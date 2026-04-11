@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a1a;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;font-family:'Segoe UI',Arial,sans-serif}
+.board{background:#111;border:2px solid #333;padding:18px 16px;width:880px}
+.board-title{text-align:center;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#ff6a00;margin-bottom:8px;font-weight:700}
+.plbl{text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin:4px 0 3px;font-weight:700}
+.plbl.p1{color:#ff6a00}.plbl.p2{color:#c0392b}
+.row{display:flex;justify-content:center;gap:5px;margin:4px 0;align-items:stretch}
+
+/* ── Card-shaped zones: portrait ratio ~2:3, rounded corners ── */
+.z{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;font-size:9px;font-weight:700;color:#fff;
+  letter-spacing:.2px;line-height:1.2;
+  border:2.5px solid;border-radius:6px;padding:4px 2px;
+  position:relative;overflow:hidden;
+}
+/* Inner bevel effect like real cards */
+.z::after{
+  content:'';position:absolute;inset:3px;border:1px solid rgba(255,255,255,.08);border-radius:4px;pointer-events:none;
+}
+.z span{display:block}
+.z .sub{font-size:6.5px;font-weight:400;color:rgba(255,255,255,.45);margin-top:2px;letter-spacing:.5px}
+.z .libra-tag{font-size:6.5px;font-weight:700;color:#FFD700;margin-top:1px}
+
+/* Card slots — portrait */
+.card-z{width:72px;height:96px}
+.side-z{width:58px;height:96px}
+.rfg-z{width:110px;height:52px;border-radius:5px}
+
+/* Field + Box stacked pair */
+.half-z{width:58px;height:47px;border-radius:0}
+.stacked{display:flex;flex-direction:column;gap:0}
+.stacked .z:first-child{border-radius:6px 6px 0 0;border-bottom-width:1px}
+.stacked .z:last-child{border-radius:0 0 6px 6px;border-top-width:1px}
+
+/* ── Zone colors ── */
+.c-deck{background:linear-gradient(180deg,#666 0%,#444 100%);border-color:#888}
+.c-trick{background:linear-gradient(180deg,#1976D2 0%,#0D47A1 100%);border-color:#1565C0}
+.c-trick-lib{background:linear-gradient(180deg,#1976D2 0%,#0D47A1 100%);border-color:#FFD700}
+.c-cat{background:linear-gradient(180deg,#E65100 0%,#BF360C 100%);border-color:#FF6A00}
+.c-void{background:linear-gradient(180deg,#444 0%,#222 100%);border-color:#555;color:#aaa}
+.c-fusion{background:linear-gradient(180deg,#8E24AA 0%,#4A148C 100%);border-color:#AB47BC}
+.c-field{background:linear-gradient(180deg,#388E3C 0%,#1B5E20 100%);border-color:#4CAF50}
+.c-box{background:linear-gradient(180deg,#222 0%,#111 100%);border-color:#555;color:#aaa}
+.c-rfg{background:linear-gradient(180deg,#B71C1C 0%,#7F0000 100%);border-color:#E53935;color:#ffaaaa}
+
+/* Center divider */
+.center-row{display:flex;justify-content:center;gap:14px;margin:6px 0;align-items:center}
+.div-line{flex:1;height:2px;background:linear-gradient(90deg,transparent,#ff6a00,transparent)}
+
+.footer{text-align:center;margin-top:8px;font-size:6.5px;color:#555;letter-spacing:.7px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="board">
+<div class="board-title">Carry The Flame — Official Board Layout</div>
+
+<!-- ═══ PLAYER 2 (Opponent) ═══ -->
+<div class="plbl p2">▼ Player 2 (Opponent)</div>
+
+<!-- P2 Back Row: Deck | 5 Tricks | Fusion -->
+<div class="row">
+<div class="z side-z c-deck"><span>DECK</span><span class="sub">40–60</span></div>
+<div class="z card-z c-trick-lib"><span>Trick</span><span>Cards</span><span class="libra-tag">★ LIBRA</span></div>
+<div class="z card-z c-trick"><span>Trick</span><span>Cards</span></div>
+<div class="z card-z c-trick"><span>Trick</span><span>Cards</span></div>
+<div class="z card-z c-trick"><span>Trick</span><span>Cards</span></div>
+<div class="z card-z c-trick-lib"><span>Trick</span><span>Cards</span><span class="libra-tag">★ LIBRA</span></div>
+<div class="z side-z c-fusion"><span>Fusion</span><span>Deck</span><span class="sub">0–15</span></div>
+</div>
+
+<!-- P2 Front Row: Void | 5 Catalysts | Field+Box -->
+<div class="row">
+<div class="z side-z c-void"><span>The</span><span>Void</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="stacked"><div class="z half-z c-field"><span>FIELD</span></div><div class="z half-z c-box"><span>The</span><span>Box</span></div></div>
+</div>
+
+<!-- CENTER — RFG -->
+<div class="center-row">
+<div class="div-line"></div>
+<div class="z rfg-z c-rfg"><span>REMOVED</span><span>FROM PLAY</span><span class="sub">P2 RFG</span></div>
+<div class="z rfg-z c-rfg"><span>REMOVED</span><span>FROM PLAY</span><span class="sub">P1 RFG</span></div>
+<div class="div-line"></div>
+</div>
+
+<!-- ═══ PLAYER 1 (You) ═══ -->
+<div class="plbl p1">▲ Player 1 (You)</div>
+
+<!-- P1 Front Row: Field+Box | 5 Catalysts | Void -->
+<div class="row">
+<div class="stacked"><div class="z half-z c-field"><span>FIELD</span></div><div class="z half-z c-box"><span>The</span><span>Box</span></div></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z card-z c-cat"><span>Catalyst</span><span>Cards</span></div>
+<div class="z side-z c-void"><span>The</span><span>Void</span></div>
+</div>
+
+<!-- P1 Back Row: Fusion | 5 Tricks | Deck -->
+<div class="row">
+<div class="z side-z c-fusion"><span>Fusion</span><span>Deck</span><span class="sub">0–15</span></div>
+<div class="z card-z c-trick-lib"><span>Trick</span><span>Cards</span><span class="libra-tag">★ LIBRA</span></div>
+<div class="z card-z c-trick"><span>Trick</span><span>Cards</span></div>
+<div class="z card-z c-trick"><span>Trick</span><span>Cards</span></div>
+<div class="z card-z c-trick"><span>Trick</span><span>Cards</span></div>
+<div class="z card-z c-trick-lib"><span>Trick</span><span>Cards</span><span class="libra-tag">★ LIBRA</span></div>
+<div class="z side-z c-deck"><span>DECK</span><span class="sub">40–60</span></div>
+</div>
+
+<div class="footer">
+ORANGE = Catalyst (5) · BLUE = Trick (5, outer 2 = Libra) · GRAY = Deck / Void · PURPLE = Fusion · GREEN = Field · BLACK = Box · RED = RFG<br>
+Perfect Timing Gaming / Makairis Holding Group · Carry The Flame © 2026
+</div>
+</div>
+</body>
+</html>
