@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carry The Flame — Perfect Timing Gaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--coal:#0d0d0d;--coal-light:#1a1a1a;--coal-mid:#242424;--flame:#ff6a00;--ember:#c0392b;--amber:#ffb347;--ash:#888;--white:#f5f0e8;--cream:#e8e0d0;--font-display:'Bebas Neue',sans-serif;--font-label:'Barlow Condensed',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Space Mono',monospace}
+html{scroll-behavior:smooth}
+body{background:var(--coal);color:var(--white);font-family:var(--font-body);overflow-x:hidden;line-height:1.6}
+a{color:var(--flame);text-decoration:none;transition:color .2s}a:hover{color:var(--amber)}
+nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,106,0,.15)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.5rem}
+.nav-brand{font-family:var(--font-display);font-size:1.6rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase}.nav-brand span{color:var(--white)}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-family:var(--font-label);font-weight:600;font-size:.95rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--cream);position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--flame);transition:width .3s}
+.nav-links a:hover::after{width:100%}.nav-links a:hover{color:var(--flame)}
+.menu-toggle{display:none;background:none;border:none;color:var(--flame);font-size:1.5rem;cursor:pointer}
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(255,106,0,.12) 0%,rgba(192,57,43,.06) 40%,transparent 70%),var(--coal)}
+#ember-canvas{position:absolute;inset:0;pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:800px;padding:2rem}
+.hero-tag{font-family:var(--font-label);font-weight:600;font-size:.85rem;letter-spacing:4px;text-transform:uppercase;color:var(--flame);margin-bottom:1rem;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero-title{font-family:var(--font-display);font-size:clamp(3.5rem,10vw,8rem);line-height:.95;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(180deg,var(--white) 30%,var(--flame) 70%,var(--ember) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;animation:fadeUp .8s .5s forwards}
+.hero-sub{font-family:var(--font-body);font-size:1.15rem;color:var(--cream);margin-top:1.2rem;max-width:560px;margin-left:auto;margin-right:auto;opacity:0;animation:fadeUp .8s .7s forwards}
+.hero-cta{display:inline-flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp .8s .9s forwards}
+.btn{font-family:var(--font-label);font-weight:700;font-size:.95rem;letter-spacing:2px;text-transform:uppercase;padding:.9rem 2.2rem;border:none;cursor:pointer;transition:all .3s}
+.btn-fire{background:linear-gradient(135deg,var(--flame),var(--ember));color:var(--white);clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.btn-fire:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,106,0,.4)}
+.btn-ghost{background:transparent;color:var(--flame);border:1.5px solid var(--flame);clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.btn-ghost:hover{background:rgba(255,106,0,.1);transform:translateY(-2px)}
+section{padding:5rem 1.5rem}.section-inner{max-width:1100px;margin:0 auto}
+.section-label{font-family:var(--font-label);font-weight:600;font-size:.8rem;letter-spacing:4px;text-transform:uppercase;color:var(--flame);margin-bottom:.5rem}
+.section-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:1rem}.section-title span{color:var(--flame)}
+.divider{width:60px;height:3px;background:linear-gradient(90deg,var(--flame),var(--ember));margin-bottom:2rem}
+.features{background:var(--coal-light)}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+.feat-card{background:var(--coal-mid);border:1px solid rgba(255,106,0,.1);padding:2rem;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
+.feat-card:hover{transform:translateY(-4px);border-color:var(--flame)}
+.feat-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--flame),var(--ember));transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.feat-card:hover::before{transform:scaleX(1)}
+.feat-icon{font-size:2rem;margin-bottom:1rem}
+.feat-card h3{font-family:var(--font-display);font-size:1.4rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:.5rem}
+.feat-card p{font-size:.9rem;color:var(--cream);line-height:1.7}
+.win-conditions{background:var(--coal)}
+.win-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:2rem}
+.win-card{text-align:center;padding:2.5rem 2rem;border:1px solid rgba(255,106,0,.08);background:linear-gradient(180deg,var(--coal-mid) 0%,var(--coal) 100%);position:relative}
+.win-card::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:40px;height:3px;background:var(--flame)}
+.win-number{font-family:var(--font-display);font-size:4rem;color:var(--flame);line-height:1;opacity:.3}
+.win-card h3{font-family:var(--font-display);font-size:1.5rem;letter-spacing:2px;text-transform:uppercase;margin:.5rem 0}
+.win-card p{font-size:.9rem;color:var(--cream);line-height:1.7}
+.card-types{background:var(--coal-light)}
+.type-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:2rem}
+.type-item{display:flex;align-items:flex-start;gap:1rem;padding:1.2rem;background:var(--coal);border-left:3px solid var(--flame)}
+.type-item h4{font-family:var(--font-label);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:1px;color:var(--flame)}
+.type-item p{font-size:.85rem;color:var(--cream);margin-top:.2rem}
+.stats{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);border-bottom:1px solid rgba(255,106,0,.1)}
+.stat-grid{display:flex;justify-content:space-around;flex-wrap:wrap;gap:2rem;text-align:center;padding:3rem 0}
+.stat-num{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4rem);color:var(--flame);line-height:1}
+.stat-label{font-family:var(--font-label);font-weight:600;font-size:.8rem;letter-spacing:3px;text-transform:uppercase;color:var(--ash);margin-top:.3rem}
+.quickstart{background:var(--coal-light)}
+.qs-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:2rem;counter-reset:step}
+.qs-step{counter-increment:step;padding:2rem;background:var(--coal);border:1px solid rgba(255,106,0,.08);position:relative}
+.qs-step::before{content:counter(step,decimal-leading-zero);font-family:var(--font-display);font-size:3rem;color:var(--flame);opacity:.2;position:absolute;top:.5rem;right:1rem}
+.qs-step h4{font-family:var(--font-display);font-size:1.2rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.5rem}
+.qs-step p{font-size:.88rem;color:var(--cream);line-height:1.7}
+footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3rem 1.5rem;text-align:center}
+.footer-brand{font-family:var(--font-display);font-size:1.4rem;letter-spacing:2px;color:var(--flame)}
+.footer-links{display:flex;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
+.footer-links a{font-family:var(--font-label);font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash)}.footer-links a:hover{color:var(--flame)}
+.footer-copy{font-size:.75rem;color:var(--ash);margin-top:1rem}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){
+.nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1.5rem;gap:1.2rem;border-bottom:1px solid rgba(255,106,0,.15)}.nav-links.open{display:flex}.menu-toggle{display:block}
+.hero-title{font-size:clamp(2.5rem,8vw,5rem)}section{padding:3rem 1rem}}
+</style>
+</head>
+<body>
+<nav><div class="nav-inner">
+<a href="index.html" class="nav-brand">Carry The <span>Flame</span></a>
+<button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+<ul class="nav-links">
+<li><a href="rules.html">Rules</a></li>
+<li><a href="cards.html">Cards</a></li>
+<li><a href="deckbuilder.html">Deck Builder</a></li>
+<li><a href="play.html">Play</a></li>
+<li><a href="glossary.html">Glossary</a></li>
+<li><a href="submit.html">Submit Cards</a></li>
+</ul></div></nav>
+
+<section class="hero">
+<div class="hero-bg"></div>
+<canvas id="ember-canvas"></canvas>
+<div class="hero-content">
+<p class="hero-tag">Perfect Timing Gaming · Makairis Holding Group · Buffalo, NY</p>
+<h1 class="hero-title">Carry The Flame</h1>
+<p class="hero-sub">A tactical online card game with 3 simultaneous win paths, 1,599 unique cards across 40 sets, and a community-first philosophy. Built from scratch. No shortcuts.</p>
+<div class="hero-cta">
+<a href="rules.html" class="btn btn-fire">Learn the Rules</a>
+<a href="cards.html" class="btn btn-ghost">Browse Cards</a>
+</div></div></section>
+
+<section class="stats"><div class="section-inner"><div class="stat-grid">
+<div><div class="stat-num">1,599</div><div class="stat-label">Unique Cards</div></div>
+<div><div class="stat-num">40</div><div class="stat-label">Card Sets</div></div>
+<div><div class="stat-num">3</div><div class="stat-label">Win Conditions</div></div>
+<div><div class="stat-num">4</div><div class="stat-label">Play Modes</div></div>
+</div></div></section>
+
+<section class="features"><div class="section-inner">
+<p class="section-label">System Overview</p>
+<h2 class="section-title">What Makes CTF <span>Different</span></h2>
+<div class="divider"></div>
+<div class="feat-grid">
+<div class="feat-card"><div class="feat-icon">🔥</div><h3>3 Simultaneous Win Paths</h3>
+<p>Drain opponent Chi from 10,000 to 0 (Chi KO), destroy 7 Catalysts through battle (7 Kills), or Capture into your Box then Extract 7 permanently (7 Extractions). All three paths are live every turn — switch mid-match when your opponent over-commits to one defense.</p></div>
+
+<div class="feat-card"><div class="feat-icon">⚔️</div><h3>Proactive vs Reactive Split</h3>
+<p>Palm Tricks are always proactive — your turn only, always Link 1. Concealed Tricks are always reactive — set face-down, activate on opponent's turn. Counter Tricks lock the chain — only another Counter can respond above them. No timing ambiguity.</p></div>
+
+<div class="feat-card"><div class="feat-icon">📦</div><h3>The Box & Capture System</h3>
+<p>When your Pressure beats an opponent's Counter Pressure, their Catalyst enters your Box — not the Void. Cards in the Box fuel the Extraction win path. The Box vs Void distinction is the strategic heart of CTF.</p></div>
+
+<div class="feat-card"><div class="feat-icon">⚖️</div><h3>The Libra System</h3>
+<p>Place two Normal Catalysts in the outermost Libra Zones. Their Levels define a range — summon any Catalyst whose Level falls strictly between the two scales. The entire Libra Summon counts as 1 Special Summon.</p></div>
+
+<div class="feat-card"><div class="feat-icon">🎯</div><h3>End Phase — Mandatory Choice</h3>
+<p>Every End Phase with an eligible Catalyst forces a choice: End Turn, Extraction, Rescue, or Destroy Trick. Three of the four cost a Catalyst sacrifice. This tension between offense, recovery, and board control defines every turn.</p></div>
+
+<div class="feat-card"><div class="feat-icon">🛡️</div><h3>Shotgun Rule</h3>
+<p>Every Special Summon gives your opponent a free draw — 1st through 5th, no exceptions. Hard cap of 5 Special Summons per turn. This anti-combo safety valve keeps games balanced and punishes overextension.</p></div>
+</div></div></section>
+
+<section class="win-conditions"><div class="section-inner">
+<p class="section-label">Victory Paths</p>
+<h2 class="section-title">3 Ways to <span>Win</span></h2>
+<div class="divider"></div>
+<div class="win-grid">
+<div class="win-card"><div class="win-number">I</div><h3>Chi KO</h3>
+<p>Reduce opponent Chi from 10,000 to 0 through Logic damage. ATK vs ATK battle deals the Pressure difference. Direct attacks (when all opponent Catalyst Zones are empty) deal full Pressure. Chi KO is instant — game ends the moment Chi hits 0.</p></div>
+
+<div class="win-card"><div class="win-number">II</div><h3>7 Kills</h3>
+<p>Destroy 7 opponent Catalysts through <strong>battle only</strong>. ATK vs ATK wins, Mutual Kills, and ATK beating a Great Card in DEF all count. Card effects and Destroy Trick send cards to Void as destroyed/discarded — those are NOT Kills.</p></div>
+
+<div class="win-card"><div class="win-number">III</div><h3>7 Extractions</h3>
+<p>Capture opponent DEF Catalysts into your Box (ATK beats Counter Pressure), then sacrifice your own Catalysts during End Phase to Extract them permanently to the RFG Zone. The slowest but most strategically layered path.</p></div>
+</div></div></section>
+
+<section class="card-types"><div class="section-inner">
+<p class="section-label">Card System</p>
+<h2 class="section-title">Core <span>Card Types</span></h2>
+<div class="divider"></div>
+<div class="type-list">
+<div class="type-item"><div><h4>Catalysts</h4><p>Primary units with Pressure (ATK) & Counter Pressure (DEF). 8 Alignments, stackable KINDS. Normal Catalysts (Lore text, no effect) are required for Libra Zones.</p></div></div>
+<div class="type-item"><div><h4>Palm Tricks</h4><p>Proactive spells — your Action Phase only. Can NEVER be counter-type. Always Link 1 on any chain. Type: Palm. 🔒</p></div></div>
+<div class="type-item"><div><h4>Concealed Tricks</h4><p>Reactive traps — set face-down, activate on either turn. Cannot activate same turn set. Only card playable on opponent's turn. Type: Concealed. 🔒</p></div></div>
+<div class="type-item"><div><h4>Field Tricks</h4><p>Environment cards in Main Deck. 1 per player active. Effects refresh at Ignition Phase. New one replaces old. Type: Field. 🔒</p></div></div>
+<div class="type-item"><div><h4>Fusion Cards</h4><p>Fusion Deck only (0–15). Requires named materials to Void + Fusion enabler. Entire Fusion Summon = 1 Special Summon. Shotgun Rule applies.</p></div></div>
+<div class="type-item"><div><h4>Great Cards</h4><p>Any card with "Great" in its name. Great Catalysts: 1 copy each, max 5/deck. Can NEVER enter the Box. Cannot be Tributed for End Phase. CAN be Killed in ATK vs ATK battle.</p></div></div>
+</div></div></section>
+
+<section class="quickstart"><div class="section-inner">
+<p class="section-label">New Player</p>
+<h2 class="section-title">Quick <span>Start</span></h2>
+<div class="divider"></div>
+<div class="qs-steps">
+<div class="qs-step"><h4>Build Your Deck</h4><p>40–60 cards in your Main Deck — Catalysts, Palm Tricks, Concealed Tricks, and Field Tricks shuffled together. Add up to 15 Fusion Cards in a separate Fusion Deck. Side Deck: 0–15 cards for Best of 3.</p></div>
+<div class="qs-step"><h4>Draw & Deploy</h4><p>Start with 10,000 Chi and 5 cards in hand. Draw 1 each turn. Normal Summon 1 Catalyst per turn — Level 1–4 free, Level 5–6 costs 1 Tribute, Level 7+ costs 2. Deck out is NOT a loss — skip draw and continue.</p></div>
+<div class="qs-step"><h4>Play Through 7 Phases</h4><p>Turn Start → Draw → Ignition → Action → Battle → Resolution → End. The Action Phase is your main play window. Battle Phase is always optional. The End Phase forces a mandatory strategic choice.</p></div>
+<div class="qs-step"><h4>Carry The Flame</h4><p>Adapt every turn. Chase Chi KO, 7 Kills, or 7 Extractions — or threaten multiple paths. The player who forces two simultaneous threats wins. Play online at perfecttiminggaming.com.</p></div>
+</div></div></section>
+
+<footer>
+<div class="footer-brand">CARRY THE FLAME</div>
+<div class="footer-links">
+<a href="rules.html">Rules</a><a href="cards.html">Cards</a><a href="deckbuilder.html">Deck Builder</a><a href="play.html">Play</a><a href="glossary.html">Glossary</a><a href="submit.html">Submit Cards</a>
+</div>
+<p class="footer-copy">© 2026 Perfect Timing Gaming · Makairis Holding Group · Dr. Zoom & Newz · Buffalo, NY · Consistency > Hype</p>
+</footer>
+
+<script>
+const canvas=document.getElementById('ember-canvas'),ctx=canvas.getContext('2d');let W,H,embers=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+window.addEventListener('resize',resize);resize();
+class Ember{constructor(){this.reset()}reset(){this.x=Math.random()*W;this.y=H+10;this.r=Math.random()*2.5+.5;this.vx=(Math.random()-.5)*.6;this.vy=-(Math.random()*1.5+.5);this.life=Math.random()*200+100;this.maxLife=this.life;this.hue=Math.random()*30+15}update(){this.x+=this.vx+Math.sin(this.life*.02)*.3;this.y+=this.vy;this.life--;if(this.life<=0||this.y<-10)this.reset()}draw(){const a=this.life/this.maxLife;ctx.beginPath();ctx.arc(this.x,this.y,this.r*a,0,Math.PI*2);ctx.fillStyle=`hsla(${this.hue},100%,55%,${a*.6})`;ctx.fill();ctx.beginPath();ctx.arc(this.x,this.y,this.r*a*2.5,0,Math.PI*2);ctx.fillStyle=`hsla(${this.hue},100%,55%,${a*.08})`;ctx.fill()}}
+for(let i=0;i<80;i++)embers.push(new Ember());
+(function loop(){ctx.clearRect(0,0,W,H);embers.forEach(e=>{e.update();e.draw()});requestAnimationFrame(loop)})();
+</script>
+</body>
+</html>

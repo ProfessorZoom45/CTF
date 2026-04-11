@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit Custom Cards — Carry The Flame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--coal:#0d0d0d;--coal-light:#1a1a1a;--coal-mid:#242424;--flame:#ff6a00;--ember:#c0392b;--amber:#ffb347;--ash:#888;--white:#f5f0e8;--cream:#e8e0d0;--green:#4CAF50;--red:#e74c3c;--blue:#2196F3;--purple:#9C27B0;--gold:#FFD700;--font-display:'Bebas Neue',sans-serif;--font-label:'Barlow Condensed',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Space Mono',monospace}
+html{scroll-behavior:smooth}
+body{background:var(--coal);color:var(--white);font-family:var(--font-body);line-height:1.6;overflow-x:hidden}
+a{color:var(--flame);text-decoration:none;transition:color .2s}a:hover{color:var(--amber)}
+
+/* ── NAV (matches all pages) ── */
+nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,106,0,.15)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.5rem}
+.nav-brand{font-family:var(--font-display);font-size:1.6rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase}.nav-brand span{color:var(--white)}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-family:var(--font-label);font-weight:600;font-size:.95rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--cream);position:relative;transition:color .2s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--flame);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-links a:hover,.nav-links a.active{color:var(--flame)}
+.menu-toggle{display:none;background:none;border:none;color:var(--flame);font-size:1.5rem;cursor:pointer}
+
+/* ── PAGE HEADER (matches rules/play/cards/glossary) ── */
+.page-header{padding:8rem 1.5rem 2.5rem;text-align:center;background:radial-gradient(ellipse at 50% 100%,rgba(255,106,0,.08),transparent 60%),var(--coal)}
+.page-header h1{font-family:var(--font-display);font-size:clamp(2.5rem,6vw,4.5rem);letter-spacing:3px;text-transform:uppercase;background:linear-gradient(180deg,var(--white) 40%,var(--flame));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-header p{color:var(--cream);max-width:650px;margin:.5rem auto 0;font-size:.95rem}
+
+.container{max-width:960px;margin:0 auto;padding:1rem 1.5rem 3rem}
+
+/* ── INFO BOX ── */
+.info-box{background:var(--coal-mid);border-left:3px solid var(--flame);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--cream);line-height:1.7}
+.info-box strong{color:var(--flame)}
+
+/* ── POOL TRACKER ── */
+.pool-tracker{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;padding:1rem;background:var(--coal-light);border:1px solid rgba(255,106,0,.1)}
+.pool-bar-wrap{position:relative}
+.pool-label{font-family:var(--font-label);font-weight:700;font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--cream);margin-bottom:.3rem;display:flex;justify-content:space-between}
+.pool-label span{font-family:var(--font-mono);font-size:.85rem}
+.pool-label .ok{color:var(--flame)}.pool-label .over{color:var(--red)}
+.pool-bar{height:28px;background:var(--coal-mid);border:1px solid rgba(255,106,0,.08);overflow:hidden;position:relative}
+.pool-fill{height:100%;transition:width .2s}
+.pool-fill-pr{background:linear-gradient(90deg,var(--flame),var(--ember))}
+.pool-fill-cp{background:linear-gradient(90deg,var(--blue),var(--purple))}
+.pool-fill.over{background:linear-gradient(90deg,var(--red),#8B0000)}
+
+/* ── CARD BUILDER SECTIONS ── */
+.card-builder{background:var(--coal-light);border:1px solid rgba(255,106,0,.08);padding:1.2rem;margin-bottom:1rem;transition:border-color .3s}
+.card-builder:hover{border-color:rgba(255,106,0,.2)}
+.card-builder.is-valid{border-color:var(--green)}
+.card-builder.has-error{border-color:var(--red)}
+.cb-header{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem}
+.cb-num{font-family:var(--font-display);font-size:2rem;color:var(--flame);opacity:.3;line-height:1}
+.cb-title{font-family:var(--font-display);font-size:1.2rem;letter-spacing:2px;text-transform:uppercase;color:var(--white)}
+.cb-badge{font-family:var(--font-mono);font-size:.65rem;padding:.15rem .5rem;border-radius:2px;margin-left:.5rem}
+.badge-normal{background:var(--ash);color:var(--coal)}.badge-effect{background:var(--flame);color:#fff}
+.badge-great{background:var(--gold);color:#000}.badge-trick{background:var(--purple);color:#fff}
+
+.cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.cb-field{display:flex;flex-direction:column;gap:.2rem}.cb-field.full{grid-column:1/-1}
+.cb-lbl{font-family:var(--font-label);font-weight:700;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash)}
+.cb-lbl .cap-hint{font-weight:400;color:var(--flame)}
+.cb-input{font-family:var(--font-body);background:var(--coal-mid);border:1px solid rgba(255,106,0,.12);color:var(--white);padding:.45rem .6rem;font-size:.85rem;outline:none;transition:border-color .2s}
+.cb-input:focus{border-color:var(--flame)}
+.cb-input.input-error{border-color:var(--red) !important}
+select.cb-input{cursor:pointer}select.cb-input option{background:var(--coal-mid)}
+textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);line-height:1.5}
+
+/* ── STAT SLIDERS ── */
+.stat-row{display:flex;align-items:center;gap:.6rem}
+.stat-slider{flex:1;-webkit-appearance:none;appearance:none;height:8px;background:var(--coal-mid);outline:none;border-radius:4px;cursor:pointer}
+.stat-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--coal);cursor:grab}
+.stat-slider:active::-webkit-slider-thumb{cursor:grabbing}
+.stat-slider.pr-slider::-webkit-slider-thumb{background:var(--flame)}
+.stat-slider.cp-slider::-webkit-slider-thumb{background:var(--blue)}
+.stat-slider::-webkit-slider-runnable-track{height:8px;border-radius:4px}
+.stat-val{font-family:var(--font-mono);font-size:.9rem;min-width:50px;text-align:right;font-weight:700}
+.stat-val-pr{color:var(--flame)}.stat-val-cp{color:var(--blue)}
+.stat-max{font-family:var(--font-mono);font-size:.7rem;color:var(--ash);min-width:65px}
+
+/* ── MATERIAL SELECT ── */
+.mat-select{display:flex;gap:.5rem;flex-wrap:wrap}
+.mat-btn{font-family:var(--font-label);font-size:.85rem;padding:.5rem 1rem;background:var(--coal-mid);border:1px solid rgba(255,106,0,.1);color:var(--cream);cursor:pointer;transition:all .2s}
+.mat-btn:hover{border-color:var(--flame)}.mat-btn.selected{background:var(--flame);color:#fff;border-color:var(--flame)}
+
+/* ── TRICK TYPE ── */
+.trick-types{display:flex;gap:.5rem}
+.tt-btn{font-family:var(--font-label);font-size:.85rem;padding:.5rem 1rem;background:var(--coal-mid);border:1px solid rgba(255,106,0,.1);color:var(--cream);cursor:pointer;transition:all .2s}
+.tt-btn:hover{border-color:var(--purple)}.tt-btn.selected{background:var(--purple);color:#fff;border-color:var(--purple)}
+
+/* ── FUSION INFO BAR ── */
+.fusion-info{font-family:var(--font-mono);font-size:.75rem;margin-top:.6rem;padding:.5rem .8rem;background:var(--coal);display:flex;gap:1.5rem;flex-wrap:wrap;border-left:3px solid var(--gold)}
+.fusion-info span{display:flex;gap:.3rem;align-items:center}
+.fi-label{color:var(--ash)}.fi-val{font-weight:700}
+
+/* ── VALIDATION ── */
+.validation{background:var(--coal-light);border:1px solid rgba(255,106,0,.08);padding:1rem;margin:1.5rem 0}
+.validation h3{font-family:var(--font-display);font-size:1.1rem;color:var(--flame);letter-spacing:2px;text-transform:uppercase;margin-bottom:.5rem}
+.v-list{display:flex;flex-direction:column;gap:.25rem}
+.v-item{font-family:var(--font-mono);font-size:.73rem;display:flex;align-items:center;gap:.4rem}
+.v-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.v-ok{background:var(--green)}.v-err{background:var(--red)}
+
+/* ── PREVIEW ── */
+.preview{margin:1.5rem 0}
+.preview h3{font-family:var(--font-display);font-size:1.1rem;color:var(--flame);letter-spacing:2px;text-transform:uppercase;margin-bottom:.8rem}
+.preview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem}
+.p-card{background:var(--coal-mid);border:1px solid rgba(255,106,0,.1);padding:.7rem;position:relative}
+.p-card.great-card{border-color:var(--gold);box-shadow:0 0 8px rgba(255,215,0,.12)}
+.p-card.trick-card{border-color:var(--purple)}
+.p-bar{height:3px;margin-bottom:.4rem;border-radius:1px}
+.p-name{font-family:var(--font-display);font-size:.85rem;letter-spacing:.5px;text-transform:uppercase;color:var(--white);line-height:1.2}
+.p-type{font-family:var(--font-mono);font-size:.58rem;color:var(--ash);margin:.2rem 0}
+.p-stats{font-family:var(--font-mono);font-size:.72rem;color:var(--flame);margin:.2rem 0}
+.p-desc{font-size:.65rem;color:var(--cream);line-height:1.4;margin-top:.2rem;padding-top:.2rem;border-top:1px solid rgba(255,106,0,.06);max-height:3.6em;overflow:hidden}
+
+/* ── SUBMIT ── */
+.submit-section{margin:2rem 0}
+.submit-section h3{font-family:var(--font-display);font-size:1.3rem;color:var(--flame);letter-spacing:2px;text-transform:uppercase;margin-bottom:.8rem}
+.submit-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.btn-submit{font-family:var(--font-label);font-weight:700;font-size:.95rem;letter-spacing:2px;text-transform:uppercase;padding:.9rem 2rem;border:none;cursor:pointer;transition:all .3s;width:100%;background:linear-gradient(135deg,var(--flame),var(--ember));color:#fff;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.btn-submit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,106,0,.3)}
+.btn-submit:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.submit-status{font-family:var(--font-mono);font-size:.8rem;text-align:center;margin-top:.8rem;padding:.6rem;min-height:2rem}
+.status-ok{color:var(--green);background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.2)}
+.status-err{color:var(--red);background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2)}
+
+/* ── FOOTER (matches all pages) ── */
+footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3rem 1.5rem;text-align:center}
+.footer-brand{font-family:var(--font-display);font-size:1.4rem;letter-spacing:2px;color:var(--flame)}
+.footer-links{display:flex;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
+.footer-links a{font-family:var(--font-label);font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash)}.footer-links a:hover{color:var(--flame)}
+.footer-copy{font-size:.75rem;color:var(--ash);margin-top:1rem}
+
+@media(max-width:768px){
+.nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1.5rem;gap:1.2rem;border-bottom:1px solid rgba(255,106,0,.15)}.nav-links.open{display:flex}.menu-toggle{display:block}
+.cb-grid{grid-template-columns:1fr}.pool-tracker{grid-template-columns:1fr}.submit-row{grid-template-columns:1fr}
+.preview-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- NAV (identical structure to all pages) -->
+<nav><div class="nav-inner">
+<a href="index.html" class="nav-brand">Carry The <span>Flame</span></a>
+<button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+<ul class="nav-links">
+<li><a href="rules.html">Rules</a></li>
+<li><a href="cards.html">Cards</a></li>
+<li><a href="deckbuilder.html">Deck Builder</a></li>
+<li><a href="play.html">Play</a></li>
+<li><a href="glossary.html">Glossary</a></li>
+<li><a href="submit.html" class="active">Submit Cards</a></li>
+</ul></div></nav>
+
+<div class="page-header">
+<h1>Submit Custom Cards</h1>
+<p>Design your own 5-card set — 3 Normal Catalysts, 1 Great Fusion Catalyst, and 1 Trick Card. All cards are reviewed before entering the game.</p>
+</div>
+
+<div class="container">
+
+<div class="info-box">
+<strong>Custom Card Rules:</strong> You receive a stat pool of <strong>4,500 Pressure</strong> and <strong>4,500 Counter Pressure</strong> to distribute across your 3 non-Fusion Catalysts. Two Catalysts are Level 1–4 (max 1,800 PR / 2,000 CP each). One is Level 6–7 (max 2,500 PR / 2,500 CP). Your Fusion Catalyst is a Great Card combining two of your three — stats cannot exceed materials combined, capped at 3,200 PR, 3,200 CP, or 4,000 total. Your Trick Card targets a single Catalyst — no double effects, max +300 stat boost.
+</div>
+
+<div style="background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);border-left:3px solid var(--ember);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.82rem;color:var(--cream);line-height:1.7">
+<strong style="color:var(--ember);font-family:var(--font-display);font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:.4rem">⚠ Important — Please Read Before Submitting</strong>
+<strong style="color:var(--flame)">Intellectual Property &amp; Ownership:</strong> By submitting custom cards, you acknowledge and agree that all approved cards become the intellectual property of Perfect Timing Gaming and Makairis Holding Group (MHG). The final published version of any approved card — including name, stats, effect text, and artwork — is owned exclusively by PTG/MHG and becomes part of the official Carry The Flame canon.<br><br>
+<strong style="color:var(--flame)">Original Names Required:</strong> All card names must be <strong>completely original</strong> creations. Do not submit names that reference, copy, or are derived from any existing intellectual property — including but not limited to characters, brands, franchises, trademarks, or copyrighted works from anime, video games, movies, TV shows, comics, or any other media. Submissions containing third-party IP names will be rejected.<br><br>
+<strong style="color:var(--flame)">Subject to Change:</strong> All submitted cards are subject to review, modification, rebalancing, renaming, or rejection at the sole discretion of Perfect Timing Gaming. Approved cards may be altered at any time for game balance, legal compliance, or creative direction. Submitting a card does not guarantee it will appear in the game, and PTG reserves the right to modify any aspect of the card before or after publication.<br><br>
+<strong style="color:var(--flame)">Credit:</strong> Approved card creators will be credited by their submitted gamertag in the card's metadata where applicable, but this credit does not convey any ownership rights over the card or its use within the CTF ecosystem.
+</div>
+
+<!-- POOL TRACKER -->
+<div class="pool-tracker">
+<div class="pool-bar-wrap">
+<div class="pool-label">Pressure Pool <span id="pr-pool-txt" class="ok">0 / 4,500</span></div>
+<div class="pool-bar"><div class="pool-fill pool-fill-pr" id="pr-bar" style="width:0%"></div></div>
+</div>
+<div class="pool-bar-wrap">
+<div class="pool-label">Counter Pressure Pool <span id="cp-pool-txt" class="ok">0 / 4,500</span></div>
+<div class="pool-bar"><div class="pool-fill pool-fill-cp" id="cp-bar" style="width:0%"></div></div>
+</div>
+</div>
+
+<!-- SUBMITTER -->
+<div class="card-builder">
+<div class="cb-header"><span class="cb-num">⚙</span><span class="cb-title">Your Info</span></div>
+<div class="cb-grid">
+<div class="cb-field"><label class="cb-lbl">Name / Gamertag</label><input class="cb-input" id="sub-name" placeholder="Dr. Zoom" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Email</label><input class="cb-input" id="sub-email" type="email" placeholder="you@example.com" oninput="U()"></div>
+</div></div>
+
+<!-- CATALYST 1 (Lv 1-4) -->
+<div class="card-builder" id="b-c1">
+<div class="cb-header"><span class="cb-num">1</span><span class="cb-title">Catalyst #1</span><span class="cb-badge badge-normal">Normal · Lv 1–4</span></div>
+<div class="cb-grid">
+<div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c1-name" placeholder="e.g. Storm Sentinel" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Level (1–4)</label><select class="cb-input" id="c1-level" onchange="U()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option></select></div>
+<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c1-align" onchange="U()"><option>Dark</option><option>Light</option><option selected>Fire</option><option>Earth</option><option>Water</option><option>Wind</option><option>Thunder</option><option>Divine</option></select></div>
+<div class="cb-field"><label class="cb-lbl">KINDS (comma-separated)</label><input class="cb-input" id="c1-kinds" placeholder="Warrior, Human" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c1-pr-hint">(max 1,800)</span></label>
+<div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c1-pr" min="0" max="1800" value="1800" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c1-pr-v">1800</span><span class="stat-max" id="c1-pr-m">/ 1800</span></div></div>
+<div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c1-cp-hint">(max 2,000)</span></label>
+<div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c1-cp" min="0" max="2000" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c1-cp-v">1500</span><span class="stat-max" id="c1-cp-m">/ 2000</span></div></div>
+<div class="cb-field full"><label class="cb-lbl">Lore Text (Normal Catalysts have no effect — flavor only)</label><textarea class="cb-input" id="c1-lore" placeholder="A sentinel born from the eternal storm." oninput="U()"></textarea></div>
+</div></div>
+
+<!-- CATALYST 2 (Lv 1-4) -->
+<div class="card-builder" id="b-c2">
+<div class="cb-header"><span class="cb-num">2</span><span class="cb-title">Catalyst #2</span><span class="cb-badge badge-normal">Normal · Lv 1–4</span></div>
+<div class="cb-grid">
+<div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c2-name" placeholder="e.g. Iron Fang" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Level (1–4)</label><select class="cb-input" id="c2-level" onchange="U()"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c2-align" onchange="U()"><option>Dark</option><option>Light</option><option>Fire</option><option selected>Earth</option><option>Water</option><option>Wind</option><option>Thunder</option><option>Divine</option></select></div>
+<div class="cb-field"><label class="cb-lbl">KINDS</label><input class="cb-input" id="c2-kinds" placeholder="Beast" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c2-pr-hint">(max 1,800)</span></label>
+<div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c2-pr" min="0" max="1800" value="300" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c2-pr-v">300</span><span class="stat-max" id="c2-pr-m">/ 1800</span></div></div>
+<div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c2-cp-hint">(max 2,000)</span></label>
+<div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c2-cp" min="0" max="2000" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c2-cp-v">1500</span><span class="stat-max" id="c2-cp-m">/ 2000</span></div></div>
+<div class="cb-field full"><label class="cb-lbl">Lore Text</label><textarea class="cb-input" id="c2-lore" placeholder="A loyal beast with fangs of cold iron." oninput="U()"></textarea></div>
+</div></div>
+
+<!-- CATALYST 3 (Lv 6-7) -->
+<div class="card-builder" id="b-c3">
+<div class="cb-header"><span class="cb-num">3</span><span class="cb-title">Catalyst #3</span><span class="cb-badge badge-normal">Normal · Lv 6–7</span></div>
+<div class="cb-grid">
+<div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c3-name" placeholder="e.g. Crimson Warden" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Level (6–7)</label><select class="cb-input" id="c3-level" onchange="U()"><option value="6">6</option><option value="7" selected>7</option></select></div>
+<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c3-align" onchange="U()"><option>Dark</option><option>Light</option><option selected>Fire</option><option>Earth</option><option>Water</option><option>Wind</option><option>Thunder</option><option>Divine</option></select></div>
+<div class="cb-field"><label class="cb-lbl">KINDS</label><input class="cb-input" id="c3-kinds" placeholder="Warrior, Dragon" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c3-pr-hint">(max 2,500)</span></label>
+<div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c3-pr" min="0" max="2500" value="2400" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c3-pr-v">2400</span><span class="stat-max" id="c3-pr-m">/ 2500</span></div></div>
+<div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c3-cp-hint">(max 2,500)</span></label>
+<div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c3-cp" min="0" max="2500" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c3-cp-v">1500</span><span class="stat-max" id="c3-cp-m">/ 2500</span></div></div>
+<div class="cb-field full"><label class="cb-lbl">Lore Text</label><textarea class="cb-input" id="c3-lore" placeholder="The Crimson Warden waits for the flame to call." oninput="U()"></textarea></div>
+</div></div>
+
+<!-- FUSION (Great) -->
+<div class="card-builder" id="b-f" style="border-color:rgba(255,215,0,.3)">
+<div class="cb-header"><span class="cb-num">★</span><span class="cb-title">Fusion Catalyst</span><span class="cb-badge badge-great">★ GREAT · Effect · Fusion</span></div>
+<div class="cb-grid">
+<div class="cb-field full"><label class="cb-lbl">Fusion Materials (select exactly 2 of your 3 Catalysts)</label>
+<div class="mat-select"><button class="mat-btn" id="mat-c1" type="button" onclick="toggleMat('c1')">Catalyst #1</button><button class="mat-btn" id="mat-c2" type="button" onclick="toggleMat('c2')">Catalyst #2</button><button class="mat-btn" id="mat-c3" type="button" onclick="toggleMat('c3')">Catalyst #3</button></div>
+</div>
+<div class="cb-field"><label class="cb-lbl">Card Name <span class="cap-hint">(must include "Great")</span></label><input class="cb-input" id="f-name" placeholder="e.g. Storm Warden The Great" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Level <span class="cap-hint">(auto = sum of materials)</span></label><input class="cb-input" id="f-level" readonly style="color:var(--amber)"></div>
+<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="f-align" onchange="U()"><option>Dark</option><option>Light</option><option selected>Fire</option><option>Earth</option><option>Water</option><option>Wind</option><option>Thunder</option><option>Divine</option></select></div>
+<div class="cb-field"><label class="cb-lbl">KINDS</label><input class="cb-input" id="f-kinds" placeholder="Warrior, Dragon, Fusion" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="f-pr-hint">(max: select materials)</span></label>
+<div class="stat-row"><input type="range" class="stat-slider pr-slider" id="f-pr" min="0" max="3200" value="3200" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="f-pr-v">3200</span><span class="stat-max" id="f-pr-m">/ 3200</span></div></div>
+<div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="f-cp-hint">(max: select materials)</span></label>
+<div class="stat-row"><input type="range" class="stat-slider cp-slider" id="f-cp" min="0" max="3200" value="2500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="f-cp-v">2500</span><span class="stat-max" id="f-cp-m">/ 3200</span></div></div>
+<div class="cb-field full"><label class="cb-lbl">Effect Text <span class="cap-hint">(this is an Effect Catalyst)</span></label><textarea class="cb-input" id="f-effect" placeholder="When this card is Fusion Summoned: destroy 1 Catalyst your opponent controls." oninput="U()"></textarea></div>
+</div>
+<div class="fusion-info">
+<span><span class="fi-label">Material PR cap:</span> <span class="fi-val" id="fi-pr" style="color:var(--flame)">—</span></span>
+<span><span class="fi-label">Material CP cap:</span> <span class="fi-val" id="fi-cp" style="color:var(--blue)">—</span></span>
+<span><span class="fi-label">Total (PR+CP):</span> <span class="fi-val" id="fi-total" style="color:var(--amber)">—</span> <span class="fi-label">/ 4,000</span></span>
+</div>
+</div>
+
+<!-- TRICK CARD -->
+<div class="card-builder" id="b-t" style="border-color:rgba(156,39,176,.3)">
+<div class="cb-header"><span class="cb-num">T</span><span class="cb-title">Trick Card</span><span class="cb-badge badge-trick">Single Target · No Double Effects</span></div>
+<div class="cb-grid">
+<div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="t-name" placeholder="e.g. Flame Guard Stance" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Trick Type</label>
+<div class="trick-types"><button class="tt-btn selected" type="button" onclick="setTT('Concealed Trick',this)">Concealed Trick</button><button class="tt-btn" type="button" onclick="setTT('Palm Trick',this)">Palm Trick</button></div>
+<input type="hidden" id="t-type" value="Concealed Trick">
+</div>
+<div class="cb-field full"><label class="cb-lbl">Effect <span class="cap-hint">(target 1 Catalyst · max +300 PR/CP boost · no double effects)</span></label><textarea class="cb-input" id="t-effect" placeholder="Change the battle position of 1 Catalyst on the field." oninput="U()"></textarea></div>
+</div></div>
+
+<!-- VALIDATION -->
+<div class="validation"><h3>Validation Checklist</h3><div class="v-list" id="v-list"></div></div>
+
+<!-- PREVIEW -->
+<div class="preview"><h3>Card Preview</h3><div class="preview-grid" id="preview-grid"></div></div>
+
+<!-- SUBMIT -->
+<div class="submit-section">
+<h3>Submit Your Cards</h3>
+<div style="background:var(--coal-mid);border:1px solid rgba(255,106,0,.1);padding:.8rem 1rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:.6rem">
+<input type="checkbox" id="agree-check" onchange="U()" style="margin-top:.3rem;accent-color:var(--flame);width:18px;height:18px;cursor:pointer;flex-shrink:0">
+<label for="agree-check" style="font-size:.8rem;color:var(--cream);line-height:1.6;cursor:pointer">I confirm that all card names are my original creations and do not infringe on any existing intellectual property. I understand that approved cards become the property of Perfect Timing Gaming / Makairis Holding Group, are subject to modification or rejection, and will be part of the official Carry The Flame canon.</label>
+</div>
+<button class="btn-submit" id="submit-btn" onclick="submitCards()" disabled>Submit 5 Cards for Review</button>
+<div class="submit-status" id="submit-status"></div>
+</div>
+</div>
+
+<!-- FOOTER (matches all pages) -->
+<footer>
+<div class="footer-brand">CARRY THE FLAME</div>
+<div class="footer-links">
+<a href="rules.html">Rules</a><a href="cards.html">Cards</a><a href="deckbuilder.html">Deck Builder</a><a href="play.html">Play</a><a href="glossary.html">Glossary</a><a href="submit.html">Submit Cards</a>
+</div>
+<p class="footer-copy">© 2026 Perfect Timing Gaming · Makairis Holding Group · Dr. Zoom & Newz · Buffalo, NY · Consistency > Hype</p>
+</footer>
+
+<script>
+// ═══════ CONSTANTS ═══════
+const PR_POOL=4500, CP_POOL=4500;
+const CAPS={
+ c1:{pr:1800,cp:2000}, c2:{pr:1800,cp:2000}, c3:{pr:2500,cp:2500}
+};
+
+let mats=new Set(); // selected material IDs
+let trickType='Concealed Trick';
+let allValid=false;
+
+// ═══════ HELPERS ═══════
+const $=id=>document.getElementById(id);
+const V=id=>$(id).value;
+const N=id=>parseInt($(id).value)||0;
+
+function setTT(type,btn){
+ trickType=type; $('t-type').value=type;
+ document.querySelectorAll('.tt-btn').forEach(b=>b.classList.remove('selected'));
+ btn.classList.add('selected'); U();
+}
+
+function toggleMat(id){
+ if(mats.has(id))mats.delete(id);
+ else if(mats.size<2)mats.add(id);
+ document.querySelectorAll('.mat-btn').forEach(b=>b.classList.toggle('selected',mats.has(b.id.replace('mat-',''))));
+ U();
+}
+
+// ═══════ CORE UPDATE — runs on every input ═══════
+function U(){
+ const ids=['c1','c2','c3'];
+ const pr={},cp={};
+
+ // 1) Read current values
+ ids.forEach(id=>{ pr[id]=N(id+'-pr'); cp[id]=N(id+'-cp'); });
+
+ // 2) Calculate pool usage
+ const usedPR=pr.c1+pr.c2+pr.c3;
+ const usedCP=cp.c1+cp.c2+cp.c3;
+
+ // 3) Enforce dynamic max on each slider = min(individual_cap, pool_remaining + my_current_value)
+ ids.forEach(id=>{
+  const otherPR=usedPR-pr[id];
+  const otherCP=usedCP-cp[id];
+  const effMaxPR=Math.min(CAPS[id].pr, PR_POOL-otherPR);
+  const effMaxCP=Math.min(CAPS[id].cp, CP_POOL-otherCP);
+
+  const slPR=$(id+'-pr'), slCP=$(id+'-cp');
+
+  // Update slider max attributes
+  slPR.max=Math.max(0,effMaxPR);
+  slCP.max=Math.max(0,effMaxCP);
+
+  // Clamp current value if it exceeds new max
+  if(pr[id]>effMaxPR){ slPR.value=Math.max(0,effMaxPR); pr[id]=parseInt(slPR.value); }
+  if(cp[id]>effMaxCP){ slCP.value=Math.max(0,effMaxCP); cp[id]=parseInt(slCP.value); }
+
+  // Display
+  $(id+'-pr-v').textContent=pr[id];
+  $(id+'-cp-v').textContent=cp[id];
+  $(id+'-pr-m').textContent='/ '+effMaxPR;
+  $(id+'-cp-m').textContent='/ '+effMaxCP;
+ });
+
+ // Recalculate after clamping
+ const finalPR=pr.c1+pr.c2+pr.c3;
+ const finalCP=cp.c1+cp.c2+cp.c3;
+
+ // 4) Pool display
+ const prPct=Math.min(100,finalPR/PR_POOL*100);
+ const cpPct=Math.min(100,finalCP/CP_POOL*100);
+ $('pr-bar').style.width=prPct+'%';
+ $('cp-bar').style.width=cpPct+'%';
+ $('pr-bar').classList.toggle('over',finalPR>PR_POOL);
+ $('cp-bar').classList.toggle('over',finalCP>CP_POOL);
+ $('pr-pool-txt').textContent=`${finalPR.toLocaleString()} / 4,500`;
+ $('cp-pool-txt').textContent=`${finalCP.toLocaleString()} / 4,500`;
+ $('pr-pool-txt').className=finalPR>PR_POOL?'over':'ok';
+ $('cp-pool-txt').className=finalCP>CP_POOL?'over':'ok';
+
+ // 5) Fusion — dynamic caps from materials
+ const matArr=[...mats];
+ let matPR=0,matCP=0,matLvl=0;
+ matArr.forEach(m=>{ matPR+=pr[m]; matCP+=cp[m]; matLvl+=N(m+'-level'); });
+
+ const fPRcap= mats.size===2 ? Math.min(matPR,3200) : 0;
+ const fCPcap= mats.size===2 ? Math.min(matCP,3200) : 0;
+ const fSlPR=$('f-pr'), fSlCP=$('f-cp');
+
+ fSlPR.max=Math.max(0,fPRcap);
+ fSlCP.max=Math.max(0,fCPcap);
+
+ // Clamp fusion values
+ if(N('f-pr')>fPRcap) fSlPR.value=fPRcap;
+ if(N('f-cp')>fCPcap) fSlCP.value=fCPcap;
+
+ const fpr=N('f-pr'), fcp=N('f-cp');
+ const fTotal=fpr+fcp;
+
+ // Enforce 4000 combined cap on fusion
+ if(fTotal>4000){
+  // Reduce the last-changed one (heuristic: reduce CP if over)
+  const excess=fTotal-4000;
+  if(fcp>=excess){ fSlCP.value=fcp-excess; }
+  else{ fSlPR.value=fpr-(excess-fcp); fSlCP.value=0; }
+ }
+
+ const fprFinal=N('f-pr'), fcpFinal=N('f-cp');
+
+ $('f-pr-v').textContent=fprFinal;
+ $('f-cp-v').textContent=fcpFinal;
+ $('f-pr-m').textContent='/ '+fPRcap;
+ $('f-cp-m').textContent='/ '+fCPcap;
+ $('f-pr-hint').textContent=mats.size===2?`(max ${fPRcap.toLocaleString()})`:'(select 2 materials)';
+ $('f-cp-hint').textContent=mats.size===2?`(max ${fCPcap.toLocaleString()})`:'(select 2 materials)';
+
+ if(mats.size===2){ $('f-level').value=matLvl; }
+ else{ $('f-level').value='Select 2 materials'; }
+
+ $('fi-pr').textContent=mats.size===2?fPRcap:'—';
+ $('fi-cp').textContent=mats.size===2?fCPcap:'—';
+ $('fi-total').textContent=fprFinal+fcpFinal;
+ $('fi-total').style.color=(fprFinal+fcpFinal)>4000?'var(--red)':'var(--amber)';
+
+ // Update material button labels
+ ids.forEach(m=>{
+  const nm=V(m+'-name')||('Catalyst #'+(m==='c1'?'1':m==='c2'?'2':'3'));
+  $('mat-'+m).textContent=nm+' (Lv'+N(m+'-level')+')';
+ });
+
+ validate();
+ renderPreview();
+}
+
+// ═══════ VALIDATION ═══════
+function validate(){
+ const errs=[];
+ const ids=['c1','c2','c3'];
+ const pr={},cp={};
+ ids.forEach(id=>{ pr[id]=N(id+'-pr'); cp[id]=N(id+'-cp'); });
+ const usedPR=pr.c1+pr.c2+pr.c3, usedCP=cp.c1+cp.c2+cp.c3;
+
+ // Names
+ ['c1','c2','c3','f','t'].forEach(id=>{
+  const n=V((id==='f'||id==='t'?id:id)+'-name').trim();
+  const label=id==='f'?'Fusion':id==='t'?'Trick':'C'+(id==='c1'?'1':id==='c2'?'2':'3');
+  errs.push({ok:!!n,text:`${label}: ${n?'Name set':'Name required'}`});
+ });
+
+ // Fusion name must include Great
+ const fn=V('f-name');
+ if(fn) errs.push({ok:/great/i.test(fn),text:fn?'Fusion: Name must include "Great"':'—'});
+
+ // Pool
+ errs.push({ok:usedPR<=PR_POOL,text:`PR Pool: ${usedPR} / ${PR_POOL}`});
+ errs.push({ok:usedCP<=CP_POOL,text:`CP Pool: ${usedCP} / ${CP_POOL}`});
+
+ // Individual
+ errs.push({ok:pr.c1<=CAPS.c1.pr,text:`C1 PR: ${pr.c1} / ${CAPS.c1.pr}`});
+ errs.push({ok:cp.c1<=CAPS.c1.cp,text:`C1 CP: ${cp.c1} / ${CAPS.c1.cp}`});
+ errs.push({ok:pr.c2<=CAPS.c2.pr,text:`C2 PR: ${pr.c2} / ${CAPS.c2.pr}`});
+ errs.push({ok:cp.c2<=CAPS.c2.cp,text:`C2 CP: ${cp.c2} / ${CAPS.c2.cp}`});
+ errs.push({ok:pr.c3<=CAPS.c3.pr,text:`C3 PR: ${pr.c3} / ${CAPS.c3.pr}`});
+ errs.push({ok:cp.c3<=CAPS.c3.cp,text:`C3 CP: ${cp.c3} / ${CAPS.c3.cp}`});
+
+ // Materials
+ errs.push({ok:mats.size===2,text:`Materials: ${mats.size}/2 selected`});
+
+ // Fusion
+ if(mats.size===2){
+  const matArr=[...mats];
+  let mPR=0,mCP=0;
+  matArr.forEach(m=>{mPR+=pr[m];mCP+=cp[m]});
+  const fpr=N('f-pr'),fcp=N('f-cp');
+  errs.push({ok:fpr<=Math.min(mPR,3200),text:`Fusion PR: ${fpr} / ${Math.min(mPR,3200)}`});
+  errs.push({ok:fcp<=Math.min(mCP,3200),text:`Fusion CP: ${fcp} / ${Math.min(mCP,3200)}`});
+  errs.push({ok:(fpr+fcp)<=4000,text:`Fusion Total: ${fpr+fcp} / 4,000`});
+ }
+
+ // Text fields
+ ['c1','c2','c3'].forEach((m,i)=>errs.push({ok:!!V(m+'-lore').trim(),text:`C${i+1}: ${V(m+'-lore').trim()?'Lore set':'Lore required'}`}));
+ errs.push({ok:!!V('f-effect').trim(),text:V('f-effect').trim()?'Fusion: Effect set':'Fusion: Effect required'});
+ errs.push({ok:!!V('t-effect').trim(),text:V('t-effect').trim()?'Trick: Effect set':'Trick: Effect required'});
+
+ // KINDS
+ ['c1','c2','c3','f'].forEach(m=>{
+  const label=m==='f'?'Fusion':'C'+(m==='c1'?'1':m==='c2'?'2':'3');
+  errs.push({ok:!!V(m+'-kinds').trim(),text:`${label}: ${V(m+'-kinds').trim()?'KINDS set':'KINDS required'}`});
+ });
+
+ // Submitter
+ errs.push({ok:!!V('sub-name').trim(),text:V('sub-name').trim()?'Name provided':'Name required'});
+ errs.push({ok:V('sub-email').includes('@'),text:V('sub-email').includes('@')?'Email valid':'Email required'});
+
+ // Agreement checkbox
+ const agreed=$('agree-check').checked;
+ errs.push({ok:agreed,text:agreed?'IP & ownership agreement accepted':'You must accept the IP & ownership agreement'});
+
+ $('v-list').innerHTML=errs.map(e=>`<div class="v-item"><span class="v-dot ${e.ok?'v-ok':'v-err'}"></span>${e.text}</div>`).join('');
+ allValid=errs.every(e=>e.ok);
+ $('submit-btn').disabled=!allValid;
+}
+
+// ═══════ PREVIEW ═══════
+function renderPreview(){
+ const cards=[];
+ ['c1','c2','c3'].forEach((m,i)=>{
+  cards.push({name:V(m+'-name')||`Catalyst #${i+1}`,type:`Normal Catalyst · ${V(m+'-align')} · Lv ${N(m+'-level')}`,
+   kinds:V(m+'-kinds'),pr:N(m+'-pr'),cp:N(m+'-cp'),desc:V(m+'-lore'),cls:'',bar:'var(--flame)'});
+ });
+ const matNames=[...mats].map(m=>V(m+'-name')||'?');
+ cards.push({name:V('f-name')||'Fusion The Great',type:`Great Fusion · ${V('f-align')} · Lv ${V('f-level')}`,
+  kinds:V('f-kinds'),pr:N('f-pr'),cp:N('f-cp'),desc:(V('f-effect')||'...')+`\n[${matNames.join(' + ')}]`,cls:'great-card',bar:'var(--gold)'});
+ cards.push({name:V('t-name')||'Trick Card',type:trickType,kinds:'—',pr:null,cp:null,desc:V('t-effect')||'...',cls:'trick-card',bar:'var(--purple)'});
+
+ $('preview-grid').innerHTML=cards.map(c=>`<div class="p-card ${c.cls}">
+  <div class="p-bar" style="background:${c.bar}"></div>
+  <div class="p-name">${c.name}</div>
+  <div class="p-type">${c.type}</div>
+  ${c.kinds&&c.kinds!=='—'?`<div class="p-type">${c.kinds}</div>`:''}
+  ${c.pr!==null?`<div class="p-stats">PR ${c.pr} · CP ${c.cp}</div>`:''}
+  <div class="p-desc">${c.desc.replace(/\n/g,'<br>')}</div></div>`).join('');
+}
+
+// ═══════ SUBMIT ═══════
+function submitCards(){
+ if(!allValid)return;
+ const st=$('submit-status');
+ st.textContent='Preparing submission...'; st.className='submit-status';
+
+ const sub={submitter:{name:V('sub-name'),email:V('sub-email')},timestamp:new Date().toISOString(),cards:[]};
+
+ ['c1','c2','c3'].forEach((m,i)=>{
+  sub.cards.push({slot:`Catalyst ${i+1}`,type:'Normal Catalyst',name:V(m+'-name'),level:N(m+'-level'),alignment:V(m+'-align'),kinds:V(m+'-kinds'),pressure:N(m+'-pr'),counterPressure:N(m+'-cp'),text:V(m+'-lore')});
+ });
+
+ const matNames=[...mats].map(m=>V(m+'-name'));
+ sub.cards.push({slot:'Fusion (Great)',type:'Great Effect Fusion Catalyst',name:V('f-name'),level:V('f-level'),alignment:V('f-align'),kinds:V('f-kinds'),pressure:N('f-pr'),counterPressure:N('f-cp'),text:V('f-effect'),materials:matNames});
+ sub.cards.push({slot:'Trick Card',type:trickType,name:V('t-name'),text:V('t-effect')});
+ sub.poolUsed={pressure:N('c1-pr')+N('c2-pr')+N('c3-pr'),counterPressure:N('c1-cp')+N('c2-cp')+N('c3-cp')};
+
+ // Email body
+ const emailBody=sub.cards.map(c=>`--- ${c.slot} ---\nName: ${c.name}\nType: ${c.type}\n${c.level?'Level: '+c.level+'\n':''}${c.alignment?'Alignment: '+c.alignment+'\n':''}${c.kinds?'KINDS: '+c.kinds+'\n':''}${c.pressure!==undefined?'Pressure: '+c.pressure+'\nCounter Pressure: '+c.counterPressure+'\n':''}${c.materials?'Materials: '+c.materials.join(' + ')+'\n':''}Text: ${c.text}`).join('\n\n');
+ const subject=encodeURIComponent(`CTF Custom Card Submission — ${V('sub-name')}`);
+ const body=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
+
+ // Download JSON
+ const blob=new Blob([JSON.stringify(sub,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CTF_Cards_${V('sub-name').replace(/\s+/g,'_')}.json`;a.click();
+
+ // Open email
+ setTimeout(()=>{window.location.href=`mailto:changethewrld@outlook.com?subject=${subject}&body=${body}`},500);
+
+ st.textContent='✓ JSON downloaded & email client opened. If email didn\'t open, send the JSON to changethewrld@outlook.com';
+ st.className='submit-status status-ok';
+}
+
+// ═══════ INIT ═══════
+U();
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+============================================================
+  CARRY THE FLAME (CTF) — INSTALLATION & DEPLOYMENT GUIDE
+  Perfect Timing Gaming / Makairis Holding Group
+============================================================
+
+REQUIREMENTS
+  - Any modern web browser (Chrome, Firefox, Edge, Safari)
+  - No server, no Node.js, no build tools required
+  - For online play: internet connection + PeerJS CDN access
+
+------------------------------------------------------------
+OPTION 1: LOCAL PLAY (Fastest)
+------------------------------------------------------------
+
+  1. Download or clone the repository:
+     git clone https://github.com/ProfessorZoom45/CTF.git
+
+  2. Open CTF/index.html in your browser.
+
+  3. Navigate using the top nav bar:
+     Home → Rules → Cards → Deck Builder → Play → Glossary → Submit
+
+  That's it. Everything runs client-side.
+
+------------------------------------------------------------
+OPTION 2: GITHUB PAGES (Public URL)
+------------------------------------------------------------
+
+  1. Push the CTF repo to GitHub under ProfessorZoom45/CTF
+
+  2. Go to repo Settings → Pages
+
+  3. Set Source: Deploy from a branch → main → / (root)
+
+  4. Save. Your site will be live at:
+     https://ProfessorZoom45.github.io/CTF/
+
+  Note: The .nojekyll file is included so GitHub Pages
+  serves files without Jekyll processing.
+
+------------------------------------------------------------
+REPO STRUCTURE
+------------------------------------------------------------
+
+  CTF/
+  ├── index.html          Homepage
+  ├── rules.html          Complete rulebook
+  ├── cards.html          Card database browser
+  ├── deckbuilder.html    Deck builder
+  ├── play.html           Online play client (WebRTC)
+  ├── glossary.html       Terminology reference
+  ├── submit.html         Custom card submission
+  ├── assets/
+  │   ├── js/
+  │   │   ├── data.js     Card database (1,610 cards, 7 decks)
+  │   │   └── engine.js   Game engine + networking
+  │   └── img/
+  │       ├── ctf-board-layout.png   Board diagram
+  │       └── board-diagram.html     Board diagram source
+  ├── docs/
+  │   └── CHANGELOG.md    Version history
+  ├── README.md
+  ├── LICENSE
+  ├── INSTALL.txt         This file
+  ├── .gitignore
+  └── .nojekyll
+
+------------------------------------------------------------
+ONLINE PLAY SETUP
+------------------------------------------------------------
+
+  The play.html page uses PeerJS (loaded from CDN) for
+  WebRTC peer-to-peer connections. No server needed.
+
+  To play:
+  1. Player 1: Open play.html → Select a starter deck → Create Room
+  2. Player 1: Share the 6-digit room code with Player 2
+  3. Player 2: Open play.html → Select a deck → Enter code → Join Room
+
+  Both players must have internet access. All game state
+  syncs directly between browsers via WebRTC.
+
+------------------------------------------------------------
+TROUBLESHOOTING
+------------------------------------------------------------
+
+  Cards not loading?
+  → Ensure data.js is in assets/js/ and loads before other scripts
+
+  Deck builder blank?
+  → Check browser console for "CTF_CARDS undefined" error
+  → Verify <script src="assets/js/data.js"> appears before deck builder JS
+
+  WebRTC connection failing?
+  → Both players need stable internet
+  → Some corporate firewalls block WebRTC — try a different network
+  → PeerJS CDN must be accessible
+
+------------------------------------------------------------
+CONTACT
+------------------------------------------------------------
+
+  changethewrld@outlook.com
+  GitHub: ProfessorZoom45
+  Carry The Flame © 2026 Makairis Holding Group
