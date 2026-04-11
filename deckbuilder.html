@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deck Builder — Carry The Flame</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--coal:#0d0d0d;--coal-light:#1a1a1a;--coal-mid:#242424;--flame:#ff6a00;--ember:#c0392b;--amber:#ffb347;--ash:#888;--white:#f5f0e8;--cream:#e8e0d0;--green:#4CAF50;--red:#e74c3c;--blue:#2196F3;--purple:#9C27B0;--font-display:'Bebas Neue',sans-serif;--font-label:'Barlow Condensed',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Space Mono',monospace}
+body{background:var(--coal);color:var(--white);font-family:var(--font-body);line-height:1.5;overflow-x:hidden}
+a{color:var(--flame);text-decoration:none}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--coal-mid)}::-webkit-scrollbar-thumb{background:var(--flame);border-radius:3px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,106,0,.15)}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.2rem}
+.nav-brand{font-family:var(--font-display);font-size:1.4rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase}.nav-brand span{color:var(--white)}
+.nav-links{display:flex;gap:1.5rem;list-style:none}.nav-links a{font-family:var(--font-label);font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--cream);transition:color .2s}.nav-links a:hover,.nl a.active{color:var(--flame)}
+.menu-toggle{display:none;background:none;border:none;color:var(--flame);font-size:1.3rem;cursor:pointer}
+
+/* Layout */
+.builder{display:grid;grid-template-columns:340px 1fr;gap:0;margin-top:48px;height:calc(100vh - 48px)}
+
+/* Left panel — card pool */
+.pool{background:var(--coal-light);border-right:1px solid rgba(255,106,0,.1);display:flex;flex-direction:column;overflow:hidden}
+.pool-header{padding:.8rem;border-bottom:1px solid rgba(255,106,0,.08)}
+.pool-header h2{font-family:var(--font-display);font-size:1.2rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase;margin-bottom:.5rem}
+.pool-filters{display:flex;flex-direction:column;gap:.4rem}
+.pool-filters input,.pool-filters select{font-family:var(--font-body);background:var(--coal-mid);border:1px solid rgba(255,106,0,.12);color:var(--white);padding:.4rem .6rem;font-size:.8rem;outline:none}.pool-filters input:focus,.pool-filters select:focus{border-color:var(--flame)}
+.pool-filters select option{background:var(--coal-mid)}
+.pool-row{display:flex;gap:.4rem}.pool-row>*{flex:1}
+.pool-count{font-family:var(--font-mono);font-size:.7rem;color:var(--ash);padding:.3rem .8rem;border-bottom:1px solid rgba(255,106,0,.06)}
+.pool-list{flex:1;overflow-y:auto;padding:.3rem}
+.pc{display:flex;align-items:center;gap:.5rem;padding:.35rem .6rem;margin-bottom:2px;background:var(--coal);border:1px solid transparent;cursor:pointer;transition:all .15s;font-size:.78rem;border-radius:2px;user-select:none}
+.pc:hover{border-color:var(--flame);background:rgba(255,106,0,.04)}
+.pc-color{width:4px;height:28px;border-radius:1px;flex-shrink:0}
+.pc-catalyst{background:var(--flame)}.pc-palm{background:var(--blue)}.pc-concealed{background:var(--purple)}.pc-counter{background:#E91E63}.pc-field{background:var(--green)}.pc-fusion{background:var(--amber)}
+.pc-info{flex:1;min-width:0}
+.pc-name{font-family:var(--font-label);font-weight:700;font-size:.82rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-meta{color:var(--ash);font-size:.68rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-stats{font-family:var(--font-mono);font-size:.7rem;color:var(--flame);white-space:nowrap;flex-shrink:0}
+.pc-count{font-family:var(--font-mono);font-size:.7rem;color:var(--ash);flex-shrink:0;min-width:24px;text-align:center}
+.pc-great .pc-name::after{content:'★';color:gold;margin-left:.3rem;font-size:.7rem}
+
+/* Right panel — deck zones */
+.deck-area{display:flex;flex-direction:column;overflow-y:auto;padding:1rem}
+.deck-toolbar{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;flex-wrap:wrap}
+.deck-name{font-family:var(--font-body);background:var(--coal-mid);border:1px solid rgba(255,106,0,.15);color:var(--white);padding:.4rem .8rem;font-size:.9rem;outline:none;flex:1;min-width:200px}.deck-name:focus{border-color:var(--flame)}
+.btn{font-family:var(--font-label);font-weight:700;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;padding:.45rem .9rem;border:none;cursor:pointer;transition:all .2s;border-radius:2px}
+.btn-flame{background:var(--flame);color:#fff}.btn-flame:hover{background:var(--amber)}
+.btn-ghost{background:transparent;color:var(--flame);border:1px solid var(--flame)}.btn-ghost:hover{background:rgba(255,106,0,.1)}
+.btn-red{background:transparent;color:var(--ember);border:1px solid var(--ember)}.btn-red:hover{background:rgba(192,57,43,.1)}
+.btn-green{background:transparent;color:var(--green);border:1px solid var(--green)}.btn-green:hover{background:rgba(76,175,80,.1)}
+
+/* Validation */
+.valid{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.8rem}
+.vr{font-family:var(--font-mono);font-size:.72rem;display:flex;align-items:center;gap:.3rem}
+.vr .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.dot-ok{background:var(--green)}.dot-err{background:var(--red)}.dot-warn{background:var(--amber)}
+
+/* Deck zone */
+.zone{margin-bottom:1.2rem}
+.zone-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:1px solid rgba(255,106,0,.1)}
+.zone-title{font-family:var(--font-display);font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;color:var(--flame)}
+.zone-count{font-family:var(--font-mono);font-size:.8rem;color:var(--ash)}
+.zone-sort{font-family:var(--font-label);font-size:.7rem;color:var(--ash);cursor:pointer;border:none;background:none;text-transform:uppercase;letter-spacing:1px}.zone-sort:hover{color:var(--flame)}
+
+/* Card grid in deck zones — YGO style compact tiles */
+.dg{display:flex;flex-wrap:wrap;gap:3px;min-height:50px;padding:4px;background:rgba(255,106,0,.02);border:1px dashed rgba(255,106,0,.08);border-radius:3px}
+.dc{width:90px;background:var(--coal-mid);border:1px solid rgba(255,106,0,.08);padding:4px;cursor:pointer;position:relative;transition:all .15s;border-radius:2px;user-select:none}
+.dc:hover{border-color:var(--flame);transform:translateY(-1px);box-shadow:0 3px 10px rgba(255,106,0,.12)}
+.dc-bar{height:3px;border-radius:1px;margin-bottom:3px}
+.dc-name{font-family:var(--font-label);font-weight:700;font-size:.62rem;color:var(--white);line-height:1.2;height:2.4em;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.dc-info{font-family:var(--font-mono);font-size:.56rem;color:var(--ash);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dc-stats{font-family:var(--font-mono);font-size:.58rem;color:var(--flame);margin-top:1px}
+.dc-qty{position:absolute;top:2px;right:3px;font-family:var(--font-mono);font-size:.6rem;color:var(--coal);background:var(--flame);padding:0 3px;border-radius:1px;line-height:1.3}
+.dc-great{border-color:gold !important;box-shadow:0 0 4px rgba(255,215,0,.3)}
+
+/* Tooltip */
+.tooltip{display:none;position:fixed;z-index:3000;background:var(--coal-light);border:1px solid var(--flame);padding:.8rem;max-width:300px;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+.tooltip.show{display:block}
+.tt-name{font-family:var(--font-display);font-size:1rem;color:var(--flame);letter-spacing:1px;text-transform:uppercase}
+.tt-type{font-family:var(--font-mono);font-size:.65rem;color:var(--ash);margin:.2rem 0}
+.tt-stats{font-family:var(--font-mono);font-size:.75rem;color:var(--flame);margin:.2rem 0}
+.tt-desc{font-size:.75rem;color:var(--cream);line-height:1.5;margin-top:.3rem;border-top:1px solid rgba(255,106,0,.1);padding-top:.3rem}
+
+/* Import modal */
+.imp-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.8);align-items:center;justify-content:center;padding:1rem}.imp-overlay.open{display:flex}
+.imp-box{background:var(--coal-light);border:1px solid rgba(255,106,0,.2);padding:1.5rem;max-width:500px;width:100%}
+.imp-box h3{font-family:var(--font-display);font-size:1.3rem;color:var(--flame);margin-bottom:.8rem}
+.imp-box textarea{width:100%;height:200px;background:var(--coal-mid);border:1px solid rgba(255,106,0,.15);color:var(--white);font-family:var(--font-mono);font-size:.75rem;padding:.6rem;outline:none;resize:vertical}
+.imp-box textarea:focus{border-color:var(--flame)}
+.imp-actions{display:flex;gap:.5rem;margin-top:.8rem;justify-content:flex-end}
+
+@media(max-width:900px){
+.nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1rem;gap:1rem}.nav-links.open{display:flex}.menu-toggle{display:block}
+.builder{grid-template-columns:1fr;height:auto}.pool{max-height:50vh}}
+</style>
+</head>
+<body>
+
+<nav><div class="nav-inner"><a href="index.html" class="nav-brand">Carry The <span>Flame</span></a>
+<button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+<ul class="nav-links"><li><a href="rules.html">Rules</a></li><li><a href="cards.html">Cards</a></li><li><a href="deckbuilder.html" class="active">Deck Builder</a></li><li><a href="play.html">Play</a></li><li><a href="glossary.html">Glossary</a></li><li><a href="submit.html">Submit Cards</a></li></ul></div></nav>
+
+<div class="builder">
+<!-- LEFT — CARD POOL -->
+<div class="pool">
+<div class="pool-header">
+<h2>Card Pool — <span id="pool-total">0</span> cards</h2>
+<div class="pool-filters">
+<input type="text" id="pq" placeholder="Search name, kind, effect...">
+<div class="pool-row">
+<select id="pft"><option value="">All Types</option><option value="Catalyst">Catalyst</option><option value="Palm Trick">Palm Trick</option><option value="Concealed Trick">Concealed Trick</option><option value="Counter Trick">Counter Trick</option><option value="Field Trick">Field Trick</option><option value="Fusion">Fusion</option></select>
+<select id="pfa"><option value="">All Align</option><option value="Dark">Dark</option><option value="Light">Light</option><option value="Fire">Fire</option><option value="Earth">Earth</option><option value="Water">Water</option><option value="Wind">Wind</option><option value="Thunder">Thunder</option></select>
+</div>
+<div class="pool-row">
+<select id="pfs"><option value="">All Sets</option></select>
+<select id="pfl"><option value="">All Lvl</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8+</option></select>
+</div>
+</div>
+</div>
+<div class="pool-count" id="pool-showing">Showing 0</div>
+<div class="pool-list" id="pool-list"></div>
+</div>
+
+<!-- RIGHT — DECK AREA -->
+<div class="deck-area">
+<div class="deck-toolbar">
+<input type="text" class="deck-name" id="deck-name" value="My CTF Deck" placeholder="Deck Name...">
+<button class="btn btn-flame" onclick="exportDeck()">Export</button>
+<button class="btn btn-green" onclick="showImport()">Import</button>
+<button class="btn btn-ghost" onclick="saveDeckLocal()">Save</button>
+<button class="btn btn-ghost" onclick="loadDeckLocal()">Load</button>
+<button class="btn btn-red" onclick="clearDeck()">Clear</button>
+</div>
+
+<div class="valid" id="valid"></div>
+
+<!-- MAIN DECK -->
+<div class="zone">
+<div class="zone-header">
+<span class="zone-title">Main Deck</span>
+<span><button class="zone-sort" onclick="sortZone('main','name')">Name</button> · <button class="zone-sort" onclick="sortZone('main','type')">Type</button> · <button class="zone-sort" onclick="sortZone('main','level')">Level</button> · <button class="zone-sort" onclick="sortZone('main','pr')">Pressure</button></span>
+<span class="zone-count" id="main-count">0 / 40–60</span>
+</div>
+<div class="dg" id="main-grid"></div>
+</div>
+
+<!-- FUSION DECK -->
+<div class="zone">
+<div class="zone-header">
+<span class="zone-title">Fusion Deck</span>
+<span class="zone-count" id="fusion-count">0 / 15</span>
+</div>
+<div class="dg" id="fusion-grid"></div>
+</div>
+
+<!-- SIDE DECK -->
+<div class="zone">
+<div class="zone-header">
+<span class="zone-title">Side Deck</span>
+<span class="zone-count" id="side-count">0 / 15</span>
+</div>
+<div class="dg" id="side-grid"></div>
+</div>
+</div>
+</div>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip">
+<div class="tt-name" id="tt-name"></div>
+<div class="tt-type" id="tt-type"></div>
+<div class="tt-stats" id="tt-stats"></div>
+<div class="tt-desc" id="tt-desc"></div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="imp-overlay" id="imp-overlay">
+<div class="imp-box">
+<h3>Import Deck</h3>
+<textarea id="imp-text" placeholder="Paste exported deck text here..."></textarea>
+<div class="imp-actions">
+<button class="btn btn-red" onclick="hideImport()">Cancel</button>
+<button class="btn btn-flame" onclick="importDeck()">Import</button>
+</div>
+</div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script>
+// ── GUARD: data.js must load ──
+if(typeof CTF_CARDS==='undefined'){
+ document.querySelector('.builder').innerHTML='<div style="grid-column:1/-1;padding:4rem 2rem;text-align:center"><h2 style="color:#ff6a00;font-family:Bebas Neue,sans-serif;font-size:2rem;margin-bottom:1rem">Card Database Not Loaded</h2><p style="color:#e8e0d0;max-width:500px;margin:0 auto;line-height:1.7">Make sure <code style="color:#ff6a00">data.js</code> is in the same folder as this HTML file. All site files must be deployed together in the repo structure.</p><p style="color:#888;margin-top:1rem;font-size:.85rem">Required files: index.html, rules.html, cards.html, deckbuilder.html, play.html, glossary.html, submit.html, data.js</p></div>';
+ throw new Error('data.js not loaded — CTF_CARDS undefined');
+}
+
+// ── STATE ──
+let mainDeck=[],fusionDeck=[],sideDeck=[];
+let poolFiltered=[...CTF_CARDS];
+const cardMap=Object.fromEntries(CTF_CARDS.map(c=>[c.id,c]));
+function safeCard(id){return cardMap[id]||{id,name:'Unknown',cardType:'Catalyst',alignment:'',level:0,pr:0,cp:0,kinds:[],kindsStr:'',sub:null,desc:'',great:false,img:'',set:'?'}}
+
+// Populate set filter
+document.getElementById('pfs').innerHTML='<option value="">All Sets</option>'+CTF_SETS.map(s=>`<option value="${s}">${s}</option>`).join('');
+document.getElementById('pool-total').textContent=CTF_CARDS.length;
+
+// ── COLOR HELPERS ──
+function barColor(t){return t==='Catalyst'?'var(--flame)':t==='Palm Trick'?'var(--blue)':t==='Concealed Trick'?'var(--purple)':t==='Counter Trick'?'#E91E63':t==='Field Trick'?'var(--green)':t==='Fusion'?'var(--amber)':'var(--ash)'}
+function pcClass(t){return t==='Catalyst'?'pc-catalyst':t==='Palm Trick'?'pc-palm':t==='Concealed Trick'?'pc-concealed':t==='Counter Trick'?'pc-counter':t==='Field Trick'?'pc-field':t==='Fusion'?'pc-fusion':'pc-catalyst'}
+
+// ── POOL RENDERING ──
+function filterPool(){
+ const q=document.getElementById('pq').value.toLowerCase();
+ const ft=document.getElementById('pft').value;
+ const fa=document.getElementById('pfa').value;
+ const fs=document.getElementById('pfs').value;
+ const fl=document.getElementById('pfl').value;
+ poolFiltered=CTF_CARDS.filter(c=>{
+  if(ft&&c.cardType!==ft)return false;
+  if(fa&&c.alignment!==fa)return false;
+  if(fs&&c.set!==fs)return false;
+  if(fl){const lv=+fl;if(lv>=8){if(c.level<8)return false}else if(c.level!==lv)return false}
+  if(q&&!c.name.toLowerCase().includes(q)&&!c.kindsStr.toLowerCase().includes(q)&&!c.desc.toLowerCase().includes(q))return false;
+  return true;
+ });
+ renderPool();
+}
+
+function renderPool(){
+ const list=document.getElementById('pool-list');
+ document.getElementById('pool-showing').textContent=`Showing ${poolFiltered.length}`;
+ // Virtual scroll — render max 200 for performance
+ const slice=poolFiltered.slice(0,200);
+ list.innerHTML=slice.map(c=>{
+  const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
+  const total=countInAllDecks(c.id);
+  const max=c.great?1:3;
+  return`<div class="pc${c.great?' pc-great':''}" onclick="addCard('${c.id}')" oncontextmenu="event.preventDefault();addCard('${c.id}','side')" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
+   <div class="pc-color ${pcClass(c.cardType)}"></div>
+   <div class="pc-info"><div class="pc-name">${c.name}</div><div class="pc-meta">${c.cardType}${c.sub&&c.sub!=='Normal'?' · '+c.sub:''} · ${c.set}${c.level?' · Lv'+c.level:''}</div></div>
+   ${isC?`<div class="pc-stats">${c.pr}/${c.cp}</div>`:''}
+   <div class="pc-count">${total}/${max}</div>
+  </div>`;
+ }).join('');
+ if(poolFiltered.length>200)list.innerHTML+=`<div style="text-align:center;padding:.5rem;color:var(--ash);font-size:.75rem">${poolFiltered.length-200} more cards — refine filters to see all</div>`;
+}
+
+// ── DECK OPERATIONS ──
+function countInAllDecks(id){return mainDeck.filter(x=>x===id).length+fusionDeck.filter(x=>x===id).length+sideDeck.filter(x=>x===id).length}
+
+function addCard(id,zone){
+ const c=cardMap[id];if(!c)return;
+ const total=countInAllDecks(id);
+ const max=c.great?1:3;
+ if(total>=max)return;
+
+ if(zone==='side'){
+  if(sideDeck.length>=15)return;
+  sideDeck.push(id);
+ } else if(c.cardType==='Fusion'){
+  if(fusionDeck.length>=15)return;
+  fusionDeck.push(id);
+ } else {
+  if(mainDeck.length>=60)return;
+  mainDeck.push(id);
+ }
+ renderAll();
+}
+
+function removeCard(zone,index){
+ if(zone==='main')mainDeck.splice(index,1);
+ else if(zone==='fusion')fusionDeck.splice(index,1);
+ else sideDeck.splice(index,1);
+ renderAll();
+}
+
+function clearDeck(){mainDeck=[];fusionDeck=[];sideDeck=[];renderAll()}
+
+function sortZone(zone,key){
+ const arr=zone==='main'?mainDeck:zone==='fusion'?fusionDeck:sideDeck;
+ arr.sort((a,b)=>{
+  const ca=safeCard(a),cb=safeCard(b);
+  if(key==='name')return ca.name.localeCompare(cb.name);
+  if(key==='type'){const order={Catalyst:0,'Palm Trick':1,'Concealed Trick':2,'Counter Trick':3,'Field Trick':4,Fusion:5};return(order[ca.cardType]||9)-(order[cb.cardType]||9)||ca.name.localeCompare(cb.name)}
+  if(key==='level')return(cb.level||0)-(ca.level||0)||cb.pr-ca.pr;
+  if(key==='pr')return cb.pr-ca.pr||cb.cp-ca.cp;
+  return 0;
+ });
+ renderAll();
+}
+
+// ── DECK RENDERING ──
+function renderDeckZone(arr,gridId,zone){
+ const grid=document.getElementById(gridId);
+ // Group by ID and maintain order of first appearance
+ const seen=new Map();
+ arr.forEach((id,i)=>{if(!seen.has(id))seen.set(id,{card:safeCard(id),indices:[i]});else seen.get(id).indices.push(i)});
+ 
+ let html='';
+ for(const[id,{card:c,indices}]of seen){
+  const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
+  const qty=indices.length;
+  html+=`<div class="dc${c.great?' dc-great':''}" onclick="removeCard('${zone}',${indices[indices.length-1]})" oncontextmenu="event.preventDefault();removeCard('${zone}',${indices[indices.length-1]})" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
+   <div class="dc-bar" style="background:${barColor(c.cardType)}"></div>
+   <div class="dc-name">${c.name}</div>
+   <div class="dc-info">${c.cardType==='Catalyst'?c.alignment||'':c.cardType.replace(' Trick','')}${c.level?' Lv'+c.level:''}</div>
+   ${isC?`<div class="dc-stats">${c.pr}/${c.cp}</div>`:''}
+   ${qty>1?`<div class="dc-qty">×${qty}</div>`:''}
+  </div>`;
+ }
+ grid.innerHTML=html||'<div style="padding:1rem;color:var(--ash);font-size:.8rem;width:100%;text-align:center">Click cards from the pool to add · Click here to remove</div>';
+}
+
+function validate(){
+ const v=document.getElementById('valid');
+ const mc=mainDeck.length,fc=fusionDeck.length,sc=sideDeck.length;
+ const greatCount=new Set([...mainDeck,...sideDeck].filter(id=>cardMap[id]&&cardMap[id].great&&cardMap[id].cardType==='Catalyst')).size;
+ 
+ // Check copy limits
+ const allIds=[...mainDeck,...fusionDeck,...sideDeck];
+ const counts={};allIds.forEach(id=>{counts[id]=(counts[id]||0)+1});
+ let copyOk=true;
+ for(const[id,ct]of Object.entries(counts)){const c=cardMap[id];if(c&&ct>(c.great?1:3)){copyOk=false;break}}
+ 
+ // Check for non-Fusion in Fusion deck
+ const fusionPure=fusionDeck.every(id=>cardMap[id]&&cardMap[id].cardType==='Fusion');
+ 
+ const rules=[
+  {ok:mc>=40&&mc<=60,text:`Main: ${mc}/40–60`},
+  {ok:fc<=15,text:`Fusion: ${fc}/15`},
+  {ok:sc<=15,text:`Side: ${sc}/15`},
+  {ok:greatCount<=5,text:`Great Catalysts: ${greatCount}/5`},
+  {ok:copyOk,text:copyOk?'Copies: OK':'Copies: OVER LIMIT'},
+  {ok:fusionPure,text:fusionPure?'Fusion: Valid':'Fusion: Non-Fusion cards!'},
+ ];
+ v.innerHTML=rules.map(r=>`<div class="vr"><span class="dot ${r.ok?'dot-ok':'dot-err'}"></span>${r.text}</div>`).join('');
+ 
+ document.getElementById('main-count').textContent=`${mc} / 40–60`;
+ document.getElementById('fusion-count').textContent=`${fc} / 15`;
+ document.getElementById('side-count').textContent=`${sc} / 15`;
+}
+
+function renderAll(){
+ renderDeckZone(mainDeck,'main-grid','main');
+ renderDeckZone(fusionDeck,'fusion-grid','fusion');
+ renderDeckZone(sideDeck,'side-grid','side');
+ validate();
+ renderPool(); // Update copy counts in pool
+}
+
+// ── TOOLTIP ──
+function showTT(event,el,id){
+ const c=cardMap[id];if(!c)return;
+ const tt=document.getElementById('tooltip');
+ document.getElementById('tt-name').textContent=c.name+(c.great?' ★ GREAT':'');
+ document.getElementById('tt-type').textContent=`${c.cardType}${c.sub&&c.sub!=='Normal'?' ('+c.sub+')':''} · ${c.set} · ${c.id}${c.alignment?' · '+c.alignment:''}${c.level?' · Lv '+c.level:''}${c.kindsStr?' · '+c.kindsStr:''}`;
+ const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
+ document.getElementById('tt-stats').textContent=isC?`Pressure: ${c.pr}  ·  Counter Pressure: ${c.cp}`:'';
+ document.getElementById('tt-desc').textContent=c.desc||'No effect text.';
+ 
+ const rect=el.getBoundingClientRect();
+ let left=rect.right+10,top=rect.top;
+ if(left+310>window.innerWidth)left=rect.left-310;
+ if(top+200>window.innerHeight)top=window.innerHeight-210;
+ if(top<0)top=10;
+ tt.style.left=left+'px';tt.style.top=top+'px';
+ tt.classList.add('show');
+}
+function hideTT(){document.getElementById('tooltip').classList.remove('show')}
+
+// ── EXPORT ──
+function exportDeck(){
+ const name=document.getElementById('deck-name').value||'My CTF Deck';
+ function deckToText(arr,label){
+  if(!arr.length)return`\n## ${label} (0)\n`;
+  const counts={};arr.forEach(id=>{counts[id]=(counts[id]||0)+1});
+  let txt=`\n## ${label} (${arr.length})\n`;
+  for(const[id,ct]of Object.entries(counts)){const c=cardMap[id];txt+=`${ct}x ${c?c.name:id} [${c?c.set:'?'}]\n`}
+  return txt;
+ }
+ let txt=`# ${name}\n# Carry The Flame Deck · Perfect Timing Gaming / Makairis Holding Group\n`;
+ txt+=deckToText(mainDeck,'Main Deck');
+ txt+=deckToText(fusionDeck,'Fusion Deck');
+ txt+=deckToText(sideDeck,'Side Deck');
+ 
+ const blob=new Blob([txt],{type:'text/plain'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name.replace(/\s+/g,'_')+'.ctfdeck';a.click();
+}
+
+// ── IMPORT ──
+function showImport(){document.getElementById('imp-overlay').classList.add('open')}
+function hideImport(){document.getElementById('imp-overlay').classList.remove('open')}
+function importDeck(){
+ const txt=document.getElementById('imp-text').value;
+ if(!txt.trim()){hideImport();return}
+ 
+ mainDeck=[];fusionDeck=[];sideDeck=[];
+ let currentZone='main';
+ const nameMap=Object.fromEntries(CTF_CARDS.map(c=>[c.name.toLowerCase(),c.id]));
+ 
+ txt.split('\n').forEach(line=>{
+  line=line.trim();
+  if(line.startsWith('# ')&&!line.startsWith('## ')){
+   const name=line.replace(/^#\s*/,'').replace(/Carry The Flame.*/i,'').trim();
+   if(name)document.getElementById('deck-name').value=name;
+   return;
+  }
+  if(line.toLowerCase().includes('main'))currentZone='main';
+  else if(line.toLowerCase().includes('fusion'))currentZone='fusion';
+  else if(line.toLowerCase().includes('side'))currentZone='side';
+  
+  const match=line.match(/^(\d+)x\s+(.+?)(?:\s+\[.*\])?$/);
+  if(match){
+   const qty=parseInt(match[1]);
+   const cardName=match[2].trim().toLowerCase();
+   const id=nameMap[cardName];
+   if(id){
+    const arr=currentZone==='fusion'?fusionDeck:currentZone==='side'?sideDeck:mainDeck;
+    for(let i=0;i<qty;i++)arr.push(id);
+   }
+  }
+ });
+ 
+ hideImport();
+ document.getElementById('imp-text').value='';
+ renderAll();
+}
+
+// ── LOCAL STORAGE ──
+function saveDeckLocal(){
+ const data={name:document.getElementById('deck-name').value,main:mainDeck,fusion:fusionDeck,side:sideDeck};
+ localStorage.setItem('ctf_deck',JSON.stringify(data));
+ alert('Deck saved locally!');
+}
+function loadDeckLocal(){
+ const raw=localStorage.getItem('ctf_deck');
+ if(!raw){alert('No saved deck found.');return}
+ try{
+  const data=JSON.parse(raw);
+  document.getElementById('deck-name').value=data.name||'My CTF Deck';
+  mainDeck=data.main||[];fusionDeck=data.fusion||[];sideDeck=data.side||[];
+  renderAll();
+ }catch(e){alert('Error loading deck.')}
+}
+
+// ── INIT ──
+['pq'].forEach(id=>document.getElementById(id).addEventListener('input',filterPool));
+['pft','pfa','pfs','pfl'].forEach(id=>document.getElementById(id).addEventListener('change',filterPool));
+filterPool();
+renderAll();
+
+// Load saved deck if exists
+try{const raw=localStorage.getItem('ctf_deck');if(raw){const d=JSON.parse(raw);if(d&&d.main){document.getElementById('deck-name').value=d.name||'My CTF Deck';mainDeck=(d.main||[]).filter(id=>cardMap[id]);fusionDeck=(d.fusion||[]).filter(id=>cardMap[id]);sideDeck=(d.side||[]).filter(id=>cardMap[id]);renderAll()}}}catch(e){console.warn('Could not load saved deck:',e)}
+</script>
+</body>
+</html>
