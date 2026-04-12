@@ -1,25 +1,9 @@
-# OS files
+# Ignore node modules
+node_modules/
+
+# Build output
+/dist/
+
+# System Files
 .DS_Store
 Thumbs.db
-desktop.ini
-
-# Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Node (if backend added later)
-node_modules/
-package-lock.json
-npm-debug.log
-
-# Build artifacts
-dist/
-build/
-*.zip
-
-# Environment
-.env
-.env.local
