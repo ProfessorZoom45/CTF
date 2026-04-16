@@ -46,6 +46,10 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .pc-count{font-family:var(--font-mono);font-size:.7rem;color:var(--ash);flex-shrink:0;min-width:24px;text-align:center}
 .pc-great .pc-name::after{content:'★';color:gold;margin-left:.3rem;font-size:.7rem}
 
+.pc-thumb.is-gif{width:50px;height:50px;object-fit:contain;object-position:center;image-rendering:pixelated;image-rendering:crisp-edges;background:transparent}
+.dc-thumb.is-gif{width:50px;height:50px;aspect-ratio:auto;display:block;margin:0 auto 4px;object-fit:contain;object-position:center;image-rendering:pixelated;image-rendering:crisp-edges;background:transparent}
+.tt-img.is-gif{width:120px;height:120px;object-fit:contain;object-position:center;image-rendering:pixelated;image-rendering:crisp-edges;background:transparent}
+
 /* Right panel — deck zones */
 .deck-area{display:flex;flex-direction:column;overflow-y:auto;padding:1rem}
 .deck-toolbar{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;flex-wrap:wrap}
@@ -213,25 +217,29 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 <script src="assets/js/deck-utils.js"></script>
 <script>
 // ── GUARD: data.js must load ──
-if(typeof CTF_CARDS==='undefined'){
+const ALL_CARDS = (typeof CTF_CARDS!=='undefined' && Array.isArray(CTF_CARDS) && CTF_CARDS.length) ? CTF_CARDS : ((window.CTF_CARDS && Array.isArray(window.CTF_CARDS)) ? window.CTF_CARDS : []);
+const ALL_SETS = (typeof CTF_SETS!=='undefined' && Array.isArray(CTF_SETS) && CTF_SETS.length) ? CTF_SETS : ((window.CTF_SETS && Array.isArray(window.CTF_SETS)) ? window.CTF_SETS : []);
+const STARTER_DECKS = (typeof CTF_STARTER_DECKS!=='undefined' && Array.isArray(CTF_STARTER_DECKS)) ? CTF_STARTER_DECKS : ((window.CTF_STARTER_DECKS && Array.isArray(window.CTF_STARTER_DECKS)) ? window.CTF_STARTER_DECKS : []);
+
+if(!ALL_CARDS.length){
  document.querySelector('.builder').innerHTML='<div style="grid-column:1/-1;padding:4rem 2rem;text-align:center"><h2 style="color:#ff6a00;font-family:Bebas Neue,sans-serif;font-size:2rem;margin-bottom:1rem">Card Database Not Loaded</h2><p style="color:#e8e0d0;max-width:500px;margin:0 auto;line-height:1.7">Make sure <code style="color:#ff6a00">data.js</code> is in the same folder as this HTML file. All site files must be deployed together in the repo structure.</p><p style="color:#888;margin-top:1rem;font-size:.85rem">Required files: index.html, rules.html, cards.html, deckbuilder.html, play.html, glossary.html, submit.html, data.js</p></div>';
  throw new Error('data.js not loaded — CTF_CARDS undefined');
 }
 
 // ── STATE ──
 let mainDeck=[],fusionDeck=[],sideDeck=[];
-let poolFiltered=[...CTF_CARDS];
-const cardMap=Object.fromEntries(CTF_CARDS.map(c=>[c.id,c]));
+let poolFiltered=[...ALL_CARDS];
+const cardMap=Object.fromEntries(ALL_CARDS.map(c=>[c.id,c]));
 function safeCard(id){return cardMap[id]||{id,name:'Unknown',cardType:'Catalyst',alignment:'',level:0,pr:0,cp:0,kinds:[],kindsStr:'',sub:null,desc:'',great:false,img:'images/placeholder.gif',image:'images/placeholder.gif',set:'?'}}
-function cardImg(c){return (window.CTF_CARD_IMAGES&&c&&c.id&&CTF_CARD_IMAGES[c.id]) || (c&&((c.img&&c.img.trim())||(c.image&&c.image.trim()))) || 'images/placeholder.gif'}
-function imgTag(c, cls){const alt=((c&&c.name)||'Card').replace(/"/g,'&quot;');return `<img class="${cls}" src="${cardImg(c)}" alt="${alt}" loading="lazy" onerror="this.onerror=null;this.src='images/placeholder.gif'">`}
+function cardImg(c){const map=(window.CTF_CARD_IMAGES || (typeof CTF_CARD_IMAGES!=='undefined' ? CTF_CARD_IMAGES : null));return (map&&c&&c.id&&map[c.id]) || (c&&((c.img&&c.img.trim())||(c.image&&c.image.trim()))) || 'images/placeholder.gif'}
+function imgTag(c, cls){const alt=((c&&c.name)||'Card').replace(/\"/g,'&quot;');const src=cardImg(c);const gifClass=/\.gif$/i.test(src)?' is-gif':'';return `<img class="${cls}${gifClass}" src="${src}" alt="${alt}" loading="lazy" onerror="this.onerror=null;this.src='images/placeholder.gif';this.classList.add('is-gif')">`}
 
 // Populate filters + starter decks
-document.getElementById('pfs').innerHTML='<option value="">All Sets</option>'+CTF_SETS.map(s=>`<option value="${s}">${s}</option>`).join('');
-document.getElementById('pool-total').textContent=CTF_CARDS.length;
-if(typeof CTF_STARTER_DECKS!=='undefined'){
+document.getElementById('pfs').innerHTML='<option value="">All Sets</option>'+ALL_SETS.map(s=>`<option value="${s}">${s}</option>`).join('');
+document.getElementById('pool-total').textContent=ALL_CARDS.length;
+if(STARTER_DECKS.length){
  const sel=document.getElementById('starter-select');
- sel.innerHTML='<option value="">Load Starter Deck…</option>'+CTF_STARTER_DECKS.map((d,i)=>`<option value="${i}">${d.name} (${(d.main||[]).length})</option>`).join('');
+ sel.innerHTML='<option value="">Load Starter Deck…</option>'+STARTER_DECKS.map((d,i)=>`<option value="${i}">${d.name} (${(d.main||[]).length})</option>`).join('');
 }
 
 // ── COLOR HELPERS ──
@@ -245,7 +253,7 @@ function filterPool(){
  const fa=document.getElementById('pfa').value;
  const fs=document.getElementById('pfs').value;
  const fl=document.getElementById('pfl').value;
- poolFiltered=CTF_CARDS.filter(c=>{
+ poolFiltered=ALL_CARDS.filter(c=>{
   if(ft&&c.cardType!==ft)return false;
   if(fa&&c.alignment!==fa)return false;
   if(fs&&c.set!==fs)return false;
@@ -383,7 +391,7 @@ function showTT(event,el,id){
  const tt=document.getElementById('tooltip');
  document.getElementById('tt-name').textContent=c.name+(c.great?' ★ GREAT':'');
  document.getElementById('tt-type').textContent=`${c.cardType}${c.sub&&c.sub!=='Normal'?' ('+c.sub+')':''} · ${c.set} · ${c.id}${c.alignment?' · '+c.alignment:''}${c.level?' · Lv '+c.level:''}${c.kindsStr?' · '+c.kindsStr:''}`;
- const ttImg=document.getElementById('tt-img');ttImg.src=cardImg(c);ttImg.onerror=()=>{ttImg.onerror=null;ttImg.src='images/placeholder.gif'};
+ const ttImg=document.getElementById('tt-img');const ttSrc=cardImg(c);ttImg.src=ttSrc;ttImg.classList.toggle('is-gif', /\.gif$/i.test(ttSrc));ttImg.onerror=()=>{ttImg.onerror=null;ttImg.src='images/placeholder.gif';ttImg.classList.add('is-gif')};
  const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
  document.getElementById('tt-stats').textContent=isC?`Pressure: ${c.pr}  ·  Counter Pressure: ${c.cp}`:'';
  document.getElementById('tt-desc').textContent=c.desc||'No effect text.';
@@ -426,7 +434,7 @@ function importDeck(){
  
  mainDeck=[];fusionDeck=[];sideDeck=[];
  let currentZone='main';
- const nameMap=Object.fromEntries(CTF_CARDS.map(c=>[c.name.toLowerCase(),c.id]));
+ const nameMap=Object.fromEntries(ALL_CARDS.map(c=>[c.name.toLowerCase(),c.id]));
  
  txt.split('\n').forEach(line=>{
   line=line.trim();
@@ -457,10 +465,10 @@ function importDeck(){
 }
 
 function loadStarterDeck(){
- if(typeof CTF_STARTER_DECKS==='undefined')return;
+ if(!STARTER_DECKS.length)return;
  const idx=document.getElementById('starter-select').value;
  if(idx==='')return;
- const starter=CTF_STARTER_DECKS[Number(idx)];
+ const starter=STARTER_DECKS[Number(idx)];
  if(!starter)return;
  document.getElementById('deck-name').value=starter.name||'Starter Deck';
  mainDeck=(starter.main||[]).filter(id=>cardMap[id]);
@@ -486,7 +494,7 @@ function loadDeckLocal(){
 }
 function launchPlayWithDeck(){
  const deck=currentDeckObject();
- const check=CTFDeckUtils.validateDeck(deck, CTF_CARDS);
+ const check=CTFDeckUtils.validateDeck(deck, ALL_CARDS);
  if(!check.ok){
   alert('This deck cannot launch into play yet.\n\n' + check.errors.join('\n'));
   return;
@@ -501,6 +509,7 @@ function launchPlayWithDeck(){
 ['pft','pfa','pfs','pfl'].forEach(id=>document.getElementById(id).addEventListener('change',filterPool));
 filterPool();
 renderAll();
+if(!poolFiltered.length && ALL_CARDS.length){ poolFiltered=[...ALL_CARDS]; renderPool(); document.getElementById('pool-total').textContent=ALL_CARDS.length; }
 
 // Load saved deck if exists
 try{const d=CTFDeckUtils.loadLocalDeck();if(d&&(d.main.length||d.fusion.length||d.side.length)){document.getElementById('deck-name').value=d.name||'My CTF Deck';mainDeck=(d.main||[]).filter(id=>cardMap[id]);fusionDeck=(d.fusion||[]).filter(id=>cardMap[id]);sideDeck=(d.side||[]).filter(id=>cardMap[id]);renderAll()}}catch(e){console.warn('Could not load saved deck:',e)}
