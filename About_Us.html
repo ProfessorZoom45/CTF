@@ -356,142 +356,41 @@ body {
 }
 
 /* ══════════════════════════════════════
-   GAME TESTER SIGNUP
+   HOW TO START
 ══════════════════════════════════════ */
 .start-section {
   padding: 5.5rem 1.5rem;
   background: #000;
 }
-.tester-wrap {
-  max-width: 1100px;
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem; max-width: 1100px;
   margin: 3rem auto 0;
-  display: grid;
-  grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.05fr);
-  gap: 1.6rem;
-  align-items: stretch;
+  counter-reset: step;
 }
-.tester-card,
-.tester-form {
-  background: linear-gradient(180deg, rgba(255,77,0,0.04), rgba(255,140,0,0.02));
-  border: 1px solid rgba(255,77,0,0.14);
-  padding: 2rem 1.7rem;
+.step {
+  background: #000;
+  border: 1px solid rgba(255,77,0,0.12);
+  padding: 2rem 1.6rem;
+  position: relative; counter-increment: step;
+  transition: border-color 0.3s, transform 0.3s;
 }
-.tester-card {
-  position: relative;
-  overflow: hidden;
-}
-.tester-card::after {
-  content: 'TEST';
-  position: absolute;
-  top: 0.7rem;
-  right: 1rem;
+.step:hover { border-color: var(--flame); transform: translateY(-4px); }
+.step::before {
+  content: counter(step, decimal-leading-zero);
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 4rem;
-  line-height: 1;
-  color: var(--flame);
-  opacity: 0.12;
+  font-size: 3.8rem; color: var(--flame); opacity: 0.13;
+  position: absolute; top: 0.6rem; right: 1.1rem; line-height: 1;
 }
-.tester-card h4,
-.tester-form h4 {
+.step h4 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.7rem;
-  letter-spacing: 2px;
-  color: var(--white);
-  margin-bottom: 0.75rem;
+  font-size: 1.45rem; letter-spacing: 2px;
+  color: var(--white); margin-bottom: 0.6rem;
 }
-.tester-card p,
-.tester-note,
-.tester-mail {
-  font-size: 0.95rem;
-  color: var(--cream);
-  opacity: 0.8;
-  line-height: 1.75;
-}
-.tester-mail {
-  margin-top: 1rem;
-}
-.tester-mail a {
-  color: var(--amber);
-  text-decoration: none;
-}
-.tester-bullets {
-  list-style: none;
-  margin-top: 1.25rem;
-  display: grid;
-  gap: 0.8rem;
-}
-.tester-bullets li {
-  color: var(--cream);
-  opacity: 0.82;
-  font-size: 0.92rem;
-  padding-left: 1rem;
-  position: relative;
-}
-.tester-bullets li::before {
-  content: '🔥';
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-.tester-form {
-  display: grid;
-  gap: 1rem;
-}
-.tester-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-.field-group {
-  display: grid;
-  gap: 0.42rem;
-}
-.field-group label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--amber);
-}
-.field-group input,
-.field-group select,
-.field-group textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,77,0,0.18);
-  color: var(--white);
-  padding: 0.95rem 0.9rem;
-  font: inherit;
-  outline: none;
-}
-.field-group textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-.field-group input:focus,
-.field-group select:focus,
-.field-group textarea:focus {
-  border-color: var(--flame2);
-  box-shadow: 0 0 0 2px rgba(255,120,0,0.14);
-}
-.field-span-2 {
-  grid-column: 1 / -1;
-}
-.tester-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.9rem;
-  align-items: center;
-}
-.tester-note {
-  margin: 0;
-}
-@media (max-width: 860px) {
-  .tester-wrap,
-  .tester-grid {
-    grid-template-columns: 1fr;
-  }
+.step p {
+  font-size: 0.88rem; color: var(--cream);
+  opacity: 0.72; line-height: 1.65;
 }
 
 /* ══════════════════════════════════════
@@ -637,7 +536,6 @@ footer .copy {
   <div class="cta-group">
     <a class="btn-fire" href="deckbuilder.html">Build a Deck</a>
     <a class="btn-ghost" href="cards.html">Browse Cards</a>
-    <a class="btn-ghost" href="About_Us.html">About Us</a>
   </div>
 
   <div class="scroll-hint">
@@ -718,66 +616,28 @@ footer .copy {
   </div>
 </section>
 
-<!-- ══════════════════════════════ GAME TESTER SIGNUP ══════════════════════════════ -->
+<!-- ══════════════════════════════ HOW TO START ══════════════════════════════ -->
 <section class="start-section">
   <div class="fire-rule"></div>
-  <p class="section-label reveal">Join The Forge</p>
-  <h2 class="section-title reveal">Become a Game Tester</h2>
-  <div class="tester-wrap">
-    <div class="tester-card reveal">
-      <h4>Help Shape Carry The Flame</h4>
-      <p>Want early access to builds, test sessions, and future updates? Sign up below and send your info straight to the team. This helps CTF find serious players who want to test, give feedback, and help carry the flame forward.</p>
-      <ul class="tester-bullets">
-        <li>Share your gamertag and contact info</li>
-        <li>Tell us your card-game experience</li>
-        <li>Show us your excitement level</li>
-        <li>Open your email app with everything ready to send</li>
-      </ul>
-      <p class="tester-mail">Direct contact: <a href="mailto:changethewrld@outlook.com?subject=GAME%20TESTER">changethewrld@outlook.com</a></p>
+  <p class="section-label reveal">Get In The Game</p>
+  <h2 class="section-title reveal">How to Play Right Now</h2>
+  <div class="steps-grid">
+    <div class="step reveal">
+      <h4>Clone The Repo</h4>
+      <p>Download CTF from GitHub. No install, no build step, no server needed. The whole game runs client-side in any modern browser.</p>
     </div>
-
-    <form class="tester-form reveal" id="gameTesterForm">
-      <h4>Tester Sign-Up</h4>
-      <div class="tester-grid">
-        <div class="field-group">
-          <label for="testerGamertag">Gamertag</label>
-          <input id="testerGamertag" name="gamertag" type="text" placeholder="Your gamertag" required>
-        </div>
-        <div class="field-group">
-          <label for="testerEmail">Email</label>
-          <input id="testerEmail" name="email" type="email" placeholder="you@example.com" required>
-        </div>
-        <div class="field-group">
-          <label for="testerExperience">Card-Game Experience</label>
-          <select id="testerExperience" name="experience" required>
-            <option value="" selected disabled>Select your level</option>
-            <option>Beginner</option>
-            <option>Casual Player</option>
-            <option>Experienced Player</option>
-            <option>Competitive Player</option>
-            <option>Playtester / Judge</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label for="testerExcitement">Level of Excitement</label>
-          <select id="testerExcitement" name="excitement" required>
-            <option value="" selected disabled>Choose your hype</option>
-            <option>Curious</option>
-            <option>Interested</option>
-            <option>Very Excited</option>
-            <option>All In 🔥</option>
-          </select>
-        </div>
-        <div class="field-group field-span-2">
-          <label for="testerNotes">Anything Else?</label>
-          <textarea id="testerNotes" name="notes" placeholder="Tell us what games you play, what kind of testing you enjoy, or why you want to join."></textarea>
-        </div>
-      </div>
-      <div class="tester-actions">
-        <button class="btn-fire" type="submit">Email Tester Sign-Up</button>
-        <p class="tester-note">Subject line: <strong>GAME TESTER</strong></p>
-      </div>
-    </form>
+    <div class="step reveal">
+      <h4>Open &amp; Explore</h4>
+      <p>Open index.html locally. Browse 1,610+ cards, read the full rulebook, and build decks in the Deck Builder — all fully working right now.</p>
+    </div>
+    <div class="step reveal">
+      <h4>Play Hot-Seat</h4>
+      <p>Load up Sandbox mode and pass the device back and forth. Two players, one screen — the full CTF experience is live and playable today.</p>
+    </div>
+    <div class="step reveal">
+      <h4>Online Play — Coming Soon</h4>
+      <p>Peer-to-peer online play is in active development. The engine and networking code are in place — full online multiplayer drops with the beta launch.</p>
+    </div>
   </div>
 </section>
 
@@ -809,14 +669,13 @@ footer .copy {
   <div class="cta-group reveal">
     <a class="btn-fire" href="deckbuilder.html">Build a Deck</a>
     <a class="btn-ghost" href="cards.html">Browse All Cards</a>
-    <a class="btn-ghost" href="About_Us.html">About Us</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="brand">CARRY THE FLAME</div>
-  <div class="copy">© 2026 Perfect Timing Gaming &nbsp;·&nbsp; Dr. Zoom &amp; Newz &nbsp;·&nbsp; Buffalo, NY &nbsp;·&nbsp; Consistency &gt; Hype &nbsp;·&nbsp; <a href="About_Us.html">About Us</a></div>
+  <div class="copy">© 2026 Perfect Timing Gaming &nbsp;·&nbsp; Dr. Zoom &amp; Newz &nbsp;·&nbsp; Buffalo, NY &nbsp;·&nbsp; Consistency &gt; Hype</div>
 </footer>
 
 <script>
@@ -951,42 +810,6 @@ footer .copy {
     });
   }, { threshold: 0.1 });
   els.forEach(el => io.observe(el));
-})();
-</script>
-
-<script>
-(function () {
-  const testerForm = document.getElementById('gameTesterForm');
-  if (!testerForm) return;
-
-  testerForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const gamertag = document.getElementById('testerGamertag').value.trim();
-    const email = document.getElementById('testerEmail').value.trim();
-    const experience = document.getElementById('testerExperience').value.trim();
-    const excitement = document.getElementById('testerExcitement').value.trim();
-    const notes = document.getElementById('testerNotes').value.trim();
-
-    const bodyLines = [
-      'GAME TESTER SIGN-UP',
-      '',
-      'Gamertag: ' + gamertag,
-      'Email: ' + email,
-      'Card-Game Experience: ' + experience,
-      'Level of Excitement: ' + excitement
-    ];
-
-    if (notes) {
-      bodyLines.push('', 'Additional Notes:', notes);
-    }
-
-    const mailto = 'mailto:changethewrld@outlook.com' +
-      '?subject=' + encodeURIComponent('GAME TESTER') +
-      '&body=' + encodeURIComponent(bodyLines.join('\n'));
-
-    window.location.href = mailto;
-  });
 })();
 </script>
 </body>
