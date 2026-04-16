@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carry The Flame — Free-to-Play Custom Online Trading Card Game</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Carry The Flame is a free-to-play custom online trading card game where players build decks, create cards, and battle friends and opponents.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --coal:   #000000;
+  --coal2:  #000000;
+  --coal3:  #050505;
+  --flame:  #ff4d00;
+  --flame2: #ff7520;
+  --ember:  #b83000;
+  --amber:  #ffaa00;
+  --gold:   #ffd060;
+  --cream:  #f2e8d5;
+  --white:  #faf5ee;
+  --ash:    #5a5a5a;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--coal);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── FIXED EMBER CANVAS covers viewport at all scroll positions ── */
+#ember-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* everything content-level floats above canvas */
+.hero, section, .stats-bar, footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1.5rem 6rem;
+  overflow: hidden;
+}
+
+.hero-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.65rem, 1.4vw, 0.85rem);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.4rem;
+  animation: riseUp 0.7s 0.15s ease both;
+}
+
+/* SOLID white title — no background-clip, no invisible text */
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5.5rem, 18vw, 14rem);
+  line-height: 0.86;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--white);
+  text-shadow:
+    0 0 60px rgba(255,100,0,0.65),
+    0 0 140px rgba(180,40,0,0.4);
+  animation: riseUp 0.85s 0.3s ease both;
+}
+
+.hero-sub-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1rem, 3vw, 2rem);
+  letter-spacing: 14px;
+  color: var(--amber);
+  text-shadow: 0 0 30px rgba(255,170,0,0.5);
+  margin-top: 0.7rem;
+  animation: riseUp 0.85s 0.45s ease both;
+}
+
+.hero-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--cream);
+  max-width: 660px;
+  line-height: 1.55;
+  margin-top: 2rem;
+  animation: riseUp 0.85s 0.6s ease both;
+}
+.hero-sub strong { color: var(--amber); font-weight: 900; }
+
+.hero-divider {
+  width: 64px; height: 3px;
+  background: linear-gradient(90deg, var(--flame), var(--amber));
+  margin: 2rem auto;
+  animation: riseUp 0.7s 0.75s ease both;
+}
+
+.cta-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: riseUp 0.7s 0.88s ease both;
+}
+
+/* scroll arrow */
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.4rem;
+  animation: riseUp 0.7s 1.3s ease both;
+}
+.scroll-hint span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.62rem; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--ash);
+}
+.scroll-arr {
+  width: 1px; height: 44px;
+  background: linear-gradient(to bottom, var(--flame), transparent);
+  animation: arrowPulse 1.8s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
+.btn-fire {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 1rem;
+  letter-spacing: 3px; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--flame), var(--ember));
+  color: var(--white); border: none;
+  padding: 0.9rem 2.5rem;
+  clip-path: polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
+  cursor: pointer; text-decoration: none;
+  display: inline-block;
+  transition: transform 0.22s, box-shadow 0.22s;
+}
+.btn-fire:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(255,77,0,0.5);
+}
+
+.btn-ghost {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 1rem;
+  letter-spacing: 3px; text-transform: uppercase;
+  background: transparent; color: var(--flame2);
+  border: 2px solid var(--flame2);
+  padding: 0.9rem 2.5rem;
+  clip-path: polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
+  cursor: pointer; text-decoration: none;
+  display: inline-block;
+  transition: background 0.22s, transform 0.22s;
+}
+.btn-ghost:hover {
+  background: rgba(255,77,0,0.12);
+  transform: translateY(-3px);
+}
+
+/* ══════════════════════════════════════
+   SHARED HELPERS
+══════════════════════════════════════ */
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 0.7rem;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: var(--flame2); text-align: center; margin-bottom: 0.6rem;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  letter-spacing: 3px; text-align: center;
+  color: var(--white); margin-bottom: 3rem;
+}
+.fire-rule {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--flame), transparent);
+}
+.amber-rule {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+}
+
+/* ══════════════════════════════════════
+   CLAIM STRIP
+══════════════════════════════════════ */
+.claim-strip {
+  text-align: center;
+  padding: 5rem 1.5rem 4.5rem;
+  background: #000;
+}
+.badge {
+  display: inline-block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 0.68rem;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: var(--coal);
+  background: linear-gradient(90deg, var(--amber), var(--gold));
+  padding: 0.35rem 1.2rem; margin-bottom: 2rem;
+  clip-path: polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);
+}
+.big-claim {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 5.2rem);
+  letter-spacing: 3px; line-height: 1.05;
+  color: var(--white);
+  max-width: 920px; margin: 0 auto 1.5rem;
+}
+.big-claim em { font-style: normal; color: var(--amber); }
+.sub-claim {
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  color: var(--cream); opacity: 0.82;
+  max-width: 580px; margin: 0 auto; line-height: 1.75;
+}
+
+/* ══════════════════════════════════════
+   STATS BAR
+══════════════════════════════════════ */
+.stats-bar {
+  background: rgba(255,77,0,0.06);
+  border-top: 1px solid rgba(255,77,0,0.2);
+  border-bottom: 1px solid rgba(255,77,0,0.2);
+  padding: 2.8rem 1.5rem;
+}
+.stats-inner {
+  display: flex; justify-content: space-around;
+  flex-wrap: wrap; gap: 2rem;
+  max-width: 1000px; margin: 0 auto; text-align: center;
+}
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  color: var(--flame2); line-height: 1;
+  text-shadow: 0 0 40px rgba(255,100,0,0.4);
+}
+.stat-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 0.68rem;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--ash); margin-top: 0.3rem;
+}
+
+/* ══════════════════════════════════════
+   WIN PATHS
+══════════════════════════════════════ */
+.paths-section {
+  padding: 5.5rem 1.5rem;
+  background: #000;
+  overflow: hidden;
+}
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  max-width: 1100px; margin: 0 auto;
+  gap: 2px;
+  background: rgba(255,77,0,0.1);
+  border: 1px solid rgba(255,77,0,0.15);
+}
+.path-card {
+  background: #000;
+  padding: 2.5rem 2rem;
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.path-card:hover { background: #0a0500; }
+.path-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--flame), var(--amber));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.path-card:hover::after { transform: scaleX(1); }
+.path-roman {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem; line-height: 1;
+  color: var(--flame); opacity: 0.12;
+  position: absolute; top: 0.8rem; right: 1.4rem;
+}
+.path-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+.path-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem; letter-spacing: 2px;
+  color: var(--white); margin-bottom: 0.4rem;
+}
+.path-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 0.75rem;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 1rem;
+}
+.path-desc {
+  font-size: 0.9rem; color: var(--cream);
+  opacity: 0.75; line-height: 1.7;
+}
+
+/* ══════════════════════════════════════
+   CREATE SECTION — solid colour, zero clip-path text
+══════════════════════════════════════ */
+.create-section {
+  padding: 6rem 1.5rem;
+  text-align: center;
+  background: #000;
+}
+.create-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 0.78rem;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 1rem;
+}
+.create-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  letter-spacing: 3px; line-height: 1;
+  color: var(--white);
+  text-shadow: 0 0 60px rgba(255,100,0,0.5);
+  margin-bottom: 1.5rem;
+}
+/* em in amber — solid colour only, no clip */
+.create-headline em {
+  font-style: normal;
+  color: var(--amber);
+  text-shadow: 0 0 40px rgba(255,170,0,0.5);
+}
+.create-body {
+  font-size: 1.05rem; color: var(--cream);
+  opacity: 0.8; max-width: 560px;
+  margin: 0 auto 2.5rem; line-height: 1.78;
+}
+
+/* ══════════════════════════════════════
+   GAME TESTER SIGNUP
+══════════════════════════════════════ */
+.start-section {
+  padding: 5.5rem 1.5rem;
+  background: #000;
+}
+.tester-wrap {
+  max-width: 1100px;
+  margin: 3rem auto 0;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.05fr);
+  gap: 1.6rem;
+  align-items: stretch;
+}
+.tester-card,
+.tester-form {
+  background: linear-gradient(180deg, rgba(255,77,0,0.04), rgba(255,140,0,0.02));
+  border: 1px solid rgba(255,77,0,0.14);
+  padding: 2rem 1.7rem;
+}
+.tester-card {
+  position: relative;
+  overflow: hidden;
+}
+.tester-card::after {
+  content: 'TEST';
+  position: absolute;
+  top: 0.7rem;
+  right: 1rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--flame);
+  opacity: 0.12;
+}
+.tester-card h4,
+.tester-form h4 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.7rem;
+  letter-spacing: 2px;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+.tester-card p,
+.tester-note,
+.tester-mail {
+  font-size: 0.95rem;
+  color: var(--cream);
+  opacity: 0.8;
+  line-height: 1.75;
+}
+.tester-mail {
+  margin-top: 1rem;
+}
+.tester-mail a {
+  color: var(--amber);
+  text-decoration: none;
+}
+.tester-bullets {
+  list-style: none;
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 0.8rem;
+}
+.tester-bullets li {
+  color: var(--cream);
+  opacity: 0.82;
+  font-size: 0.92rem;
+  padding-left: 1rem;
+  position: relative;
+}
+.tester-bullets li::before {
+  content: '🔥';
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.tester-form {
+  display: grid;
+  gap: 1rem;
+}
+.tester-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.field-group {
+  display: grid;
+  gap: 0.42rem;
+}
+.field-group label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.field-group input,
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,77,0,0.18);
+  color: var(--white);
+  padding: 0.95rem 0.9rem;
+  font: inherit;
+  outline: none;
+}
+.field-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  border-color: var(--flame2);
+  box-shadow: 0 0 0 2px rgba(255,120,0,0.14);
+}
+.field-span-2 {
+  grid-column: 1 / -1;
+}
+.tester-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+}
+.tester-note {
+  margin: 0;
+}
+@media (max-width: 860px) {
+  .tester-wrap,
+  .tester-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ══════════════════════════════════════
+   FREE SECTION
+══════════════════════════════════════ */
+.free-section {
+  padding: 5.5rem 1.5rem;
+  text-align: center;
+  background: #000;
+}
+.free-pill {
+  display: inline-block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 0.95rem;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: var(--coal);
+  background: linear-gradient(90deg, var(--amber), var(--gold));
+  padding: 0.5rem 2rem; margin-bottom: 2rem;
+  clip-path: polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+}
+.free-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: 3px; color: var(--white);
+  max-width: 800px; margin: 0 auto 1.5rem;
+  line-height: 1.1;
+}
+.free-title em { font-style: normal; color: var(--amber); }
+.perk-list {
+  display: flex; flex-wrap: wrap;
+  justify-content: center; gap: 0.8rem;
+  max-width: 700px; margin: 0 auto 2.5rem;
+  list-style: none;
+}
+.perk-list li {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 0.82rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--cream);
+  background: rgba(255,77,0,0.09);
+  border: 1px solid rgba(255,77,0,0.22);
+  padding: 0.42rem 1.2rem;
+  display: flex; align-items: center; gap: 0.45rem;
+}
+.perk-list li::before { content: '🔥'; font-size: 0.7rem; }
+
+/* ══════════════════════════════════════
+   FINAL CTA — solid colour title only
+══════════════════════════════════════ */
+.final-cta {
+  padding: 7rem 1.5rem 6rem;
+  text-align: center;
+  background: #000;
+  overflow: hidden;
+}
+.final-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4.5rem, 13vw, 10rem);
+  letter-spacing: 6px; line-height: 0.88;
+  color: var(--white);
+  text-shadow:
+    0 0 80px rgba(255,100,0,0.65),
+    0 0 200px rgba(180,40,0,0.35);
+  margin-bottom: 0.8rem;
+}
+.final-url {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--ash); margin-bottom: 2.8rem;
+}
+.final-url a {
+  color: var(--flame2); text-decoration: none;
+  transition: color 0.2s;
+}
+.final-url a:hover { color: var(--amber); }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  background: #000;
+  border-top: 1px solid rgba(255,77,0,0.1);
+  padding: 2rem 1.5rem; text-align: center;
+}
+footer .brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.35rem; letter-spacing: 3px; color: var(--flame);
+}
+footer .copy {
+  font-size: 0.7rem; color: var(--ash);
+  margin-top: 0.4rem; letter-spacing: 1.5px;
+}
+
+/* ══════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════ */
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes arrowPulse {
+  0%,100% { opacity: 0.25; transform: scaleY(0.8); }
+  50%      { opacity: 1;    transform: scaleY(1); }
+}
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.vis {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  .cta-group { flex-direction: column; align-items: center; }
+  .btn-fire, .btn-ghost { width: 230px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- FIXED full-viewport ember canvas -->
+<canvas id="ember-canvas"></canvas>
+
+<!-- ══════════════════════════════ HERO ══════════════════════════════ -->
+<section class="hero">
+  <p class="hero-eyebrow">Perfect Timing Gaming &nbsp;·&nbsp; Buffalo, NY &nbsp;·&nbsp; Est. 2026</p>
+
+  <h1 class="hero-title">Carry<br>The<br>Flame</h1>
+  <p class="hero-sub-title">Trading Card Game</p>
+
+  <p class="hero-sub">
+    The <strong>first free-to-play custom online trading card game</strong><br>
+    where you create your own cards and use them against opponents and friends.
+  </p>
+
+  <div class="hero-divider"></div>
+
+  <div class="cta-group">
+    <a class="btn-fire" href="deckbuilder.html">Build a Deck</a>
+    <a class="btn-ghost" href="cards.html">Browse Cards</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arr"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ CLAIM ══════════════════════════════ -->
+<section class="claim-strip">
+  <div class="fire-rule"></div>
+  <div class="badge reveal">World First</div>
+  <h2 class="big-claim reveal">
+    Other games give you the cards.<br>
+    <em>CTF gives you the pen.</em>
+  </h2>
+  <p class="sub-claim reveal">
+    Submit your own 5-card sets. Pass review and your creations join
+    1,606 cards every player in the game can use.
+    Your flame burns in the database forever.
+  </p>
+</section>
+
+<!-- ══════════════════════════════ STATS ══════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="reveal"><div class="stat-num">1,606</div><div class="stat-lbl">Unique Cards</div></div>
+    <div class="reveal"><div class="stat-num">41</div><div class="stat-lbl">Card Sets</div></div>
+    <div class="reveal"><div class="stat-num">3</div><div class="stat-lbl">Ways to Win</div></div>
+    <div class="reveal"><div class="stat-num">7</div><div class="stat-lbl">Turn Phases</div></div>
+    <div class="reveal"><div class="stat-num">$0</div><div class="stat-lbl">Cost to Play</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ WIN PATHS ══════════════════════════════ -->
+<section class="paths-section">
+  <div class="fire-rule"></div>
+  <p class="section-label reveal">Victory Conditions</p>
+  <h2 class="section-title reveal">3 Ways to Win. All Active. Every Turn.</h2>
+  <div class="paths-grid reveal">
+    <div class="path-card">
+      <span class="path-roman">I</span>
+      <span class="path-icon">💥</span>
+      <div class="path-name">Chi KO</div>
+      <div class="path-sub">Reduce Chi from 10,000 to 0</div>
+      <p class="path-desc">Hit hard, hit fast, drain your opponent's Chi to zero through battle damage and direct attacks. The moment they hit 0 — game over. Instant. No waiting.</p>
+    </div>
+    <div class="path-card">
+      <span class="path-roman">II</span>
+      <span class="path-icon">⚔️</span>
+      <div class="path-name">7 Kills</div>
+      <div class="path-sub">Destroy 7 opponent Catalysts in battle</div>
+      <p class="path-desc">Grind through your opponent's fighters. Destroy 7 of their Catalysts through pure battle and you win. The battlefield is yours to command.</p>
+    </div>
+    <div class="path-card">
+      <span class="path-roman">III</span>
+      <span class="path-icon">📦</span>
+      <div class="path-name">7 Extractions</div>
+      <div class="path-sub">Capture then extract 7 enemy Catalysts</div>
+      <p class="path-desc">Capture enemy fighters into your Box by overpowering their defense, then permanently remove them at End Phase. The slowest path — and the most satisfying to land.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ CREATE ══════════════════════════════ -->
+<section class="create-section">
+  <div class="amber-rule"></div>
+  <p class="create-eyebrow reveal">The Feature That Changes Everything</p>
+  <h2 class="create-headline reveal"><em>You</em> Make<br>The Cards.</h2>
+  <p class="create-body reveal">
+    Submit your own 5-card set through the in-game system.
+    Build Catalysts, Palm Tricks, Concealed Tricks, Field Tricks, and Fusions
+    using the stat pool — then watch your creations go live in the
+    official card database for everyone to build with.
+  </p>
+  <div class="cta-group reveal">
+    <a class="btn-fire" href="submit.html">Start Building</a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ GAME TESTER SIGNUP ══════════════════════════════ -->
+<section class="start-section">
+  <div class="fire-rule"></div>
+  <p class="section-label reveal">Join The Forge</p>
+  <h2 class="section-title reveal">Become a Game Tester</h2>
+  <div class="tester-wrap">
+    <div class="tester-card reveal">
+      <h4>Help Shape Carry The Flame</h4>
+      <p>Want early access to builds, test sessions, and future updates? Sign up below and send your info straight to the team. This helps CTF find serious players who want to test, give feedback, and help carry the flame forward.</p>
+      <ul class="tester-bullets">
+        <li>Share your gamertag and contact info</li>
+        <li>Tell us your card-game experience</li>
+        <li>Show us your excitement level</li>
+        <li>Open your email app with everything ready to send</li>
+      </ul>
+      <p class="tester-mail">Direct contact: <a href="mailto:changethewrld@outlook.com?subject=GAME%20TESTER">changethewrld@outlook.com</a></p>
+    </div>
+
+    <form class="tester-form reveal" id="gameTesterForm">
+      <h4>Tester Sign-Up</h4>
+      <div class="tester-grid">
+        <div class="field-group">
+          <label for="testerGamertag">Gamertag</label>
+          <input id="testerGamertag" name="gamertag" type="text" placeholder="Your gamertag" required>
+        </div>
+        <div class="field-group">
+          <label for="testerEmail">Email</label>
+          <input id="testerEmail" name="email" type="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field-group">
+          <label for="testerExperience">Card-Game Experience</label>
+          <select id="testerExperience" name="experience" required>
+            <option value="" selected disabled>Select your level</option>
+            <option>Beginner</option>
+            <option>Casual Player</option>
+            <option>Experienced Player</option>
+            <option>Competitive Player</option>
+            <option>Playtester / Judge</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="testerExcitement">Level of Excitement</label>
+          <select id="testerExcitement" name="excitement" required>
+            <option value="" selected disabled>Choose your hype</option>
+            <option>Curious</option>
+            <option>Interested</option>
+            <option>Very Excited</option>
+            <option>All In 🔥</option>
+          </select>
+        </div>
+        <div class="field-group field-span-2">
+          <label for="testerNotes">Anything Else?</label>
+          <textarea id="testerNotes" name="notes" placeholder="Tell us what games you play, what kind of testing you enjoy, or why you want to join."></textarea>
+        </div>
+      </div>
+      <div class="tester-actions">
+        <button class="btn-fire" type="submit">Email Tester Sign-Up</button>
+        <p class="tester-note">Subject line: <strong>GAME TESTER</strong></p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ FREE ══════════════════════════════ -->
+<section class="free-section">
+  <div class="amber-rule"></div>
+  <div class="free-pill reveal">No Cost. No Gatekeeping.</div>
+  <h2 class="free-title reveal">Every card.<br>Every set.<br><em>Free for everyone.</em></h2>
+  <ul class="perk-list reveal">
+    <li>No packs to buy</li>
+    <li>No pay-to-win</li>
+    <li>No account needed</li>
+    <li>Browser-based</li>
+    <li>1,610+ cards day one</li>
+    <li>Open card creation</li>
+  </ul>
+  <a class="btn-fire reveal" href="deckbuilder.html">Start Playing — It's Free</a>
+</section>
+
+<!-- ══════════════════════════════ FINAL CTA ══════════════════════════════ -->
+<section class="final-cta">
+  <div class="fire-rule"></div>
+  <h2 class="final-title reveal">Carry<br>The<br>Flame</h2>
+  <p class="final-url reveal">
+    <a href="https://github.com/ProfessorZoom45/CTF" target="_blank">github.com/ProfessorZoom45/CTF</a>
+    &nbsp;·&nbsp;
+    <a href="mailto:changethewrld@outlook.com">changethewrld@outlook.com</a>
+  </p>
+  <div class="cta-group reveal">
+    <a class="btn-fire" href="deckbuilder.html">Build a Deck</a>
+    <a class="btn-ghost" href="cards.html">Browse All Cards</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">CARRY THE FLAME</div>
+  <div class="copy">© 2026 Perfect Timing Gaming &nbsp;·&nbsp; Dr. Zoom &amp; Newz &nbsp;·&nbsp; Buffalo, NY &nbsp;·&nbsp; Consistency &gt; Hype</div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   FLAME BACKGROUND + EMBER PARTICLE SYSTEM
+   Canvas is FIXED — covers the viewport at all scroll positions.
+   A layered radial flame glow sits at the viewport bottom,
+   and 140 embers continuously rise from the base upward.
+══════════════════════════════════════════════════════════════ */
+(function () {
+  const canvas = document.getElementById('ember-canvas');
+  const ctx    = canvas.getContext('2d');
+  let VW, VH;
+
+  function resize() {
+    VW = canvas.width  = window.innerWidth;
+    VH = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* ── Ember class ── */
+  class Ember {
+    constructor(scatter) { this.spawn(scatter); }
+
+    spawn(scatter) {
+      this.x    = Math.random() * VW;
+      this.y    = scatter ? Math.random() * VH : VH + 8;
+      this.r    = Math.random() * 2.8 + 0.4;
+      this.vx   = (Math.random() - 0.5) * 0.85;
+      this.vy   = -(Math.random() * 1.7 + 0.4);
+      this.life = Math.random() * 280 + 80;
+      this.max  = this.life;
+      this.hue  = Math.random() * 36 + 6;   // 6–42 = deep red through amber
+      this.hot  = Math.random() < 0.18;      // bright hotspot embers
+    }
+
+    tick() {
+      this.x += this.vx + Math.sin(this.life * 0.021) * 0.42;
+      this.y += this.vy;
+      this.life--;
+      if (this.life <= 0 || this.y < -14) this.spawn(false);
+    }
+
+    draw() {
+      const t = this.life / this.max;
+      const r = this.r * (0.25 + 0.75 * t);
+
+      if (this.hot) {
+        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r * 6);
+        g.addColorStop(0,   `hsla(${this.hue},100%,75%,${t * 0.65})`);
+        g.addColorStop(0.4, `hsla(${this.hue},100%,55%,${t * 0.3})`);
+        g.addColorStop(1,   `hsla(${this.hue},100%,40%,0)`);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, r * 6, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+
+      /* solid core */
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue},100%,64%,${t * 0.78})`;
+      ctx.fill();
+
+      /* outer soft halo */
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, r * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue},100%,50%,${t * 0.09})`;
+      ctx.fill();
+    }
+  }
+
+  /* 70 pre-scattered + 70 rising from bottom */
+  const embers = [
+    ...Array.from({ length: 70 }, () => new Ember(true)),
+    ...Array.from({ length: 70 }, () => new Ember(false))
+  ];
+
+  /* ── Flame base glow drawn at bottom of fixed canvas ── */
+  function drawFlameBase() {
+    /* fill pure black first */
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, VW, VH);
+
+    /* wide molten pool */
+    const pool = ctx.createRadialGradient(VW * 0.5, VH, 0, VW * 0.5, VH, VH * 0.75);
+    pool.addColorStop(0,    'rgba(230,75,0,0.55)');
+    pool.addColorStop(0.2,  'rgba(190,45,0,0.35)');
+    pool.addColorStop(0.5,  'rgba(130,22,0,0.15)');
+    pool.addColorStop(1,    'rgba(0,0,0,0)');
+    ctx.fillStyle = pool;
+    ctx.fillRect(0, 0, VW, VH);
+
+    /* offset hot core for realism */
+    const core = ctx.createRadialGradient(VW * 0.47, VH, 0, VW * 0.47, VH, VH * 0.42);
+    core.addColorStop(0,    'rgba(255,120,0,0.38)');
+    core.addColorStop(0.35, 'rgba(210,65,0,0.18)');
+    core.addColorStop(1,    'rgba(0,0,0,0)');
+    ctx.fillStyle = core;
+    ctx.fillRect(0, 0, VW, VH);
+
+    /* narrow bright tongue of flame */
+    const tongue = ctx.createRadialGradient(VW * 0.5, VH, 0, VW * 0.5, VH * 0.55, VH * 0.25);
+    tongue.addColorStop(0,   'rgba(255,160,0,0.18)');
+    tongue.addColorStop(0.6, 'rgba(220,80,0,0.08)');
+    tongue.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = tongue;
+    ctx.fillRect(0, 0, VW, VH);
+  }
+
+  /* ── Animation loop ── */
+  function frame() {
+    drawFlameBase();
+    embers.forEach(e => { e.tick(); e.draw(); });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL REVEAL  (.reveal → .vis)
+══════════════════════════════════════════════════════════════ */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  const io  = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('vis'), i * 65);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+<script>
+(function () {
+  const testerForm = document.getElementById('gameTesterForm');
+  if (!testerForm) return;
+
+  testerForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const gamertag = document.getElementById('testerGamertag').value.trim();
+    const email = document.getElementById('testerEmail').value.trim();
+    const experience = document.getElementById('testerExperience').value.trim();
+    const excitement = document.getElementById('testerExcitement').value.trim();
+    const notes = document.getElementById('testerNotes').value.trim();
+
+    const bodyLines = [
+      'GAME TESTER SIGN-UP',
+      '',
+      'Gamertag: ' + gamertag,
+      'Email: ' + email,
+      'Card-Game Experience: ' + experience,
+      'Level of Excitement: ' + excitement
+    ];
+
+    if (notes) {
+      bodyLines.push('', 'Additional Notes:', notes);
+    }
+
+    const mailto = 'mailto:changethewrld@outlook.com' +
+      '?subject=' + encodeURIComponent('GAME TESTER') +
+      '&body=' + encodeURIComponent(bodyLines.join('\n'));
+
+    window.location.href = mailto;
+  });
+})();
+</script>
+</body>
+</html>
