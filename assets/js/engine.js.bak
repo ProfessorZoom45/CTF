@@ -1010,41 +1010,6 @@ regEffect('inu-119-kanna', { type:'activated', tag:'kannaWipe', action:'custom_k
 regEffect('tg1-112-knivesdestroyerofmankind', { type:'activated', tag:'knivesGreatWipe', action:'custom_knivesgreat', cost:1000 });
 regEffect('tg1-201-darkseeker', { type:'onSelfDestroyed', tag:'darkSeeker', action:'custom_darkseeker' });
 
-// ─── TG1 (TRIGUN) FULL SET REGISTRATIONS — Patch 40 ───
-// Catalysts
-regEffect('tg1-002-remsaverem',             { type:'summonCondition', tag:'remSaveremRitual',    action:'ritualSummon',         ritualSpell:'saving rem' });
-regEffect('tg1-004-wolfwoodgunghogunintraining', { type:'summonCondition', tag:'wolfwoodRitual', action:'ritualSummon',         ritualSpell:'corrupting the priest' });
-regEffect('tg1-007-dominiquethecyclops2ndgunghogun', { type:'activated', tag:'dominiqueParalyze', action:'custom_dominique' });
-regEffect('tg1-008-monevthegale1stgunghogun', { type:'standbyCountdown', tag:'monevCountdown',   count:2 });
-regEffect('tg1-009-egmine3rdgunghogun',     { type:'onAttackDeclared',  tag:'egminePRBoost',     prBoost:500, untilNextTurn:true });
-regEffect('tg1-011-leonofthepuppetmaster8thgunghogun', { type:'activated', tag:'leonPuppet',     action:'custom_leon',          cost:500 });
-regEffect('tg1-012-graytheninelives7thgunghogun', { type:'onSelfDestroyed', tag:'grayRevive',    action:'custom_gray' });
-regEffect('tg1-013-zaziethebeast4thgunghogun', { type:'continuous',     tag:'zazieProtected',    action:'protectedIfFieldActive', fieldName:'civilians in the way' });
-regEffect('tg1-014-cainethelongshot9thgunghogun', [
-  { type:'continuous', tag:'caineForceCP',  action:'forceCPPosition' },
-  { type:'continuous', tag:'caineCanAttackFromCP', action:'canAttackFromCP' }
-]);
-regEffect('tg1-014-hopperedthegauntlet6thgunghogun', { type:'onAttackDeclared', tag:'hopperedSwitch', action:'switchToCPAfterAttack' });
-regEffect('tg1-103-vashthelegendarygunman', { type:'activated', tag:'vashLegendary',             action:'custom_vashlegendary' });
-regEffect('tg1-104-puppetofdemise',         { type:'handActivated',    tag:'puppetDiscard',      action:'custom_puppetofdemise' });
-regEffect('tg1-105-knivesminipulation',     { type:'equip',            tag:'knivesManipEquip',   prBoost:600, targetNameIncludes:['vash','gung-ho gun'] });
-regEffect('tg1-106-knives',                 { type:'continuous',       tag:'knivesControl',      action:'custom_knives' });
-regEffect('tg1-110-derringermeryl',         { type:'standbyFlipEffect', tag:'derringerCoin',      action:'custom_derringermeryl' });
-regEffect('tg1-111-stungunmilly',           { type:'standbyFlipEffect', tag:'stungunCoin',        action:'custom_stungunmilly' });
-regEffect('tg1-112-nicholasdwolfwood',      { type:'summonCondition',  tag:'wolfwoodSpecialRFG', action:'custom_wolfwoodSummon',  summonRestriction:'cannotNormalSummon' });
-regEffect('tg1-112-nicholasdwolfwood',      { type:'onBattleResult',   tag:'wolfwoodSearch',     resultType:'kill', action:'custom_wolfwoodKill' });
-// Palm / Trick scripts
-regEffect('tg1-003-savingrem',              { type:'palmScript',       tag:'savingRemRitual',    action:'custom_savingrem' });
-regEffect('tg1-003-elizabeth',              { type:'palmScript',       tag:'elizabethBounce',    action:'custom_elizabeth' });
-regEffect('tg1-005-corruptingthepriest',    { type:'palmScript',       tag:'corruptPriestRitual',action:'custom_corruptingthepriest' });
-regEffect('tg1-006-millyslove',             { type:'concealedScript',  tag:'millysLoveSearch',   action:'custom_millyslove' });
-regEffect('tg1-018-gooddeedsgorewarded',    { type:'palmScript',       tag:'goodDeedsChiGain',   action:'custom_gooddeeds' });
-regEffect('tg1-019-thenebraskafamily',      { type:'concealedScript',  tag:'nebraskaChoice',     action:'custom_nebraska' });
-regEffect('tg1-021-civiliansintheway',      { type:'fieldAuraPR',      tag:'civiliansPRBoost',   prBoostAll:500, targetNameIncludes:'gung-ho gun' });
-regEffect('tg1-021-deadmanwalking',         { type:'palmScript',       tag:'deadManWalkSS',      action:'custom_deadmanwalking' });
-regEffect('tg1-021-vashsrevenge',           { type:'palmScript',       tag:'vashRevengeDestroy', action:'custom_vashsrevenge' });
-regEffect('tg1-023-evilreturns',            { type:'palmScript',       tag:'evilReturnsEquip',   action:'custom_evilreturns' });
-
 // ─── FUSION CARD REGISTRATIONS ───
 regEffect('bl1-019-bluelockteamzunited', { type:'doubleAttack', tag:'blueLockTeamZDbl' });
 regEffect('dbs-021-gogetasupersaiyanblue', { type:'doubleAttack', tag:'gogetaBlueDbl' });
@@ -1921,29 +1886,6 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
         const found = addCardToHandFromDeckByNameToken(state, ownerPlayer, ['demons devour me']);
         if (found) addLog(state, `Effect Script: Onigumo added ${found.name} to hand.`);
       }
-    } else if (eff.action === 'custom_gray') {
-      // Gray the Ninelives: after destroyed, revive on next standby with 500 less Pressure
-      const card = getCard(cardId);
-      const curPR = Number(card?.pr || 0);
-      if (curPR > 500) {
-        queueDelayedRevive(state, ownerPlayer, cardId, { prBoost: -500 });
-        addLog(state, `Effect Script: Gray the Ninelives will revive on your next Ignition Phase with ${curPR - 500} Pressure.`);
-      } else {
-        addLog(state, 'Effect Script: Gray the Ninelives had no Pressure left to revive with.');
-      }
-    } else if (eff.action === 'custom_darkseeker') {
-      // Dark Seeker: when sent from field to Void, search for a Dark Catalyst Level 5 or lower
-      const found = addCardToHandFromDeckByPredicate(state, ownerPlayer,
-        c => c.cardType === 'Catalyst' && cardHasAlignment(c, 'Dark') && Number(c.level || 0) <= 5);
-      if (found) addLog(state, `Effect Script: The Great Dark Seeker searched and added ${found.name} to hand.`);
-      else addLog(state, 'Effect Script: The Great Dark Seeker found no valid Dark Catalyst (Level 5 or lower) in the Deck.');
-    } else if (eff.action === 'custom_wolfwoodKill') {
-      // Nicholas D. Wolfwood: when he destroys a Catalyst in battle, add a Gung-Ho Gun from Deck to hand
-      if (ctx && ctx.reason === 'battle') {
-        const found = addCardToHandFromDeckByPredicate(state, ownerPlayer,
-          c => c.cardType === 'Catalyst' && /gung.ho gun/i.test(c.name || ''));
-        if (found) addLog(state, `Effect Script: Nicholas D. Wolfwood added ${found.name} to hand after destroying in battle.`);
-      }
     } else if (eff.action === 'custom_assaultshroud') {
       // On destroy: RFG this card instead of going to Void
       const voidIdx = owner.void.indexOf(cardId);
@@ -2539,129 +2481,6 @@ function runPalmScript(state, playerIdx, card, manual) {
       }
       addLog(state, `Effect Script: Inferno Takeover took control of ${stolen} FIRE Catalyst(s) until End Phase.`);
     }
-
-  // ─── TG1 PALM / CONCEALED HANDLERS ───
-  } else if (name === 'saving rem') {
-    // Ritual: SS Rem Saverem by discarding Catalysts totalling exactly her level
-    const remLevel = 6;
-    const handCats = p.hand.map((id,i) => ({i,c:getCard(id)})).filter(x => x.c && x.c.cardType === 'Catalyst');
-    const total = handCats.reduce((s,x) => s + Number(x.c.level||0), 0);
-    if (total < remLevel) { addLog(state, `Effect Script: Saving Rem needs Catalysts in hand totalling at least Level ${remLevel}.`); }
-    else {
-      const remInHand = p.hand.findIndex(id => cardNameHas(getCard(id), 'rem saverem'));
-      if (remInHand < 0) { addLog(state, 'Effect Script: Saving Rem needs Rem Saverem in hand.'); }
-      else {
-        // Discard lowest-level cats first to reach exactly remLevel
-        let remaining = remLevel;
-        const toDiscard = [];
-        for (const x of handCats.filter(x => !cardNameHas(x.c, 'rem saverem')).sort((a,b) => Number(a.c.level||0)-Number(b.c.level||0))) {
-          if (remaining <= 0) break;
-          toDiscard.push(x.i);
-          remaining -= Number(x.c.level||0);
-        }
-        for (const idx of toDiscard.sort((a,b)=>b-a)) { p.void.push(p.hand.splice(idx,1)[0]); }
-        const remIdx = p.hand.indexOf(p.hand.find(id => cardNameHas(getCard(id), 'rem saverem')));
-        const [remId] = p.hand.splice(p.hand.findIndex(id => cardNameHas(getCard(id), 'rem saverem')), 1);
-        const zone = getFirstEmptyCatalystZone(state, playerIdx);
-        if (zone >= 0) { specialSummonToZone(state, playerIdx, remId, zone, 'Saving Rem'); addLog(state, 'Effect Script: Saving Rem Special Summoned Rem Saverem.'); }
-        else { p.hand.push(remId); addLog(state, 'Effect Script: Saving Rem — no empty Catalyst Zone for Rem Saverem.'); }
-      }
-    }
-  } else if (name === 'corrupting the priest') {
-    // Ritual: SS Wolfwood by discarding Catalysts totalling exactly his level
-    const wolfLevel = 7;
-    const handCats = p.hand.map((id,i) => ({i,c:getCard(id)})).filter(x => x.c && x.c.cardType === 'Catalyst');
-    const wolfIdx = p.hand.findIndex(id => cardNameHas(getCard(id), 'wolfwood gung ho gun in training'));
-    if (wolfIdx < 0) { addLog(state, 'Effect Script: Corrupting The Priest needs Wolfwood - Gung-Ho Gun In Training in hand.'); }
-    else {
-      let remaining = wolfLevel;
-      const toDiscard = [];
-      for (const x of handCats.filter(x => !cardNameHas(x.c,'wolfwood')).sort((a,b)=>Number(a.c.level||0)-Number(b.c.level||0))) {
-        if (remaining <= 0) break;
-        toDiscard.push(x.i);
-        remaining -= Number(x.c.level||0);
-      }
-      if (remaining > 0) { addLog(state, `Effect Script: Corrupting The Priest needs more Catalysts in hand to total Level ${wolfLevel}.`); }
-      else {
-        for (const idx of toDiscard.sort((a,b)=>b-a)) { p.void.push(p.hand.splice(idx,1)[0]); }
-        const [wolfId] = p.hand.splice(p.hand.findIndex(id => cardNameHas(getCard(id), 'wolfwood gung ho gun in training')), 1);
-        const zone = getFirstEmptyCatalystZone(state, playerIdx);
-        if (zone >= 0) { specialSummonToZone(state, playerIdx, wolfId, zone, 'Corrupting The Priest'); addLog(state, 'Effect Script: Corrupting The Priest Special Summoned Wolfwood - Gung-Ho Gun In Training.'); }
-        else { p.hand.push(wolfId); addLog(state, 'Effect Script: Corrupting The Priest — no empty Catalyst Zone.'); }
-      }
-    }
-  } else if (name === 'elizabeth') {
-    const opp = state.players[1-playerIdx];
-    const vashCards = opp.hand.filter(id => cardNameHas(getCard(id), 'vash'));
-    if (!vashCards.length) { addLog(state, 'Effect Script: Elizabeth — opponent has no Vash cards in hand.'); }
-    else {
-      opp.hand = opp.hand.filter(id => !cardNameHas(getCard(id), 'vash'));
-      for (const id of vashCards) opp.deck.push(id);
-      shuffleArray(opp.deck);
-      addLog(state, `Effect Script: Elizabeth returned ${vashCards.length} Vash card(s) from the opponent's hand to their Deck.`);
-    }
-  } else if (name === "milly's love") {
-    const found = addCardToHandFromDeckByPredicate(state, playerIdx, c => cardNameHas(c, 'nicholas d wolfwood'))
-               || addCardToHandFromVoidByPredicate(state, playerIdx, c => cardNameHas(c, 'nicholas d wolfwood'));
-    addLog(state, found ? `Effect Script: Milly's Love added ${found.name} to hand.` : "Effect Script: Milly's Love — Nicholas D. Wolfwood not found.");
-  } else if (name === 'good deeds go rewarded') {
-    const merylMillyCount = p.void.filter(id => { const c = getCard(id); return c && (cardNameHas(c,'meryl') || cardNameHas(c,'milly')); }).length;
-    const gain = 1000 + (merylMillyCount * 200);
-    p.chi += gain;
-    addLog(state, `Effect Script: Good Deeds Go Rewarded restored ${gain} Chi (1000 base + ${merylMillyCount} Meryl/Milly in Void × 200).`);
-  } else if (name === 'the nebraska family') {
-    const mode = manual && manual.mode ? String(manual.mode) : '1';
-    if (mode === '2') {
-      if (p.chi < 1000) { addLog(state, 'Effect Script: The Nebraska Family Mode 2 needs 1000 Chi.'); }
-      else { p.chi -= 1000; state.players[1-playerIdx].chi = Math.max(0, state.players[1-playerIdx].chi - 2000); addLog(state, 'Effect Script: The Nebraska Family dealt 2000 direct Chi damage (Mode 2).'); }
-    } else {
-      if (p.chi < 500) { addLog(state, 'Effect Script: The Nebraska Family Mode 1 needs 500 Chi.'); }
-      else { p.chi -= 500; state.players[1-playerIdx].chi = Math.max(0, state.players[1-playerIdx].chi - 1000); addLog(state, 'Effect Script: The Nebraska Family dealt 1000 direct Chi damage (Mode 1).'); }
-    }
-  } else if (name === 'dead-man walking') {
-    const ghgIdx = p.void.findIndex(id => { const c = getCard(id); return c && (cardNameHas(c,'gung-ho gun') || cardNameHas(c,'legato')); });
-    if (ghgIdx < 0) { addLog(state, 'Effect Script: Dead-Man Walking — no Gung-Ho Gun or Legato in your Void.'); }
-    else {
-      const zone = getFirstEmptyCatalystZone(state, playerIdx);
-      if (zone < 0) { addLog(state, 'Effect Script: Dead-Man Walking — no empty Catalyst Zone.'); }
-      else {
-        const [id] = p.void.splice(ghgIdx, 1);
-        const res = specialSummonToZone(state, playerIdx, id, zone, 'Dead-Man Walking');
-        if (res.ok && p.catalysts[zone]) p.catalysts[zone].cannotAttackThisTurn = true;
-        addLog(state, res.ok ? `Effect Script: Dead-Man Walking Special Summoned ${getCard(id)?.name||'a Catalyst'} from Void. It cannot attack this turn.` : `Effect Script: Dead-Man Walking failed. (${res.msg})`);
-      }
-    }
-  } else if (name === "vash's revenge") {
-    const opp = state.players[1-playerIdx];
-    const targetZ = opp.catalysts.findIndex(s => s && (cardNameHas(getCard(s.cardId),'knives') || /gung.ho gun/i.test(getCard(s.cardId)?.name||'')));
-    if (targetZ < 0) { addLog(state, "Effect Script: Vash's Revenge — no Knives or Gung-Ho Gun Catalyst on opponent's field."); }
-    else {
-      const id = opp.catalysts[targetZ].cardId;
-      runOnSelfDestroyed(state, 1-playerIdx, id, { reason:"Vash's Revenge" });
-      opp.catalysts[targetZ] = null;
-      opp.void.push(id);
-      addLog(state, `Effect Script: Vash's Revenge destroyed ${getCard(id)?.name||'a Catalyst'}.`);
-    }
-  } else if (name === 'evil returns') {
-    if (p.chi < 800) { addLog(state, 'Effect Script: Evil Returns needs 800 Chi.'); }
-    else {
-      const darkVoidIdx = p.void.findIndex(id => { const c = getCard(id); return c && c.cardType === 'Catalyst' && cardHasAlignment(c, 'Dark'); });
-      if (darkVoidIdx < 0) { addLog(state, 'Effect Script: Evil Returns — no DARK Catalyst in your Void.'); }
-      else {
-        p.chi -= 800;
-        const zone = getFirstEmptyCatalystZone(state, playerIdx);
-        if (zone < 0) { addLog(state, 'Effect Script: Evil Returns — no empty Catalyst Zone.'); }
-        else {
-          const [id] = p.void.splice(darkVoidIdx, 1);
-          const res = specialSummonToZone(state, playerIdx, id, zone, 'Evil Returns');
-          if (res.ok && p.catalysts[zone]) {
-            p.catalysts[zone]._equipCount = (p.catalysts[zone]._equipCount||0) + 1;
-            p.catalysts[zone]._evilReturnsEquipped = true;
-          }
-          addLog(state, res.ok ? `Effect Script: Evil Returns Special Summoned ${getCard(id)?.name||'a DARK Catalyst'} and equipped it.` : `Effect Script: Evil Returns failed. (${res.msg})`);
-        }
-      }
-    }
   }
   return { ok:true };
 }
@@ -3135,121 +2954,7 @@ function activateCatalystEffect(state, playerIdx, zoneIdx, effectTag, manual) {
     return { ok:true };
   }
 
-  // ─── TG1 ACTIVATED HANDLERS ───
-  if (effectTag === 'custom_dominique' || name === 'dominique the cyclops 2nd gung ho gun') {
-    if (isEffectUsed(state, playerIdx, slot.cardId, 'dominique')) return { ok:false, msg:'Dominique already used her effect this turn.' };
-    const opp = state.players[1 - playerIdx];
-    const targets = opp.catalysts.map((s,z) => s ? {z,s} : null).filter(Boolean);
-    if (!targets.length) return { ok:false, msg:'No opponent Catalysts to target.' };
-    const t = targets[Math.floor(Math.random() * targets.length)];
-    t.s.cannotAttackThisTurn = true;
-    t.s._posLocked = true;
-    markEffectUsed(state, playerIdx, slot.cardId, 'dominique');
-    addLog(state, `Effect Script: Dominique paralyzed opponent Zone C${t.z+1} — it cannot attack or change position this turn.`);
-    return { ok:true };
-  }
-
-  if (effectTag === 'custom_leon' || /leonof.*puppet/i.test(name)) {
-    const p = state.players[playerIdx];
-    if (p.chi < 500) return { ok:false, msg:'Not enough Chi (need 500).' };
-    p.chi -= 500;
-    const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, playerIdx, c => cardNameHas(c, 'puppet of demise'), 'Leonof');
-    addLog(state, res.ok ? 'Effect Script: Leonof Special Summoned Puppet of Demise.' : `Effect Script: No Puppet of Demise available. (${res.msg})`);
-    return { ok:true };
-  }
-
-  if (effectTag === 'custom_vashlegendary' || /vash.*legendary gunman/i.test(name)) {
-    if (isEffectUsed(state, playerIdx, slot.cardId, 'vashLegendary')) return { ok:false, msg:'Vash already used this effect this turn.' };
-    const p = state.players[playerIdx];
-    const oppGungHo = state.players[1-playerIdx].catalysts.map((s,z) => s && /gung.ho gun/i.test(getCard(s.cardId)?.name||'') ? z : -1).filter(z=>z>=0);
-    if (!oppGungHo.length) return { ok:false, msg:'No opponent Gung-Ho Gun Catalysts to remove from game.' };
-    let removed = 0;
-    for (const z of oppGungHo) {
-      const id = state.players[1-playerIdx].catalysts[z].cardId;
-      state.players[1-playerIdx].catalysts[z] = null;
-      state.players[1-playerIdx].rfg = state.players[1-playerIdx].rfg || [];
-      state.players[1-playerIdx].rfg.push(id);
-      removed++;
-    }
-    slot.cannotAttackThisTurn = true;
-    markEffectUsed(state, playerIdx, slot.cardId, 'vashLegendary');
-    addLog(state, `Effect Script: Vash - The Legendary Gunman removed ${removed} Gung-Ho Gun(s) from game. Battle Phase skipped this turn.`);
-    return { ok:true };
-  }
-
-  if (effectTag === 'custom_puppetofdemise' || /puppet of demise/i.test(name)) {
-    const p = state.players[playerIdx];
-    const inHand = p.hand.findIndex(id => cardNameHas(getCard(id), 'puppet of demise'));
-    if (inHand < 0) return { ok:false, msg:'Puppet of Demise not in hand.' };
-    p.hand.splice(inHand, 1);
-    p.void.push(slot.cardId);
-    let added = 0;
-    for (let i = 0; i < 2; i++) {
-      const di = p.deck.findIndex(id => cardNameHas(getCard(id), 'puppet of demise'));
-      if (di >= 0) { p.hand.push(p.deck.splice(di,1)[0]); added++; }
-    }
-    addLog(state, `Effect Script: Puppet of Demise discarded itself to add ${added} Puppet of Demise card(s) from Deck to hand.`);
-    return { ok:true };
-  }
-
-  if (effectTag === 'custom_knivesgreat' || /knives.*destroyer of mankind/i.test(name)) {
-    const p = state.players[playerIdx];
-    if (p.chi < 1000) return { ok:false, msg:'Not enough Chi (need 1000).' };
-    p.chi -= 1000;
-    const opp = state.players[1-playerIdx];
-    const vashOrGHG = opp.catalysts.map((s,z) => s && (/vash/i.test(getCard(s.cardId)?.name||'') || /gung.ho gun/i.test(getCard(s.cardId)?.name||'')) ? z : -1).filter(z=>z>=0);
-    let wiped = 0;
-    for (const z of vashOrGHG) {
-      const id = opp.catalysts[z].cardId;
-      opp.catalysts[z] = null;
-      opp.void.push(id);
-      wiped++;
-    }
-    addLog(state, `Effect Script: Knives - Great Destroyer of Mankind destroyed ${wiped} Vash/Gung-Ho Gun Catalyst(s). Cost 1000 Chi.`);
-    return { ok:true };
-  }
-
-  if (effectTag === 'custom_derringermeryl' || /derringer meryl/i.test(name)) {
-    const flip = Math.random() < 0.5 ? 'heads' : 'tails';
-    const guess = Math.random() < 0.5 ? 'heads' : 'tails';
-    const correct = flip === guess;
-    addLog(state, `Effect Script: Derringer Meryl — flipped ${flip}, guessed ${guess} — ${correct ? 'CORRECT' : 'WRONG'}.`);
-    if (correct) {
-      const opp = state.players[1-playerIdx];
-      const tricks = opp.tricks.map((t,z) => t ? z : -1).filter(z=>z>=0);
-      if (tricks.length) {
-        const z = tricks[0];
-        opp.void.push(opp.tricks[z].cardId);
-        opp.tricks[z] = null;
-        addLog(state, 'Effect Script: Derringer Meryl destroyed an opponent Palm/Concealed Trick.');
-      }
-      const field = opp.fieldTrick;
-      if (!tricks.length && field) {
-        opp.void.push(field.cardId);
-        opp.fieldTrick = null;
-        addLog(state, 'Effect Script: Derringer Meryl destroyed the opponent Field Trick.');
-      }
-    }
-    return { ok:true };
-  }
-
-  if (effectTag === 'custom_stungunmilly' || /stungun milly/i.test(name)) {
-    const flip = Math.random() < 0.5 ? 'heads' : 'tails';
-    const guess = Math.random() < 0.5 ? 'heads' : 'tails';
-    const correct = flip === guess;
-    addLog(state, `Effect Script: Stungun Milly — flipped ${flip}, guessed ${guess} — ${correct ? 'CORRECT' : 'WRONG'}.`);
-    if (correct) {
-      const opp = state.players[1-playerIdx];
-      const targets = opp.catalysts.filter(Boolean);
-      if (targets.length) {
-        const t = targets[Math.floor(Math.random() * targets.length)];
-        t.atkMod = (t.atkMod||0) - 300;
-        t.cpMod  = (t.cpMod||0)  - 300;
-        addLog(state, 'Effect Script: Stungun Milly reduced a random opponent Catalyst by 300 Pressure and 300 Counter Pressure.');
-      }
-    }
-    return { ok:true };
-  }
+  return { ok:false, msg:`No activated ability found for ${card.name}.` };
 }
 
 function getActivatableCatalystAbilities(state, playerIdx) {
@@ -3404,22 +3109,6 @@ function runConcealedResolutionScript(state, link) {
     const found = addCardToHandFromDeckByPredicate(state, link.player, c => cardNameHas(c, 'shu') || cardNameHas(c, 'emperor pilaf') || cardNameHas(c, 'pilaf'));
     if (found) addLog(state, `Effect Script: Mai searched ${found.name} from the Deck.`);
     else addLog(state, 'Effect Script: Mai had no valid Shu or Pilaf in the Deck.');
-
-  // ─── TG1 CONCEALED HANDLERS ───
-  } else if (name === "milly's love") {
-    const found = addCardToHandFromDeckByPredicate(state, link.player, c => cardNameHas(c, 'nicholas d wolfwood'))
-               || addCardToHandFromVoidByPredicate(state, link.player, c => cardNameHas(c, 'nicholas d wolfwood'));
-    addLog(state, found ? `Effect Script: Milly's Love added ${found.name} to hand.` : "Effect Script: Milly's Love — Nicholas D. Wolfwood not found in Deck or Void.");
-  } else if (name === 'the nebraska family') {
-    const p = state.players[link.player];
-    const mode = state.pendingAction?.mode ? String(state.pendingAction.mode) : '1';
-    if (mode === '2') {
-      if (p.chi < 1000) addLog(state, 'Effect Script: The Nebraska Family Mode 2 needs 1000 Chi.');
-      else { p.chi -= 1000; state.players[1-link.player].chi = Math.max(0, state.players[1-link.player].chi - 2000); addLog(state, 'Effect Script: The Nebraska Family dealt 2000 direct Chi damage (Mode 2).'); }
-    } else {
-      if (p.chi < 500) addLog(state, 'Effect Script: The Nebraska Family Mode 1 needs 500 Chi.');
-      else { p.chi -= 500; state.players[1-link.player].chi = Math.max(0, state.players[1-link.player].chi - 1000); addLog(state, 'Effect Script: The Nebraska Family dealt 1000 direct Chi damage (Mode 1).'); }
-    }
   }
 }
 
@@ -4121,12 +3810,8 @@ function getFusionMaterialCandidates(state, playerIdx, desc, usedFieldIdxs, used
 }
 
 function findFusionAssignment(state, playerIdx, spec, pos, usedFieldIdxs, usedHandIdxs, acc) {
-  if (spec?.freeFusion) return { steps: [], fieldIdxs: [], handIdxs: [], materialCardIds: [] };
-  /* ── pickN / pool: choose any N distinct cards from a pool ── */
-  if (spec?.pickN && spec?.pool) {
-    return _findPickNAssignment(state, playerIdx, spec.pool, spec.pickN, 0, new Set(), new Set(), []);
-  }
   const materials = spec?.materials || [];
+  if (spec?.freeFusion) return { steps: [], fieldIdxs: [], handIdxs: [], materialCardIds: [] };
   if (pos >= materials.length) {
     return { steps: acc.slice(), fieldIdxs: acc.filter(x => x.src === 'field').map(x => x.idx), handIdxs: acc.filter(x => x.src === 'hand').map(x => x.idx), materialCardIds: acc.map(x => x.cardId) };
   }
@@ -4143,27 +3828,6 @@ function findFusionAssignment(state, playerIdx, spec, pos, usedFieldIdxs, usedHa
   }
   return null;
 }
-/* Backtracking search: pick exactly N distinct cards that each match a different pool descriptor */
-function _findPickNAssignment(state, playerIdx, pool, n, pos, usedFieldIdxs, usedHandIdxs, acc) {
-  if (acc.length === n) {
-    return { steps: acc.slice(), fieldIdxs: acc.filter(x => x.src === 'field').map(x => x.idx), handIdxs: acc.filter(x => x.src === 'hand').map(x => x.idx), materialCardIds: acc.map(x => x.cardId) };
-  }
-  if (pos >= pool.length) return null;              // exhausted pool before finding N
-  if (pool.length - pos < n - acc.length) return null; // not enough pool entries left
-  for (let i = pos; i < pool.length; i++) {
-    const desc = pool[i];
-    const candidates = getFusionMaterialCandidates(state, playerIdx, desc, usedFieldIdxs, usedHandIdxs);
-    for (const cand of candidates) {
-      const nf = new Set(usedFieldIdxs); const nh = new Set(usedHandIdxs);
-      if (cand.src === 'field') nf.add(cand.idx); else nh.add(cand.idx);
-      acc.push({ ...cand, label: desc.label || desc.exact || cand.card.name });
-      const found = _findPickNAssignment(state, playerIdx, pool, n, i + 1, nf, nh, acc);
-      if (found) return found;
-      acc.pop();
-    }
-  }
-  return null;
-}
 
 function getAvailableFusionSummons(state, playerIdx) {
   const p = state.players[playerIdx];
@@ -4177,7 +3841,7 @@ function getAvailableFusionSummons(state, playerIdx) {
     if (!spec) return;
     const assignment = findFusionAssignment(state, playerIdx, spec, 0, new Set(), new Set(), []);
     if (!assignment) return;
-    options.push({ fusionDeckIdx, fusionId, fusionCard, materials: parseFusionMaterials(fusionCard), materialDescriptors: spec.pool || spec.materials || [], steps: assignment.steps || [], fieldIdxs: assignment.fieldIdxs || [], handIdxs: assignment.handIdxs || [], materialCardIds: assignment.materialCardIds || [], usesFieldEnabler: fieldTrickProvidesFusion(p.fieldTrick), freeFusion: !!spec.freeFusion, pickN: spec.pickN || 0, inferred: !!spec.inferred, anomaly: !!spec.anomaly });
+    options.push({ fusionDeckIdx, fusionId, fusionCard, materials: parseFusionMaterials(fusionCard), materialDescriptors: spec.materials || [], steps: assignment.steps || [], fieldIdxs: assignment.fieldIdxs || [], handIdxs: assignment.handIdxs || [], materialCardIds: assignment.materialCardIds || [], usesFieldEnabler: fieldTrickProvidesFusion(p.fieldTrick), freeFusion: !!spec.freeFusion, inferred: !!spec.inferred, anomaly: !!spec.anomaly });
   });
   return options;
 }
@@ -4192,23 +3856,11 @@ function fusionSummonDetailed(state, playerIdx, fusionDeckIdx, zoneIdx, fieldIdx
   if (!spec) return { ok:false, msg:'No Fusion spec found for that card.' };
   const assignment = spec.freeFusion ? { fieldIdxs:[], handIdxs:[], materialCardIds:[] } : findFusionAssignment(state, playerIdx, spec, 0, new Set(), new Set(), []);
   if (!assignment) return { ok:false, msg:'No legal Fusion material assignment exists right now.' };
-  /* ── pickN validation: any N distinct pool members are legal ── */
-  if (spec.pickN && spec.pool) {
-    const totalChosen = (fieldIdxs||[]).length + (handIdxs||[]).length;
-    if (totalChosen !== spec.pickN) return { ok:false, msg:`This Fusion requires exactly ${spec.pickN} materials from its crew pool.` };
-    const poolNames = spec.pool.map(m => (m.exact||m.label||'').toLowerCase());
-    const chosenNames = [];
-    for (const idx of (fieldIdxs||[])) { const s = p.catalysts[idx]; const c = s ? getCard(s.cardId) : null; if (!c) return { ok:false, msg:'Invalid field material.' }; chosenNames.push(c.name.toLowerCase()); }
-    for (const idx of (handIdxs||[])) { const c = getCard(p.hand[idx]); if (!c) return { ok:false, msg:'Invalid hand material.' }; chosenNames.push(c.name.toLowerCase()); }
-    if (new Set(chosenNames).size !== spec.pickN) return { ok:false, msg:'Each Fusion material must be a different Catalyst.' };
-    for (const cn of chosenNames) { if (!poolNames.includes(cn)) return { ok:false, msg:`"${cn}" is not a valid Fusion material for this card.` }; }
-  } else if (!spec.freeFusion) {
-    const chosenField = (fieldIdxs || []).slice().sort((a,b)=>a-b).join('|');
-    const chosenHand = (handIdxs || []).slice().sort((a,b)=>a-b).join('|');
-    const legalField = (assignment.fieldIdxs || []).slice().sort((a,b)=>a-b).join('|');
-    const legalHand = (assignment.handIdxs || []).slice().sort((a,b)=>a-b).join('|');
-    if (chosenField !== legalField || chosenHand !== legalHand) return { ok:false, msg:'Chosen Fusion materials do not match a legal assignment.' };
-  }
+  const chosenField = (fieldIdxs || []).slice().sort((a,b)=>a-b).join('|');
+  const chosenHand = (handIdxs || []).slice().sort((a,b)=>a-b).join('|');
+  const legalField = (assignment.fieldIdxs || []).slice().sort((a,b)=>a-b).join('|');
+  const legalHand = (assignment.handIdxs || []).slice().sort((a,b)=>a-b).join('|');
+  if (!spec.freeFusion && (chosenField !== legalField || chosenHand !== legalHand)) return { ok:false, msg:'Chosen Fusion materials do not match a legal assignment.' };
   if (p.catalysts[zoneIdx] !== null) return { ok:false, msg:'Chosen Catalyst Zone is occupied.' };
   const consumedIds = [];
   const finalRemoveMode = removeMode === 'rfg' ? 'rfg' : 'void';
