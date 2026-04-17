@@ -293,6 +293,13 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
     <p>A <strong>JSON file was downloaded</strong> to your device containing your full submission including any attached artwork. Keep it — it's your personal record and includes the full image data not stored in the review queue.</p>
   </div>
 
+
+  <div class="json-reminder" id="tester-mailto-reminder" style="display:none;max-width:560px;margin:1rem auto 0;border-left-color:var(--flame)">
+    <div class="json-reminder-title">✉️ Tester Email Backup</div>
+    <p>If your email app did not open, use the button below to open the tester backup message manually.</p>
+    <p style="margin-top:.85rem"><a id="tester-mailto-link" href="#" class="btn-secondary" style="display:inline-block">Open Tester Email</a></p>
+  </div>
+
 </section>
 
 <!-- FOOTER (matches all pages) -->
@@ -329,6 +336,61 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
   }
 })();
 </script>
+
+<script>
+(function(){
+  function buildMailto(data){
+    const subject='CTF Game Tester Signup';
+    const lines=[
+      'CTF Game Tester Signup',
+      '',
+      'Gamertag: '+(data.gamertag||''),
+      'Email: '+(data.email||''),
+      'Favorite Universe: '+(data.favorite_universe||''),
+      'Beta Role: '+(data.beta_role||''),
+      '',
+      'This message was opened after the thank-you page redirect as a backup copy for the tester signup.'
+    ];
+    return 'mailto:'+encodeURIComponent(data.email||'')+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('
+'));
+  }
+  function getData(){
+    const q=new URLSearchParams(window.location.search);
+    if(q.get('tester')==='1'){
+      return {
+        email:q.get('email')||'',
+        gamertag:q.get('gamertag')||'',
+        favorite_universe:q.get('favorite_universe')||'',
+        beta_role:q.get('beta_role')||''
+      };
+    }
+    try{
+      const raw=sessionStorage.getItem('ctfTesterMailtoPending');
+      return raw?JSON.parse(raw):null;
+    }catch(_err){
+      return null;
+    }
+  }
+  const data=getData();
+  if(!data||!data.email) return;
+  const key='ctfTesterMailtoShown:'+data.email+':'+(data.gamertag||'');
+  const reminder=document.getElementById('tester-mailto-reminder');
+  const link=document.getElementById('tester-mailto-link');
+  const mailto=buildMailto(data);
+  if(link) link.href=mailto;
+  if(reminder) reminder.style.display='block';
+  try{
+    if(!sessionStorage.getItem(key)){
+      sessionStorage.setItem(key,'1');
+      setTimeout(function(){ window.location.href=mailto; }, 450);
+    }
+    sessionStorage.removeItem('ctfTesterMailtoPending');
+  }catch(_err){
+    setTimeout(function(){ window.location.href=mailto; }, 450);
+  }
+})();
+</script>
+
 <script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
 </body>
 </html>

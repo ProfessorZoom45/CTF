@@ -65,6 +65,26 @@ section{padding:5rem 1.5rem}.section-inner{max-width:1100px;margin:0 auto}
 .stat-num{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4rem);color:var(--flame);line-height:1}
 .stat-label{font-family:var(--font-label);font-weight:600;font-size:.8rem;letter-spacing:3px;text-transform:uppercase;color:var(--ash);margin-top:.3rem}
 .quickstart{background:var(--coal-light)}
+
+.tester-signup{background:var(--coal-light);border-top:1px solid rgba(255,106,0,.1);border-bottom:1px solid rgba(255,106,0,.1)}
+.tester-grid{display:grid;grid-template-columns:minmax(260px,1fr) minmax(320px,1.15fr);gap:1.5rem;margin-top:2rem}
+.tester-card{background:linear-gradient(180deg,rgba(255,106,0,.14),rgba(192,57,43,.08));border:1px solid rgba(255,106,0,.18);padding:2rem}
+.tester-card h3{font-family:var(--font-display);font-size:1.6rem;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:.8rem;color:var(--white)}
+.tester-card p{font-size:.95rem;color:var(--cream);margin-bottom:1rem}
+.tester-bullets{list-style:none;display:grid;gap:.65rem;margin-top:1rem}
+.tester-bullets li{font-size:.88rem;color:var(--cream);padding-left:1.2rem;position:relative}
+.tester-bullets li::before{content:'✦';position:absolute;left:0;top:0;color:var(--amber)}
+.tester-form{display:grid;gap:.9rem}
+.tester-form .field-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.tester-form label{display:grid;gap:.35rem;font-family:var(--font-label);font-size:.82rem;letter-spacing:1.3px;text-transform:uppercase;color:var(--amber)}
+.tester-form input,.tester-form select{width:100%;padding:.9rem 1rem;background:var(--coal);border:1px solid rgba(255,106,0,.2);color:var(--white);font-family:var(--font-body);font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.tester-form input:focus,.tester-form select:focus{border-color:var(--flame);box-shadow:0 0 0 3px rgba(255,106,0,.12)}
+.tester-note{font-size:.82rem;color:var(--ash);line-height:1.7}
+.tester-actions{display:flex;gap:.9rem;flex-wrap:wrap;align-items:center;margin-top:.25rem}
+.tester-status{min-height:1.2rem;font-size:.85rem;color:var(--amber)}
+.tester-status.error{color:#ff8a80}
+.tester-status.success{color:#9be7a6}
+@media(max-width:768px){.tester-grid,.tester-form .field-row{grid-template-columns:1fr}.tester-card{padding:1.25rem}}
 .qs-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:2rem;counter-reset:step}
 .qs-step{counter-increment:step;padding:2rem;background:var(--coal);border:1px solid rgba(255,106,0,.08);position:relative}
 .qs-step::before{content:counter(step,decimal-leading-zero);font-family:var(--font-display);font-size:3rem;color:var(--flame);opacity:.2;position:absolute;top:.5rem;right:1rem}
@@ -179,6 +199,74 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 <div class="qs-step"><h4>Carry The Flame</h4><p>Adapt every turn. Chase Chi KO, 7 Kills, or 7 Extractions — or threaten multiple paths. The player who forces two simultaneous threats wins. Play online at perfecttiminggaming.com.</p></div>
 </div></div></section>
 
+
+<section class="tester-signup" id="game-tester"><div class="section-inner">
+<p class="section-label">Join the Flame</p>
+<h2 class="section-title">Become a <span>Game Tester</span></h2>
+<div class="divider"></div>
+<div class="tester-grid">
+<div class="tester-card">
+<h3>Help Shape Carry The Flame</h3>
+<p>Join the tester list to get early updates, closed beta access, and a direct lane into the next version of CTF. We want players who love card games, spot balance issues fast, and actually give useful feedback.</p>
+<ul class="tester-bullets">
+<li>Early access to test builds and feature drops</li>
+<li>Priority invites for closed beta sessions</li>
+<li>A chance to help improve balance, flow, and feedback</li>
+<li>Your email stays tied to your tester signup for follow-up</li>
+</ul>
+</div>
+<div class="tester-card">
+<h3>Tester Sign-Up</h3>
+<form id="tester-signup-form" class="tester-form" novalidate>
+<div class="field-row">
+<label>Gamertag
+<input name="gamertag" type="text" placeholder="Your gamertag" required>
+</label>
+<label>Email
+<input name="email" type="email" placeholder="you@example.com" required>
+</label>
+</div>
+<div class="field-row">
+<label>Favorite Universe
+<select name="favorite_universe" required>
+<option value="" selected disabled>Choose your world</option>
+<option>Dragon Ball</option>
+<option>Naruto</option>
+<option>Bleach</option>
+<option>Final Fantasy</option>
+<option>Kingdom Hearts</option>
+<option>Gundam</option>
+<option>Sonic</option>
+<option>Original CTF</option>
+<option>Other</option>
+</select>
+</label>
+<label>Beta Role
+<select name="beta_role" required>
+<option value="" selected disabled>Choose your role</option>
+<option>Balance tester</option>
+<option>Bug hunter</option>
+<option>UI / UX feedback</option>
+<option>Rules tester</option>
+<option>Deck builder / meta tester</option>
+<option>General tester</option>
+</select>
+</label>
+</div>
+<input type="hidden" name="signup_type" value="game_tester">
+<input type="hidden" name="page" value="index.html">
+<input type="hidden" name="_subject" value="CTF Game Tester Signup">
+<p class="tester-note">After you sign up, you’ll be redirected to the thank-you page. Then your email app will open with a prefilled tester message as a backup copy.</p>
+<div class="tester-actions">
+<button type="submit" class="btn btn-fire">Start Tester Sign-Up</button>
+<a href="play.html" class="btn btn-ghost">Launch the Game Tester</a>
+</div>
+<div id="tester-signup-status" class="tester-status" aria-live="polite"></div>
+</form>
+</div>
+</div>
+</div></section>
+
 <footer>
 <div class="footer-brand">CARRY THE FLAME</div>
 <div class="footer-links">
@@ -196,5 +284,58 @@ for(let i=0;i<80;i++)embers.push(new Ember());
 (function loop(){ctx.clearRect(0,0,W,H);embers.forEach(e=>{e.update();e.draw()});requestAnimationFrame(loop)})();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script>
+
+<script>
+(function(){
+  const form=document.getElementById('tester-signup-form');
+  const status=document.getElementById('tester-signup-status');
+  if(!form||!status) return;
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    status.className='tester-status';
+    status.textContent='Submitting your tester sign-up...';
+    const fd=new FormData(form);
+    const email=(fd.get('email')||'').toString().trim();
+    const gamertag=(fd.get('gamertag')||'').toString().trim();
+    const favoriteUniverse=(fd.get('favorite_universe')||'').toString().trim();
+    const betaRole=(fd.get('beta_role')||'').toString().trim();
+    if(!email||!gamertag||!favoriteUniverse||!betaRole){
+      status.className='tester-status error';
+      status.textContent='Fill out every tester field before submitting.';
+      return;
+    }
+    try{
+      if(typeof OperatorStack==='undefined' || typeof OperatorStack.submitForm!=='function'){
+        throw new Error('OperatorStack SDK not available');
+      }
+      await OperatorStack.submitForm('frm_lbj0uk3fpl', {
+        email,
+        gamertag,
+        favorite_universe: favoriteUniverse,
+        beta_role: betaRole,
+        signup_type: 'game_tester',
+        page: 'index.html',
+        source: 'ctf_homepage_tester_signup'
+      });
+      try{
+        sessionStorage.setItem('ctfTesterMailtoPending', JSON.stringify({
+          email,
+          gamertag,
+          favorite_universe: favoriteUniverse,
+          beta_role: betaRole,
+          ts: Date.now()
+        }));
+      }catch(_err){}
+      const params=new URLSearchParams({tester:'1',email,gamertag,favorite_universe:favoriteUniverse,beta_role:betaRole});
+      window.location.href='thanks.html?'+params.toString();
+    }catch(err){
+      status.className='tester-status error';
+      status.textContent='Tester signup failed. Please try again.';
+      console.error(err);
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
