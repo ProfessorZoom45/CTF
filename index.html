@@ -998,29 +998,16 @@ footer .copy {
   }
 
   function triggerMailto(mailtoUrl) {
-    try {
-      const link = document.createElement('a');
-      link.href = mailtoUrl;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      return true;
-    } catch (error) {
-      try {
-        window.open(mailtoUrl, '_blank', 'noopener,noreferrer');
-        return true;
-      } catch (popupError) {
-        try {
-          window.location.href = mailtoUrl;
-          return true;
-        } catch (navError) {
-          return false;
-        }
-      }
-    }
+    // No target="_blank" — mailto: links must NOT request a new tab or browsers
+    // treat them as popups and block them (falling through to window.location.href
+    // which triggers a page-reload visual). A plain anchor click opens the mail
+    // client without navigating away from the page.
+    const link = document.createElement('a');
+    link.href = mailtoUrl;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   async function submitToOperatorStack(payload) {
@@ -1137,9 +1124,12 @@ footer .copy {
     sessionStorage.setItem(payloadKey, JSON.stringify(payload));
     sessionStorage.setItem(statusKey, 'pending');
 
+    // ── Fire mailto FIRST — must be synchronous before any DOM changes or
+    //    browsers may no longer treat it as a direct user-gesture ──
+    triggerMailto(buildMailto(payload));
+
     setButtonState('Submitting...', true);
     renderTesterState(payload, 'sending');
-    triggerMailto(buildMailto(payload));
 
     setTimeout(function () {
       continuePendingSubmission();

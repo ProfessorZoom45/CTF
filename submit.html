@@ -643,6 +643,9 @@ async function submitCards(){
  const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
  const mailtoUrl=`mailto:changethewrld@outlook.com?subject=${subject}&body=${emailBodyEncoded}`;
 
+ // ── STEP 0: Fire mailto NOW — must happen synchronously before any await or browsers block it ──
+ window.location.href=mailtoUrl;
+
  // ── STEP 1: Download JSON (full image data included via getImageDataFull) ──
  st.textContent='[1/3] Saving backup JSON...'; st.className='submit-status';
  sub.images=getImageSummary();         // metadata for readability
@@ -688,22 +691,17 @@ async function submitCards(){
 
  try{
   await OperatorStack.submitForm('frm_hz1no8yg5r', osPayload);
-
-  // ── STEP 3: Open mailto ──
-  st.textContent='[3/3] Opening email client...'; st.className='submit-status';
-  window.open(mailtoUrl);
-
-  // ── Redirect to thank-you page ──
-  setTimeout(()=>{ window.location.href='thanks.html'; }, 900);
-
+  st.textContent='[3/3] ✓ Submission received! Redirecting...'; st.className='submit-status status-ok';
  }catch(err){
-  // OperatorStack failed — surface the error clearly, re-enable button, mailto still works
+  // OperatorStack failed — show error but still redirect; mailto already fired above
   const errMsg=err&&err.message?err.message:'connection error';
-  st.innerHTML=`<strong style="color:var(--ember)">⚠ Review queue unavailable (${errMsg})</strong><br>Your JSON was saved locally. Please email it to <a href="${mailtoUrl}" style="color:var(--flame)">changethewrld@outlook.com</a> manually.`;
+  st.innerHTML=`<strong style="color:var(--ember)">⚠ Review queue unavailable (${errMsg})</strong><br>Your JSON was saved. If your email client didn't open, send it to <a href="${mailtoUrl}" style="color:var(--flame)">changethewrld@outlook.com</a>.`;
   st.className='submit-status status-err';
-  btn.disabled=false;
   console.error('OperatorStack submitForm error:', err);
  }
+
+ // ── Always redirect to thank-you page (success or failure) ──
+ setTimeout(()=>{ window.location.href='thanks.html'; }, 2000);
 }
 
 // ═══════ IMAGE UPLOAD SYSTEM ═══════
