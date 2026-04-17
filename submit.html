@@ -127,6 +127,27 @@ textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);l
 .status-ok{color:var(--green);background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.2)}
 .status-err{color:var(--red);background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2)}
 
+/* ── IMAGE UPLOAD ── */
+.img-upload-section{margin-top:.8rem;padding:.8rem;background:var(--coal);border:1px solid rgba(255,106,0,.08);border-radius:2px}
+.img-upload-label{font-family:var(--font-label);font-weight:700;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.img-upload-label .img-tag{font-size:.65rem;padding:.1rem .4rem;background:rgba(255,106,0,.12);color:var(--flame);border:1px solid rgba(255,106,0,.2)}
+.img-dropzone{border:2px dashed rgba(255,106,0,.2);padding:1rem;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.img-dropzone:hover,.img-dropzone.drag-over{border-color:var(--flame);background:rgba(255,106,0,.04)}
+.img-dropzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.img-dropzone-text{font-family:var(--font-mono);font-size:.72rem;color:var(--ash);pointer-events:none}
+.img-dropzone-text strong{color:var(--flame)}
+.img-thumbs{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+.img-thumb{position:relative;width:72px;height:72px;border:1px solid rgba(255,106,0,.15);overflow:hidden;flex-shrink:0}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-thumb-remove{position:absolute;top:1px;right:1px;background:rgba(0,0,0,.7);color:var(--flame);border:none;cursor:pointer;font-size:.7rem;width:16px;height:16px;display:flex;align-items:center;justify-content:center;line-height:1}
+.img-thumb-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.7);font-size:.55rem;color:var(--cream);padding:1px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.img-count{font-family:var(--font-mono);font-size:.7rem;color:var(--ash);margin-top:.35rem}
+.img-count .img-ok{color:var(--green)}.img-count .img-warn{color:var(--amber)}
+
+/* ── CONCEPT ART SECTION ── */
+.concept-art-block{background:var(--coal-light);border:1px solid rgba(255,106,0,.08);padding:1.2rem;margin-bottom:1rem}
+.concept-art-block h4{font-family:var(--font-display);font-size:1rem;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:.3rem}
+.concept-art-block p{font-size:.8rem;color:var(--ash);margin-bottom:.8rem;line-height:1.6}
 /* ── FOOTER (matches all pages) ── */
 footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3rem 1.5rem;text-align:center}
 .footer-brand{font-family:var(--font-display);font-size:1.4rem;letter-spacing:2px;color:var(--flame)}
@@ -139,6 +160,9 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 .cb-grid{grid-template-columns:1fr}.pool-tracker{grid-template-columns:1fr}.submit-row{grid-template-columns:1fr}
 .preview-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
+
+<script defer src="assets/js/embers-bg.js"></script>
+<script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
 </head>
 <body>
 
@@ -152,8 +176,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 <li><a href="deckbuilder.html">Deck Builder</a></li>
 <li><a href="play.html">Play</a></li>
 <li><a href="glossary.html">Glossary</a></li>
-<li><a href="submit.html" class="active">Submit Cards</a></li>
-</ul></div></nav>
+<li><a href="submit.html" class="active">Submit Cards</a></li></ul></div></nav>
 
 <div class="page-header">
 <h1>Submit Custom Cards</h1>
@@ -207,7 +230,18 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 <div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c1-cp-hint">(max 2,000)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c1-cp" min="0" max="2000" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c1-cp-v">1500</span><span class="stat-max" id="c1-cp-m">/ 2000</span></div></div>
 <div class="cb-field full"><label class="cb-lbl">Lore Text (Normal Catalysts have no effect — flavor only)</label><textarea class="cb-input" id="c1-lore" placeholder="A sentinel born from the eternal storm." oninput="U()"></textarea></div>
-</div></div>
+</div>
+<!-- IMAGE UPLOAD: Catalyst 1 -->
+<div class="img-upload-section">
+  <div class="img-upload-label">🎨 Card Art / Reference <span class="img-tag">OPTIONAL · up to 3 images</span></div>
+  <div class="img-dropzone" id="dz-c1" ondragover="dzOver(event,'c1')" ondragleave="dzLeave('c1')" ondrop="dzDrop(event,'c1')">
+    <div class="img-dropzone-text">Drop images here or <strong>click to browse</strong><br><span style="font-size:.65rem">JPG, PNG, GIF, WEBP · max 3 images per card · 5 MB each</span></div>
+    <input type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" multiple onchange="imgPick('c1',this)">
+  </div>
+  <div class="img-thumbs" id="thumbs-c1"></div>
+  <div class="img-count" id="imgcount-c1"></div>
+</div>
+</div>
 
 <!-- CATALYST 2 (Lv 1-4) -->
 <div class="card-builder" id="b-c2">
@@ -222,7 +256,18 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 <div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c2-cp-hint">(max 2,000)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c2-cp" min="0" max="2000" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c2-cp-v">1500</span><span class="stat-max" id="c2-cp-m">/ 2000</span></div></div>
 <div class="cb-field full"><label class="cb-lbl">Lore Text</label><textarea class="cb-input" id="c2-lore" placeholder="A loyal beast with fangs of cold iron." oninput="U()"></textarea></div>
-</div></div>
+</div>
+<!-- IMAGE UPLOAD: Catalyst 2 -->
+<div class="img-upload-section">
+  <div class="img-upload-label">🎨 Card Art / Reference <span class="img-tag">OPTIONAL · up to 3 images</span></div>
+  <div class="img-dropzone" id="dz-c2" ondragover="dzOver(event,'c2')" ondragleave="dzLeave('c2')" ondrop="dzDrop(event,'c2')">
+    <div class="img-dropzone-text">Drop images here or <strong>click to browse</strong><br><span style="font-size:.65rem">JPG, PNG, GIF, WEBP · max 3 images per card · 5 MB each</span></div>
+    <input type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" multiple onchange="imgPick('c2',this)">
+  </div>
+  <div class="img-thumbs" id="thumbs-c2"></div>
+  <div class="img-count" id="imgcount-c2"></div>
+</div>
+</div>
 
 <!-- CATALYST 3 (Lv 6-7) -->
 <div class="card-builder" id="b-c3">
@@ -237,7 +282,18 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 <div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c3-cp-hint">(max 2,500)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c3-cp" min="0" max="2500" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c3-cp-v">1500</span><span class="stat-max" id="c3-cp-m">/ 2500</span></div></div>
 <div class="cb-field full"><label class="cb-lbl">Lore Text</label><textarea class="cb-input" id="c3-lore" placeholder="The Crimson Warden waits for the flame to call." oninput="U()"></textarea></div>
-</div></div>
+</div>
+<!-- IMAGE UPLOAD: Catalyst 3 -->
+<div class="img-upload-section">
+  <div class="img-upload-label">🎨 Card Art / Reference <span class="img-tag">OPTIONAL · up to 3 images</span></div>
+  <div class="img-dropzone" id="dz-c3" ondragover="dzOver(event,'c3')" ondragleave="dzLeave('c3')" ondrop="dzDrop(event,'c3')">
+    <div class="img-dropzone-text">Drop images here or <strong>click to browse</strong><br><span style="font-size:.65rem">JPG, PNG, GIF, WEBP · max 3 images per card · 5 MB each</span></div>
+    <input type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" multiple onchange="imgPick('c3',this)">
+  </div>
+  <div class="img-thumbs" id="thumbs-c3"></div>
+  <div class="img-count" id="imgcount-c3"></div>
+</div>
+</div>
 
 <!-- FUSION (Great) -->
 <div class="card-builder" id="b-f" style="border-color:rgba(255,215,0,.3)">
@@ -261,6 +317,17 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 <span><span class="fi-label">Material CP cap:</span> <span class="fi-val" id="fi-cp" style="color:var(--blue)">—</span></span>
 <span><span class="fi-label">Total (PR+CP):</span> <span class="fi-val" id="fi-total" style="color:var(--amber)">—</span> <span class="fi-label">/ 4,000</span></span>
 </div>
+
+<!-- IMAGE UPLOAD: Fusion Catalyst -->
+<div class="img-upload-section">
+  <div class="img-upload-label">🎨 Card Art / Reference <span class="img-tag">OPTIONAL · up to 3 images</span></div>
+  <div class="img-dropzone" id="dz-fusion" ondragover="dzOver(event,'fusion')" ondragleave="dzLeave('fusion')" ondrop="dzDrop(event,'fusion')">
+    <div class="img-dropzone-text">Drop images here or <strong>click to browse</strong><br><span style="font-size:.65rem">JPG, PNG, GIF, WEBP · max 3 images per card · 5 MB each</span></div>
+    <input type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" multiple onchange="imgPick('fusion',this)">
+  </div>
+  <div class="img-thumbs" id="thumbs-fusion"></div>
+  <div class="img-count" id="imgcount-fusion"></div>
+</div>
 </div>
 
 <!-- TRICK CARD -->
@@ -273,7 +340,30 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 <input type="hidden" id="t-type" value="Concealed Trick">
 </div>
 <div class="cb-field full"><label class="cb-lbl">Effect <span class="cap-hint">(target 1 Catalyst · max +300 PR/CP boost · no double effects)</span></label><textarea class="cb-input" id="t-effect" placeholder="Change the battle position of 1 Catalyst on the field." oninput="U()"></textarea></div>
-</div></div>
+</div>
+<!-- IMAGE UPLOAD: Trick Card -->
+<div class="img-upload-section">
+  <div class="img-upload-label">🎨 Card Art / Reference <span class="img-tag">OPTIONAL · up to 2 images</span></div>
+  <div class="img-dropzone" id="dz-trick" ondragover="dzOver(event,'trick')" ondragleave="dzLeave('trick')" ondrop="dzDrop(event,'trick')">
+    <div class="img-dropzone-text">Drop images here or <strong>click to browse</strong><br><span style="font-size:.65rem">JPG, PNG, GIF, WEBP · max 2 images per card · 5 MB each</span></div>
+    <input type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" multiple onchange="imgPick('trick',this)">
+  </div>
+  <div class="img-thumbs" id="thumbs-trick"></div>
+  <div class="img-count" id="imgcount-trick"></div>
+</div>
+</div>
+
+<!-- CONCEPT ART / GENERAL REFERENCES -->
+<div class="concept-art-block">
+  <h4>🖼 Set Concept Art &amp; References</h4>
+  <p>Upload any mood boards, sketches, style references, or full artwork for your card set. These help the review team understand your vision — they're optional but strongly encouraged. Up to 6 images.</p>
+  <div class="img-dropzone" id="dz-concept" ondragover="dzOver(event,'concept')" ondragleave="dzLeave('concept')" ondrop="dzDrop(event,'concept')">
+    <div class="img-dropzone-text">Drop concept art here or <strong>click to browse</strong><br><span style="font-size:.65rem">JPG, PNG, GIF, WEBP · up to 6 images · 5 MB each</span></div>
+    <input type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" multiple onchange="imgPick('concept',this)">
+  </div>
+  <div class="img-thumbs" id="thumbs-concept"></div>
+  <div class="img-count" id="imgcount-concept"></div>
+</div>
 
 <!-- VALIDATION -->
 <div class="validation"><h3>Validation Checklist</h3><div class="v-list" id="v-list"></div></div>
@@ -528,11 +618,14 @@ function renderPreview(){
 }
 
 // ═══════ SUBMIT ═══════
-function submitCards(){
+async function submitCards(){
  if(!allValid)return;
  const st=$('submit-status');
- st.textContent='Preparing submission...'; st.className='submit-status';
+ const btn=$('submit-btn');
+ btn.disabled=true;
+ st.textContent=''; st.className='submit-status';
 
+ // ── Build submission object ──
  const sub={submitter:{name:V('sub-name'),email:V('sub-email')},timestamp:new Date().toISOString(),cards:[]};
 
  ['c1','c2','c3'].forEach((m,i)=>{
@@ -544,20 +637,159 @@ function submitCards(){
  sub.cards.push({slot:'Trick Card',type:trickType,name:V('t-name'),text:V('t-effect')});
  sub.poolUsed={pressure:N('c1-pr')+N('c2-pr')+N('c3-pr'),counterPressure:N('c1-cp')+N('c2-cp')+N('c3-cp')};
 
- // Email body
+ // Build mailto before any async ops
  const emailBody=sub.cards.map(c=>`--- ${c.slot} ---\nName: ${c.name}\nType: ${c.type}\n${c.level?'Level: '+c.level+'\n':''}${c.alignment?'Alignment: '+c.alignment+'\n':''}${c.kinds?'KINDS: '+c.kinds+'\n':''}${c.pressure!==undefined?'Pressure: '+c.pressure+'\nCounter Pressure: '+c.counterPressure+'\n':''}${c.materials?'Materials: '+c.materials.join(' + ')+'\n':''}Text: ${c.text}`).join('\n\n');
  const subject=encodeURIComponent(`CTF Custom Card Submission — ${V('sub-name')}`);
- const body=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
+ const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
+ const mailtoUrl=`mailto:changethewrld@outlook.com?subject=${subject}&body=${emailBodyEncoded}`;
 
- // Download JSON
+ // ── STEP 1: Download JSON (full image data included via getImageDataFull) ──
+ st.textContent='[1/3] Saving backup JSON...'; st.className='submit-status';
+ sub.images=getImageSummary();         // metadata for readability
+ sub.imagesFull=getImageDataFull();    // full base64 for local archive
+ sub.totalImages=getTotalImageCount();
  const blob=new Blob([JSON.stringify(sub,null,2)],{type:'application/json'});
- const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CTF_Cards_${V('sub-name').replace(/\s+/g,'_')}.json`;a.click();
+ const dl=document.createElement('a');
+ dl.href=URL.createObjectURL(blob);
+ dl.download=`CTF_Cards_${V('sub-name').replace(/\s+/g,'_')}.json`;
+ dl.click();
 
- // Open email
- setTimeout(()=>{window.location.href=`mailto:changethewrld@outlook.com?subject=${subject}&body=${body}`},500);
+ // ── STEP 2: Submit to OperatorStack (metadata only — no base64 images) ──
+ st.textContent='[2/3] Submitting to review queue...'; st.className='submit-status';
+ const osPayload={
+  name:V('sub-name'), email:V('sub-email'), submission_timestamp:sub.timestamp,
+  // Catalyst 1
+  catalyst_1_name:V('c1-name'), catalyst_1_level:N('c1-level'),
+  catalyst_1_alignment:V('c1-align'), catalyst_1_kinds:V('c1-kinds'),
+  catalyst_1_pressure:N('c1-pr'), catalyst_1_cp:N('c1-cp'), catalyst_1_lore:V('c1-lore'),
+  // Catalyst 2
+  catalyst_2_name:V('c2-name'), catalyst_2_level:N('c2-level'),
+  catalyst_2_alignment:V('c2-align'), catalyst_2_kinds:V('c2-kinds'),
+  catalyst_2_pressure:N('c2-pr'), catalyst_2_cp:N('c2-cp'), catalyst_2_lore:V('c2-lore'),
+  // Catalyst 3
+  catalyst_3_name:V('c3-name'), catalyst_3_level:N('c3-level'),
+  catalyst_3_alignment:V('c3-align'), catalyst_3_kinds:V('c3-kinds'),
+  catalyst_3_pressure:N('c3-pr'), catalyst_3_cp:N('c3-cp'), catalyst_3_lore:V('c3-lore'),
+  // Fusion
+  fusion_name:V('f-name'), fusion_level:V('f-level'),
+  fusion_alignment:V('f-align'), fusion_kinds:V('f-kinds'),
+  fusion_pressure:N('f-pr'), fusion_cp:N('f-cp'),
+  fusion_effect:V('f-effect'), fusion_materials:matNames.join(' + '),
+  // Trick
+  trick_name:V('t-name'), trick_type:trickType, trick_effect:V('t-effect'),
+  // Pool totals
+  pool_pr_used:sub.poolUsed.pressure, pool_cp_used:sub.poolUsed.counterPressure,
+  // Image metadata (no base64 — sizes/names only)
+  total_images_attached:sub.totalImages,
+  image_slots_used:Object.keys(sub.images).join(', ')||'none',
+  // Reserved OperatorStack field
+  _subject:`CTF Submission — ${V('sub-name')}`
+ };
 
- st.textContent='✓ JSON downloaded & email client opened. If email didn\'t open, send the JSON to changethewrld@outlook.com';
- st.className='submit-status status-ok';
+ try{
+  await OperatorStack.submitForm('frm_hz1no8yg5r', osPayload);
+
+  // ── STEP 3: Open mailto ──
+  st.textContent='[3/3] Opening email client...'; st.className='submit-status';
+  window.open(mailtoUrl);
+
+  // ── Redirect to thank-you page ──
+  setTimeout(()=>{ window.location.href='thanks.html'; }, 900);
+
+ }catch(err){
+  // OperatorStack failed — surface the error clearly, re-enable button, mailto still works
+  const errMsg=err&&err.message?err.message:'connection error';
+  st.innerHTML=`<strong style="color:var(--ember)">⚠ Review queue unavailable (${errMsg})</strong><br>Your JSON was saved locally. Please email it to <a href="${mailtoUrl}" style="color:var(--flame)">changethewrld@outlook.com</a> manually.`;
+  st.className='submit-status status-err';
+  btn.disabled=false;
+  console.error('OperatorStack submitForm error:', err);
+ }
+}
+
+// ═══════ IMAGE UPLOAD SYSTEM ═══════
+const IMG_STORES = {};
+const IMG_LIMITS = {c1:3,c2:3,c3:3,fusion:3,trick:2,concept:6};
+
+function getStore(id){if(!IMG_STORES[id])IMG_STORES[id]=[];return IMG_STORES[id];}
+
+function imgPick(id,input){
+  const files=[...input.files];
+  addImages(id,files);
+  input.value=''; // allow re-picking same file
+}
+
+function dzOver(e,id){e.preventDefault();document.getElementById('dz-'+id).classList.add('drag-over');}
+function dzLeave(id){document.getElementById('dz-'+id).classList.remove('drag-over');}
+function dzDrop(e,id){
+  e.preventDefault();
+  dzLeave(id);
+  const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));
+  addImages(id,files);
+}
+
+function addImages(id,files){
+  const store=getStore(id);
+  const limit=IMG_LIMITS[id]||3;
+  const remaining=limit-store.length;
+  if(remaining<=0){showImgWarn(id,`Max ${limit} images reached`);return;}
+  const toAdd=files.slice(0,remaining);
+  let loaded=0;
+  toAdd.forEach(file=>{
+    if(file.size>5*1024*1024){showImgWarn(id,file.name+' exceeds 5 MB — skipped');return;}
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      store.push({name:file.name,size:file.size,dataUrl:ev.target.result,type:file.type});
+      loaded++;
+      if(loaded===toAdd.length)renderThumbs(id);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removeImg(id,idx){
+  const store=getStore(id);
+  store.splice(idx,1);
+  renderThumbs(id);
+}
+
+function renderThumbs(id){
+  const store=getStore(id);
+  const limit=IMG_LIMITS[id]||3;
+  const container=document.getElementById('thumbs-'+id);
+  const countEl=document.getElementById('imgcount-'+id);
+  if(!container)return;
+  container.innerHTML=store.map((img,i)=>`
+    <div class="img-thumb">
+      <img src="${img.dataUrl}" alt="${img.name}">
+      <button class="img-thumb-remove" onclick="removeImg('${id}',${i})" title="Remove">✕</button>
+      <div class="img-thumb-name">${img.name}</div>
+    </div>`).join('');
+  const cls=store.length>=limit?'img-warn':'img-ok';
+  countEl.innerHTML=store.length>0?`<span class="${cls}">${store.length}/${limit} image${store.length!==1?'s':''} attached</span>`:'';
+}
+
+function showImgWarn(id,msg){
+  const el=document.getElementById('imgcount-'+id);
+  if(el){el.innerHTML=`<span class="img-warn">⚠ ${msg}</span>`;setTimeout(()=>renderThumbs(id),2500);}
+}
+
+function getImageSummary(){
+  const keys=['c1','c2','c3','fusion','trick','concept'];
+  const summary={};
+  keys.forEach(k=>{const s=getStore(k);if(s.length)summary[k]=s.map(i=>({name:i.name,size:i.size,type:i.type}));});
+  return summary;
+}
+
+// Full image data (base64 included) — for local JSON download only
+function getImageDataFull(){
+  const keys=['c1','c2','c3','fusion','trick','concept'];
+  const full={};
+  keys.forEach(k=>{const s=getStore(k);if(s.length)full[k]=s.map(i=>({name:i.name,size:i.size,type:i.type,dataUrl:i.dataUrl}));});
+  return full;
+}
+
+function getTotalImageCount(){
+  return ['c1','c2','c3','fusion','trick','concept'].reduce((t,k)=>t+getStore(k).length,0);
 }
 
 // ═══════ INIT ═══════

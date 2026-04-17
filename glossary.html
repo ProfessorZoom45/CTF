@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Glossary — Carry The Flame</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d0d0d">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -35,11 +37,20 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 .footer-links{display:flex;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
 .footer-links a{font-family:var(--font-label);font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash)}.footer-links a:hover{color:var(--flame)}
 </style>
+
+<script defer src="assets/js/embers-bg.js"></script>
+<script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
 </head>
 <body>
 <nav><div class="nav-inner"><a href="index.html" class="nav-brand">Carry The <span>Flame</span></a>
 <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
-<ul class="nav-links"><li><a href="rules.html">Rules</a></li><li><a href="cards.html">Cards</a></li><li><a href="deckbuilder.html">Deck Builder</a></li><li><a href="play.html">Play</a></li><li><a href="glossary.html">Glossary</a></li><li><a href="submit.html">Submit Cards</a></li></ul></div></nav>
+<ul class="nav-links">
+  <li><a href="rules.html">Rules</a></li>
+  <li><a href="cards.html">Cards</a></li>
+  <li><a href="deckbuilder.html">Deck Builder</a></li>
+  <li><a href="play.html">Play</a></li>
+  <li><a href="glossary.html" class="active">Glossary</a></li>
+  <li><a href="submit.html">Submit Cards</a></li></ul></div></nav>
 
 <div class="page-header"><h1>Glossary</h1><p>Every term in the Carry The Flame system, defined and searchable. CTF terminology is canonical — CTF system terms noted where applicable.</p></div>
 
@@ -70,7 +81,7 @@ const TERMS=[
 {term:"Chain",def:"When one player activates a card or effect, the other can respond before resolution. CTF chains resolve Last In, First Out (LIFO). Palm Tricks always Link 1. Counter Tricks lock the chain."},
 {term:"Chi",aka:"CTF: Chi",def:"Your life total. Each player starts with 10,000 Chi. Reduced by Logic damage. When Chi reaches 0, that player loses via Chi KO instantly.",locked:true},
 {term:"Chi KO",def:"Win Condition 1. Reduce opponent Chi from 10,000 to 0. Instant win — game ends the moment Chi hits 0. Does not wait for turn end."},
-{term:"Concealed Trick",aka:"CTF: Concealed Trick",def:"Reactive trap card. Set face-down during your Action Phase. Cannot activate the same turn set. Activate in response to triggers on either player's turn. The ONLY card type playable on the opponent's turn. Trick type classification: Concealed.",locked:true},
+{term:"Concealed Trick",aka:"CTF: Concealed Trick",def:"Reactive Trick card. Concealed Tricks may be set face-down during your Action Phase and cannot activate the same turn they are set. All Tricks may be set face-down, but Field Tricks may only be set face-down in the Field Trick location. Concealed Tricks are the main reactive Trick type.",locked:true},
 {term:"Counter Pressure",aka:"CTF: Counter Pressure",def:"The defensive stat on a Catalyst card. Used when the Catalyst is in Defense Position. If the attacker's Pressure doesn't exceed Counter Pressure, the attacker bounces off.",locked:true},
 {term:"Counter Trick",def:"A subtype of Concealed Trick. Highest chain priority — once a Counter Trick is on the chain, only another Counter Trick can respond above it. Regular Concealed Tricks cannot respond.",locked:true},
 {term:"Deck Out",def:"When your deck is empty and you reach your Draw Phase: skip the draw and continue playing. Deck out is NOT a loss in CTF.",locked:true},
@@ -132,5 +143,6 @@ document.getElementById('letter-nav').innerHTML=letters.map(l=>`<a href="#letter
 document.getElementById('search').addEventListener('input',e=>render(e.target.value));
 render();
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script>
 </body>
 </html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beta Checklist — Carry The Flame</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d0d0d">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!--
+    This page provides an interactive version of the official beta
+    checklist.  It mirrors the tasks defined in the project
+    documentation (see docs/CTF_Beta_Checklist_UPDATED.txt) and
+    exposes them as a set of tick boxes.  Testers can mark items
+    complete as they verify functionality.  Progress is persisted
+    locally via localStorage so that a refresh does not clear the
+    state.  Use the “Clear Progress” button at the top of the page
+    to reset all checkboxes.
+  -->
+  <style>
+    /* basic reset and theme variables */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --coal: #0d0d0d;
+      --coal-light: #1a1a1a;
+      --coal-mid: #242424;
+      --flame: #ff6a00;
+      --ember: #c0392b;
+      --amber: #ffb347;
+      --ash: #888;
+      --white: #f5f0e8;
+      --cream: #e8e0d0;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-label: 'Barlow Condensed', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--coal);
+      color: var(--white);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 3rem;
+    }
+    a { color: var(--flame); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--amber); }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(13,13,13,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,106,0,.15);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .8rem 1.5rem;
+    }
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      color: var(--flame);
+      text-transform: uppercase;
+    }
+    .nav-brand span { color: var(--white); }
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: .95rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--cream);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--flame);
+      transition: width .3s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a:hover { color: var(--flame); }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--flame);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(13,13,13,.98);
+        flex-direction: column;
+        padding: 1.5rem;
+        gap: 1.2rem;
+        border-bottom: 1px solid rgba(255,106,0,.15);
+      }
+      .nav-links.open { display: flex; }
+      .menu-toggle { display: block; }
+    }
+    .page-header {
+      padding: 8rem 1.5rem 3rem;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 100%, rgba(255,106,0,.08), transparent 60%), var(--coal);
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      background: linear-gradient(180deg, var(--white) 40%, var(--flame));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: .5rem;
+    }
+    .page-header p {
+      color: var(--cream);
+      max-width: 700px;
+      margin: .8rem auto 0;
+      font-size: 1rem;
+    }
+    .content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1.5rem;
+    }
+    .reset-btn {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: .85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: .6rem 1.4rem;
+      border: 1px solid var(--flame);
+      background: transparent;
+      color: var(--flame);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .reset-btn:hover {
+      background: rgba(255,106,0,.1);
+    }
+    .checklist-section {
+      margin-bottom: 2.5rem;
+    }
+    .checklist-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--flame);
+      margin-bottom: .5rem;
+    }
+    .checklist-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-top: 1.2rem;
+      margin-bottom: .6rem;
+      padding-left: .5rem;
+      border-left: 3px solid var(--flame);
+    }
+    ul.task-list {
+      list-style: none;
+      margin-left: 0;
+    }
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .6rem;
+      margin-bottom: .6rem;
+    }
+    .task-item input[type="checkbox"] {
+      margin-top: .15rem;
+      /* accent-color is supported in modern browsers to match theme */
+      accent-color: var(--flame);
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+    }
+    .task-item label {
+      color: var(--cream);
+      font-size: .95rem;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+    footer {
+      background: var(--coal);
+      border-top: 1px solid rgba(255,106,0,.1);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      color: var(--flame);
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-family: var(--font-label);
+      font-size: .85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ash);
+    }
+    .footer-links a:hover { color: var(--flame); }
+    .footer-copy {
+      font-size: .75rem;
+      color: var(--ash);
+      margin-top: .5rem;
+    }
+  </style>
+  <script defer src="assets/js/embers-bg.js"></script>
+  <script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Carry The <span>Flame</span></a>
+      <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+      <ul class="nav-links">
+        <li><a href="rules.html">Rules</a></li>
+        <li><a href="cards.html">Cards</a></li>
+        <li><a href="deckbuilder.html">Deck Builder</a></li>
+        <li><a href="play.html">Play</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="submit.html">Submit Cards</a></li>
+        <li><a href="checklist.html" class="active">Checklist</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1>Beta Checklist</h1>
+    <p>Track and document your progress toward beta readiness. Check off each item as it is completed or verified. Progress is saved locally in your browser.</p>
+  </div>
+
+  <main class="content">
+    <div class="controls">
+      <button class="reset-btn" onclick="resetChecklist()">Clear Progress</button>
+    </div>
+    <!-- Sections begin -->
+    <div class="checklist-section" id="section1">
+      <h2>1. Rules Engine</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="chi-starts"><label for="chi-starts">Chi starts at 10,000 everywhere</label></li>
+        <li class="task-item"><input type="checkbox" id="win-paths"><label for="win-paths">3 win paths work correctly: Chi KO / 7 Kills / 7 Extractions</label></li>
+        <li class="task-item"><input type="checkbox" id="paths-no-mix"><label for="paths-no-mix">Paths do not mix</label></li>
+        <li class="task-item"><input type="checkbox" id="turn-structure"><label for="turn-structure">Turn structure always stays at 7 phases</label></li>
+        <li class="task-item"><input type="checkbox" id="p1-no-attack"><label for="p1-no-attack">P1 Turn 1 draws but cannot attack</label></li>
+        <li class="task-item"><input type="checkbox" id="shotgun-rule"><label for="shotgun-rule">Shotgun Rule works on every Special Summon</label></li>
+        <li class="task-item"><input type="checkbox" id="libra-counts"><label for="libra-counts">Libra Summon counts as 1 Special Summon</label></li>
+        <li class="task-item"><input type="checkbox" id="rescue-returns"><label for="rescue-returns">Rescue returns to your deck</label></li>
+        <li class="task-item"><input type="checkbox" id="great-enforced"><label for="great-enforced">Great Card rules are enforced correctly</label></li>
+        <li class="task-item"><input type="checkbox" id="simultaneous-priority"><label for="simultaneous-priority">Simultaneous win priority works where intended</label></li>
+        <li class="task-item"><input type="checkbox" id="deckout-behavior"><label for="deckout-behavior">Deck‑out behavior matches the locked rule set</label></li>
+        <li class="task-item"><input type="checkbox" id="tricks-set"><label for="tricks-set">All Tricks may be set face‑down</label></li>
+        <li class="task-item"><input type="checkbox" id="field-tricks-only"><label for="field-tricks-only">Field Tricks may only be set face‑down in the Field Trick location on the board</label></li>
+      </ul>
+      <h3>1A. Basic Rules to Examine</h3>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="start-hand"><label for="start-hand">Starting hand is always 5</label></li>
+        <li class="task-item"><input type="checkbox" id="turn-order"><label for="turn-order">Turn order and phase advancement never skip or repeat incorrectly</label></li>
+        <li class="task-item"><input type="checkbox" id="normal-limit"><label for="normal-limit">Normal Summon limit is enforced</label></li>
+        <li class="task-item"><input type="checkbox" id="special-cap"><label for="special-cap">Special Summon hard cap is enforced</label></li>
+        <li class="task-item"><input type="checkbox" id="side-range"><label for="side-range">Side Deck rules use the correct range</label></li>
+        <li class="task-item"><input type="checkbox" id="endphase-sacrifice"><label for="endphase-sacrifice">End Phase action rules use the current locked sacrifice rule</label></li>
+        <li class="task-item"><input type="checkbox" id="great-exceptions"><label for="great-exceptions">Great Card exceptions are enforced exactly where they should be</label></li>
+        <li class="task-item"><input type="checkbox" id="locked-rulings"><label for="locked-rulings">The engine uses the current locked rulings rather than older draft assumptions</label></li>
+      </ul>
+      <h3>1B. Core Game Functions to Examine</h3>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="turn-state"><label for="turn-state">Turn state tracking is accurate</label></li>
+        <li class="task-item"><input type="checkbox" id="phase-state"><label for="phase-state">Phase state tracking is accurate</label></li>
+        <li class="task-item"><input type="checkbox" id="chi-tracking"><label for="chi-tracking">Chi total tracking is accurate</label></li>
+        <li class="task-item"><input type="checkbox" id="kill-tracking"><label for="kill-tracking">Kill count tracking is accurate</label></li>
+        <li class="task-item"><input type="checkbox" id="extraction-tracking"><label for="extraction-tracking">Extraction count tracking is accurate</label></li>
+        <li class="task-item"><input type="checkbox" id="void-box"><label for="void-box">Void / Box / RFG destinations are tracked accurately</label></li>
+        <li class="task-item"><input type="checkbox" id="field-trick-state"><label for="field-trick-state">Field Trick state is tracked accurately</label></li>
+        <li class="task-item"><input type="checkbox" id="libra-scale-state"><label for="libra-scale-state">Libra scale state is tracked accurately</label></li>
+        <li class="task-item"><input type="checkbox" id="fusion-deck-state"><label for="fusion-deck-state">Fusion Deck state is tracked accurately</label></li>
+        <li class="task-item"><input type="checkbox" id="illegal-block"><label for="illegal-block">Illegal actions are blocked before they corrupt state</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section2">
+      <h2>2. Card Effect Coverage</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="all-cards-resolve"><label for="all-cards-resolve">All cards in the beta pool resolve by their real text</label></li>
+        <li class="task-item"><input type="checkbox" id="palm-timing"><label for="palm-timing">Palm Tricks only work in valid timing windows</label></li>
+        <li class="task-item"><input type="checkbox" id="concealed-timing"><label for="concealed-timing">Concealed Tricks react in valid timing windows</label></li>
+        <li class="task-item"><input type="checkbox" id="counter-priority"><label for="counter-priority">Counter Trick priority is correct</label></li>
+        <li class="task-item"><input type="checkbox" id="field-tricks-replace"><label for="field-tricks-replace">Field Tricks apply and replace correctly</label></li>
+        <li class="task-item"><input type="checkbox" id="libra-edge"><label for="libra-edge">Libra edge cases are handled</label></li>
+        <li class="task-item"><input type="checkbox" id="fusion-material"><label for="fusion-material">Fusion material checks and summon rules are handled</label></li>
+        <li class="task-item"><input type="checkbox" id="no-placeholder"><label for="no-placeholder">No placeholder “first valid target” logic remains for beta cards</label></li>
+      </ul>
+      <h3>2A. Card‑Type Function Checks</h3>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="catalyst-atk-def"><label for="catalyst-atk-def">Catalysts correctly support ATK / DEF position logic</label></li>
+        <li class="task-item"><input type="checkbox" id="palm-proactive"><label for="palm-proactive">Palm Tricks are proactive and never used as illegal counter‑responses</label></li>
+        <li class="task-item"><input type="checkbox" id="concealed-triggers"><label for="concealed-triggers">Concealed Tricks trigger only in legal windows</label></li>
+        <li class="task-item"><input type="checkbox" id="counter-chain"><label for="counter-chain">Counter Tricks preserve priority correctly once on chain</label></li>
+        <li class="task-item"><input type="checkbox" id="field-first-class"><label for="field-first-class">Field Tricks behave as first‑class board objects</label></li>
+        <li class="task-item"><input type="checkbox" id="fusion-stay"><label for="fusion-stay">Fusion Cards stay in the Fusion Deck until legally summoned</label></li>
+        <li class="task-item"><input type="checkbox" id="libra-scales"><label for="libra-scales">Libra scale cards behave like scales and not regular Catalyst Zone cards</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section3">
+      <h2>3. Duel Flow</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="normal-summon"><label for="normal-summon">Normal Summon works correctly</label></li>
+        <li class="task-item"><input type="checkbox" id="special-cap-enforced"><label for="special-cap-enforced">Special Summon cap is enforced</label></li>
+        <li class="task-item"><input type="checkbox" id="tribute-selection"><label for="tribute-selection">Tribute selection is manual and reliable</label></li>
+        <li class="task-item"><input type="checkbox" id="hand-discard"><label for="hand-discard">Hand discard is manual and reliable</label></li>
+        <li class="task-item"><input type="checkbox" id="extraction-select"><label for="extraction-select">Extraction target selection works</label></li>
+        <li class="task-item"><input type="checkbox" id="rescue-select"><label for="rescue-select">Rescue target selection works</label></li>
+        <li class="task-item"><input type="checkbox" id="destroy-select"><label for="destroy-select">Destroy Trick target selection works</label></li>
+        <li class="task-item"><input type="checkbox" id="direct-checks"><label for="direct-checks">Direct attack checks are correct</label></li>
+        <li class="task-item"><input type="checkbox" id="attack-once"><label for="attack-once">Attack‑once‑per‑turn tracking is correct</label></li>
+        <li class="task-item"><input type="checkbox" id="counters-drift"><label for="counters-drift">Kill and Extraction counters never drift</label></li>
+      </ul>
+      <h3>3A. Battle System</h3>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="attack-legality"><label for="attack-legality">Attack legality is checked before battle starts</label></li>
+        <li class="task-item"><input type="checkbox" id="valid-targets"><label for="valid-targets">Valid attack targets are enforced</label></li>
+        <li class="task-item"><input type="checkbox" id="direct-only-when-clear"><label for="direct-only-when-clear">Direct attack is only allowed when the opponent’s field is fully clear</label></li>
+        <li class="task-item"><input type="checkbox" id="atk-gt-atk"><label for="atk-gt-atk">ATK > opponent ATK sends the losing Catalyst to the Void and applies Chi damage equal to the difference</label></li>
+        <li class="task-item"><input type="checkbox" id="atk-lt-atk"><label for="atk-lt-atk">ATK < opponent ATK sends the attacker to the Void and applies Chi damage to that controller equal to the difference</label></li>
+        <li class="task-item"><input type="checkbox" id="atk-eq-atk"><label for="atk-eq-atk">ATK = opponent ATK destroys both and applies no Chi damage</label></li>
+        <li class="task-item"><input type="checkbox" id="atk-gt-def-non"><label for="atk-gt-def-non">ATK > opponent DEF (non‑Great) sends the defender to the Box and does not apply Chi damage</label></li>
+        <li class="task-item"><input type="checkbox" id="atk-gt-def-great"><label for="atk-gt-def-great">ATK > opponent DEF (Great Card) sends the Great Card to the Void, not the Box</label></li>
+        <li class="task-item"><input type="checkbox" id="atk-eq-def"><label for="atk-eq-def">ATK = opponent DEF causes no destruction and no Chi damage</label></li>
+        <li class="task-item"><input type="checkbox" id="atk-lt-def"><label for="atk-lt-def">ATK < opponent DEF causes no Kill and no Capture</label></li>
+        <li class="task-item"><input type="checkbox" id="atk-lt-def-damage"><label for="atk-lt-def-damage">ATK < opponent DEF makes the attacking controller take Chi damage equal to the difference</label></li>
+        <li class="task-item"><input type="checkbox" id="battle-destinations"><label for="battle-destinations">Battle results always go to the correct destination: Void / Box / RFG</label></li>
+        <li class="task-item"><input type="checkbox" id="great-battle-exceptions"><label for="great-battle-exceptions">Great Card battle exceptions are enforced correctly</label></li>
+        <li class="task-item"><input type="checkbox" id="kill-increments"><label for="kill-increments">Kill counting only increments on valid Kill outcomes</label></li>
+        <li class="task-item"><input type="checkbox" id="extraction-progress"><label for="extraction-progress">Extraction progress only increments on valid Extraction outcomes</label></li>
+        <li class="task-item"><input type="checkbox" id="win-checks"><label for="win-checks">Win checks trigger correctly after battle resolution</label></li>
+      </ul>
+      <h3>3B. End Phase Flow</h3>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="extract-valid"><label for="extract-valid">Extract works only when a valid Box target exists</label></li>
+        <li class="task-item"><input type="checkbox" id="rescue-valid"><label for="rescue-valid">Rescue works only when a valid Box target exists</label></li>
+        <li class="task-item"><input type="checkbox" id="destroy-valid"><label for="destroy-valid">Destroy Trick works only on valid Trick / Field Trick targets</label></li>
+        <li class="task-item"><input type="checkbox" id="endphase-cost"><label for="endphase-cost">End Phase sacrifice cost is applied exactly once</label></li>
+        <li class="task-item"><input type="checkbox" id="hand-limit"><label for="hand-limit">Hand limit discard happens after the End Phase action in the correct order</label></li>
+        <li class="task-item"><input type="checkbox" id="manual-choice"><label for="manual-choice">Player choice is never auto‑forced when a manual choice is required</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section4">
+      <h2>4. Multiplayer Stability</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="host-authoritative"><label for="host-authoritative">Host‑authoritative action flow is stable</label></li>
+        <li class="task-item"><input type="checkbox" id="illegal-rejection"><label for="illegal-rejection">Illegal moves are rejected with a clear message</label></li>
+        <li class="task-item"><input type="checkbox" id="desync-detection"><label for="desync-detection">Desync detection works</label></li>
+        <li class="task-item"><input type="checkbox" id="reconnect"><label for="reconnect">Reconnect actually restores a usable match</label></li>
+        <li class="task-item"><input type="checkbox" id="rematch"><label for="rematch">Rematch works cleanly</label></li>
+        <li class="task-item"><input type="checkbox" id="repeat-match"><label for="repeat-match">Two real users can finish repeated matches without state corruption</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section5">
+      <h2>5. Deck System</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="deck-handoff"><label for="deck-handoff">Deck Builder → Play handoff works every time</label></li>
+        <li class="task-item"><input type="checkbox" id="main-deck-valid"><label for="main-deck-valid">Main Deck validation works</label></li>
+        <li class="task-item"><input type="checkbox" id="fusion-deck-valid"><label for="fusion-deck-valid">Fusion Deck validation works</label></li>
+        <li class="task-item"><input type="checkbox" id="side-deck-valid"><label for="side-deck-valid">Side Deck validation works</label></li>
+        <li class="task-item"><input type="checkbox" id="great-limits"><label for="great-limits">Great Card limits work</label></li>
+        <li class="task-item"><input type="checkbox" id="missing-blocked"><label for="missing-blocked">Missing/invalid card IDs are blocked</label></li>
+        <li class="task-item"><input type="checkbox" id="deck-import"><label for="deck-import">Deck imports/exports do not corrupt data</label></li>
+        <li class="task-item"><input type="checkbox" id="removed-linger"><label for="removed-linger">Removed cards no longer linger in saved decks</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section6">
+      <h2>6. Data Integrity</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="no-broken-ids"><label for="no-broken-ids">No broken card IDs</label></li>
+        <li class="task-item"><input type="checkbox" id="no-broken-paths"><label for="no-broken-paths">No broken image paths</label></li>
+        <li class="task-item"><input type="checkbox" id="no-duplicates"><label for="no-duplicates">No duplicate IDs causing conflicts</label></li>
+        <li class="task-item"><input type="checkbox" id="no-removed"><label for="no-removed">No removed Seto/Kaiba cards remain in live data</label></li>
+        <li class="task-item"><input type="checkbox" id="starter-valid"><label for="starter-valid">Starter decks load valid cards only</label></li>
+        <li class="task-item"><input type="checkbox" id="sanity-checks"><label for="sanity-checks">Sanity checks pass before each beta build</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section7">
+      <h2>7. UI / UX Clarity</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="phase-obvious"><label for="phase-obvious">Current phase is always obvious</label></li>
+        <li class="task-item"><input type="checkbox" id="legal-obvious"><label for="legal-obvious">Current legal actions are obvious</label></li>
+        <li class="task-item"><input type="checkbox" id="chain-readable"><label for="chain-readable">Chain stack is readable</label></li>
+        <li class="task-item"><input type="checkbox" id="confirmations"><label for="confirmations">Confirmations exist for risky actions</label></li>
+        <li class="task-item"><input type="checkbox" id="endphase-panel"><label for="endphase-panel">End Phase panel is clear</label></li>
+        <li class="task-item"><input type="checkbox" id="duel-log"><label for="duel-log">Duel log is readable and filterable</label></li>
+        <li class="task-item"><input type="checkbox" id="mobile-layout"><label for="mobile-layout">Mobile layout is playable</label></li>
+        <li class="task-item"><input type="checkbox" id="accessibility"><label for="accessibility">Accessibility/settings options work</label></li>
+        <li class="task-item"><input type="checkbox" id="board-clear"><label for="board-clear">Board state is understandable at a glance</label></li>
+      </ul>
+      <h3>7A. Battle Readability</h3>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="battle-outcome"><label for="battle-outcome">Players can clearly see what battle result occurred</label></li>
+        <li class="task-item"><input type="checkbox" id="kill-capture"><label for="kill-capture">Players can clearly tell whether a result was a Kill, Capture, or rebound Chi damage</label></li>
+        <li class="task-item"><input type="checkbox" id="card-location"><label for="card-location">Players can clearly tell where a card went after battle</label></li>
+        <li class="task-item"><input type="checkbox" id="totals-visible"><label for="totals-visible">Players can clearly see current Chi totals, Kill totals, and Extraction totals</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section8">
+      <h2>8. Product Loop</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="product-pages"><label for="product-pages">Homepage, Cards, Deck Builder, Rules, and Play all work together</label></li>
+        <li class="task-item"><input type="checkbox" id="match-summary"><label for="match-summary">Match result summary works</label></li>
+        <li class="task-item"><input type="checkbox" id="hot-seat"><label for="hot-seat">Hot‑seat mode works</label></li>
+        <li class="task-item"><input type="checkbox" id="sandbox"><label for="sandbox">Sandbox mode works</label></li>
+        <li class="task-item"><input type="checkbox" id="pwa-install"><label for="pwa-install">PWA install works</label></li>
+        <li class="task-item"><input type="checkbox" id="offline-app-shell"><label for="offline-app-shell">Offline/app‑shell behavior is tested after deployment</label></li>
+        <li class="task-item"><input type="checkbox" id="tracking-script"><label for="tracking-script">Tracking script loads on every page</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section9">
+      <h2>9. QA Pass</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="qa-desktop"><label for="qa-desktop">Desktop browser pass</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-mobile"><label for="qa-mobile">Mobile browser pass</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-hot-seat"><label for="qa-hot-seat">Hot‑seat pass</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-sandbox"><label for="qa-sandbox">Sandbox pass</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-online"><label for="qa-online">Online 1v1 pass</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-long"><label for="qa-long">Long‑match pass</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-regression"><label for="qa-regression">Regression pass after every patch</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-silent"><label for="qa-silent">No major silent failures remain</label></li>
+      </ul>
+      <h3>9A. Rules and Battle QA</h3>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="qa-battle-all"><label for="qa-battle-all">Test every battle outcome manually</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-great"><label for="qa-great">Test Great Card exceptions manually</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-endphase"><label for="qa-endphase">Test End Phase actions manually</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-libra-edge"><label for="qa-libra-edge">Test Libra Summon edge cases manually</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-fusion-edge"><label for="qa-fusion-edge">Test Fusion material edge cases manually</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-chain-timing"><label for="qa-chain-timing">Test chain / Counter timing manually</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-direct"><label for="qa-direct">Test direct attack checks manually</label></li>
+        <li class="task-item"><input type="checkbox" id="qa-rebound"><label for="qa-rebound">Test rebound Chi damage on ATK &lt; DEF manually</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section-blockers">
+      <h2>Beta Blockers</h2>
+      <p style="color: var(--cream); margin-bottom: .8rem;">Do not call it Beta unless all of these are true:</p>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="blocker-rules-engine"><label for="blocker-rules-engine">Rules engine is trustworthy</label></li>
+        <li class="task-item"><input type="checkbox" id="blocker-multiplayer"><label for="blocker-multiplayer">Multiplayer is stable enough for repeated live matches</label></li>
+        <li class="task-item"><input type="checkbox" id="blocker-deck-legal"><label for="blocker-deck-legal">Deck legality + launch flow is dependable</label></li>
+        <li class="task-item"><input type="checkbox" id="blocker-desync"><label for="blocker-desync">No major desyncs or silent illegal actions remain</label></li>
+        <li class="task-item"><input type="checkbox" id="blocker-card-pool"><label for="blocker-card-pool">The playable beta card pool resolves correctly</label></li>
+        <li class="task-item"><input type="checkbox" id="blocker-feedback"><label for="blocker-feedback">Players are mostly testing balance and feel, not broken systems</label></li>
+      </ul>
+    </div>
+    <div class="checklist-section" id="section-decision">
+      <h2>Beta Decision Box</h2>
+      <p style="color: var(--cream); margin-bottom: .8rem;">Call it Beta only when:</p>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="decision-features"><label for="decision-features">90%+ of intended beta features work reliably</label></li>
+        <li class="task-item"><input type="checkbox" id="decision-bugs"><label for="decision-bugs">Critical rule bugs are rare</label></li>
+        <li class="task-item"><input type="checkbox" id="decision-online"><label for="decision-online">Online matches can be completed consistently</label></li>
+        <li class="task-item"><input type="checkbox" id="decision-feedback"><label for="decision-feedback">Test players are no longer mainly reporting broken systems</label></li>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-brand">CARRY THE FLAME</div>
+    <div class="footer-links">
+      <a href="rules.html">Rules</a>
+      <a href="cards.html">Cards</a>
+      <a href="deckbuilder.html">Deck Builder</a>
+      <a href="play.html">Play</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="submit.html">Submit Cards</a>
+      <a href="checklist.html" class="active">Checklist</a>
+    </div>
+    <p class="footer-copy">© 2026 Perfect Timing Gaming · Makairis Holding Group · Dr. Zoom &amp; Newz · Buffalo, NY</p>
+  </footer>
+
+  <script>
+    // Persist checkbox state in localStorage.
+    function initChecklist() {
+      const inputs = document.querySelectorAll('input[type="checkbox"]');
+      inputs.forEach(input => {
+        const stored = localStorage.getItem('ctf-beta-' + input.id);
+        if (stored === 'true') {
+          input.checked = true;
+        }
+        input.addEventListener('change', () => {
+          localStorage.setItem('ctf-beta-' + input.id, input.checked);
+        });
+      });
+    }
+    function resetChecklist() {
+      if (confirm('Are you sure you want to clear all checklist progress?')) {
+        const inputs = document.querySelectorAll('input[type="checkbox"]');
+        inputs.forEach(input => {
+          input.checked = false;
+          localStorage.removeItem('ctf-beta-' + input.id);
+        });
+      }
+    }
+    window.addEventListener('DOMContentLoaded', initChecklist);
+  </script>
+  <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));}</script>
+</body>
+</html>

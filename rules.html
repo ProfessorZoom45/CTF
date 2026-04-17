@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rules — Carry The Flame</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d0d0d">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -39,12 +41,21 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 .footer-links{display:flex;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
 .footer-links a{font-family:var(--font-label);font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash)}.footer-links a:hover{color:var(--flame)}
 </style>
+
+<script defer src="assets/js/embers-bg.js"></script>
+<script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
 </head>
 <body>
 <nav><div class="nav-inner">
 <a href="index.html" class="nav-brand">Carry The <span>Flame</span></a>
 <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
-<ul class="nav-links"><li><a href="rules.html" class="active">Rules</a></li><li><a href="cards.html">Cards</a></li><li><a href="deckbuilder.html">Deck Builder</a></li><li><a href="play.html">Play</a></li><li><a href="glossary.html">Glossary</a></li><li><a href="submit.html">Submit Cards</a></li></ul>
+<ul class="nav-links">
+  <li><a href="rules.html" class="active">Rules</a></li>
+  <li><a href="cards.html">Cards</a></li>
+  <li><a href="deckbuilder.html">Deck Builder</a></li>
+  <li><a href="play.html">Play</a></li>
+  <li><a href="glossary.html">Glossary</a></li>
+  <li><a href="submit.html">Submit Cards</a></li></ul>
 </div></nav>
 
 <div class="page-header">
@@ -96,7 +107,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <thead><tr><th>Zone</th><th>Cards Allowed</th><th>Limit</th><th>Key Rule</th></tr></thead>
 <tbody>
 <tr><td>Catalyst Zones (5)</td><td>Catalysts only</td><td>5 max</td><td>ATK (upright) or DEF (sideways). Front row, facing opponent.</td></tr>
-<tr><td>Trick Card Zones (5)</td><td>Palm / Concealed Tricks</td><td>5 max</td><td>Back row. Set face-down. Outermost 2 double as Libra Zones. Face-down Tricks do NOT block direct attacks. <span class="locked">🔒</span></td></tr>
+<tr><td>Trick Card Zones (5)</td><td>Palm / Concealed Tricks</td><td>5 max</td><td>All Tricks may be set face-down. Field Tricks may only be set face-down in the Field Trick location. Outermost 2 back-row slots double as Libra Zones. Face-down Tricks do NOT block direct attacks. <span class="locked">🔒</span></td></tr>
 <tr><td>Libra Zones (2)</td><td>Normal Catalysts ONLY</td><td>Uses outermost Trick slots</td><td>Outermost Trick Zones double as Libra. Normal Catalyst placed here = Level becomes Scale value. Treated as Trick cards for targeting. <span class="locked">🔒</span></td></tr>
 <tr><td>Field Trick Zone</td><td>Field Tricks only</td><td>1 per player</td><td>Stacked above The Box. New Field Trick destroys the old one.</td></tr>
 <tr><td>The Box</td><td>Captured opp. Catalysts</td><td>Unlimited</td><td>Stacked below Field Trick. Great Cards NEVER enter. Visible to both. <span class="locked">🔒</span></td></tr>
@@ -152,7 +163,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <tr><td>Your ATK > Opp DEF (normal)</td><td>Opp Catalyst → YOUR BOX (Capture)</td><td>NO</td><td>+1 Capture</td></tr>
 <tr><td>Your ATK > Opp DEF (Great Card)</td><td>Great Card → Void</td><td>NO</td><td>+1 Kill</td></tr>
 <tr><td>ATK = DEF (tie)</td><td>Attacker bounces. Defender stays.</td><td>NO</td><td>None</td></tr>
-<tr><td>ATK < DEF</td><td>Attacker bounces. Defender stays.</td><td>NO</td><td>None</td></tr>
+<tr><td>ATK < DEF</td><td>No Kill. No Capture. Attacker remains on field.</td><td>YES — attacking controller takes Chi damage equal to the difference</td><td>None</td></tr>
 <tr><td>Direct Attack (Catalyst Zones empty)</td><td>Full ATK → opponent Chi</td><td>YES (full ATK)</td><td>Chi KO path</td></tr>
 </tbody></table>
 <div class="warn-box"><strong>🔒 Direct attacks require ALL opponent CATALYST ZONES empty.</strong> Face-down Concealed Tricks in Trick Card Zones do NOT block direct attacks.</div>
@@ -195,7 +206,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 
 <div class="rule-section" id="box">
 <h2>The Box & Capture System</h2>
-<p>When your ATK Pressure strictly exceeds an opponent's DEF Counter Pressure, the defender is <strong>Captured</strong> and enters your Box. ATK = DEF = tie (bounce, nothing captured). Only non-Great Catalysts can enter the Box.</p>
+<p>When your ATK Pressure strictly exceeds an opponent's DEF Counter Pressure, the defender is <strong>Captured</strong> and enters your Box. ATK = DEF = tie (bounce, nothing captured). Only Catalysts can enter the Box.</p>
 <table class="rule-table">
 <thead><tr><th>Situation</th><th>Opponent's Choice</th><th>Result</th></tr></thead>
 <tbody>
@@ -207,7 +218,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 
 <div class="rule-section" id="end-phase">
 <h2>End Phase — Mandatory Strategic Choice <span class="locked">🔒 LOCKED</span></h2>
-<p>An <strong>eligible Catalyst</strong> = any non-Great Catalyst in your Catalyst Zones. Great Card Catalysts cannot be sacrificed for End Phase actions. If you have at least one eligible Catalyst, you MUST choose one of four actions:</p>
+<p>An <strong>eligible Catalyst</strong> = any Catalyst in your Catalyst Zones. Any Catalyst in your Catalyst Zones can be sacrificed for End Phase actions. If you have at least one eligible Catalyst, you MUST choose one of four actions:</p>
 <table class="rule-table">
 <thead><tr><th>Action</th><th>Cost</th><th>Effect</th></tr></thead>
 <tbody>
@@ -333,5 +344,6 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 </div>
 <p class="footer-copy">© 2026 Perfect Timing Gaming · Makairis Holding Group · Dr. Zoom \&amp; Newz · Buffalo, NY · Consistency > Hype</p>
 </footer>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script>
 </body>
 </html>

@@ -39,9 +39,10 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .pag button:disabled{opacity:.3;cursor:default}
 
 /* Card grid */
-.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.8rem}
 .ci{background:var(--coal-mid);border:1px solid rgba(255,106,0,.06);padding:.9rem;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
-.ci-img{width:100%;aspect-ratio:59/86;object-fit:cover;object-position:center;border-radius:3px;border:1px solid rgba(255,106,0,.08);background:var(--coal);margin-bottom:.7rem}
+.ci-artbox{width:100%;height:112px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid rgba(255,106,0,.08);background:linear-gradient(180deg,rgba(255,106,0,.06),rgba(0,0,0,.16));margin-bottom:.7rem;padding:10px}
+.ci-img{width:40px;height:40px;max-width:40px;max-height:40px;object-fit:contain;object-position:center;border:none;background:transparent;margin:0;image-rendering:pixelated;image-rendering:crisp-edges;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
 .ci:hover{border-color:var(--flame);transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,106,0,.1)}
 .ci::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--flame);transform:scaleX(0);transform-origin:left;transition:transform .3s}.ci:hover::before{transform:scaleX(1)}
 .cn{font-family:var(--font-display);font-size:1.05rem;letter-spacing:.5px;text-transform:uppercase;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -59,8 +60,9 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 /* Modal */
 .mo{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem}.mo.open{display:flex}
 .md{background:var(--coal-light);border:1px solid rgba(255,106,0,.2);max-width:860px;width:100%;padding:1.8rem;position:relative;max-height:90vh;overflow-y:auto}
-.modal-grid{display:grid;grid-template-columns:280px 1fr;gap:1.2rem;align-items:start}
-.modal-art{width:100%;border-radius:4px;border:1px solid rgba(255,106,0,.12);background:var(--coal)}
+.modal-grid{display:grid;grid-template-columns:220px 1fr;gap:1.2rem;align-items:start}
+.modal-artbox{width:100%;height:220px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid rgba(255,106,0,.12);background:linear-gradient(180deg,rgba(255,106,0,.08),rgba(0,0,0,.18));padding:16px}
+.modal-art{width:120px;height:120px;max-width:120px;max-height:120px;object-fit:contain;object-position:center;border:none;background:transparent;image-rendering:pixelated;image-rendering:crisp-edges;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
 .mc{position:absolute;top:.8rem;right:.8rem;background:none;border:none;color:var(--flame);font-size:1.4rem;cursor:pointer}
 .md h2{font-family:var(--font-display);font-size:1.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--flame);margin-bottom:.5rem;padding-right:2rem}
 .mf{margin-bottom:.5rem;font-size:.85rem}.mf .ml{font-family:var(--font-label);font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ash);font-size:.75rem}.mf .mv{color:var(--cream);margin-top:.1rem}
@@ -69,7 +71,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .empty{text-align:center;padding:3rem;color:var(--ash)}
 footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:1.5rem;text-align:center}
 .footer-brand{font-family:var(--font-display);font-size:1.1rem;letter-spacing:2px;color:var(--flame)}.footer-copy{font-size:.7rem;color:var(--ash);margin-top:.4rem}
-@media(max-width:768px){.nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1.5rem;gap:1.2rem}.nav-links.open{display:flex}.menu-toggle{display:block}.cg{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.modal-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1.5rem;gap:1.2rem}.nav-links.open{display:flex}.menu-toggle{display:block}.cg{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.ci-artbox{height:96px}.modal-grid{grid-template-columns:1fr}.modal-artbox{height:160px}.modal-art{width:96px;height:96px;max-width:96px;max-height:96px}}
 .footer-links{display:flex;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
 .footer-links a{font-family:var(--font-label);font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash)}.footer-links a:hover{color:var(--flame)}
 </style>
@@ -86,11 +88,9 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:1.
   <li><a href="deckbuilder.html">Deck Builder</a></li>
   <li><a href="play.html">Play</a></li>
   <li><a href="glossary.html">Glossary</a></li>
-  <li><a href="submit.html">Submit Cards</a></li>
-  <li><a href="checklist.html">Checklist</a></li>
-</ul></div></nav>
+  <li><a href="submit.html">Submit Cards</a></li></ul></div></nav>
 
-<div class="page-header"><h1>Card Gallery</h1><p>All 1,610 cards from 41 sets. Search, filter, and click any card for full details.</p></div>
+<div class="page-header"><h1>Card Gallery</h1><p id="gallery-subtitle">All live cards from the current Patch 42 database. Search, filter, and click any card for full details.</p></div>
 
 <div class="container">
 <div class="sbar" id="stats"></div>
@@ -110,7 +110,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:1.
 <div class="mo" id="modal"><div class="md">
 <button class="mc" onclick="closeModal()">✕</button>
 <div class="modal-grid">
-<div><img class="modal-art" id="m-img" src="images/placeholder.gif" alt="Card art"></div>
+<div><div class="modal-artbox"><img class="modal-art" id="m-img" src="images/placeholder.gif" alt="Card art"></div></div>
 <div>
 <h2 id="m-name"></h2>
 <div class="mf"><div class="ml">Type</div><div class="mv" id="m-type"></div></div>
@@ -128,7 +128,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:1.
 <footer>
 <div class="footer-brand">CARRY THE FLAME</div>
 <div class="footer-links">
-<a href="rules.html">Rules</a><a href="cards.html">Cards</a><a href="deckbuilder.html">Deck Builder</a><a href="play.html">Play</a><a href="glossary.html">Glossary</a><a href="submit.html">Submit Cards</a><a href="checklist.html">Checklist</a>
+<a href="rules.html">Rules</a><a href="cards.html">Cards</a><a href="deckbuilder.html">Deck Builder</a><a href="play.html">Play</a><a href="glossary.html">Glossary</a><a href="submit.html">Submit Cards</a>
 </div>
 <p class="footer-copy">© 2026 Perfect Timing Gaming · Makairis Holding Group · Dr. Zoom \&amp; Newz · Buffalo, NY · Consistency > Hype</p>
 </footer>
@@ -137,13 +137,13 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:1.
 <script src="assets/js/card-image-map.js"></script>
 <script>
 if(typeof CTF_CARDS==='undefined'){
- document.querySelector('.container').innerHTML='<div style="padding:4rem 2rem;text-align:center"><h2 style="color:#ff6a00;font-family:Bebas Neue,sans-serif;font-size:2rem;margin-bottom:1rem">Card Database Not Loaded</h2><p style="color:#e8e0d0;max-width:500px;margin:0 auto;line-height:1.7">Make sure <code style="color:#ff6a00">assets/js/data.js</code> exists in the repo.</p></div>';
+ document.querySelector('.container').innerHTML='<div style="padding:4rem 2rem;text-align:center"><h2 style="color:#ff6a00;font-family:Bebas Neue,sans-serif;font-size:2rem;margin-bottom:1rem">Card Database Not Loaded</h2><p style="color:#e8e0d0;max-width:560px;margin:0 auto;line-height:1.7">Make sure <code style="color:#ff6a00">assets/js/data.js</code> and <code style="color:#ff6a00">assets/js/card-image-map.js</code> both exist in the repo and that the service worker is not serving an older cached version.</p></div>';
  throw new Error('data.js not loaded');
 }
 const PER_PAGE=60;
 let filtered=[],page=0;
-function cardImg(c){return (window.CTF_CARD_IMAGES&&c&&c.id&&CTF_CARD_IMAGES[c.id]) || (c&&((c.img&&c.img.trim())||(c.image&&c.image.trim()))) || 'images/placeholder.gif'}
-function imgHtml(c,cls){const alt=((c&&c.name)||'Card').replace(/"/g,'&quot;');return `<img class="${cls}" src="${cardImg(c)}" alt="${alt}" loading="lazy" onerror="this.onerror=null;this.src='images/placeholder.gif'">`}
+function cardImg(c){return (window.CTF_CARD_IMAGES&&c&&c.id&&window.CTF_CARD_IMAGES[c.id]) || (c&&((c.img&&c.img.trim())||(c.image&&c.image.trim()))) || 'images/placeholder.gif'}
+function imgHtml(c,cls){const alt=((c&&c.name)||'Card').replace(/\"/g,'&quot;');return `<div class="ci-artbox"><img class="${cls}" src="${cardImg(c)}" alt="${alt}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='images/placeholder.gif'"></div>`}
 
 function typeClass(t){return t==='Catalyst'?'ct-catalyst':t==='Palm Trick'?'ct-palm':t==='Concealed Trick'?'ct-concealed':t==='Counter Trick'?'ct-counter':t==='Field Trick'?'ct-field':t==='Fusion'?'ct-fusion':'ct-catalyst'}
 
@@ -162,6 +162,8 @@ document.getElementById('stats').innerHTML=`
 <div class="s"><span class="sv">${CTF_META.fields}</span><span class="sl">Field</span></div>
 <div class="s"><span class="sv">${CTF_META.fusions}</span><span class="sl">Fusion</span></div>
 <div class="s"><span class="sv" id="showing">0</span><span class="sl">Showing</span></div>`;
+const gallerySubtitle=document.getElementById('gallery-subtitle');
+if(gallerySubtitle){gallerySubtitle.textContent=`All ${CTF_META.total.toLocaleString()} live cards from ${CTF_META.sets} sets. Search, filter, and click any card for full details.`;}
 
 function applyFilters(){
  const q=document.getElementById('q').value.toLowerCase();
@@ -229,7 +231,7 @@ function openModal(c){
  const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
  const stw=document.getElementById('m-stats-wrap');
  if(isC){stw.style.display='flex';stw.innerHTML=`<div class="cs"><div class="cl">PRESSURE</div><div class="cv">${c.pr}</div></div><div class="cs"><div class="cl">COUNTER PR</div><div class="cv">${c.cp}</div></div>`}else stw.style.display='none';
- document.getElementById('m-desc').textContent=c.desc;
+ document.getElementById('m-desc').textContent=c.desc||'No effect text.';
  document.getElementById('modal').classList.add('open');
 }
 function closeModal(){document.getElementById('modal').classList.remove('open')}

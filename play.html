@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Play — Carry The Flame</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d0d0d">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
@@ -11,6 +13,11 @@
 :root{--coal:#0d0d0d;--coal-light:#1a1a1a;--coal-mid:#242424;--flame:#ff6a00;--ember:#c0392b;--amber:#ffb347;--ash:#888;--white:#f5f0e8;--cream:#e8e0d0;--green:#4CAF50;--red:#e74c3c;--blue:#2196F3;--purple:#9C27B0;--gold:#FFD700;--font-display:'Bebas Neue',sans-serif;--font-label:'Barlow Condensed',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Space Mono',monospace}
 html,body{height:100%;overflow:hidden}
 body{background:var(--coal);color:var(--white);font-family:var(--font-body);user-select:none}
+button:focus-visible,.lb-btn:focus-visible,.act-btn:focus-visible,.log-filter:focus-visible,.zone:focus-visible,.field-slot:focus-visible,.hand-card:focus-visible,.deck-opt:focus-visible,.choice-item:focus-visible,.log-search:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px;box-shadow:0 0 0 2px rgba(255,215,0,.18)}
+body.board-clarity .zone{border-width:2px}
+body.board-clarity .zone-label{color:rgba(255,255,255,.32)}
+body.board-clarity .field-card{box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
+body.board-clarity .field-card.face-down::after{content:'SET';position:absolute;top:4px;right:4px;font-family:var(--font-mono);font-size:.44rem;letter-spacing:.5px;background:rgba(0,0,0,.7);padding:1px 4px;border:1px solid rgba(255,255,255,.12);color:var(--cream)}
 
 /* ═══ LOBBY ═══ */
 #lobby{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:1.5rem;padding:1.5rem}
@@ -30,8 +37,42 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 .deck-select{display:flex;flex-direction:column;gap:.4rem;margin:.6rem 0}
 .deck-opt{padding:.6rem;background:var(--coal);border:1px solid rgba(255,106,0,.06);cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:center}
 .deck-opt:hover{border-color:var(--flame)}.deck-opt.selected{border-color:var(--flame);background:rgba(255,106,0,.08)}
+.deck-opt.invalid{border-color:var(--red);background:rgba(231,76,60,.08)}
+.deck-opt-meta{font-size:.68rem;color:var(--ash);margin-top:2px}
+.deck-opt.invalid .deck-opt-meta{color:#ffb3aa}
 .deck-opt-name{font-family:var(--font-label);font-weight:700;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;color:var(--white)}
 .deck-opt-desc{font-size:.72rem;color:var(--ash)}
+
+.status-banner{padding:6px 10px;background:linear-gradient(90deg,rgba(255,106,0,.18),rgba(255,106,0,.04));border-bottom:1px solid rgba(255,106,0,.18);font-family:var(--font-label);font-size:.78rem;letter-spacing:1px;text-transform:uppercase;display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.status-banner .sb-main{color:var(--white);font-weight:700}
+.status-banner .sb-sub{color:var(--cream);font-size:.68rem}
+.status-banner.waiting{background:linear-gradient(90deg,rgba(33,150,243,.18),rgba(33,150,243,.04));border-bottom-color:rgba(33,150,243,.2)}
+.status-banner.alert{background:linear-gradient(90deg,rgba(231,76,60,.18),rgba(231,76,60,.04));border-bottom-color:rgba(231,76,60,.2)}
+.battle-readout{padding:8px 10px;border-top:1px solid rgba(255,106,0,.15);border-bottom:1px solid rgba(255,106,0,.15);background:rgba(255,255,255,.03);display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.battle-readout .label{font-family:var(--font-label);font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--ember)}.battle-readout .value{font-size:.84rem;color:var(--white);font-weight:700}.battle-readout .sub{font-size:.72rem;color:var(--ash)}
+.field-stack{display:flex;flex-direction:column;gap:2px;min-width:62px}
+.field-slot{width:62px;height:40px;border:1px solid rgba(76,175,80,.35);background:rgba(46,125,50,.16);border-radius:3px;display:flex;align-items:center;justify-content:center;padding:2px;cursor:pointer;transition:all .15s}
+.field-slot.empty{color:rgba(255,255,255,.3);font-family:var(--font-mono);font-size:.45rem;letter-spacing:.4px;text-transform:uppercase}
+.field-slot.active{border-color:#66bb6a;box-shadow:0 0 8px rgba(102,187,106,.22)}
+.field-slot.highlight{border-color:var(--amber);background:rgba(255,179,71,.1)}
+.field-card.mini{width:100%;height:100%;padding:2px}
+.field-card.mini .fc-name{font-size:.42rem;-webkit-line-clamp:2}
+.field-card.mini .fc-stats{font-size:.42rem}
+.helper-panel{padding:8px;border-bottom:1px solid rgba(255,106,0,.08);flex-shrink:0}
+.helper-title{font-family:var(--font-display);font-size:.78rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.helper-copy{font-size:.72rem;line-height:1.35;color:var(--cream)}
+.legal-actions-panel{padding:8px;border-bottom:1px solid rgba(255,106,0,.08);flex-shrink:0}
+.legal-actions-list{display:flex;flex-wrap:wrap;gap:4px}
+.legal-chip{font-family:var(--font-mono);font-size:.56rem;line-height:1;padding:4px 6px;border:1px solid rgba(255,106,0,.18);background:rgba(255,106,0,.06);color:var(--cream);text-transform:uppercase}
+.legal-chip.warn{border-color:rgba(255,179,71,.35);background:rgba(255,179,71,.08);color:var(--amber)}
+.legal-chip.blocked{border-color:rgba(231,76,60,.35);background:rgba(231,76,60,.08);color:#ffb3aa}
+.log-filters{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.log-search{width:100%;font-family:var(--font-mono);font-size:.62rem;background:var(--coal);border:1px solid rgba(255,106,0,.12);color:var(--cream);padding:5px 6px;margin-bottom:6px;outline:none}
+.log-search:focus{border-color:var(--flame)}
+.log-empty{font-family:var(--font-mono);font-size:.62rem;color:var(--ash);padding:6px 0}
+.log-filter{font-family:var(--font-mono);font-size:.58rem;padding:3px 5px;border:1px solid rgba(255,106,0,.16);background:transparent;color:var(--ash);cursor:pointer}
+.log-filter.active{color:var(--flame);border-color:var(--flame);background:rgba(255,106,0,.08)}
+.log-entry .log-meta{display:block;color:rgba(255,255,255,.28);font-size:.52rem;margin-bottom:2px}
+.log-entry.system{border-left-color:rgba(255,179,71,.45)}
 
 /* ═══ GAME SCREEN ═══ */
 #game{display:none;height:100vh;grid-template-columns:1fr 220px;grid-template-rows:1fr}
@@ -85,6 +126,11 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 .fc-name{font-family:var(--font-label);font-weight:700;font-size:.48rem;color:var(--white);line-height:1.1;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .fc-stats{font-family:var(--font-mono);font-size:.5rem;color:var(--flame);margin-top:auto}
 .fc-great{border-color:var(--gold) !important}
+/* Position badges: P (Pressure) | CP (Counter Pressure) | FACE-DOWN */
+.fc-pos{font-family:var(--font-mono);font-size:.38rem;font-weight:700;letter-spacing:.04em;padding:0 2px;border-radius:1px;flex-shrink:0;align-self:flex-start;margin-bottom:1px;line-height:1.4}
+.fc-pos-p{background:rgba(255,106,0,.25);color:var(--flame);border:1px solid rgba(255,106,0,.4)}
+.fc-pos-cp{background:rgba(80,140,255,.22);color:#7fb3ff;border:1px solid rgba(80,140,255,.4)}
+.fc-pos-fd{background:rgba(255,255,255,.08);color:var(--ash);border:1px solid rgba(255,255,255,.15)}
 
 /* My hand */
 .my-hand{display:flex;justify-content:center;gap:3px;padding:4px 10px;background:rgba(0,0,0,.4);flex-shrink:0;min-height:80px;align-items:flex-end;overflow-x:auto}
@@ -105,6 +151,10 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 .phase-list{display:flex;flex-direction:column;gap:2px}
 .phase-item{font-family:var(--font-mono);font-size:.6rem;padding:3px 6px;color:var(--ash);border-left:2px solid transparent;transition:all .15s}
 .phase-item.active{color:var(--flame);border-left-color:var(--flame);background:rgba(255,106,0,.06);font-weight:700}
+/* Increase the font size of the active phase item for better visibility. This helps
+   players immediately identify the current phase, addressing the "Current phase is
+   always obvious" checklist item. */
+.phase-item.active{font-size:.75rem;}
 .phase-item.done{color:rgba(255,255,255,.2)}
 
 /* Action buttons */
@@ -122,12 +172,14 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 /* End Phase buttons */
 .end-phase-btns{display:flex;flex-direction:column;gap:3px;padding:6px 8px;border-bottom:1px solid rgba(255,106,0,.08);flex-shrink:0}
 .end-phase-btns h4{font-family:var(--font-display);font-size:.8rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.end-phase-note{font-size:.66rem;line-height:1.35;color:var(--cream);margin-bottom:4px}
 
 /* Combat log */
 .log-panel{flex:1;overflow-y:auto;padding:6px 8px}
 .log-panel h4{font-family:var(--font-display);font-size:.8rem;color:var(--ash);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;position:sticky;top:0;background:var(--coal-light);padding-bottom:2px}
 .log-entry{font-family:var(--font-mono);font-size:.58rem;color:var(--cream);line-height:1.5;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.02)}
 .log-entry.combat{color:var(--flame)}.log-entry.win{color:var(--gold);font-weight:700;font-size:.7rem}
+.log-entry.debug{color:rgba(120,200,255,.6);font-size:.52rem}.log-entry.effect{color:rgba(180,140,255,.8)}
 .log-entry.phase-change{color:var(--amber)}
 
 /* ═══ GAME OVER OVERLAY ═══ */
@@ -149,13 +201,121 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 .tip-stats{font-family:var(--font-mono);font-size:.72rem;color:var(--flame);margin:2px 0}
 .tip-desc{font-size:.68rem;color:var(--cream);line-height:1.4;margin-top:3px;padding-top:3px;border-top:1px solid rgba(255,106,0,.1)}
 
+.choice-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:1600;padding:1rem}
+.choice-modal.show{display:flex}
+.choice-card{width:min(720px,96vw);max-height:86vh;overflow:auto;background:var(--coal-light);border:1px solid rgba(255,106,0,.22);box-shadow:0 10px 30px rgba(0,0,0,.45);padding:1rem}
+.choice-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:.8rem}
+.choice-title{font-family:var(--font-display);font-size:1.4rem;letter-spacing:2px;text-transform:uppercase;color:var(--flame)}
+.choice-sub{font-size:.78rem;color:var(--cream);line-height:1.4;margin-top:.25rem}
+.choice-list{display:flex;flex-direction:column;gap:.45rem;margin:.8rem 0}
+.choice-item{width:100%;background:var(--coal);border:1px solid rgba(255,106,0,.12);color:var(--white);padding:.7rem .8rem;cursor:pointer;text-align:left}
+.choice-item:hover{border-color:var(--flame);background:rgba(255,106,0,.06)}
+.choice-item strong{display:block;font-family:var(--font-label);letter-spacing:1px;text-transform:uppercase}
+.choice-item small{display:block;color:var(--ash);margin-top:2px}
+.choice-actions{display:flex;justify-content:flex-end;gap:.5rem;margin-top:.8rem}
+.choice-tag{display:inline-block;font-family:var(--font-mono);font-size:.62rem;color:var(--amber);margin-top:3px}
+
+.net-pill{display:inline-flex;align-items:center;justify-content:center;padding:3px 6px;border:1px solid rgba(255,255,255,.15);font-family:var(--font-mono);font-size:.58rem;text-transform:uppercase;color:var(--ash);min-width:72px}
+.net-pill.ok{color:#9be7a1;border-color:rgba(76,175,80,.45);background:rgba(76,175,80,.08)}
+.net-pill.warn{color:#90caf9;border-color:rgba(33,150,243,.45);background:rgba(33,150,243,.08)}
+.net-pill.err{color:#ffb3aa;border-color:rgba(231,76,60,.45);background:rgba(231,76,60,.08)}
+.illegal-panel{display:none;padding:8px 10px;background:rgba(231,76,60,.18);border:1px solid rgba(231,76,60,.35);border-radius:4px;color:#ffb3aa;font-size:.75rem;font-weight:600;line-height:1.35;margin:4px 0}
+.field-card.has-art,.hand-card.has-art{background-size:cover;background-position:center;border-color:rgba(255,255,255,.12)}
+.field-card.has-art::before,.hand-card.has-art::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.72));pointer-events:none}
+.field-card.has-art>*,.hand-card.has-art>*{position:relative;z-index:1}
+.settings-drawer{position:fixed;top:0;right:-320px;width:min(320px,92vw);height:100vh;background:var(--coal-light);border-left:1px solid rgba(255,106,0,.14);z-index:1700;transition:right .2s ease;display:flex;flex-direction:column;padding:14px;gap:10px}
+.settings-drawer.show{right:0}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.8rem;color:var(--cream)}
+.settings-row input[type="range"]{width:120px}
+.settings-row input[type="checkbox"]{transform:scale(1.15)}
+.result-card{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:1650;padding:1rem}
+.result-card.show{display:flex}
+.result-panel{width:min(560px,95vw);background:linear-gradient(180deg,#171717,#0d0d0d);border:1px solid rgba(255,106,0,.25);padding:1rem;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.result-title{font-family:var(--font-display);font-size:2rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:.8rem 0}
+.result-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:.6rem}
+.result-box strong{display:block;font-family:var(--font-label);letter-spacing:1px;text-transform:uppercase;color:var(--ash);font-size:.7rem}
+.result-box span{font-family:var(--font-mono);font-size:1rem;color:var(--white)}
+body.high-contrast{--white:#fff;--cream:#fff;--ash:#d0d0d0;--flame:#ff8a00;--amber:#ffd166}
+body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after{transition:none!important;animation:none!important}
+body.card-art-off .field-card.has-art,body.card-art-off .hand-card.has-art{background-image:none!important}
+body.card-art-off .field-card.has-art::before,body.card-art-off .hand-card.has-art::before{display:none}
+body.compact-zones .zone{width:40px;height:48px}
+body.compact-zones .field-card{width:36px;height:44px}
+
+/* Settings drawer — wire backdrop toggle */
+.settings-drawer.show~#settings-backdrop{display:block}
+#settings-backdrop.active{display:block}
+
+/* Confirm modal */
+.confirm-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:1800;padding:1rem}
+.confirm-modal.show{display:flex}
+.confirm-card{background:var(--coal-light);border:1px solid rgba(255,106,0,.3);padding:1.2rem;width:min(360px,92vw);display:flex;flex-direction:column;gap:.8rem;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+.confirm-title{font-family:var(--font-display);font-size:1.2rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.confirm-body{font-family:var(--font-body);font-size:.85rem;color:var(--cream);line-height:1.4}
+.confirm-actions{display:flex;gap:.6rem;justify-content:flex-end}
+
+/* Chain stack polish */
+.chain-stack{margin-bottom:8px;padding:8px 10px;border:1px solid rgba(255,106,0,.25);background:linear-gradient(180deg,rgba(0,0,0,.58),rgba(255,106,0,.04));border-left:3px solid var(--flame);border-radius:4px}
+.chain-hdr{font-family:var(--font-display);font-size:.82rem;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chain-depth{font-family:var(--font-mono);font-size:.6rem;background:var(--flame);color:#fff;padding:1px 5px;border-radius:2px}
+.chain-resolve-hint{font-family:var(--font-mono);font-size:.55rem;color:var(--ash);margin-left:auto}
+.chain-entry{font-family:var(--font-mono);font-size:.64rem;color:var(--cream);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:auto auto 1fr auto;gap:6px;align-items:center}
+.chain-entry:last-child{border-bottom:none}
+.chain-idx{color:var(--ash);min-width:18px}
+.chain-who{color:var(--amber);min-width:22px}
+.chain-name{font-weight:700;color:var(--white)}
+.chain-meta{grid-column:3 / span 2;font-size:.54rem;color:var(--ash);margin-top:-2px}
+.chain-tag{font-size:.52rem;padding:1px 4px;border-radius:2px;background:rgba(156,39,176,.3);color:#ce93d8;flex-shrink:0}
+.chain-tag.counter{background:rgba(233,30,99,.3);color:#f48fb1}
+.chain-tag.src{background:rgba(33,150,243,.25);color:#90caf9}
+.chain-resolve{font-size:.5rem;letter-spacing:.5px;color:var(--gold);text-transform:uppercase;justify-self:end}
+.chain-arrow{font-size:.55rem;color:var(--ash);margin:2px 0 2px;text-align:center;letter-spacing:1px}
+
+/* Mobile touch target improvements */
 @media(max-width:768px){
 #game{grid-template-columns:1fr;grid-template-rows:1fr auto}
-.sidebar{max-height:35vh;border-left:none;border-top:1px solid rgba(255,106,0,.1)}
+.sidebar{max-height:35vh;border-left:none;border-top:1px solid rgba(255,106,0,.1);overflow-y:auto}
 .zone{width:48px;height:56px}.field-card{width:44px;height:52px}
 .hand-card{width:52px;height:68px}.card-back{width:22px;height:30px}
-.side-zone{width:36px;height:44px}}
+.side-zone{width:36px;height:44px}
+/* Ensure all action buttons hit 44px min-height for touch */
+.act-btn{min-height:44px;font-size:.82rem}
+.lb-btn{min-height:44px}
+/* Log filter buttons need more tap surface */
+.log-filter{min-height:36px;padding:4px 8px}
+/* End phase buttons full-width on mobile */
+.end-phase-btns .act-btn{width:100%}
+/* Score bar wraps gracefully */
+.score-bar{flex-wrap:wrap;gap:4px}
+}
+
+@media(max-width:480px){
+html,body{overflow:auto}
+#lobby{height:auto;min-height:100vh;padding:1rem}
+#game{height:auto;min-height:100vh}
+.board{overflow:auto}
+.score-bar{font-size:.6rem;padding:4px 6px}
+.chi-val{font-size:1.05rem}
+.zone{width:42px;height:52px}
+.field-card{width:38px;height:48px}
+.field-card .fc-name{font-size:.48rem}
+.field-card .fc-stats{font-size:.42rem}
+.hand-card{width:44px;height:60px}
+.hand-card .hc-name{font-size:.48rem}
+.side-zone{width:32px;height:40px}
+.field-slot{width:48px;height:34px}
+.zone-row{gap:2px}
+.field{padding:4px 2px}
+.sidebar{max-height:none}
+.log-panel{min-height:180px}
+.chain-entry{grid-template-columns:auto auto 1fr}
+.chain-resolve{grid-column:1 / -1;justify-self:start;margin-left:24px}
+}
+
 </style>
+<script defer src="assets/js/embers-bg.js"></script>
+<script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
 </head>
 <body>
 
@@ -164,6 +324,13 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 <a href="index.html" style="font-family:var(--font-label);font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;display:inline-block">← Back to Home</a>
 <div class="lobby-title">Carry The Flame</div>
 <div class="lobby-sub">Online Card Battle — connect with a room code and play.</div>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
+  <button class="lb-btn lb-btn-ghost" onclick="startHotSeat()">Hot-Seat Local</button>
+  <button class="lb-btn lb-btn-ghost" onclick="startSandbox()">Solo Sandbox</button>
+  <span class="net-pill" id="net-state">Offline</span>
+  <button class="lb-btn lb-btn-ghost" id="reconnect-btn" onclick="reconnectRoom()" style="display:none">Reconnect</button>
+  <button class="lb-btn lb-btn-ghost" id="install-btn" onclick="installApp()" style="display:none">Install App</button>
+</div>
 
 <div class="lobby-box">
 <h3>Select Deck</h3>
@@ -192,7 +359,7 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 <div class="board">
 <!-- Opponent score bar -->
 <div class="score-bar opp">
-<span>P<span id="opp-num">2</span></span>
+<span>P<span id="opp-num">2</span> · <span id="opp-deck-name">Starter Deck</span></span>
 <span>CHI: <span class="chi-val chi-opp" id="opp-chi">10000</span></span>
 <span class="score-stat">Kills: <strong id="opp-kills">0</strong></span>
 <span class="score-stat">Capt: <strong id="opp-captures">0</strong></span>
@@ -208,22 +375,22 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 <!-- Opp back row: Deck | 5 Tricks (outer=Libra) | Fusion -->
 <div class="zone-row">
 <div class="side-zone"><span class="sz-count" id="opp-deck-c">0</span><span class="sz-label">Deck</span></div>
-<div class="zone trick-zone libra-zone" data-p="opp" data-type="trick" data-z="0"><span class="zone-label">T/LIB</span></div>
-<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="1"><span class="zone-label">T</span></div>
-<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="2"><span class="zone-label">T</span></div>
-<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="3"><span class="zone-label">T</span></div>
-<div class="zone trick-zone libra-zone" data-p="opp" data-type="trick" data-z="4"><span class="zone-label">T/LIB</span></div>
+<div class="zone trick-zone libra-zone" data-p="opp" data-type="trick" data-z="0" role="button" tabindex="0" aria-label="Opponent Libra Zone 1"><span class="zone-label">T/LIB</span></div>
+<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="1" role="button" tabindex="0" aria-label="Opponent Trick Zone 2"><span class="zone-label">T</span></div>
+<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="2" role="button" tabindex="0" aria-label="Opponent Trick Zone 3"><span class="zone-label">T</span></div>
+<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="3" role="button" tabindex="0" aria-label="Opponent Trick Zone 4"><span class="zone-label">T</span></div>
+<div class="zone trick-zone libra-zone" data-p="opp" data-type="trick" data-z="4" role="button" tabindex="0" aria-label="Opponent Libra Zone 5"><span class="zone-label">T/LIB</span></div>
 <div class="side-zone"><span class="sz-count" id="opp-fusion-c">0</span><span class="sz-label">Fusion</span></div>
 </div>
 <!-- Opp front row: Void | 5 Catalysts | Field + Box -->
 <div class="zone-row">
 <div class="side-zone"><span class="sz-count" id="opp-void-c">0</span><span class="sz-label">Void</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="0" onclick="zoneClick('opp','cat',0)"><span class="zone-label">C1</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="1" onclick="zoneClick('opp','cat',1)"><span class="zone-label">C2</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="2" onclick="zoneClick('opp','cat',2)"><span class="zone-label">C3</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="3" onclick="zoneClick('opp','cat',3)"><span class="zone-label">C4</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="4" onclick="zoneClick('opp','cat',4)"><span class="zone-label">C5</span></div>
-<div class="side-zone" style="display:flex;flex-direction:column;gap:1px;height:auto"><div style="background:#2E7D32;border:1px solid #1B5E20;padding:2px 4px;text-align:center"><span class="sz-label" style="color:#fff">Field</span></div><div style="background:#111;border:1px solid #444;padding:2px 4px;text-align:center"><span class="sz-count" id="opp-box-c">0</span><span class="sz-label">Box</span></div></div>
+<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="0" onclick="zoneClick('opp','cat',0)" role="button" aria-label="Opponent Catalyst Zone 1"><span class="zone-label">C1</span></div>
+<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="1" onclick="zoneClick('opp','cat',1)" role="button" aria-label="Opponent Catalyst Zone 2"><span class="zone-label">C2</span></div>
+<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="2" onclick="zoneClick('opp','cat',2)" role="button" aria-label="Opponent Catalyst Zone 3"><span class="zone-label">C3</span></div>
+<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="3" onclick="zoneClick('opp','cat',3)" role="button" aria-label="Opponent Catalyst Zone 4"><span class="zone-label">C4</span></div>
+<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="4" onclick="zoneClick('opp','cat',4)" role="button" aria-label="Opponent Catalyst Zone 5"><span class="zone-label">C5</span></div>
+<div class="field-stack"><div class="field-slot empty" id="opp-field-slot" onmouseenter="showFieldTip(event,1)" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="Opponent Field Trick slot">Field Empty</div><div class="side-zone"><span class="sz-count" id="opp-box-c">0</span><span class="sz-label">Box</span></div></div>
 </div>
 
 <!-- CENTER — RFG -->
@@ -236,34 +403,43 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 
 <!-- My front row: Field + Box | 5 Catalysts | Void -->
 <div class="zone-row">
-<div class="side-zone" style="display:flex;flex-direction:column;gap:1px;height:auto"><div style="background:#2E7D32;border:1px solid #1B5E20;padding:2px 4px;text-align:center"><span class="sz-label" style="color:#fff">Field</span></div><div style="background:#111;border:1px solid #444;padding:2px 4px;text-align:center"><span class="sz-count" id="my-box-c">0</span><span class="sz-label">Box</span></div></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="0" onclick="zoneClick('me','cat',0)"><span class="zone-label">C1</span></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="1" onclick="zoneClick('me','cat',1)"><span class="zone-label">C2</span></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="2" onclick="zoneClick('me','cat',2)"><span class="zone-label">C3</span></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="3" onclick="zoneClick('me','cat',3)"><span class="zone-label">C4</span></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="4" onclick="zoneClick('me','cat',4)"><span class="zone-label">C5</span></div>
+<div class="field-stack"><div class="field-slot empty" id="my-field-slot" onclick="fieldSlotClick()" onmouseenter="showFieldTip(event,0)" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="My Field Trick slot">Field Empty</div><div class="side-zone"><span class="sz-count" id="my-box-c">0</span><span class="sz-label">Box</span></div></div>
+<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="0" onclick="zoneClick('me','cat',0)" role="button" aria-label="My Catalyst Zone 1"><span class="zone-label">C1</span></div>
+<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="1" onclick="zoneClick('me','cat',1)" role="button" aria-label="My Catalyst Zone 2"><span class="zone-label">C2</span></div>
+<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="2" onclick="zoneClick('me','cat',2)" role="button" aria-label="My Catalyst Zone 3"><span class="zone-label">C3</span></div>
+<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="3" onclick="zoneClick('me','cat',3)" role="button" aria-label="My Catalyst Zone 4"><span class="zone-label">C4</span></div>
+<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="4" onclick="zoneClick('me','cat',4)" role="button" aria-label="My Catalyst Zone 5"><span class="zone-label">C5</span></div>
 <div class="side-zone"><span class="sz-count" id="my-void-c">0</span><span class="sz-label">Void</span></div>
 </div>
 <!-- My back row: Fusion | 5 Tricks (outer=Libra) | Deck -->
 <div class="zone-row">
 <div class="side-zone"><span class="sz-count" id="my-fusion-c">0</span><span class="sz-label">Fusion</span></div>
-<div class="zone trick-zone libra-zone" data-p="me" data-type="trick" data-z="0" onclick="zoneClick('me','trick',0)"><span class="zone-label">T/LIB</span></div>
-<div class="zone trick-zone" data-p="me" data-type="trick" data-z="1" onclick="zoneClick('me','trick',1)"><span class="zone-label">T</span></div>
-<div class="zone trick-zone" data-p="me" data-type="trick" data-z="2" onclick="zoneClick('me','trick',2)"><span class="zone-label">T</span></div>
-<div class="zone trick-zone" data-p="me" data-type="trick" data-z="3" onclick="zoneClick('me','trick',3)"><span class="zone-label">T</span></div>
-<div class="zone trick-zone libra-zone" data-p="me" data-type="trick" data-z="4" onclick="zoneClick('me','trick',4)"><span class="zone-label">T/LIB</span></div>
+<div class="zone trick-zone libra-zone" data-p="me" data-type="trick" data-z="0" onclick="zoneClick('me','trick',0)" role="button" tabindex="0" aria-label="My Libra Zone 1"><span class="zone-label">T/LIB</span></div>
+<div class="zone trick-zone" data-p="me" data-type="trick" data-z="1" onclick="zoneClick('me','trick',1)" role="button" tabindex="0" aria-label="My Trick Zone 2"><span class="zone-label">T</span></div>
+<div class="zone trick-zone" data-p="me" data-type="trick" data-z="2" onclick="zoneClick('me','trick',2)" role="button" tabindex="0" aria-label="My Trick Zone 3"><span class="zone-label">T</span></div>
+<div class="zone trick-zone" data-p="me" data-type="trick" data-z="3" onclick="zoneClick('me','trick',3)" role="button" tabindex="0" aria-label="My Trick Zone 4"><span class="zone-label">T</span></div>
+<div class="zone trick-zone libra-zone" data-p="me" data-type="trick" data-z="4" onclick="zoneClick('me','trick',4)" role="button" tabindex="0" aria-label="My Libra Zone 5"><span class="zone-label">T/LIB</span></div>
 <div class="side-zone"><span class="sz-count" id="my-deck-c">0</span><span class="sz-label">Deck</span></div>
 </div>
 </div>
 
 <!-- My score bar -->
 <div class="score-bar me">
-<span>P<span id="my-num">1</span></span>
+<span>P<span id="my-num">1</span> · <span id="my-deck-name">Starter Deck</span></span>
 <span>CHI: <span class="chi-val chi-me" id="my-chi">10000</span></span>
 <span class="score-stat">Kills: <strong id="my-kills">0</strong></span>
 <span class="score-stat">Capt: <strong id="my-captures">0</strong></span>
 <span class="score-stat">Ext: <strong id="my-extractions">0</strong></span>
 <span class="score-stat">Box: <strong id="my-box">0</strong></span>
+</div>
+
+<div class="battle-readout" id="battle-readout" aria-live="polite">
+  <div><div class="label">Last Battle Result</div><div class="value" id="battle-result-main">No battle resolved yet.</div></div>
+  <div class="sub" id="battle-result-sub">Kills, captures, and rebound Chi damage will appear here.</div>
+</div>
+<div class="status-banner" id="status-banner" role="status" aria-live="polite">
+  <div class="sb-main" id="status-main">Waiting to start duel…</div>
+  <div class="sb-sub" id="status-sub"></div>
 </div>
 
 <!-- My hand -->
@@ -280,10 +456,23 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 <div class="actions" id="actions-panel">
 <h4>Actions</h4>
 <div id="action-btns"></div>
+<button class="act-btn act-btn-ghost" onclick="toggleSettings()">Settings</button>
+<button class="act-btn act-btn-ghost" onclick="showResultCard()">Result Card</button>
+</div>
+
+<div class="illegal-panel" id="illegal-panel"></div>
+<div class="helper-panel">
+<div class="helper-title">What Can I Do?</div>
+<div class="helper-copy" id="helper-copy" aria-live="polite">Choose a deck to begin.</div>
+</div>
+<div class="legal-actions-panel">
+<div class="helper-title">Legal Right Now</div>
+<div class="legal-actions-list" id="legal-actions"><span class="legal-chip blocked">No actions yet</span></div>
 </div>
 
 <div class="end-phase-btns" id="end-phase-panel" style="display:none">
 <h4>End Phase — Choose One</h4>
+<div class="end-phase-note" id="end-phase-note">Pick one End Phase action. Disabled buttons tell you what is missing.</div>
 <button class="act-btn act-btn-ghost" onclick="doEndPhase('endTurn')">End Turn (free)</button>
 <button class="act-btn act-btn-fire" onclick="doEndPhase('extraction')" id="ep-extract">Extraction</button>
 <button class="act-btn act-btn-blue" onclick="doEndPhase('rescue')" id="ep-rescue">Rescue</button>
@@ -291,8 +480,19 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 </div>
 
 <div class="log-panel">
-<h4>Combat Log</h4>
-<div id="log"></div>
+<h4>Duel Log</h4>
+<div class="log-filters" id="log-filters">
+<button class="log-filter active" data-filter="all" onclick="setLogFilter('all')">All</button>
+<button class="log-filter" data-filter="phase" onclick="setLogFilter('phase')">Phase</button>
+<button class="log-filter" data-filter="combat" onclick="setLogFilter('combat')">Combat</button>
+<button class="log-filter" data-filter="system" onclick="setLogFilter('system')">System</button>
+<button class="log-filter" data-filter="win" onclick="setLogFilter('win')">Win</button>
+<button class="log-filter" data-filter="effect" onclick="setLogFilter('effect')">Effects</button>
+<button class="log-filter" data-filter="debug" onclick="setLogFilter('debug')">Debug</button>
+<button class="log-filter" onclick="downloadMatchLog()" title="Export full match log to a text file">Export</button>
+</div>
+<input class="log-search" id="log-search" type="text" placeholder="Search duel log..." oninput="setLogSearch(this.value)">
+<div id="log" aria-live="polite"></div>
 </div>
 </div>
 </div>
@@ -301,11 +501,33 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 <div class="game-over" id="game-over">
 <div class="go-title" id="go-title"></div>
 <div class="go-reason" id="go-reason"></div>
-<button class="lb-btn lb-btn-fire" onclick="location.reload()" style="margin-top:1rem">Return to Lobby</button>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem">
+<button class="lb-btn lb-btn-fire" onclick="location.reload()">Return to Lobby</button>
+<button class="lb-btn lb-btn-ghost" onclick="downloadMatchLog()">Export Match Log</button>
+<button class="lb-btn lb-btn-ghost" onclick="showPostMatchSummary()">Debug Summary</button>
+<button class="lb-btn lb-btn-ghost" onclick="downloadNetDebugLog()">Net Debug Log</button>
+</div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="assertive"></div>
+
+<!-- CHOICE MODAL -->
+<div class="choice-modal" id="choice-modal">
+  <div class="choice-card">
+    <div class="choice-head">
+      <div>
+        <div class="choice-title" id="choice-title">Choose</div>
+        <div class="choice-sub" id="choice-sub"></div>
+      </div>
+      <button class="lb-btn lb-btn-ghost" onclick="closeChoiceModal()">Close</button>
+    </div>
+    <div class="choice-list" id="choice-list"></div>
+    <div class="choice-actions">
+      <button class="lb-btn lb-btn-ghost" onclick="closeChoiceModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- TOOLTIP -->
 <div class="tip" id="tip">
@@ -315,609 +537,70 @@ body{background:var(--coal);color:var(--white);font-family:var(--font-body);user
 <div class="tip-desc" id="tip-desc"></div>
 </div>
 
+<!-- SETTINGS DRAWER -->
+<div class="settings-drawer" id="settings-drawer" role="dialog" aria-modal="true" aria-label="Settings">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+    <div style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;color:var(--flame)">Settings</div>
+    <button class="lb-btn lb-btn-ghost" onclick="toggleSettings(false)" aria-label="Close settings" style="padding:.3rem .7rem;font-size:.75rem">✕ Close</button>
+  </div>
+  <div class="settings-row">
+    <label for="set-card-art" style="cursor:pointer">Card Art</label>
+    <input type="checkbox" id="set-card-art" onchange="applySettings()" aria-label="Show card art">
+  </div>
+  <div class="settings-row">
+    <label for="set-contrast" style="cursor:pointer">High Contrast</label>
+    <input type="checkbox" id="set-contrast" onchange="applySettings()" aria-label="High contrast mode">
+  </div>
+  <div class="settings-row">
+    <label for="set-motion" style="cursor:pointer">Reduce Motion</label>
+    <input type="checkbox" id="set-motion" onchange="applySettings()" aria-label="Reduce motion">
+  </div>
+  <div class="settings-row">
+    <label for="set-scale" style="cursor:pointer">Text Scale <span id="set-scale-val">100</span>%</label>
+    <input type="range" id="set-scale" min="75" max="130" step="5" value="100" oninput="$('set-scale-val').textContent=this.value" onchange="applySettings()" aria-label="Text scale percentage">
+  </div>
+  <hr style="border:none;border-top:1px solid rgba(255,106,0,.12);margin:4px 0">
+  <div style="font-family:var(--font-label);font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--ash);margin-bottom:2px">Board</div>
+  <div class="settings-row">
+    <label for="set-compact" style="cursor:pointer">Compact Zones</label>
+    <input type="checkbox" id="set-compact" onchange="applySettings()" aria-label="Compact board zones">
+  </div>
+  <div class="settings-row">
+    <label for="set-clarity" style="cursor:pointer">Board Clarity</label>
+    <input type="checkbox" id="set-clarity" onchange="applySettings()" aria-label="Board clarity mode">
+  </div>
+  <div class="settings-row">
+    <label for="set-log-max" style="cursor:pointer">Log Lines</label>
+    <select id="set-log-max" onchange="applySettings()" style="background:var(--coal-mid);color:var(--white);border:1px solid rgba(255,106,0,.2);padding:2px 6px;font-size:.75rem" aria-label="Maximum log lines shown">
+      <option value="50">50</option>
+      <option value="100" selected>100</option>
+      <option value="200">200</option>
+      <option value="500">All</option>
+    </select>
+  </div>
+  <hr style="border:none;border-top:1px solid rgba(255,106,0,.12);margin:4px 0">
+  <button class="act-btn act-btn-ghost" onclick="downloadMatchLog()" style="margin-top:auto">Export Match Log</button>
+  <button class="act-btn act-btn-ghost" onclick="downloadNetDebugLog()">Net Debug Log</button>
+</div>
+<!-- Settings backdrop -->
+<div id="settings-backdrop" onclick="toggleSettings(false)" style="display:none;position:fixed;inset:0;z-index:1699;background:rgba(0,0,0,.45)"></div>
+
+<!-- CONFIRM MODAL (replaces native browser confirm()) -->
+<div class="confirm-modal" id="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-body">
+  <div class="confirm-card">
+    <div class="confirm-title" id="confirm-title">Are you sure?</div>
+    <div class="confirm-body" id="confirm-body"></div>
+    <div class="confirm-actions">
+      <button class="lb-btn lb-btn-ghost" id="confirm-cancel" onclick="resolveConfirm(false)">Cancel</button>
+      <button class="lb-btn lb-btn-fire" id="confirm-ok" onclick="resolveConfirm(true)">Confirm</button>
+    </div>
+  </div>
+</div>
+
 <script src="assets/js/data.js"></script>
+<script src="assets/js/deck-utils.js"></script>
 <script src="assets/js/engine.js"></script>
-<script>
-// ═══════════════════════════════════════
-// CTF GAME CLIENT v1.0
-// ═══════════════════════════════════════
+<script src="play_inline.js"></script>
 
-let GS = null;  // GameState
-let net = null;  // CTFNet instance
-let myPlayer = 0; // 0 or 1
-let selectedHandIdx = -1;
-let selectedFieldZone = null; // {type:'cat'|'trick', zone:idx}
-let attackMode = false;
-let attackerZone = -1;
-let sacrificeMode = false;
-let pendingEndAction = '';
-let selectedDeckIdx = 0;
-
-const $ = id => document.getElementById(id);
-
-// ═══ LOBBY ═══
-const starterDecks = typeof buildStarterDecks === 'function' ? buildStarterDecks() : [];
-function renderDeckSelect() {
-  const el = $('deck-select');
-  if (!starterDecks.length) { el.innerHTML = '<div style="color:var(--red);font-size:.8rem">Card database not loaded. Make sure data.js is in assets/js/</div>'; return; }
-  el.innerHTML = starterDecks.map((d, i) => `<div class="deck-opt${i === selectedDeckIdx ? ' selected' : ''}" onclick="selectDeck(${i})"><div><div class="deck-opt-name">${d.name}</div><div class="deck-opt-desc">${d.desc} · ${d.cards.length} cards</div></div></div>`).join('');
-}
-function selectDeck(i) { selectedDeckIdx = i; renderDeckSelect(); }
-
-function createRoom() {
-  if (!starterDecks.length) { $('create-status').textContent = 'No decks available.'; return; }
-  $('create-btn').disabled = true;
-  $('create-status').textContent = 'Creating room...';
-  $('create-status').className = 'lb-status';
-
-  net = new CTFNet(
-    (isHost) => { $('create-status').textContent = 'Opponent connected! Starting...'; $('create-status').className = 'lb-status ok'; setTimeout(startGame, 500); },
-    (data) => handleNetData(data),
-    () => { showToast('Opponent disconnected.'); },
-    (err) => { $('create-status').textContent = err; $('create-status').className = 'lb-status err'; $('create-btn').disabled = false; }
-  );
-
-  net.createRoom().then(code => {
-    $('room-code').textContent = code;
-    $('room-code').style.display = 'block';
-    $('create-status').textContent = 'Waiting for opponent...';
-    $('create-status').className = 'lb-status';
-    myPlayer = 0;
-  }).catch(e => {
-    $('create-status').textContent = 'Error: ' + e.message;
-    $('create-status').className = 'lb-status err';
-    $('create-btn').disabled = false;
-  });
-}
-
-function joinRoom() {
-  const code = $('join-input').value.trim();
-  if (code.length < 4) { $('join-status').textContent = 'Enter a valid room code.'; $('join-status').className = 'lb-status err'; return; }
-  if (!starterDecks.length) { $('join-status').textContent = 'No decks available.'; return; }
-
-  $('join-btn').disabled = true;
-  $('join-status').textContent = 'Connecting...';
-  $('join-status').className = 'lb-status';
-
-  net = new CTFNet(
-    (isHost) => { $('join-status').textContent = 'Connected! Waiting for host to start...'; $('join-status').className = 'lb-status ok'; },
-    (data) => handleNetData(data),
-    () => { showToast('Host disconnected.'); },
-    (err) => { $('join-status').textContent = err; $('join-status').className = 'lb-status err'; $('join-btn').disabled = false; }
-  );
-
-  myPlayer = 1;
-  net.joinRoom(code).catch(e => {
-    $('join-status').textContent = 'Error: ' + e.message;
-    $('join-status').className = 'lb-status err';
-    $('join-btn').disabled = false;
-  });
-}
-
-// ═══ START GAME ═══
-function startGame() {
-  const myDeck = starterDecks[selectedDeckIdx].cards;
-  if (net && net.isHost) {
-    // Host sends start command with both decks
-    net.send({ type: 'requestDeck' });
-  }
-  if (net && !net.isHost) {
-    // Guest sends their deck to host
-    net.send({ type: 'deckChoice', deck: myDeck });
-  }
-  // For host: will init game when guest deck arrives
-  // If host, also send own deck choice
-  if (net && net.isHost) {
-    // Wait for guest deck, meanwhile store host deck
-    window._hostDeck = myDeck;
-    return;
-  }
-}
-
-function initGame(p1Deck, p2Deck) {
-  GS = createGameState(p1Deck, p2Deck);
-  $('lobby').style.display = 'none';
-  $('game').style.display = 'grid';
-  $('my-num').textContent = myPlayer + 1;
-  $('opp-num').textContent = (1 - myPlayer) + 1;
-  executePhaseAuto(GS);
-  renderAll();
-}
-
-// ═══ NETWORKING ═══
-function handleNetData(data) {
-  if (!data || !data.type) return;
-
-  switch (data.type) {
-    case 'requestDeck':
-      // Host is asking for our deck
-      net.send({ type: 'deckChoice', deck: starterDecks[selectedDeckIdx].cards });
-      break;
-
-    case 'deckChoice':
-      if (net.isHost && window._hostDeck) {
-        const p1Deck = window._hostDeck;
-        const p2Deck = data.deck;
-        initGame(p1Deck, p2Deck);
-        // Send init state to guest
-        net.send({ type: 'initGame', state: serializeState(GS) });
-      }
-      break;
-
-    case 'initGame':
-      GS = deserializeState(data.state);
-      $('lobby').style.display = 'none';
-      $('game').style.display = 'grid';
-      $('my-num').textContent = myPlayer + 1;
-      $('opp-num').textContent = (1 - myPlayer) + 1;
-      renderAll();
-      break;
-
-    case 'action':
-      // Peer performed an action — apply it locally
-      applyAction(data.action);
-      break;
-
-    case 'stateSync':
-      GS = deserializeState(data.state);
-      renderAll();
-      break;
-  }
-}
-
-function sendAction(action) {
-  if (net) net.send({ type: 'action', action });
-}
-
-function syncState() {
-  if (net) net.send({ type: 'stateSync', state: serializeState(GS) });
-}
-
-function applyAction(action) {
-  if (!GS) return;
-  switch (action.type) {
-    case 'normalSummon':
-      normalSummon(GS, action.player, action.handIdx, action.zone, action.position);
-      break;
-    case 'setTrick':
-      setTrick(GS, action.player, action.handIdx, action.zone);
-      break;
-    case 'changePosition':
-      changePosition(GS, action.player, action.zone);
-      break;
-    case 'attack':
-      declareAttack(GS, action.attacker, action.attackerZone, action.defender, action.defenderZone);
-      break;
-    case 'advancePhase':
-      advancePhase(GS);
-      break;
-    case 'endPhaseAction':
-      endPhaseAction(GS, action.player, action.action, action.sacrificeZone, action.targetIdx);
-      break;
-  }
-  renderAll();
-}
-
-// ═══ RENDERING ═══
-function renderAll() {
-  if (!GS) return;
-  const me = GS.players[myPlayer];
-  const opp = GS.players[1 - myPlayer];
-  const isMyTurn = GS.activePlayer === myPlayer;
-
-  // Chi & scores
-  $('my-chi').textContent = me.chi.toLocaleString();
-  $('opp-chi').textContent = opp.chi.toLocaleString();
-  $('my-kills').textContent = me.kills;
-  $('opp-kills').textContent = opp.kills;
-  $('my-captures').textContent = me.captures;
-  $('opp-captures').textContent = opp.captures;
-  $('my-extractions').textContent = me.extractions;
-  $('opp-extractions').textContent = opp.extractions;
-  $('my-box').textContent = me.box.length;
-  $('opp-box').textContent = opp.box.length;
-
-  // Side zone counts
-  $('my-deck-c').textContent = me.deck.length;
-  $('my-void-c').textContent = me.void.length;
-  $('my-box-c').textContent = me.box.length;
-  $('my-fusion-c').textContent = me.fusionDeck.length;
-  $('opp-deck-c').textContent = opp.deck.length;
-  $('opp-void-c').textContent = opp.void.length;
-  $('opp-box-c').textContent = opp.box.length;
-  $('opp-fusion-c').textContent = opp.fusionDeck.length;
-  $('my-rfg-c').textContent = me.rfg.length;
-  $('opp-rfg-c').textContent = opp.rfg.length;
-
-  // Turn info
-  $('turn-num').textContent = GS.turn;
-  $('active-p').textContent = GS.activePlayer + 1;
-
-  // Phase rail
-  $('phase-list').innerHTML = PHASE_NAMES.map((name, i) => `<div class="phase-item${i === GS.phase ? ' active' : ''}${i < GS.phase ? ' done' : ''}">${i + 1}. ${name}</div>`).join('');
-
-  // Opponent hand (card backs)
-  $('opp-hand').innerHTML = Array(opp.hand.length).fill('<div class="card-back"></div>').join('');
-
-  // My hand
-  renderMyHand(me);
-
-  // Field zones
-  renderFieldZones(me, opp);
-
-  // Actions
-  renderActions(isMyTurn);
-
-  // Log
-  renderLog();
-
-  // Game over
-  if (GS.gameOver) {
-    const won = GS.winner === myPlayer;
-    $('go-title').textContent = won ? 'VICTORY' : 'DEFEAT';
-    $('go-title').className = 'go-title ' + (won ? 'go-win' : 'go-lose');
-    $('go-reason').textContent = GS.log[GS.log.length - 1]?.msg || '';
-    $('game-over').classList.add('show');
-  }
-}
-
-function renderMyHand(me) {
-  const hand = $('my-hand');
-  hand.innerHTML = me.hand.map((id, i) => {
-    const c = getCard(id);
-    if (!c) return '';
-    const isCat = c.cardType === 'Catalyst' || c.cardType === 'Fusion';
-    const color = c.cardType === 'Catalyst' ? 'var(--flame)' : c.cardType === 'Palm Trick' ? 'var(--blue)' : c.cardType === 'Field Trick' ? 'var(--green)' : ['Concealed Trick','Counter Trick'].includes(c.cardType) ? 'var(--purple)' : 'var(--amber)';
-    return `<div class="hand-card${i === selectedHandIdx ? ' selected' : ''}" onclick="handClick(${i})" onmouseenter="showTip(event,'${id}')" onmouseleave="hideTip()">
-      <div class="hc-bar" style="background:${color}"></div>
-      <div class="hc-name">${c.name}</div>
-      <div class="hc-type">${c.cardType}${c.level ? ' Lv' + c.level : ''}</div>
-      ${isCat ? `<div class="hc-stats">${c.pr}/${c.cp}</div>` : ''}
-    </div>`;
-  }).join('');
-}
-
-function renderFieldZones(me, opp) {
-  // My catalysts
-  for (let i = 0; i < 5; i++) {
-    const zone = document.querySelector(`.zone[data-p="me"][data-type="cat"][data-z="${i}"]`);
-    const cat = me.catalysts[i];
-    zone.innerHTML = '<span class="zone-label">C' + (i+1) + '</span>';
-    zone.classList.remove('highlight', 'atk-target');
-    if (cat) {
-      const c = getCard(cat.cardId);
-      const isDef = cat.position === 'def';
-      zone.innerHTML = renderFieldCard(c, cat, false);
-    }
-    if (selectedHandIdx >= 0 && !cat) zone.classList.add('highlight');
-    if (attackMode && cat && cat.position === 'atk' && attackerZone < 0) zone.classList.add('highlight');
-  }
-
-  // Opponent catalysts
-  for (let i = 0; i < 5; i++) {
-    const zone = document.querySelector(`.zone[data-p="opp"][data-type="cat"][data-z="${i}"]`);
-    const cat = opp.catalysts[i];
-    zone.innerHTML = '<span class="zone-label">C' + (i+1) + '</span>';
-    zone.classList.remove('highlight', 'atk-target');
-    if (cat) {
-      const c = getCard(cat.cardId);
-      zone.innerHTML = renderFieldCard(c, cat, true);
-    }
-    if (attackMode && attackerZone >= 0) zone.classList.add('atk-target');
-  }
-
-  // My tricks
-  for (let i = 0; i < 5; i++) {
-    const zone = document.querySelector(`.zone[data-p="me"][data-type="trick"][data-z="${i}"]`);
-    const trick = me.tricks[i];
-    const lbl = (i === 0 || i === 4) ? 'LIB' : 'T';
-    zone.innerHTML = `<span class="zone-label">${lbl}</span>`;
-    if (trick) {
-      if (trick.faceDown) {
-        zone.innerHTML = '<div class="field-card face-down" style="width:54px;height:64px"></div>';
-      } else {
-        const c = getCard(trick.cardId);
-        zone.innerHTML = renderFieldCard(c, trick, false);
-      }
-    }
-    if (selectedHandIdx >= 0 && !trick) {
-      const selCard = getCard(me.hand[selectedHandIdx]);
-      if (selCard && ['Concealed Trick','Counter Trick','Palm Trick'].includes(selCard.cardType)) zone.classList.add('highlight');
-    }
-  }
-
-  // Opponent tricks
-  for (let i = 0; i < 5; i++) {
-    const zone = document.querySelector(`.zone[data-p="opp"][data-type="trick"][data-z="${i}"]`);
-    const trick = opp.tricks[i];
-    const lbl = (i === 0 || i === 4) ? 'LIB' : 'T';
-    zone.innerHTML = `<span class="zone-label">${lbl}</span>`;
-    if (trick) {
-      zone.innerHTML = '<div class="field-card face-down" style="width:54px;height:64px"></div>';
-    }
-  }
-}
-
-function renderFieldCard(card, slot, isOpp) {
-  if (!card) return '';
-  const isCat = card.cardType === 'Catalyst' || card.cardType === 'Fusion';
-  const color = isCat ? 'var(--flame)' : card.cardType === 'Palm Trick' ? 'var(--blue)' : 'var(--purple)';
-  const defClass = slot.position === 'def' ? ' def-pos' : '';
-  const greatClass = card.great ? ' fc-great' : '';
-  return `<div class="field-card${defClass}${greatClass}" onmouseenter="showTip(event,'${card.id}')" onmouseleave="hideTip()">
-    <div class="fc-bar" style="background:${color}"></div>
-    <div class="fc-name">${card.name}</div>
-    ${isCat ? `<div class="fc-stats">${card.pr}/${card.cp}</div>` : ''}
-  </div>`;
-}
-
-function renderActions(isMyTurn) {
-  const panel = $('action-btns');
-  const epPanel = $('end-phase-panel');
-  epPanel.style.display = 'none';
-  $('actions-panel').style.display = '';
-
-  if (GS.gameOver) { panel.innerHTML = '<div style="color:var(--gold);font-size:.8rem">Game Over</div>'; return; }
-  if (!isMyTurn) { panel.innerHTML = '<div style="color:var(--ash);font-size:.75rem">Opponent\'s turn...</div>'; return; }
-
-  let html = '';
-  const phase = GS.phaseName;
-
-  if (phase === 'turnStart' || phase === 'draw' || phase === 'ignition') {
-    html += `<button class="act-btn act-btn-fire" onclick="doAdvance()">Continue →</button>`;
-  } else if (phase === 'action') {
-    if (!GS.players[myPlayer].normalSummonUsed) {
-      html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Click a hand card, then click an empty Catalyst zone to Normal Summon.</div>`;
-    }
-    html += `<button class="act-btn act-btn-ghost" onclick="doAdvance()">→ To Battle Phase</button>`;
-    if (selectedHandIdx >= 0) {
-      html += `<button class="act-btn act-btn-red" onclick="cancelSelection()">Cancel Selection</button>`;
-    }
-  } else if (phase === 'battle') {
-    if (!attackMode) {
-      html += `<button class="act-btn act-btn-fire" onclick="enterAttackMode()">Declare Attack</button>`;
-      // Direct attack button
-      const oppHasCats = GS.players[1-myPlayer].catalysts.some(c=>c!==null);
-      if (!oppHasCats) {
-        html += `<button class="act-btn act-btn-red" onclick="directAttack()">Direct Attack!</button>`;
-      }
-      html += `<button class="act-btn act-btn-ghost" onclick="doAdvance()">→ To End Phase</button>`;
-    } else {
-      if (attackerZone < 0) {
-        html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Click YOUR ATK Catalyst to select attacker.</div>`;
-      } else {
-        html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Click OPPONENT Catalyst to attack.</div>`;
-      }
-      html += `<button class="act-btn act-btn-red" onclick="cancelAttack()">Cancel Attack</button>`;
-    }
-  } else if (phase === 'resolution') {
-    html += `<button class="act-btn act-btn-fire" onclick="doAdvance()">Continue →</button>`;
-  } else if (phase === 'end') {
-    $('actions-panel').style.display = 'none';
-    epPanel.style.display = '';
-    const eligible = getEligibleCatalysts(GS, myPlayer);
-    $('ep-extract').disabled = eligible.length === 0 || GS.players[myPlayer].box.length === 0;
-    $('ep-rescue').disabled = eligible.length === 0 || GS.players[1-myPlayer].box.length === 0;
-    $('ep-destroy').disabled = eligible.length === 0;
-    return;
-  }
-  panel.innerHTML = html;
-}
-
-function renderLog() {
-  const log = $('log');
-  const entries = GS.log.slice(-50);
-  log.innerHTML = entries.map(e => {
-    let cls = 'log-entry';
-    if (e.msg.includes('⚔')) cls += ' combat';
-    if (e.msg.includes('🏆')) cls += ' win';
-    if (e.msg.includes('Phase')) cls += ' phase-change';
-    return `<div class="${cls}">${e.msg}</div>`;
-  }).join('');
-  log.scrollTop = log.scrollHeight;
-}
-
-// ═══ PLAYER ACTIONS ═══
-function handClick(idx) {
-  if (GS.activePlayer !== myPlayer) return;
-  if (GS.phaseName !== 'action') return;
-  if (selectedHandIdx === idx) { selectedHandIdx = -1; } else { selectedHandIdx = idx; }
-  attackMode = false;
-  renderAll();
-}
-
-function zoneClick(player, type, zone) {
-  if (!GS || GS.gameOver) return;
-  const isMyTurn = GS.activePlayer === myPlayer;
-
-  // Attack mode — selecting target
-  if (attackMode && attackerZone >= 0 && player === 'opp' && type === 'cat') {
-    const result = declareAttack(GS, myPlayer, attackerZone, 1 - myPlayer, zone);
-    sendAction({ type: 'attack', attacker: myPlayer, attackerZone, defender: 1 - myPlayer, defenderZone: zone });
-    syncState();
-    attackMode = false;
-    attackerZone = -1;
-    renderAll();
-    return;
-  }
-
-  // Attack mode — selecting MY attacker
-  if (attackMode && attackerZone < 0 && player === 'me' && type === 'cat') {
-    const cat = GS.players[myPlayer].catalysts[zone];
-    if (cat && cat.position === 'atk') {
-      attackerZone = zone;
-      renderAll();
-    }
-    return;
-  }
-
-  // Sacrifice mode for End Phase
-  if (sacrificeMode && player === 'me' && type === 'cat') {
-    const eligible = getEligibleCatalysts(GS, myPlayer);
-    if (eligible.includes(zone)) {
-      endPhaseAction(GS, myPlayer, pendingEndAction, zone, 0);
-      sendAction({ type: 'endPhaseAction', player: myPlayer, action: pendingEndAction, sacrificeZone: zone, targetIdx: 0 });
-      syncState();
-      sacrificeMode = false;
-      pendingEndAction = '';
-      renderAll();
-    }
-    return;
-  }
-
-  if (!isMyTurn) return;
-
-  // Normal Summon — place from hand
-  if (selectedHandIdx >= 0 && player === 'me') {
-    const cardId = GS.players[myPlayer].hand[selectedHandIdx];
-    const card = getCard(cardId);
-
-    if (type === 'cat' && card && card.cardType === 'Catalyst') {
-      const result = normalSummon(GS, myPlayer, selectedHandIdx, zone, 'atk');
-      if (result.ok) {
-        sendAction({ type: 'normalSummon', player: myPlayer, handIdx: selectedHandIdx, zone, position: 'atk' });
-        syncState();
-      } else {
-        showToast(result.msg);
-      }
-      selectedHandIdx = -1;
-      renderAll();
-      return;
-    }
-
-    if (type === 'trick' && card && ['Concealed Trick','Counter Trick','Palm Trick','Field Trick'].includes(card.cardType)) {
-      const result = setTrick(GS, myPlayer, selectedHandIdx, zone);
-      if (result.ok) {
-        sendAction({ type: 'setTrick', player: myPlayer, handIdx: selectedHandIdx, zone });
-        syncState();
-      } else {
-        showToast(result.msg);
-      }
-      selectedHandIdx = -1;
-      renderAll();
-      return;
-    }
-  }
-
-  // Change position (click own catalyst during Action Phase)
-  if (player === 'me' && type === 'cat' && GS.phaseName === 'action' && selectedHandIdx < 0) {
-    const cat = GS.players[myPlayer].catalysts[zone];
-    if (cat) {
-      const result = changePosition(GS, myPlayer, zone);
-      if (result.ok) {
-        sendAction({ type: 'changePosition', player: myPlayer, zone });
-        syncState();
-      } else {
-        showToast(result.msg);
-      }
-      renderAll();
-    }
-  }
-}
-
-function doAdvance() {
-  if (GS.activePlayer !== myPlayer) return;
-  advancePhase(GS);
-  sendAction({ type: 'advancePhase' });
-  syncState();
-  renderAll();
-}
-
-function enterAttackMode() {
-  attackMode = true;
-  attackerZone = -1;
-  renderAll();
-}
-
-function cancelAttack() {
-  attackMode = false;
-  attackerZone = -1;
-  renderAll();
-}
-
-function cancelSelection() {
-  selectedHandIdx = -1;
-  renderAll();
-}
-
-function directAttack() {
-  // Find first ATK catalyst to use
-  const me = GS.players[myPlayer];
-  let atkZone = -1;
-  for (let i = 0; i < 5; i++) {
-    if (me.catalysts[i] && me.catalysts[i].position === 'atk') { atkZone = i; break; }
-  }
-  if (atkZone < 0) { showToast('No ATK Catalyst available.'); return; }
-
-  const result = declareAttack(GS, myPlayer, atkZone, 1 - myPlayer, -1);
-  sendAction({ type: 'attack', attacker: myPlayer, attackerZone: atkZone, defender: 1 - myPlayer, defenderZone: -1 });
-  syncState();
-  renderAll();
-}
-
-function doEndPhase(action) {
-  if (GS.activePlayer !== myPlayer) return;
-  if (action === 'endTurn') {
-    endPhaseAction(GS, myPlayer, 'endTurn');
-    sendAction({ type: 'endPhaseAction', player: myPlayer, action: 'endTurn' });
-    syncState();
-    renderAll();
-    return;
-  }
-
-  // Need to select a sacrifice catalyst
-  const eligible = getEligibleCatalysts(GS, myPlayer);
-  if (eligible.length === 0) { showToast('No eligible Catalysts to sacrifice.'); return; }
-
-  if (eligible.length === 1) {
-    // Auto-sacrifice the only eligible one
-    endPhaseAction(GS, myPlayer, action, eligible[0], 0);
-    sendAction({ type: 'endPhaseAction', player: myPlayer, action, sacrificeZone: eligible[0], targetIdx: 0 });
-    syncState();
-    renderAll();
-    return;
-  }
-
-  // Multiple eligible — enter sacrifice mode
-  sacrificeMode = true;
-  pendingEndAction = action;
-  showToast('Click a Catalyst to sacrifice.');
-  renderAll();
-}
-
-// ═══ TOOLTIP ═══
-function showTip(event, id) {
-  const c = getCard(id);
-  if (!c) return;
-  const tip = $('tip');
-  $('tip-name').textContent = c.name + (c.great ? ' ★' : '');
-  $('tip-info').textContent = `${c.cardType}${c.sub && c.sub !== 'Normal' ? ' (' + c.sub + ')' : ''} · ${c.set}${c.alignment ? ' · ' + c.alignment : ''}${c.level ? ' · Lv ' + c.level : ''}${c.kindsStr ? ' · ' + c.kindsStr : ''}`;
-  const isCat = c.cardType === 'Catalyst' || c.cardType === 'Fusion';
-  $('tip-stats').textContent = isCat ? `Pressure: ${c.pr}  ·  Counter Pressure: ${c.cp}` : '';
-  $('tip-desc').textContent = c.desc || 'No text.';
-
-  const rect = event.target.getBoundingClientRect();
-  let left = rect.right + 8, top = rect.top;
-  if (left + 250 > window.innerWidth) left = rect.left - 250;
-  if (top + 180 > window.innerHeight) top = window.innerHeight - 190;
-  tip.style.left = Math.max(4, left) + 'px';
-  tip.style.top = Math.max(4, top) + 'px';
-  tip.classList.add('show');
-}
-function hideTip() { $('tip').classList.remove('show'); }
-
-// ═══ TOAST ═══
-let toastTimer = null;
-function showToast(msg) {
-  const t = $('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-// ═══ INIT ═══
-renderDeckSelect();
-</script>
 </body>
 </html>
