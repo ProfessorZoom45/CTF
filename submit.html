@@ -637,14 +637,19 @@ async function submitCards(){
  sub.cards.push({slot:'Trick Card',type:trickType,name:V('t-name'),text:V('t-effect')});
  sub.poolUsed={pressure:N('c1-pr')+N('c2-pr')+N('c3-pr'),counterPressure:N('c1-cp')+N('c2-cp')+N('c3-cp')};
 
- // Build mailto before any async ops
+ // ── Build mailto URL BEFORE any async ops (user-gesture context required) ──
  const emailBody=sub.cards.map(c=>`--- ${c.slot} ---\nName: ${c.name}\nType: ${c.type}\n${c.level?'Level: '+c.level+'\n':''}${c.alignment?'Alignment: '+c.alignment+'\n':''}${c.kinds?'KINDS: '+c.kinds+'\n':''}${c.pressure!==undefined?'Pressure: '+c.pressure+'\nCounter Pressure: '+c.counterPressure+'\n':''}${c.materials?'Materials: '+c.materials.join(' + ')+'\n':''}Text: ${c.text}`).join('\n\n');
  const subject=encodeURIComponent(`CTF Custom Card Submission — ${V('sub-name')}`);
  const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
  const mailtoUrl=`mailto:changethewrld@outlook.com?subject=${subject}&body=${emailBodyEncoded}`;
 
- // ── STEP 0: Fire mailto NOW — must happen synchronously before any await or browsers block it ──
- window.location.href=mailtoUrl;
+ // Helper — anchor-click opens mailto without browser popup-blocker (window.open is blocked after await)
+ function openMailtoNow(){
+  const a=document.createElement('a');
+  a.href=mailtoUrl; a.target='_blank'; a.rel='noopener noreferrer';
+  a.style.display='none'; document.body.appendChild(a);
+  a.click(); setTimeout(()=>a.remove(),300);
+ }
 
  // ── STEP 1: Download JSON (full image data included via getImageDataFull) ──
  st.textContent='[1/3] Saving backup JSON...'; st.className='submit-status';
@@ -691,17 +696,22 @@ async function submitCards(){
 
  try{
   await OperatorStack.submitForm('frm_hz1no8yg5r', osPayload);
-  st.textContent='[3/3] ✓ Submission received! Redirecting...'; st.className='submit-status status-ok';
+
+  // ── STEP 3: Open mailto via anchor-click (window.open is blocked after await) ──
+  st.textContent='[3/3] Opening email client...'; st.className='submit-status';
+  openMailtoNow();
+
+  // ── Redirect to thank-you page ──
+  setTimeout(()=>{ window.location.href='thanks.html'; }, 900);
+
  }catch(err){
-  // OperatorStack failed — show error but still redirect; mailto already fired above
+  // OperatorStack failed — surface the error clearly, re-enable button, mailto still works
   const errMsg=err&&err.message?err.message:'connection error';
-  st.innerHTML=`<strong style="color:var(--ember)">⚠ Review queue unavailable (${errMsg})</strong><br>Your JSON was saved. If your email client didn't open, send it to <a href="${mailtoUrl}" style="color:var(--flame)">changethewrld@outlook.com</a>.`;
+  st.innerHTML=`<strong style="color:var(--ember)">⚠ Review queue unavailable (${errMsg})</strong><br>Your JSON was saved locally. Please email it to <a href="${mailtoUrl}" style="color:var(--flame)">changethewrld@outlook.com</a> manually.`;
   st.className='submit-status status-err';
+  btn.disabled=false;
   console.error('OperatorStack submitForm error:', err);
  }
-
- // ── Always redirect to thank-you page (success or failure) ──
- setTimeout(()=>{ window.location.href='thanks.html'; }, 2000);
 }
 
 // ═══════ IMAGE UPLOAD SYSTEM ═══════

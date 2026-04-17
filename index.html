@@ -614,6 +614,7 @@ footer .copy {
   .btn-fire, .btn-ghost { width: 230px; text-align: center; }
 }
 </style>
+<script defer src="assets/js/embers-bg.js"></script>
 </head>
 <body>
 
@@ -954,189 +955,84 @@ footer .copy {
 })();
 </script>
 
-<script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
-
 <script>
+/* ══════════════════════════════════════════════════════════════
+   BETA TESTER FORM — mailto handler (no external dependencies)
+   FIX: OperatorStack os.js was auto-submitting the form as GET,
+   causing URL query params + page refresh. Removed it entirely.
+   Handler now: preventDefault → mailto → in-place success card.
+══════════════════════════════════════════════════════════════ */
 (function () {
-  const testerForm = document.getElementById('gameTesterForm');
+  var testerForm = document.getElementById('gameTesterForm');
   if (!testerForm) return;
 
-  const testerWrap = document.querySelector('.tester-wrap');
-  const submitButton = testerForm.querySelector('button[type="submit"]');
-  const submitButtonText = submitButton ? submitButton.textContent : 'Email Tester Sign-Up';
-  const formActionUrl = 'https://operator-stack-api-prod.onrender.com/v1/f/frm_lbj0uk3fpl';
-  const payloadKey = 'ctfTesterSignupPayload';
-  const statusKey = 'ctfTesterSignupStatus';
+  var testerWrap = document.querySelector('.tester-wrap');
 
-  function escapeHtml(value) {
-    return String(value || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+  function escapeHtml(v) {
+    return String(v || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
 
-  function buildMailto(data) {
-    const bodyLines = [
-      'GAME TESTER SIGN-UP',
-      '',
-      'Gamertag: ' + (data.gamertag || ''),
-      'Email: ' + (data.email || ''),
-      'Card-Game Experience: ' + (data.experience || ''),
-      'Level of Excitement: ' + (data.excitement || '')
+  function buildMailto(d) {
+    var lines = [
+      'GAME TESTER SIGN-UP','',
+      'Gamertag: '            + (d.gamertag   || ''),
+      'Email: '               + (d.email      || ''),
+      'Card-Game Experience: '+ (d.experience || ''),
+      'Level of Excitement: ' + (d.excitement || '')
     ];
-
-    if (data.notes) {
-      bodyLines.push('', 'Anything Else?', data.notes);
-    }
-
-    return 'mailto:changethewrld@outlook.com' +
-      '?subject=' + encodeURIComponent('GAME TESTER') +
-      '&body=' + encodeURIComponent(bodyLines.join('
-'));
+    if (d.notes) lines.push('', 'Anything Else?', d.notes);
+    return 'mailto:changethewrld@outlook.com'
+      + '?subject=' + encodeURIComponent('GAME TESTER')
+      + '&body='    + encodeURIComponent(lines.join('\r\n'));
   }
 
-  function triggerMailto(mailtoUrl) {
-    // No target="_blank" — mailto: links must NOT request a new tab or browsers
-    // treat them as popups and block them (falling through to window.location.href
-    // which triggers a page-reload visual). A plain anchor click opens the mail
-    // client without navigating away from the page.
-    const link = document.createElement('a');
-    link.href = mailtoUrl;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  /* Anchor-click pattern preserves user-gesture → browsers allow mailto */
+  function openMailto(url) {
+    var a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ a.remove(); }, 300);
   }
 
-  async function submitToOperatorStack(payload) {
-    if (window.OperatorStack && typeof window.OperatorStack.submitForm === 'function') {
-      return window.OperatorStack.submitForm('frm_lbj0uk3fpl', payload);
-    }
-
-    const response = await fetch(formActionUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      keepalive: true
-    });
-
-    if (!response.ok) {
-      throw new Error('OperatorStack form submission failed.');
-    }
-
-    return response.json().catch(() => ({ ok: true }));
+  function showSuccess(d) {
+    if (!testerWrap) return;
+    var mailto = buildMailto(d);
+    testerWrap.innerHTML =
+      '<div class="tester-card reveal vis" role="status" aria-live="polite">' +
+      '<h4>Thanks for signing up.</h4>' +
+      '<p class="tester-note">Your <strong>GAME TESTER</strong> sign-up was received and your email app should have opened with everything pre-filled. Just hit Send!</p>' +
+      '<ul class="tester-bullets">' +
+      '<li><strong>Gamertag:</strong> ' + escapeHtml(d.gamertag)   + '</li>' +
+      '<li><strong>Email:</strong> ' + escapeHtml(d.email)      + '</li>' +
+      '<li><strong>Card-Game Experience:</strong> ' + escapeHtml(d.experience) + '</li>' +
+      '<li><strong>Level of Excitement:</strong> ' + escapeHtml(d.excitement) + '</li>' +
+      '</ul>' +
+      (d.notes ? '<p class="tester-note"><strong>Anything Else?</strong><br>' + escapeHtml(d.notes) + '</p>' : '') +
+      '<p class="tester-mail">Email didn\'t open? <a href="' + mailto + '">Click here to open it manually</a></p>' +
+      '</div>';
   }
 
-  function setButtonState(label, disabled) {
-    if (!submitButton) return;
-    submitButton.textContent = label;
-    submitButton.disabled = !!disabled;
-  }
+  /* useCapture=true fires BEFORE any third-party listeners (OperatorStack, etc.) */
+  testerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
 
-  function renderTesterState(data, mode) {
-    if (!testerWrap || !data) return;
-
-    const mailtoUrl = buildMailto(data);
-    const heading = mode === 'sent'
-      ? 'Thanks for signing up.'
-      : mode === 'error'
-      ? 'Almost there.'
-      : 'Submitting your tester sign-up...';
-
-    const body = mode === 'sent'
-      ? 'Your <strong>GAME TESTER</strong> sign-up has been sent to the team. Your email app should have opened too.'
-      : mode === 'error'
-      ? 'Your email draft should have opened, but the site submission did not finish automatically. Use the button below to try the email again.'
-      : 'Your email draft was opened first. We are sending your tester sign-up now.';
-
-    const action = mode === 'sent'
-      ? '<p class="tester-mail">Want to send the email too? <a href="' + mailtoUrl + '">Open Email Tester Sign-Up</a></p>'
-      : '<p class="tester-mail"><a class="btn-ghost" href="' + mailtoUrl + '">Open Email Tester Sign-Up</a></p>';
-
-    testerWrap.innerHTML = `
-      <div class="tester-card reveal vis" role="status" aria-live="polite">
-        <h4>${heading}</h4>
-        <p class="tester-note">${body}</p>
-        <ul class="tester-bullets">
-          <li><strong>Gamertag:</strong> ${escapeHtml(data.gamertag)}</li>
-          <li><strong>Email:</strong> ${escapeHtml(data.email)}</li>
-          <li><strong>Card-Game Experience:</strong> ${escapeHtml(data.experience)}</li>
-          <li><strong>Level of Excitement:</strong> ${escapeHtml(data.excitement)}</li>
-        </ul>
-        ${data.notes ? `<p class="tester-note"><strong>Anything Else?</strong><br>${escapeHtml(data.notes)}</p>` : ''}
-        ${action}
-      </div>
-    `;
-  }
-
-  async function continuePendingSubmission() {
-    const raw = sessionStorage.getItem(payloadKey);
-    const status = sessionStorage.getItem(statusKey);
-
-    if (!raw) return;
-
-    let payload;
-    try {
-      payload = JSON.parse(raw);
-    } catch (error) {
-      sessionStorage.removeItem(payloadKey);
-      sessionStorage.removeItem(statusKey);
-      return;
-    }
-
-    if (status === 'sent') {
-      renderTesterState(payload, 'sent');
-      return;
-    }
-
-    renderTesterState(payload, 'sending');
-    setButtonState('Submitting...', true);
-
-    try {
-      await submitToOperatorStack(payload);
-      sessionStorage.setItem(statusKey, 'sent');
-      renderTesterState(payload, 'sent');
-    } catch (error) {
-      console.error(error);
-      sessionStorage.setItem(statusKey, 'error');
-      renderTesterState(payload, 'error');
-    } finally {
-      setButtonState(submitButtonText, false);
-    }
-  }
-
-  testerForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const payload = {
-      gamertag: document.getElementById('testerGamertag').value.trim(),
-      email: document.getElementById('testerEmail').value.trim(),
+    var d = {
+      gamertag:   document.getElementById('testerGamertag').value.trim(),
+      email:      document.getElementById('testerEmail').value.trim(),
       experience: document.getElementById('testerExperience').value.trim(),
       excitement: document.getElementById('testerExcitement').value.trim(),
-      notes: document.getElementById('testerNotes').value.trim(),
-      form_name: 'Tester Sign-Up',
-      source_page: 'index.html',
-      source_section: 'Become a Game Tester'
+      notes:      document.getElementById('testerNotes').value.trim()
     };
 
-    sessionStorage.setItem(payloadKey, JSON.stringify(payload));
-    sessionStorage.setItem(statusKey, 'pending');
+    openMailto(buildMailto(d));   /* open email FIRST while still in user-gesture */
+    showSuccess(d);               /* then swap form for success card */
+  }, true);
 
-    // ── Fire mailto FIRST — must be synchronous before any DOM changes or
-    //    browsers may no longer treat it as a direct user-gesture ──
-    triggerMailto(buildMailto(payload));
-
-    setButtonState('Submitting...', true);
-    renderTesterState(payload, 'sending');
-
-    setTimeout(function () {
-      continuePendingSubmission();
-    }, 150);
-  });
-
-  continuePendingSubmission();
 })();
 </script>
 </body>
