@@ -961,10 +961,12 @@ footer .copy {
   const testerForm = document.getElementById('gameTesterForm');
   if (!testerForm) return;
 
-  const testerSection = testerForm.closest('.tester-form');
+  const testerWrap = document.querySelector('.tester-wrap');
   const submitButton = testerForm.querySelector('button[type="submit"]');
-  const submitButtonText = submitButton ? submitButton.textContent : '';
+  const submitButtonText = submitButton ? submitButton.textContent : 'Email Tester Sign-Up';
   const formActionUrl = 'https://operator-stack-api-prod.onrender.com/v1/f/frm_lbj0uk3fpl';
+  const payloadKey = 'ctfTesterSignupPayload';
+  const statusKey = 'ctfTesterSignupStatus';
 
   function escapeHtml(value) {
     return String(value || '')
@@ -975,13 +977,50 @@ footer .copy {
       .replace(/'/g, '&#39;');
   }
 
-  function openMailto(mailtoUrl) {
-    const tempLink = document.createElement('a');
-    tempLink.href = mailtoUrl;
-    tempLink.style.display = 'none';
-    document.body.appendChild(tempLink);
-    tempLink.click();
-    document.body.removeChild(tempLink);
+  function buildMailto(data) {
+    const bodyLines = [
+      'GAME TESTER SIGN-UP',
+      '',
+      'Gamertag: ' + (data.gamertag || ''),
+      'Email: ' + (data.email || ''),
+      'Card-Game Experience: ' + (data.experience || ''),
+      'Level of Excitement: ' + (data.excitement || '')
+    ];
+
+    if (data.notes) {
+      bodyLines.push('', 'Anything Else?', data.notes);
+    }
+
+    return 'mailto:changethewrld@outlook.com' +
+      '?subject=' + encodeURIComponent('GAME TESTER') +
+      '&body=' + encodeURIComponent(bodyLines.join('
+'));
+  }
+
+  function triggerMailto(mailtoUrl) {
+    try {
+      const link = document.createElement('a');
+      link.href = mailtoUrl;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      return true;
+    } catch (error) {
+      try {
+        window.open(mailtoUrl, '_blank', 'noopener,noreferrer');
+        return true;
+      } catch (popupError) {
+        try {
+          window.location.href = mailtoUrl;
+          return true;
+        } catch (navError) {
+          return false;
+        }
+      }
+    }
   }
 
   async function submitToOperatorStack(payload) {
@@ -992,7 +1031,8 @@ footer .copy {
     const response = await fetch(formActionUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      keepalive: true
     });
 
     if (!response.ok) {
@@ -1002,96 +1042,112 @@ footer .copy {
     return response.json().catch(() => ({ ok: true }));
   }
 
-  function showThankYouState(data, mailtoUrl) {
-    if (!testerSection) return;
+  function setButtonState(label, disabled) {
+    if (!submitButton) return;
+    submitButton.textContent = label;
+    submitButton.disabled = !!disabled;
+  }
 
-    testerSection.innerHTML = `
-      <div class="tester-success" role="status" aria-live="polite" style="display:grid;gap:1rem;">
-        <h4>Thanks for signing up.</h4>
-        <p class="tester-note">Your <strong>GAME TESTER</strong> sign-up has been sent. Your mail app should have opened too, so you can send the email version right away.</p>
-        <p class="tester-note"><strong>Gamertag:</strong> ${escapeHtml(data.gamertag)}<br><strong>Email:</strong> ${escapeHtml(data.email)}</p>
-        <div class="tester-actions">
-          <a class="btn-ghost" href="${mailtoUrl}">Open Email Again</a>
-        </div>
+  function renderTesterState(data, mode) {
+    if (!testerWrap || !data) return;
+
+    const mailtoUrl = buildMailto(data);
+    const heading = mode === 'sent'
+      ? 'Thanks for signing up.'
+      : mode === 'error'
+      ? 'Almost there.'
+      : 'Submitting your tester sign-up...';
+
+    const body = mode === 'sent'
+      ? 'Your <strong>GAME TESTER</strong> sign-up has been sent to the team. Your email app should have opened too.'
+      : mode === 'error'
+      ? 'Your email draft should have opened, but the site submission did not finish automatically. Use the button below to try the email again.'
+      : 'Your email draft was opened first. We are sending your tester sign-up now.';
+
+    const action = mode === 'sent'
+      ? '<p class="tester-mail">Want to send the email too? <a href="' + mailtoUrl + '">Open Email Tester Sign-Up</a></p>'
+      : '<p class="tester-mail"><a class="btn-ghost" href="' + mailtoUrl + '">Open Email Tester Sign-Up</a></p>';
+
+    testerWrap.innerHTML = `
+      <div class="tester-card reveal vis" role="status" aria-live="polite">
+        <h4>${heading}</h4>
+        <p class="tester-note">${body}</p>
+        <ul class="tester-bullets">
+          <li><strong>Gamertag:</strong> ${escapeHtml(data.gamertag)}</li>
+          <li><strong>Email:</strong> ${escapeHtml(data.email)}</li>
+          <li><strong>Card-Game Experience:</strong> ${escapeHtml(data.experience)}</li>
+          <li><strong>Level of Excitement:</strong> ${escapeHtml(data.excitement)}</li>
+        </ul>
+        ${data.notes ? `<p class="tester-note"><strong>Anything Else?</strong><br>${escapeHtml(data.notes)}</p>` : ''}
+        ${action}
       </div>
     `;
   }
 
-  function showErrorState(message) {
-    let errorBox = testerForm.querySelector('.tester-error');
-    if (!errorBox) {
-      errorBox = document.createElement('p');
-      errorBox.className = 'tester-note tester-error';
-      errorBox.style.color = '#ffd060';
-      errorBox.style.opacity = '1';
-      errorBox.style.marginTop = '0.5rem';
-      testerForm.appendChild(errorBox);
-    }
-    errorBox.textContent = message;
-  }
+  async function continuePendingSubmission() {
+    const raw = sessionStorage.getItem(payloadKey);
+    const status = sessionStorage.getItem(statusKey);
 
-  testerForm.addEventListener('submit', async function (event) {
-    event.preventDefault();
+    if (!raw) return;
 
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = 'Sending...';
-      submitButton.style.opacity = '0.85';
-      submitButton.style.cursor = 'wait';
+    let payload;
+    try {
+      payload = JSON.parse(raw);
+    } catch (error) {
+      sessionStorage.removeItem(payloadKey);
+      sessionStorage.removeItem(statusKey);
+      return;
     }
 
-    const gamertag = document.getElementById('testerGamertag').value.trim();
-    const email = document.getElementById('testerEmail').value.trim();
-    const experience = document.getElementById('testerExperience').value.trim();
-    const excitement = document.getElementById('testerExcitement').value.trim();
-    const notes = document.getElementById('testerNotes').value.trim();
-
-    const bodyLines = [
-      'GAME TESTER SIGN-UP',
-      '',
-      'Gamertag: ' + gamertag,
-      'Email: ' + email,
-      'Card-Game Experience: ' + experience,
-      'Level of Excitement: ' + excitement
-    ];
-
-    if (notes) {
-      bodyLines.push('', 'Anything Else?', notes);
+    if (status === 'sent') {
+      renderTesterState(payload, 'sent');
+      return;
     }
 
-    const mailto = 'mailto:changethewrld@outlook.com' +
-      '?subject=' + encodeURIComponent('GAME TESTER') +
-      '&body=' + encodeURIComponent(bodyLines.join('
-'));
+    renderTesterState(payload, 'sending');
+    setButtonState('Submitting...', true);
 
     try {
-      openMailto(mailto);
-
-      await submitToOperatorStack({
-        gamertag: gamertag,
-        email: email,
-        experience: experience,
-        excitement: excitement,
-        notes: notes,
-        _subject: 'GAME TESTER',
-        form_name: 'Tester Sign-Up',
-        source_page: 'index.html'
-      });
-
-      showThankYouState({ gamertag, email }, mailto);
+      await submitToOperatorStack(payload);
+      sessionStorage.setItem(statusKey, 'sent');
+      renderTesterState(payload, 'sent');
     } catch (error) {
       console.error(error);
-      showErrorState('Your mail app should be opening, but the site could not save your tester signup right now. Please send the email and try again.');
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = submitButtonText || 'Email Tester Sign-Up';
-        submitButton.style.opacity = '';
-        submitButton.style.cursor = '';
-      }
+      sessionStorage.setItem(statusKey, 'error');
+      renderTesterState(payload, 'error');
+    } finally {
+      setButtonState(submitButtonText, false);
     }
+  }
+
+  testerForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const payload = {
+      gamertag: document.getElementById('testerGamertag').value.trim(),
+      email: document.getElementById('testerEmail').value.trim(),
+      experience: document.getElementById('testerExperience').value.trim(),
+      excitement: document.getElementById('testerExcitement').value.trim(),
+      notes: document.getElementById('testerNotes').value.trim(),
+      form_name: 'Tester Sign-Up',
+      source_page: 'index.html',
+      source_section: 'Become a Game Tester'
+    };
+
+    sessionStorage.setItem(payloadKey, JSON.stringify(payload));
+    sessionStorage.setItem(statusKey, 'pending');
+
+    setButtonState('Submitting...', true);
+    renderTesterState(payload, 'sending');
+    triggerMailto(buildMailto(payload));
+
+    setTimeout(function () {
+      continuePendingSubmission();
+    }, 150);
   });
+
+  continuePendingSubmission();
 })();
 </script>
-
 </body>
 </html>
