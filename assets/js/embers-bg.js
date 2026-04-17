@@ -6,9 +6,7 @@
     const style = document.createElement('style');
     style.id = styleId;
     style.textContent = `
-      body.ctf-embers-enabled{position:relative;overflow-x:hidden;}
-      #${canvasId}{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.9;}
-      body.ctf-embers-enabled > *{position:relative;z-index:1;}
+      #${canvasId}{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;opacity:.9;}
     `;
     document.head.appendChild(style);
   }

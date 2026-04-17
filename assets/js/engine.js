@@ -678,7 +678,7 @@ function getSummonRestriction(state, summoningPlayer, card) {
         return `${slotCard?.name || 'The Valentine Brothers'} prevents that Catalyst from being summoned.`;
       }
     }
-    for (const eff of getCardEffects(slot.cardId)) {
+    for (const eff of getAllCardEffects(slot.cardId)) {
       if (eff.type !== 'continuous') continue;
       if (eff.action === 'blockSpecialSummonAbovePR' && Number(card?.pr || 0) >= Number(eff.minPR || 0)) {
         return `${getCard(slot.cardId)?.name || 'An effect'} prevents Special Summoning Catalysts with ${eff.minPR}+ Pressure.`;
@@ -711,6 +711,124 @@ function getSummonRestriction(state, summoningPlayer, card) {
 //   immune          — immune to certain card types
 
 const EFFECT_REGISTRY = {};
+const INFERRED_EFFECT_CACHE = {};
+const COMMON_ALIGNMENT_TOKENS = ['dark','light','fire','earth','water','wind','thunder','divine'];
+
+function getRegisteredCardEffects(cardId) {
+  return EFFECT_REGISTRY[cardId] || [];
+}
+
+function _cleanInferText(v) {
+  return String(v || '').replace(/\s+/g, ' ').trim();
+}
+
+function _splitInferList(v) {
+  return _cleanInferText(v).split(/\s+and\s+|\s*,\s*/i).map(s => s.replace(/^and\s+/i,'').trim()).filter(Boolean);
+}
+
+function inferCommonStringEffects(cardOrId) {
+  const card = typeof cardOrId === 'string' ? getCard(cardOrId) : cardOrId;
+  if (!card || !card.id) return [];
+  if (INFERRED_EFFECT_CACHE[card.id]) return INFERRED_EFFECT_CACHE[card.id];
+  const effects = [];
+  const desc = _cleanInferText(card.desc || '');
+  const lower = desc.toLowerCase();
+  const registered = getRegisteredCardEffects(card.id);
+  const hasRegisteredPRAura = registered.some(e => e.type === 'fieldAuraPR' || (e.type === 'continuous' && e.prBoostAll));
+  const hasRegisteredCPAura = registered.some(e => e.type === 'fieldAuraCP' || (e.type === 'continuous' && e.cpBoostAll));
+  if (!desc) {
+    INFERRED_EFFECT_CACHE[card.id] = effects;
+    return effects;
+  }
+
+  const addAura = (statKind, mode, targetChunk, amount, scopeHint) => {
+    const eff = { type: statKind === 'cp' ? 'fieldAuraCP' : 'fieldAuraPR', _inferred: true, inferredSource: 'string', inferredMode: mode };
+    const value = Number(amount || 0) * (mode === 'decrease' ? -1 : 1);
+    if (statKind === 'cp') eff.cpBoostAll = value; else eff.prBoostAll = value;
+    const chunk = _cleanInferText(targetChunk || '');
+    const chunkLower = chunk.toLowerCase();
+    eff.scope = scopeHint || (/opponent/.test(chunkLower) ? 'opponent' : (/you control|your side of the field|of your catalysts|your field/.test(chunkLower) ? 'self' : 'both'));
+    const quoted = [...chunk.matchAll(/"([^"]+)"/g)].map(m => m[1]).filter(Boolean);
+    if (quoted.length) {
+      if (quoted.length === 1) eff.targetNameIncludes = quoted[0];
+      else eff.targetNameIncludesAny = quoted;
+    }
+    const alignments = COMMON_ALIGNMENT_TOKENS.filter(tok => new RegExp('\b' + tok + '\b', 'i').test(chunkLower));
+    if (alignments.length === 1) eff.targetAlignment = alignments[0];
+    else if (alignments.length > 1) eff.targetAlignmentsAny = alignments;
+
+    const kindParts = [];
+    for (const m of chunk.matchAll(/([A-Za-z][A-Za-z\- ]+?)(?:\s+sub)?-?type/ig)) kindParts.push(..._splitInferList(m[1]));
+    if (!kindParts.length && !alignments.length && !quoted.length) {
+      const simple = chunk.replace(/all|every|catalysts?|cards?|on your opponent'?s side of the field|on your side of the field|you control|your opponent'?s|your|face-up|face up|controller of this card may|may|remain[s]? face-up|remains face-up|as long as this card(?: remains)? face-up on the field/ig, ' ');
+      const cleaned = _cleanInferText(simple);
+      if (cleaned && !/catalyst/i.test(cleaned) && !/field/i.test(cleaned)) kindParts.push(..._splitInferList(cleaned));
+    }
+    const filteredKinds = [...new Set(kindParts.map(k => k.replace(/sub/i,'').trim()).filter(k => k && !COMMON_ALIGNMENT_TOKENS.includes(k.toLowerCase())))];
+    if (filteredKinds.length === 1) eff.targetKind = filteredKinds[0];
+    else if (filteredKinds.length > 1) eff.targetKindsAny = filteredKinds;
+    effects.push(eff);
+  };
+
+  // Pressure / Counter Pressure aura strings
+  for (const m of desc.matchAll(/(increase|boost|decrease|lower)\s+(?:the\s+)?pressure(?:\s+and\s+counter pressure)?\s+of\s+(all|every)\s+([^\.]+?)\s+by\s+(\d+)/ig)) {
+    const mode = m[1].toLowerCase();
+    const both = /counter pressure/i.test(m[0]);
+    if (!hasRegisteredPRAura) addAura('pr', mode, m[3], m[4]);
+    if (both && !hasRegisteredCPAura) addAura('cp', mode, m[3], m[4]);
+  }
+  for (const m of desc.matchAll(/(increase|boost|decrease|lower)\s+(?:the\s+)?counter pressure(?:\s+and\s+pressure)?\s+of\s+(all|every)\s+([^\.]+?)\s+by\s+(\d+)/ig)) {
+    const mode = m[1].toLowerCase();
+    const both = /pressure/i.test(m[0]) && /and\s+pressure/i.test(m[0]);
+    if (!hasRegisteredCPAura) addAura('cp', mode, m[3], m[4]);
+    if (both && !hasRegisteredPRAura) addAura('pr', mode, m[3], m[4]);
+  }
+  for (const m of desc.matchAll(/(all|every)\s+([^\.]+?)\s+(?:you control\s+)?gain\s+(\d+)\s+pressure/ig)) {
+    if (!hasRegisteredPRAura) addAura('pr', 'increase', m[2] + ' ' + (m[0].includes('you control') ? 'you control' : ''), m[3], m[0].includes('you control') ? 'self' : undefined);
+  }
+  for (const m of desc.matchAll(/increase\s+all\s+"([^"]+)"\s+catalysts?'?\s+pressure\s+by\s+(\d+)/ig)) {
+    if (!hasRegisteredPRAura) addAura('pr', 'increase', 'Catalysts with "' + m[1] + '" in their name', m[2]);
+  }
+
+  // Generic possession / take-control strings
+  if (!/equipp?ed|equip this card|if this card is equipped|when equipped/.test(lower) && /take control of/.test(lower)) {
+    const controlBase = { action:'generic_takeControl', _inferred:true, duration:'end', faceUpOnly:/face[- ]up/.test(lower) };
+    const pay = lower.match(/pay\s+(\d+)\s+chi/);
+    if (pay) controlBase.cost = Number(pay[1]);
+    if (/once per turn|only be used once per turn/.test(lower)) controlBase.oncePerTurn = true;
+    const kind = desc.match(/take control of (?:one|1|a|all)?\s*(?:face[- ]up\s*)?(?:[A-Za-z]+\s+)?([A-Za-z\- ]+?)(?:\s+sub)?-?type\s+catalyst/i);
+    const align = desc.match(/take control of (?:one|1|a|all)?\s*(?:face[- ]up\s*)?(Dark|Light|Fire|Earth|Water|Wind|Thunder|Divine)\s+catalysts?/i);
+    if (kind) controlBase.targetKind = _cleanInferText(kind[1]);
+    if (align) controlBase.targetAlignment = align[1];
+    if (/non-vampire/i.test(lower)) controlBase.excludeKinds = ['Vampire'];
+    if (/until the selected catalyst is destroyed|permanent/.test(lower)) controlBase.duration = 'permanent';
+    if (/all face[- ]up/i.test(lower) || /take control of all/i.test(lower)) controlBase.takeAll = true;
+    if (card.cardType === 'Catalyst') {
+      if (!/when (?:this (?:card|catalyst) )?(?:is )?(?:normal summoned|special summoned|summoned)/i.test(desc)) {
+        effects.push({ type:'activeAbility', tag:'genericTakeControl', ...controlBase });
+      }
+    } else if (card.cardType === 'Palm Trick' || card.cardType === 'Concealed Trick' || card.cardType === 'Counter Trick') {
+      effects.push({ type:'genericControl', tag:'genericTakeControl', ...controlBase });
+    }
+  }
+
+  // Generic on-summon possession
+  if (card.cardType === 'Catalyst' && /when (?:this (?:card|catalyst) )?(?:is )?(?:normal summoned|special summoned|summoned)/i.test(desc) && /take control of/.test(lower)) {
+    const onSummon = { type:'onSummon', tag:'genericOnSummonSteal', action:'generic_takeControl', _inferred:true, duration:/destroyed|permanent/.test(lower) ? 'permanent' : 'end', faceUpOnly:/face[- ]up/.test(lower) };
+    const kind = desc.match(/take control of (?:one|1|a)?\s*(?:face[- ]up\s*)?([A-Za-z\- ]+?)(?:\s+sub)?-?type\s+catalyst/i);
+    const align = desc.match(/take control of (?:one|1|a)?\s*(Dark|Light|Fire|Earth|Water|Wind|Thunder|Divine)\s+catalysts?/i);
+    if (kind) onSummon.targetKind = _cleanInferText(kind[1]);
+    if (align) onSummon.targetAlignment = align[1];
+    effects.push(onSummon);
+  }
+
+  INFERRED_EFFECT_CACHE[card.id] = effects;
+  return effects;
+}
+
+function getAllCardEffects(cardId) {
+  return [...getRegisteredCardEffects(cardId), ...inferCommonStringEffects(cardId)];
+}
 
 const ANM_SET_COMPLETION_REFERENCE = [
   'anm-000-acethegoat','anm-000-acethegreat','anm-000-destinthegreatwarlord','anm-000-drzoom','anm-000-newzthegreatwatcher','anm-000-newzthewatcher','anm-000-reesethegreatsgundam','anm-000-strodonarithegreat','anm-000-terrasladespartner','anm-001-kenosuke','anm-001-serpent','anm-001-toolbox','anm-002-curseoftheflameghost','anm-002-hyottokosburn','anm-002-roadtogreatness','anm-002-ultimateprice','anm-003-aoshiscommands','anm-003-keepitmoving','anm-003-nolanthegreat','anm-003-phoenixsoul','anm-004-terraspast','anm-005-lightningstrike','anm-010-aearth','anm-011-kauroscry','anm-012-reversebladesword','anm-013-amakakuroryonoherimeki','anm-014-zerodegrees','anm-021-reapermasterswordsman','anm-022-rapier','anm-023-thechosenone','anm-024-blazeinginferno','anm-025-infernodragon','anm-026-infernotakeover','anm-037-fusionzone'
@@ -723,11 +841,11 @@ function regEffect(cardId, effects) {
 }
 
 function getCardEffects(cardId) {
-  return EFFECT_REGISTRY[cardId] || [];
+  return getRegisteredCardEffects(cardId);
 }
 
 function hasEffectType(cardId, type) {
-  return getCardEffects(cardId).some(e => e.type === type);
+  return getAllCardEffects(cardId).some(e => e.type === type);
 }
 
 // Per-turn effect usage tracker (reset each turn in finalizeTurnSwitch)
@@ -1191,11 +1309,14 @@ function resolveRegistryIds() {
 function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
   const slot = state.players[playerIdx].catalysts[zoneIdx];
   if (!slot) return;
-  const effects = getCardEffects(slot.cardId);
+  const effects = getAllCardEffects(slot.cardId);
   const p = state.players[playerIdx];
   for (const eff of effects) {
     if (eff.type !== 'onSummon') continue;
-    if (eff.action === 'searchByName') {
+    if (eff.action === 'generic_takeControl') {
+      const steal = runGenericTakeControl(state, playerIdx, slot.cardId, eff, null, `Summon effect: ${getCard(slot.cardId)?.name || 'A Catalyst'}`);
+      if (!steal.ok) addLog(state, `Effect Script: ${getCard(slot.cardId)?.name || 'A Catalyst'} had no valid Catalyst to take control of on summon.`);
+    } else if (eff.action === 'searchByName') {
       const found = addCardToHandFromDeckByNameToken(state, playerIdx, eff.names);
       if (found) addLog(state, `Effect Script: ${getCard(slot.cardId)?.name} ${eff.log || 'searched a card'}.`);
     } else if (eff.action === 'custom_monarchAntares') {
@@ -1255,6 +1376,148 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
       }
     }
   }
+}
+
+
+function auraAppliesToTargetPlayer(sourcePlayerIdx, targetPlayerIdx, eff) {
+  const scope = eff && eff.scope || 'both';
+  if (scope === 'self') return sourcePlayerIdx === targetPlayerIdx;
+  if (scope === 'opponent') return sourcePlayerIdx !== targetPlayerIdx;
+  return true;
+}
+
+function auraMatchesTarget(slot, slotCard, eff) {
+  if (!slotCard) return false;
+  if (eff.targetKind && !slotHasKind(slot, slotCard, eff.targetKind)) return false;
+  if (Array.isArray(eff.targetKindsAny) && eff.targetKindsAny.length && !eff.targetKindsAny.some(k => slotHasKind(slot, slotCard, k))) return false;
+  if (eff.targetAlignment && !slotHasAlignment(slot, slotCard, eff.targetAlignment)) return false;
+  if (Array.isArray(eff.targetAlignmentsAny) && eff.targetAlignmentsAny.length && !eff.targetAlignmentsAny.some(a => slotHasAlignment(slot, slotCard, a))) return false;
+  if (eff.targetNameIncludes && !cardNameHas(slotCard, eff.targetNameIncludes)) return false;
+  if (Array.isArray(eff.targetNameIncludesAny) && eff.targetNameIncludesAny.length && !eff.targetNameIncludesAny.some(n => cardNameHas(slotCard, n))) return false;
+  return true;
+}
+
+function getInferredAuraBoost(state, targetPlayerIdx, zoneIdx, statKey) {
+  const slot = state.players[targetPlayerIdx].catalysts[zoneIdx];
+  if (!slot) return 0;
+  const slotCard = getCard(slot.cardId);
+  let boost = 0;
+  for (let sourcePlayerIdx = 0; sourcePlayerIdx < 2; sourcePlayerIdx++) {
+    const srcPlayer = state.players[sourcePlayerIdx];
+    const sourceIds = [];
+    for (let z = 0; z < 5; z++) {
+      const s = srcPlayer.catalysts[z];
+      if (s && !s.faceDown) sourceIds.push(s.cardId);
+      const t = srcPlayer.tricks[z];
+      if (t && !t.faceDown && !t.isLibra) sourceIds.push(t.cardId);
+    }
+    if (srcPlayer.fieldTrick && !srcPlayer.fieldTrick.faceDown) sourceIds.push(srcPlayer.fieldTrick.cardId);
+    for (const sourceId of sourceIds) {
+      for (const eff of inferCommonStringEffects(sourceId)) {
+        if (eff.type !== (statKey === 'cp' ? 'fieldAuraCP' : 'fieldAuraPR')) continue;
+        if (!auraAppliesToTargetPlayer(sourcePlayerIdx, targetPlayerIdx, eff)) continue;
+        if (!auraMatchesTarget(slot, slotCard, eff)) continue;
+        boost += Number(statKey === 'cp' ? eff.cpBoostAll : eff.prBoostAll || 0);
+      }
+    }
+  }
+  return boost;
+}
+
+function runGenericTakeControl(state, playerIdx, sourceCardId, eff, manual, reasonLabel) {
+  const p = state.players[playerIdx];
+  const sourceCard = getCard(sourceCardId);
+  if (eff.oncePerTurn && isEffectUsed(state, playerIdx, sourceCardId, eff.tag || 'genericTakeControl')) return { ok:false, msg:'This effect was already used this turn.' };
+  const cost = Number(eff.cost || 0);
+  if (cost && p.chi < cost) return { ok:false, msg:`Need ${cost} Chi.` };
+  const predicate = (card, slot) => {
+    if (!card) return false;
+    if (slot && slot._cannotChangeControl) return false;
+    if (eff.faceUpOnly && slot && slot.faceDown) return false;
+    if (eff.targetAlignment && !slotHasAlignment(slot, card, eff.targetAlignment)) return false;
+    if (eff.targetKind && !slotHasKind(slot, card, eff.targetKind)) return false;
+    if (Array.isArray(eff.excludeKinds) && eff.excludeKinds.some(k => slotHasKind(slot, card, k))) return false;
+    return true;
+  };
+  const opp = state.players[1 - playerIdx];
+  const manualZone = manual && typeof manual.targetZone === 'number' ? Number(manual.targetZone) : -1;
+  if (eff.takeAll) {
+    const targetZones = [];
+    for (let z = 0; z < 5; z++) {
+      const s = opp.catalysts[z];
+      if (s && predicate(getCard(s.cardId), s)) targetZones.push(z);
+    }
+    if (!targetZones.length) return { ok:false, msg:'No valid opponent Catalyst.' };
+    let moved = 0;
+    for (const tz of targetZones) {
+      const openZone = getFirstEmptyCatalystZone(state, playerIdx);
+      if (openZone < 0) break;
+      const stolen = opp.catalysts[tz];
+      if (!stolen) continue;
+      opp.catalysts[tz] = null;
+      state.players[playerIdx].catalysts[openZone] = {
+        cardId: stolen.cardId,
+        position: stolen.position || 'atk',
+        faceDown: false,
+        attackedThisTurn: false,
+        atkMod: 0,
+        cpMod: 0,
+        extraAttackThisTurn: 0,
+        cannotAttackThisTurn: false,
+        _temporaryControl: eff.duration !== 'permanent',
+        _temporaryReturnToPlayer: 1 - playerIdx
+      };
+      if (eff.duration === 'permanent') {
+        delete state.players[playerIdx].catalysts[openZone]._temporaryControl;
+        delete state.players[playerIdx].catalysts[openZone]._temporaryReturnToPlayer;
+      }
+      moved += 1;
+    }
+    if (!moved) return { ok:false, msg:'No empty Catalyst Zone.' };
+    if (cost) p.chi -= cost;
+    if (eff.oncePerTurn) markEffectUsed(state, playerIdx, sourceCardId, eff.tag || 'genericTakeControl');
+    addLog(state, `Effect Script: ${reasonLabel || sourceCard?.name || 'A card effect'} took control of ${moved} Catalyst(s)${eff.duration === 'permanent' ? ' permanently.' : ' until the End Phase.'}`);
+    return { ok:true, count:moved };
+  }
+  let result = null;
+  if (manualZone >= 0) {
+    const targetSlot = opp.catalysts[manualZone];
+    if (!targetSlot || !predicate(getCard(targetSlot.cardId), targetSlot)) return { ok:false, msg:'Chosen target is not valid for that control effect.' };
+    const openZone = getFirstEmptyCatalystZone(state, playerIdx);
+    if (openZone < 0) return { ok:false, msg:'No empty Catalyst Zone.' };
+    const stolen = opp.catalysts[manualZone];
+    opp.catalysts[manualZone] = null;
+    state.players[playerIdx].catalysts[openZone] = {
+      cardId: stolen.cardId,
+      position: stolen.position || 'atk',
+      faceDown: false,
+      attackedThisTurn: false,
+      atkMod: 0,
+      cpMod: 0,
+      extraAttackThisTurn: 0,
+      cannotAttackThisTurn: false,
+      _temporaryControl: eff.duration !== 'permanent',
+      _temporaryReturnToPlayer: 1 - playerIdx
+    };
+    if (eff.duration === 'permanent') {
+      delete state.players[playerIdx].catalysts[openZone]._temporaryControl;
+      delete state.players[playerIdx].catalysts[openZone]._temporaryReturnToPlayer;
+    }
+    result = { ok:true, zone:openZone, cardId: stolen.cardId };
+  } else {
+    result = stealFirstOpponentCatalystUntilEndTurn(state, playerIdx, reasonLabel || sourceCard?.name, predicate);
+    if (result.ok && eff.duration === 'permanent') {
+      const live = state.players[playerIdx].catalysts[result.zone];
+      if (live) { delete live._temporaryControl; delete live._temporaryReturnToPlayer; }
+    }
+  }
+  if (result.ok) {
+    if (cost) p.chi -= cost;
+    if (eff.oncePerTurn) markEffectUsed(state, playerIdx, sourceCardId, eff.tag || 'genericTakeControl');
+    const stolenCard = getCard(result.cardId);
+    addLog(state, `Effect Script: ${reasonLabel || sourceCard?.name || 'A card effect'} took control of ${stolenCard?.name || 'a Catalyst'}${eff.duration === 'permanent' ? ' permanently.' : ' until the End Phase.'}`);
+  }
+  return result;
 }
 
 function getRegisteredPRBoost(state, playerIdx, zoneIdx) {
@@ -1334,6 +1597,7 @@ function getRegisteredPRBoost(state, playerIdx, zoneIdx) {
     boost -= 500;
   }
 
+  boost += getInferredAuraBoost(state, playerIdx, zoneIdx, 'pr');
   return boost;
 }
 
@@ -1367,6 +1631,7 @@ function getRegisteredCPBoost(state, playerIdx, zoneIdx) {
   if (opp.catalysts.some(sl => sl && sl._valentineLock) && slotCard && /walter|celes victoria|integral hellsing/i.test(slotCard.name || '')) {
     boost -= 500;
   }
+  boost += getInferredAuraBoost(state, playerIdx, zoneIdx, 'cp');
   return boost;
 }
 
@@ -2121,6 +2386,14 @@ function runPalmScript(state, playerIdx, card, manual) {
     addLog(state, `Effect Script: ${card.name} equipped to ${getCard(slot.cardId)?.name || 'a Catalyst'}.`);
     return true;
   };
+
+
+  const genericPalmControl = inferCommonStringEffects(card).find(e => e.action === 'generic_takeControl');
+  if (genericPalmControl && !/legat0 the great|inferno takeover/i.test(name)) {
+    const result = runGenericTakeControl(state, playerIdx, card.id, genericPalmControl, manual, card.name);
+    if (!result.ok) addLog(state, `Effect Script: ${card.name} had no valid Catalyst to take control of.`);
+    return result;
+  }
 
   if (name === 'ready to attack') {
     const zoneIdx = getFirstFaceUpCatalystZone(state, playerIdx);
@@ -3233,6 +3506,10 @@ function activateCatalystEffect(state, playerIdx, zoneIdx, effectTag, manual) {
     return { ok:true };
   }
 
+  if (effectTag === 'genericTakeControl' || effectTag === 'genericOnSummonSteal') {
+    return runGenericTakeControl(state, playerIdx, slot.cardId, { tag: effectTag, cost: undefined, ...(getAllCardEffects(slot.cardId).find(e => e.tag === effectTag) || {}) }, manual, card.name);
+  }
+
   if (effectTag === 'custom_stungunmilly' || /stungun milly/i.test(name)) {
     const flip = Math.random() < 0.5 ? 'heads' : 'tails';
     const guess = Math.random() < 0.5 ? 'heads' : 'tails';
@@ -3260,7 +3537,7 @@ function getActivatableCatalystAbilities(state, playerIdx) {
     if (!slot || slot.faceDown) continue;
     const card = getCard(slot.cardId);
     if (!card) continue;
-    for (const eff of getCardEffects(slot.cardId)) {
+    for (const eff of getAllCardEffects(slot.cardId)) {
       if (!['activated','activeAbility','oncePerTurnActive'].includes(eff.type)) continue;
       out.push({ zoneIdx:z, cardId:slot.cardId, card, effect:eff, label:`${card.name} — ${eff.tag || 'Ability'}` });
     }
@@ -3277,6 +3554,14 @@ function runConcealedResolutionScript(state, link) {
   const atkZone = pending && pending.type === 'attack' ? pending.attackerZone : null;
   const defPlayer = pending && pending.type === 'attack' ? pending.defenderPlayer : null;
   const attacker = atkPlayer !== null ? state.players[atkPlayer].catalysts[atkZone] : null;
+
+
+  const genericConcealedControl = inferCommonStringEffects(card).find(e => e.action === 'generic_takeControl');
+  if (genericConcealedControl) {
+    const res = runGenericTakeControl(state, link.player, link.cardId, genericConcealedControl, link.manual, card.name);
+    if (!res.ok) addLog(state, `Effect Script: ${card.name} had no valid Catalyst to take control of.`);
+    return;
+  }
 
   if (name === 'dragon fortress' && attacker) {
     attacker.atkMod = Number(attacker.atkMod || 0) - 700;
@@ -3426,6 +3711,11 @@ function runConcealedResolutionScript(state, link) {
 // ── DRAW ──
 function drawCard(state, playerIdx) {
   const p = state.players[playerIdx];
+  if (Number(p._skipNextDraw || 0) > 0) {
+    p._skipNextDraw = Math.max(0, Number(p._skipNextDraw || 0) - 1);
+    addLog(state, `P${playerIdx+1} skipped a draw due to a lingering card effect.`);
+    return null;
+  }
   if (p.deck.length === 0) {
     addLog(state, `P${playerIdx+1} deck empty — skip draw (NOT a loss).`);
     return null;
@@ -4377,7 +4667,8 @@ function resolveChain(state) {
     addLog(state, `Link ${i+1} — ${card ? card.name : 'Effect'} resolved.`);
     if (link.source === 'concealed') {
       runConcealedResolutionScript(state, link);
-      const keepFaceUp = /jessica'?s love/i.test(card?.name || '') || /spell negator/i.test(card?.name || '') || /the chosen one/i.test(card?.name || '');
+      const inferredKeepsFaceUp = /continuous/i.test(String(card?.sub || '')) || inferCommonStringEffects(card).some(e => e.type === 'fieldAuraPR' || e.type === 'fieldAuraCP');
+      const keepFaceUp = /jessica'?s love/i.test(card?.name || '') || /spell negator/i.test(card?.name || '') || /the chosen one/i.test(card?.name || '') || inferredKeepsFaceUp;
       if (!keepFaceUp) {
         const zoneIdx = typeof link.zoneIdx === 'number' ? link.zoneIdx : -1;
         if (zoneIdx >= 0 && state.players[link.player].tricks[zoneIdx]) {
