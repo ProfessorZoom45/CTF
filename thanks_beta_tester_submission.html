@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beta Tester Beta Tester Submission Received — Carry The Flame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --coal:#0d0d0d;--coal-light:#1a1a1a;--coal-mid:#242424;
+  --flame:#ff6a00;--ember:#c0392b;--amber:#ffb347;
+  --ash:#888;--white:#f5f0e8;--cream:#e8e0d0;
+  --green:#4CAF50;--gold:#FFD700;
+  --font-display:'Bebas Neue',sans-serif;
+  --font-label:'Barlow Condensed',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'Space Mono',monospace
+}
+html{scroll-behavior:smooth}
+body{background:var(--coal);color:var(--white);font-family:var(--font-body);line-height:1.6;overflow-x:hidden;min-height:100vh}
+
+/* ── NAV (identical to all pages) ── */
+nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,106,0,.15)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.5rem}
+.nav-brand{font-family:var(--font-display);font-size:1.6rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase;text-decoration:none}.nav-brand span{color:var(--white)}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-family:var(--font-label);font-weight:600;font-size:.95rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--cream);position:relative;transition:color .2s;text-decoration:none}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--flame);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-links a:hover,.nav-links a.active{color:var(--flame)}
+.menu-toggle{display:none;background:none;border:none;color:var(--flame);font-size:1.5rem;cursor:pointer}
+
+/* ── HERO SECTION ── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;text-align:center;padding:6rem 1.5rem 4rem;
+  background:radial-gradient(ellipse at 50% 60%,rgba(255,106,0,.12) 0%,rgba(192,57,43,.06) 35%,transparent 65%),var(--coal);
+  overflow:hidden;
+}
+
+/* Animated flame rings */
+.flame-ring{
+  position:absolute;border-radius:50%;border:1px solid rgba(255,106,0,.08);
+  animation:pulse-ring 4s ease-in-out infinite;pointer-events:none;
+}
+.flame-ring:nth-child(1){width:400px;height:400px;animation-delay:0s}
+.flame-ring:nth-child(2){width:600px;height:600px;animation-delay:.8s;border-color:rgba(255,106,0,.05)}
+.flame-ring:nth-child(3){width:800px;height:800px;animation-delay:1.6s;border-color:rgba(255,106,0,.03)}
+
+@keyframes pulse-ring{
+  0%,100%{transform:scale(1);opacity:.4}
+  50%{transform:scale(1.04);opacity:1}
+}
+
+/* Floating ember particles */
+.embers-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.ember{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:var(--flame);opacity:0;
+  animation:float-up var(--dur,6s) ease-in var(--delay,0s) infinite;
+}
+.ember::after{content:'';position:absolute;inset:-1px;border-radius:50%;background:var(--amber);opacity:.5;filter:blur(1px)}
+
+@keyframes float-up{
+  0%{transform:translateY(0) translateX(0) scale(1);opacity:0}
+  10%{opacity:.8}
+  80%{opacity:.3}
+  100%{transform:translateY(-220px) translateX(var(--drift,20px)) scale(.2);opacity:0}
+}
+
+/* ── ICON ── */
+.check-wrap{
+  position:relative;z-index:2;margin-bottom:2rem;
+  animation:drop-in .7s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes drop-in{from{opacity:0;transform:scale(.5) translateY(-30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+.check-icon{
+  width:100px;height:100px;border-radius:50%;margin:0 auto;
+  background:linear-gradient(135deg,rgba(255,106,0,.15),rgba(192,57,43,.1));
+  border:2px solid rgba(255,106,0,.4);display:flex;align-items:center;justify-content:center;
+  position:relative;box-shadow:0 0 60px rgba(255,106,0,.15),0 0 120px rgba(255,106,0,.08);
+}
+.check-icon::before{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px solid rgba(255,106,0,.15);animation:spin-slow 8s linear infinite;
+}
+@keyframes spin-slow{to{transform:rotate(360deg)}}
+.check-icon svg{width:48px;height:48px;color:var(--flame);filter:drop-shadow(0 0 12px rgba(255,106,0,.6))}
+
+/* ── HEADLINE ── */
+.hero-headline{
+  position:relative;z-index:2;
+  font-family:var(--font-display);font-size:clamp(3rem,8vw,6rem);
+  letter-spacing:4px;text-transform:uppercase;line-height:1;margin-bottom:.6rem;
+  animation:fade-up .6s .25s ease both;
+}
+.hero-headline .line-1{
+  background:linear-gradient(180deg,var(--white) 40%,var(--flame));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;
+}
+.hero-headline .line-2{
+  background:linear-gradient(180deg,var(--amber) 0%,var(--flame) 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;font-size:clamp(1.8rem,5vw,3.5rem);letter-spacing:8px;margin-top:.2rem;
+}
+
+.hero-sub{
+  position:relative;z-index:2;
+  color:var(--cream);max-width:560px;margin:.8rem auto 0;font-size:1rem;
+  animation:fade-up .6s .4s ease both;
+}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── WHAT HAPPENS NEXT ── */
+.next-section{
+  position:relative;z-index:2;margin:3rem auto 0;max-width:700px;width:100%;
+  animation:fade-up .6s .55s ease both;
+}
+.next-title{
+  font-family:var(--font-display);font-size:1.5rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--flame);margin-bottom:1.5rem;
+}
+.next-steps{display:flex;flex-direction:column;gap:.75rem}
+.step-row{
+  display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;
+  background:var(--coal-light);border:1px solid rgba(255,106,0,.08);
+  transition:border-color .25s;
+}
+.step-row:hover{border-color:rgba(255,106,0,.2)}
+.step-num{
+  font-family:var(--font-display);font-size:1.8rem;color:var(--flame);
+  opacity:.4;line-height:1;flex-shrink:0;padding-top:.1rem;
+}
+.step-body{}
+.step-label{font-family:var(--font-label);font-weight:700;font-size:.9rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:.2rem}
+.step-detail{font-size:.82rem;color:var(--ash);line-height:1.6}
+.step-detail strong{color:var(--cream)}
+
+/* ── DIVIDER ── */
+.flame-divider{
+  position:relative;z-index:2;margin:2.5rem auto;max-width:400px;
+  display:flex;align-items:center;gap:1rem;
+  animation:fade-up .6s .65s ease both;
+}
+.flame-divider::before,.flame-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,106,0,.3))}
+.flame-divider::after{background:linear-gradient(90deg,rgba(255,106,0,.3),transparent)}
+.flame-divider-icon{font-size:1.2rem;flex-shrink:0}
+
+/* ── CTA BUTTONS ── */
+.cta-group{
+  position:relative;z-index:2;display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;
+  animation:fade-up .6s .7s ease both;
+}
+.btn-primary{
+  font-family:var(--font-label);font-weight:700;font-size:.9rem;letter-spacing:2px;text-transform:uppercase;
+  padding:.9rem 2rem;border:none;cursor:pointer;text-decoration:none;display:inline-block;
+  background:linear-gradient(135deg,var(--flame),var(--ember));color:#fff;
+  clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
+  transition:all .3s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,106,0,.3);color:#fff}
+.btn-secondary{
+  font-family:var(--font-label);font-weight:700;font-size:.9rem;letter-spacing:2px;text-transform:uppercase;
+  padding:.85rem 1.8rem;background:transparent;
+  border:1px solid rgba(255,106,0,.3);color:var(--cream);cursor:pointer;text-decoration:none;display:inline-block;
+  transition:all .3s;
+}
+.btn-secondary:hover{border-color:var(--flame);color:var(--flame)}
+
+/* ── JSON REMINDER BOX ── */
+.json-reminder{
+  position:relative;z-index:2;max-width:560px;margin:2.5rem auto 0;
+  background:var(--coal-light);border-left:3px solid var(--amber);padding:1rem 1.2rem;
+  animation:fade-up .6s .8s ease both;
+}
+.json-reminder-title{font-family:var(--font-label);font-weight:700;font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:.4rem}
+.json-reminder p{font-size:.8rem;color:var(--ash);line-height:1.7}
+.json-reminder strong{color:var(--cream)}
+
+/* ── FOOTER (matches all pages) ── */
+footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3rem 1.5rem;text-align:center;position:relative;z-index:2}
+.footer-brand{font-family:var(--font-display);font-size:1.4rem;letter-spacing:2px;color:var(--flame)}
+.footer-links{display:flex;justify-content:center;gap:2rem;margin:1rem 0;flex-wrap:wrap}
+.footer-links a{font-family:var(--font-label);font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash);text-decoration:none}.footer-links a:hover{color:var(--flame)}
+.footer-copy{font-size:.75rem;color:var(--ash);margin-top:1rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1.5rem;gap:1.2rem;border-bottom:1px solid rgba(255,106,0,.15)}.nav-links.open{display:flex}.menu-toggle{display:block}
+  .flame-ring{display:none}
+  .cta-group{flex-direction:column;align-items:center}
+  .btn-primary,.btn-secondary{width:100%;max-width:320px;text-align:center}
+}
+</style>
+<script defer src="assets/js/embers-bg.js"></script>
+</head>
+<body>
+
+<!-- NAV (identical structure to all pages) -->
+<nav><div class="nav-inner">
+  <a href="index.html" class="nav-brand">Carry The <span>Flame</span></a>
+  <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+  <ul class="nav-links">
+    <li><a href="rules.html">Rules</a></li>
+    <li><a href="cards.html">Cards</a></li>
+    <li><a href="deckbuilder.html">Deck Builder</a></li>
+    <li><a href="play.html">Play</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="submit.html">Submit Cards</a></li></ul>
+</div></nav>
+
+<!-- HERO -->
+<section class="hero">
+
+  <!-- Concentric pulse rings -->
+  <div class="flame-ring"></div>
+  <div class="flame-ring"></div>
+  <div class="flame-ring"></div>
+
+  <!-- Floating embers -->
+  <div class="embers-layer" id="embers-layer"></div>
+
+  <!-- Check icon -->
+  <div class="check-wrap">
+    <div class="check-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Headline -->
+  <h1 class="hero-headline">
+    <span class="line-1">Cards Received</span>
+    <span class="line-2">The Flame Carries On</span>
+  </h1>
+  <p class="hero-sub">Your 5-card set is in the review queue. The PTG team will evaluate each card for balance, originality, and fit within the CTF canon.</p>
+
+  <!-- What happens next -->
+  <div class="next-section">
+    <div class="next-title">What Happens Next</div>
+    <div class="next-steps">
+      <div class="step-row">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <div class="step-label">Review Period</div>
+          <div class="step-detail">The PTG team reviews your submission for <strong>balance, name originality, and CTF rules compliance.</strong> All 5 cards are evaluated together as a set.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <div class="step-label">Decision & Feedback</div>
+          <div class="step-detail">You'll receive an email at the address you submitted with an <strong>approval, rejection, or revision request.</strong> Approved cards may be modified for balance before entering canon.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <div class="step-label">Canon Entry</div>
+          <div class="step-detail">Approved cards are added to the official CTF card database and credited to your gamertag <strong>in the card's metadata.</strong> They become part of the permanent CTF set library.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <div class="step-label">Your Email Receipt</div>
+          <div class="step-detail">An email client window should have opened with your full card details. <strong>Send it if it didn't go automatically</strong> — it gives PTG a second copy of your submission.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="flame-divider"><span class="flame-divider-icon">🔥</span></div>
+
+  <!-- CTA Buttons -->
+  <div class="cta-group">
+    <a href="play.html" class="btn-primary">Play Now</a>
+    <a href="deckbuilder.html" class="btn-secondary">Deck Builder</a>
+    <a href="cards.html" class="btn-secondary">Browse Cards</a>
+    <a href="submit.html" class="btn-secondary">Back to Home</a>
+  </div>
+
+  <!-- JSON reminder -->
+
+  <div class="json-reminder" id="tester-mailto-reminder" style="display:none;max-width:560px;margin:1rem auto 0;border-left-color:var(--flame)">
+    <div class="json-reminder-title">✉️ Beta Tester Email Backup</div>
+    <p>Your email app should open automatically after this page loads. If it does not, use the button below to open the beta tester email manually.</p>
+    <p style="margin-top:.85rem"><a id="tester-mailto-link" href="#" class="btn-secondary" style="display:inline-block">Open Beta Tester Email</a></p>
+  </div>
+
+</section>
+
+<!-- FOOTER (matches all pages) -->
+<footer>
+  <div class="footer-brand">CARRY THE FLAME</div>
+  <div class="footer-links">
+    <a href="rules.html">Rules</a>
+    <a href="cards.html">Cards</a>
+    <a href="deckbuilder.html">Deck Builder</a>
+    <a href="play.html">Play</a>
+    <a href="glossary.html">Glossary</a>
+    <a href="submit.html">Submit Cards</a>
+    
+  </div>
+  <p class="footer-copy">© 2026 Perfect Timing Gaming · Makairis Holding Group · Dr. Zoom & Newz · Buffalo, NY · Consistency > Hype</p>
+</footer>
+
+<script>
+// ── Floating ember particles ──
+(function(){
+  const layer = document.getElementById('embers-layer');
+  if(!layer) return;
+  const count = 28;
+  for(let i = 0; i < count; i++){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const left = 20 + Math.random() * 60; // keep them centered-ish
+    const delay = Math.random() * 6;
+    const dur = 5 + Math.random() * 5;
+    const drift = (Math.random() - .5) * 60;
+    const size = 2 + Math.random() * 3;
+    e.style.cssText = `left:${left}%;bottom:${10 + Math.random()*30}%;--delay:${delay}s;--dur:${dur}s;--drift:${drift}px;width:${size}px;height:${size}px;`;
+    layer.appendChild(e);
+  }
+})();
+</script>
+
+<script>
+(function(){
+  function buildMailto(data){
+    const to='changethewrld@outlook.com';
+    const subject='CTF Beta Tester Submission';
+    const lines=[
+      'CTF Beta Tester Submission',
+      '',
+      'Gamertag: '+(data.gamertag||''),
+      'Email: '+(data.email||''),
+      'Favorite Universe: '+(data.favorite_universe||''),
+      'Beta Role: '+(data.beta_role||''),
+      '',
+      'This backup email was opened after the beta tester thank-you page redirect.'
+    ];
+    return 'mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('
+'));
+  }
+  function getData(){
+    const q=new URLSearchParams(window.location.search);
+    if(q.get('tester')==='1'){
+      return {
+        email:q.get('email')||'',
+        gamertag:q.get('gamertag')||'',
+        favorite_universe:q.get('favorite_universe')||'',
+        beta_role:q.get('beta_role')||''
+      };
+    }
+    try{
+      const raw=sessionStorage.getItem('ctfTesterMailtoPending');
+      return raw?JSON.parse(raw):null;
+    }catch(_err){
+      return null;
+    }
+  }
+  const data=getData();
+  if(!data||!data.email) return;
+  const key='ctfBetaTesterMailtoShown:'+data.email+':'+(data.gamertag||'');
+  const reminder=document.getElementById('tester-mailto-reminder');
+  const link=document.getElementById('tester-mailto-link');
+  const mailto=buildMailto(data);
+  if(link) link.href=mailto;
+  if(reminder) reminder.style.display='block';
+  try{
+    if(!sessionStorage.getItem(key)){
+      sessionStorage.setItem(key,'1');
+      setTimeout(function(){ window.location.href=mailto; }, 500);
+    }
+    sessionStorage.removeItem('ctfTesterMailtoPending');
+  }catch(_err){
+    setTimeout(function(){ window.location.href=mailto; }, 500);
+  }
+})();
+</script>
+
+<script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
+</body>
+</html>

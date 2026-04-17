@@ -256,7 +256,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 <input type="hidden" name="signup_type" value="game_tester">
 <input type="hidden" name="page" value="index.html">
 <input type="hidden" name="_subject" value="CTF Game Tester Signup">
-<p class="tester-note">After you sign up, you’ll be redirected to the thank-you page. Then your email app will open with a prefilled tester message as a backup copy.</p>
+<p class="tester-note">After you sign up, you’ll be redirected to the new beta tester thank-you page. Then your email app will open with the prefilled tester email backup.</p>
 <div class="tester-actions">
 <button type="submit" class="btn btn-fire">Start Tester Sign-Up</button>
 <a href="play.html" class="btn btn-ghost">Launch the Game Tester</a>
@@ -327,7 +327,7 @@ for(let i=0;i<80;i++)embers.push(new Ember());
         }));
       }catch(_err){}
       const params=new URLSearchParams({tester:'1',email,gamertag,favorite_universe:favoriteUniverse,beta_role:betaRole});
-      window.location.href='thanks.html?'+params.toString();
+      window.location.href='thanks_beta_tester_submission.html?'+params.toString();
     }catch(err){
       status.className='tester-status error';
       status.textContent='Tester signup failed. Please try again.';
