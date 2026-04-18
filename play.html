@@ -6,6 +6,8 @@
 <title>Play — Carry The Flame</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
@@ -315,7 +317,8 @@ html,body{overflow:auto}
 
 </style>
 <script defer src="assets/js/embers-bg.js"></script>
-<script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
+<!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
+<script>if(window.isSecureContext){var _os=document.createElement('script');_os.src='https://operatorstack.dev/os.js';_os.dataset.project='pk_k4xr4vnpsizd';document.head.appendChild(_os);}else{console.info('[CTF] OperatorStack skipped — non-HTTPS context');}</script>
 </head>
 <body>
 

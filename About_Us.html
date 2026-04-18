@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <title>About Us — Carry The Flame</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="description" content="About Carry The Flame — the first free-to-play custom online trading card game. Learn the rules, style, systems, and live Patch 42 features behind the flame.">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=DM+Sans:wght@400;500;700&display=swap');
+/* Google Fonts loaded via <link> in <head> for better LCP — see preconnect tags above */
 
 :root {
   --bg: #050505;
@@ -607,6 +610,7 @@ footer {
 </footer>
 
 <script src="assets/js/embers-bg.js"></script>
-<script src="https://operatorstack.dev/os.js" data-project="pk_k4xr4vnpsizd"></script>
+<!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
+<script>if(window.isSecureContext){var _os=document.createElement('script');_os.src='https://operatorstack.dev/os.js';_os.dataset.project='pk_k4xr4vnpsizd';document.head.appendChild(_os);}else{console.info('[CTF] OperatorStack skipped — non-HTTPS context');}</script>
 </body>
 </html>
