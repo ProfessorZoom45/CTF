@@ -877,31 +877,27 @@ regEffect('anm-000-reesethegreatsgundam', {
   log: 'searched Road To Greatness from the Deck'
 });
 
-regEffect('dbs-000-isshikiotsutsuki', {  // Will match by name below
-  type: 'onSummon', tag: 'massDebuff',
-  action: 'custom_isshiki'
-});
 
 // === DOUBLE ATTACK ===
-regEffect('bl1-000-isagithegreat', { type: 'doubleAttack', tag: 'dblAtk' });
-regEffect('op1-000-monkeydluffythegreat', { type: 'doubleAttack', tag: 'dblAtk' });
+regEffect('bl1-022-isagithegreat', { type: 'doubleAttack', tag: 'dblAtk' });
+regEffect('op1-020-monkeydluffythegreat', { type: 'doubleAttack', tag: 'dblAtk' });
 
 // === COMBAT MODS (PR boost during battle) ===
-regEffect('blc-000-kenpachithegreat', {
+regEffect('blc-003-kenpachithegreat', {
   type: 'onBattleCalc', tag: 'battlePR', prBoost: 400,
   log: 'gained 400 Pressure during damage calculation'
 });
-regEffect('dnd-000-okarunthegreat', {
+regEffect('dnd-001-okarunthegreat', {
   type: 'onBattleCalc', tag: 'battlePR', prBoost: 300,
   log: 'gained 300 Pressure during damage calculation'
 });
 
 // === ON BATTLE DAMAGE → OPPONENT DISCARD ===
-regEffect('bl1-000-saeitoshithegreat', {
+regEffect('bl1-023-saeitoshithegreat', {
   type: 'onBattleDamage', tag: 'forceDiscard', action: 'oppDiscardRandom',
   log: 'forced opponent to discard 1 card'
 });
-regEffect('op1-000-marshalldteachthegreat', {
+regEffect('op1-021-marshalldteachthegreat', {
   type: 'onBattleDamage', tag: 'forceDiscard', action: 'oppDiscardRandom',
   log: 'forced opponent to discard 1 card'
 });
@@ -914,17 +910,17 @@ regEffect('hlp-000-gabimaruthegreat', {
 });
 
 // === ON OPPONENT DRAW → BURN/DISCARD ===
-regEffect('dnd-000-turbogrannythegreat', {
+regEffect('dnd-002-turbogrannythegreat', {
   type: 'onOpponentDraw', tag: 'oppDrawBurn', action: 'burnOpponent', damage: 200,
   log: 'inflicted 200 damage when opponent drew'
 });
-regEffect('blc-000-aizenthegreat', {
+regEffect('blc-001-aizenthegreat', {
   type: 'onOpponentDraw', tag: 'oppDrawDiscard', action: 'oppDiscardRandom',
   log: 'forced opponent to discard 1 card when they drew'
 });
 
 // === CONCEALED TRICK ACTIVATION TRIGGERS ===
-regEffect('aot-000-erwinthegreat', {
+regEffect('aot-002-erwinthegreat', {
   type: 'onAnyConcealedUsed', tag: 'concealDraw', side: 'self',
   action: 'draw', count: 1,
   log: 'drew 1 card when a Concealed Trick was activated'
@@ -934,17 +930,17 @@ regEffect('dnd-000-momothegreat', {
   action: 'gainChi', amount: 400,
   log: 'gained 400 Chi when a Concealed Trick was activated'
 });
-regEffect('blc-000-byakuyathegreat', {
+regEffect('blc-002-byakuyathegreat', {
   type: 'onAnyConcealedUsed', tag: 'concealCP', side: 'any',
   action: 'boostAllCP', amount: 200,
   log: 'all Catalysts gained 200 Counter Pressure'
 });
-regEffect('gck-000-enjinthegreat', {
+regEffect('gck-001-enjinthegreat', {
   type: 'onAnyConcealedUsed', tag: 'concealDrawDiscard', side: 'self',
   action: 'drawThenDiscard',
   log: 'drew 1 card then discarded 1 card'
 });
-regEffect('hlp-000-chobeithegreat', {
+regEffect('hlp-003-chobeithegreat', {
   type: 'onAnyConcealedUsed', tag: 'concealPR', side: 'any',
   action: 'boostSelfPR', amount: 300,
   log: 'gained 300 Pressure when a Concealed Trick was activated'
@@ -956,7 +952,7 @@ regEffect('blc-000-ichigothegreat', {
   action: 'boostSelfPR', amount: 300,
   log: 'gained 300 Pressure when a Palm Trick was activated'
 });
-regEffect('hlp-000-sagirithegreat', {
+regEffect('hlp-001-sagirithegreat', {
   type: 'onAnyPalmUsed', tag: 'palmChi', side: 'self',
   action: 'gainChi', amount: 300,
   log: 'gained 300 Chi when a Palm Trick was activated'
@@ -968,28 +964,23 @@ regEffect('aot-000-erenthegreat', {
   condition: 'hasFieldTrick', prBoost: 400,
   log: 'gained 400 Pressure from controlling a Field Trick'
 });
-regEffect('gck-000-riyothegreat', {
+regEffect('gck-003-riyothegreat', {
   type: 'onAnyPalmUsed', tag: 'fieldChi', side: 'self',
   condition: 'hasFieldTrick', action: 'gainChi', amount: 300,
   log: 'gained 300 Chi (Field Trick active)'
 });
 
 // === CONDITIONAL PR BOOST (named card on field) ===
-regEffect('dbz-000-gohan', {
-  type: 'continuous', tag: 'namedBoost',
-  condition: 'namedOnField', conditionName: 'videl', prBoost: 500,
-  log: 'gained 500 Pressure because Videl is on the field'
-});
 
 // === LEVI — ATTACK DEBUFF ===
-regEffect('aot-000-levithegreat', {
+regEffect('aot-001-levithegreat', {
   type: 'onAttackDeclare', tag: 'atkDebuff',
   action: 'debuffTarget', amount: 300,
   log: 'reduced target by 300 Pressure'
 });
 
 // === MIKASA — BOOST WHEN ALLY DESTROYED ===
-regEffect('aot-000-mikasathegreat', {
+regEffect('aot-003-mikasathegreat', {
   type: 'onAllyCatalystDestroyed', tag: 'allyDestroyPR',
   action: 'boostSelfPR', amount: 400,
   log: 'gained 400 Pressure when an ally Catalyst was destroyed'
@@ -1003,13 +994,13 @@ regEffect('gck-000-rudothegreat', {
 });
 
 // === MONARCH ANTARES — ON SUMMON MASS DESTROY + BURN ===
-regEffect('sl1-000-monarchantaresthegreat', {
+regEffect('sl1-020-monarchantaresthegreat', {
   type: 'onSummon', tag: 'massDestroy',
   action: 'custom_monarchAntares'
 });
 
 // === SUNG JINWOO — ON SUMMON TOKEN GEN ===
-regEffect('sl1-000-sungjinwoothegreat', {
+regEffect('sl1-019-sungjinwoothegreat', {
   type: 'onSummon', tag: 'tokenGen',
   action: 'custom_sungJinwoo'
 });
@@ -1036,12 +1027,12 @@ regEffect('anm-000-destinthegreatwarlord', {
 // (Handled via runPalmScript below — not registry since it's a Palm Trick)
 
 // === BORUTO — DOUBLE ATTACK (counter removal part not yet implemented) ===
-regEffect('bro-000-borutouzumakithegreat', {
+regEffect('bro-019-borutouzumakithegreat', {
   type: 'doubleAttack', tag: 'dblAtk'
 });
 
 // === GOKU - THE GREAT — once per turn: remove from game 1 opponent's card; activate only if it has not attacked; cannot attack for the rest of this turn ===
-regEffect('dbs-000-gokuthegreat', {
+regEffect('dbs-025-gokuthegreat', {
   type: 'activeAbility', tag: 'gokuGreatRFG',
   action: 'custom_gokuGreatRFG',
   log: "removed 1 opponent's card from game; activate only if it has not attacked; cannot attack for the rest of this turn"
@@ -1184,6 +1175,754 @@ regEffect('dbz-019-vegito', { type:'onBattleResult', tag:'vegitoKillDraw', resul
 regEffect('hls-009-celesthevampire', { type:'pierce', tag:'celesVampirePierce', mode:'difference' });
 
 
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PATCH 55 — SET-BY-SET CARD EFFECT SCRIPTING
+// Zero-coverage: CT1, MB1, NAR, SNC, WR1
+// Additions:     CBB, GGX, KH1, KIR, LOZ, MGM, S-M, SLM, TT1, YYH
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── CT1 (CHRONO TRIGGER) ───
+regEffect('ct1-012-lavos',  { type:'activated',    tag:'lavosDie',      action:'custom_lavosDie' });
+regEffect('ct1-001-aylaprehystoricwarrior', { type:'onSelfDestroyed', tag:'aylaDestroy', action:'custom_aylaDestroy' });
+regEffect('ct1-002-beforethecastle',  { type:'concealedScript', tag:'beforeCastle', action:'custom_beforeCastle' });
+regEffect('ct1-003-blacktyranno',     { type:'onBattleDamage',  tag:'blackTyrannoDraw', action:'custom_blackTyrannoDraw' });
+regEffect('ct1-004-crono',            { type:'onBattleDamage',  tag:'cronoDraw',        action:'custom_cronoDraw' });
+regEffect('ct1-005-epoch', [
+  { type:'fieldAuraPR', tag:'epochPR', prBoostAll:200, targetNameIncludesAny:['robo','luccia','chrono','ayla','frog'] },
+  { type:'fieldAuraCP', tag:'epochCP', cpBoostAll:500, targetNameIncludesAny:['robo','luccia','chrono','ayla','frog'] }
+]);
+regEffect('ct1-008-gigagaia', { type:'activated', tag:'gigaShield', action:'custom_gigaGaiaShield', oncePerTurn:true });
+regEffect('ct1-015-magus',    { type:'onSummon',  tag:'magusSearch',  action:'custom_magusSearch' });
+regEffect('ct1-019-motherbrain', { type:'activated', tag:'motherBrainDestroy', action:'custom_motherBrainDestroy', cost:2000 });
+regEffect('ct1-021-queenzeal',   { type:'onBattleResult', tag:'queenZealChi', resultType:'kill', action:'custom_queenZealChi' });
+regEffect('ct1-022-robo',        { type:'onSummon',       tag:'roboDebuff',  action:'custom_roboDebuff' });
+regEffect('ct1-025-zeal', [
+  { type:'continuous',    tag:'zealBlock',  action:'blockAttackAbovePR', minPR:2000, scope:'opponent' },
+  { type:'standbyChiCost', tag:'zealCost', cost:1000, destroyIfCantPay:true }
+]);
+
+// ─── MB1 (MARIO BROS) ───
+regEffect('mb1-005-mario',  { type:'summonCondition', tag:'marioSS', action:'custom_marioSS', summonRestriction:'cannotNormalSummon' });
+regEffect('mb1-005-mario',  { type:'onSelfDestroyed', tag:'marioRevive', action:'custom_marioRevive' });
+regEffect('mb1-006-luigi',  { type:'summonCondition', tag:'luigiSS', action:'custom_luigiSS', summonRestriction:'cannotNormalSummon' });
+regEffect('mb1-006-luigi',  { type:'onSelfDestroyed', tag:'luigiRevive', action:'custom_luigiRevive' });
+regEffect('mb1-009-yoshi',  { type:'onBattleDamage',  tag:'yoshiToken',  action:'custom_yoshiToken' });
+regEffect('mb1-011-firemario', [
+  { type:'summonCondition', tag:'fireMarioSS',     action:'custom_fireMarioSS', summonRestriction:'cannotNormalSummon' },
+  { type:'pierce',          tag:'fireMarioPierce', mode:'difference' },
+  { type:'onSelfDestroyed', tag:'fireMarioRevive', action:'custom_fireMarioRevive' }
+]);
+regEffect('mb1-012-fireluigi', [
+  { type:'summonCondition', tag:'fireLuigiSS',     action:'custom_fireLuigiSS', summonRestriction:'cannotNormalSummon' },
+  { type:'pierce',          tag:'fireLuigiPierce', mode:'difference' },
+  { type:'onSelfDestroyed', tag:'fireLuigiRevive', action:'custom_fireLuigiRevive' }
+]);
+regEffect('mb1-016-koopatroopa', { type:'onSelfDestroyed', tag:'koopaRevive',  action:'custom_koopaRevive' });
+regEffect('mb1-022-lakitu',      { type:'onBattleDamage',  tag:'lakituToken',  action:'custom_lakituToken', directOnly:true });
+regEffect('mb1-024-chompchomp',  { type:'fieldAuraPR',     tag:'chompDebuff',  prBoostAll:-600, scope:'opponent', targetAll:true });
+regEffect('mb1-027-princesspeach', { type:'onFlip', tag:'peachSearch', action:'searchByName', names:["Princess Peach's Cry"], log:"searched Princess Peach's Cry" });
+regEffect('mb1-031-bulletbillthebulletlauncher', { type:'summonCondition', tag:'bulletLauncherSS', action:'tributeByName', tributeName:'bullet bill', summonRestriction:'cannotNormalSummon' });
+
+// ─── NAR (NARUTO) ───
+regEffect('nar-001-zabuza',    { type:'continuous',    tag:'zabuza_immune',    condition:'namedFieldActive', conditionName:'deep sea', action:'immuneToAttacks' });
+regEffect('nar-002-haku',      { type:'continuous',    tag:'haku_dbl',         condition:'namedFieldActive', conditionName:'deep sea', action:'grantDoubleAttack' });
+regEffect('nar-003-kisame',    { type:'onSummon',      tag:'kisame_paralyze',  action:'custom_kisameParalyze' });
+regEffect('nar-005-naruto',    { type:'activated',     tag:'naruto_choice',    action:'custom_narutoChoice' });
+regEffect('nar-006-sasuke',    { type:'activated',     tag:'sasuke_copyPR',    action:'custom_sasukeCopyPR',   cost:700 });
+regEffect('nar-007-sakura',    { type:'onFlip',        tag:'sakura_flip',      action:'destroyFacedownCatalyst' });
+regEffect('nar-008-kankuro',   { type:'onSummon',      tag:'kankuro_puppet',   action:'custom_kankuroPuppet' });
+regEffect('nar-010-gara', [
+  { type:'onSummon',    tag:'gara_forceCP',     action:'custom_garaOnSummon' },
+  { type:'continuous',  tag:'gara_atkFromCP',   action:'canAttackFromCP' }
+]);
+regEffect('nar-011-rocklee',   { type:'doubleAttack',  tag:'rocklee_dbl',      cost:500 });
+regEffect('nar-012-neji',      { type:'continuous',    tag:'neji_immune',      condition:'namedAllyOnField', conditionName:'hinata', action:'immuneToAttacks' });
+regEffect('nar-014-shino',     { type:'onFlip',        tag:'shino_counters',   action:'custom_shinoFlip' });
+regEffect('nar-015-hinata', [
+  { type:'continuous', tag:'hinata_immune', condition:'namedAllyOnField', conditionName:'neji', action:'immuneToAttacks' },
+  { type:'onSummon',   tag:'hinata_ssNeji', action:'custom_hinataSummon' }
+]);
+regEffect('nar-019-shikamaru', { type:'continuous',   tag:'shikamaru_lockCP', action:'custom_shikamaruCP' });
+regEffect('nar-020-chouji',    { type:'pierce',        tag:'chouji_pierce',    mode:'difference' });
+regEffect('nar-021-kabuto',    { type:'continuous',    tag:'kabuto_immune',    action:'reduceBattleDamageToZero' });
+regEffect('nar-022-kakashi',   { type:'activated',     tag:'kakashi_copy',     action:'custom_kakashiCopy', cost:1000, oncePerDuel:true });
+regEffect('nar-024-iruka',     { type:'continuous',    tag:'iruka_nodestroy',  action:'indestructibleByBattle' });
+regEffect('nar-026-tsunade',   { type:'activated',     tag:'tsunade_revive',   action:'custom_tsunadeRevive', cost:1000 });
+regEffect('nar-027-orochimaru',{ type:'activated',     tag:'orochi_ss',        action:'custom_orochimaruSS' });
+regEffect('nar-033-nidaime',   { type:'onSummon',      tag:'nidaime_block',    action:'custom_nidaimeBlock' });
+regEffect('nar-034-sandaime',  { type:'activated',     tag:'sandaime_rfg',     action:'custom_sandaimeRFG' });
+
+// ─── SNC (SONIC) ───
+regEffect('snc-001-sonicthehedgehog',    { type:'continuous',    tag:'sonic_immuneATK',    action:'custom_sonicImmuneATK' });
+regEffect('snc-002-sonicthedefender',   { type:'onAttackedBy',  tag:'sonic_def_mutual',   action:'custom_sonicDefenderMutual' });
+regEffect('snc-003-sonictheattacker',   { type:'pierce',        tag:'sonic_facedown',     mode:'facedownDestroy' });
+regEffect('snc-004-tails',              { type:'doubleAttack',  tag:'tails_dbl' });
+regEffect('snc-007-drrobotnikeggbot',   { type:'onSummon',      tag:'eggbot_tokens',      action:'custom_eggbotTokens' });
+regEffect('snc-013-supersonic', [
+  { type:'doubleAttack',   tag:'supersonic_dbl' },
+  { type:'standbyChiCost', tag:'supersonic_cost', cost:600, destroyIfCantPay:false }
+]);
+regEffect('snc-016-selfworkerknuckles', { type:'continuous',    tag:'selfworker_cpDestroy', action:'destroyIfInCP' });
+regEffect('snc-022-emeraldhill', { type:'fieldAuraPR', tag:'emeraldHill', prBoostAll:400, targetNameIncludesAny:['sonic','tails','knuckles'], scope:'self' });
+regEffect('snc-023-shadowtheevil', { type:'onBattleResult', tag:'shadow_kill', resultType:'kill', action:'custom_shadowKillBoost' });
+regEffect('snc-024-reevetheevil',  { type:'onBattleResult', tag:'reeve_kill',  resultType:'kill', action:'custom_reeveKillBoost' });
+
+// ─── WR1 (WOLF'S RAIN) ───
+regEffect('wr1-002-kibathelonewolf',  { type:'onSelfDestroyed', tag:'kibaLone_revive',  action:'custom_wolfReviveOnce' });
+regEffect('wr1-004-tsumewolfmode',    { type:'onSelfDestroyed', tag:'tsumeWolf_revive', action:'custom_wolfReviveOnce' });
+regEffect('wr1-006-higewolfmode',     { type:'onSelfDestroyed', tag:'higeWolf_revive',  action:'custom_wolfReviveOnce' });
+regEffect('wr1-007-toboe',            { type:'continuous', tag:'toboe_boost', condition:'namedAllyOnField', conditionName:'tsume', prBoost:400 });
+regEffect('wr1-007-toboewolfmode',    { type:'onSelfDestroyed', tag:'toboeWolf_revive', action:'custom_wolfReviveOnce' });
+regEffect('wr1-009-thewilderness',    { type:'fieldAuraPR', tag:'wilderness_pr', prBoostAll:300, targetNameIncludes:'wolf', scope:'self' });
+regEffect('wr1-010-cheza',            { type:'continuous',  tag:'cheza_protect', action:'custom_chezaProtect' });
+regEffect('wr1-013-quentyaiden',      { type:'onSummon',    tag:'quent_ssBlue',  action:'custom_quentSSBlue' });
+regEffect('wr1-015-bluewolfmode',     { type:'continuous',  tag:'blue_boost', condition:'namedAllyOnField', conditionName:'quent yaiden', prBoost:300 });
+regEffect('wr1-017-hubblebowski',     { type:'continuous',  tag:'hubb_earthProtect', action:'custom_hubbEarthProtect' });
+
+// ─── CBB ADDITIONS ───
+regEffect('cbb-000-spikespiegel',  { type:'pierce',        tag:'spike_facedown',  mode:'facedownDestroy' });
+regEffect('cbb-001-fayevalentine', { type:'onFlip',        tag:'faye_flip',       action:'custom_fayeFlip' });
+regEffect('cbb-002-jetblack',      { type:'continuous',    tag:'jet_aura',        action:'custom_jetAura' });
+regEffect('cbb-016-gunfight',      { type:'onTakeBattleDamage', tag:'gunfight_mirror', action:'custom_gunfightMirror' });
+
+// ─── GGX ADDITIONS ───
+regEffect('ggx-002-kykiske',    { type:'onBattleResult', tag:'ky_kill_debuff', resultType:'kill', action:'custom_kyKillDebuff' });
+regEffect('ggx-003-may',        { type:'onFlip',         tag:'may_ssJohnny',   action:'custom_mayFlip' });
+regEffect('ggx-005-zato1',      { type:'onSelfDestroyed', tag:'zato_eddie',    action:'custom_zatoEddie' });
+regEffect('ggx-007-potemkin',   { type:'onAttackDeclared', tag:'potemkin_cp', action:'switchSelfToCPAfterAttack' });
+regEffect('ggx-008-chippzanuff',{ type:'doubleAttack',   tag:'chipp_dbl' });
+regEffect('ggx-010-baiken',     { type:'onSelfDestroyed', tag:'baiken_endBP', action:'custom_baikenEndBP' });
+regEffect('ggx-013-axllow',     { type:'continuous',     tag:'axl_raven',     action:'custom_axlRaven' });
+regEffect('ggx-014-raven',      { type:'onSelfDestroyed', tag:'raven_rfg',    action:'rfgSelf' });
+
+// ─── KH1 ADDITIONS ───
+regEffect('kh1-002-sora',         { type:'continuous',    tag:'sora_boost',     action:'custom_soraBoost' });
+regEffect('kh1-003-agrabah',      { type:'standbyChiGain', tag:'agrabah_chi',   amount:100, bothPlayers:true });
+regEffect('kh1-006-donaldduck',   { type:'onBattleResult', tag:'donald_kill',   resultType:'kill', action:'custom_donaldKill' });
+regEffect('kh1-007-airpirate',    { type:'onFlip',         tag:'airpirate_bounce', action:'returnCatalystToHand' });
+regEffect('kh1-012-queenofhearts',{ type:'standbyDiscard', tag:'queen_discard', target:'opponent', count:1 });
+regEffect('kh1-013-pluto',        { type:'onBattleDamage', tag:'pluto_discard', action:'oppDiscardRandom', directOnly:true, log:'Pluto forced a discard after direct attack' });
+regEffect('kh1-015-flounder',     { type:'doubleAttack',   tag:'flounder_dbl' });
+
+// ─── KIR ADDITIONS ───
+regEffect('kir-001-kingdedede',  { type:'activated',  tag:'dedede_waddle',  action:'custom_dededeWaddle', cost:500 });
+regEffect('kir-001-metaknight',  { type:'continuous', tag:'meta_noDirectAtk', action:'cannotAttackDirectly' });
+regEffect('kir-010-masher',      { type:'pierce',     tag:'masher_facedown', mode:'facedownDestroy' });
+regEffect('kir-011-kracko',      { type:'activated',  tag:'kracko_nuke',    action:'custom_krackoNuke',    cost:1500 });
+regEffect('kir-011-dynablade',   { type:'activated',  tag:'dynablade_nuke', action:'custom_dynabladeNuke', cost:1500, oncePerDuel:true });
+regEffect('kir-011-popon',       { type:'activated',  tag:'popon_chi',      action:'custom_poponTribute' });
+
+// ─── LOZ ADDITIONS ───
+regEffect('loz-004-adultlink', [
+  { type:'pierce',          tag:'adultLink_pierce', mode:'difference' },
+  { type:'onBattleDamage',  tag:'adultLink_grow',   action:'boostSelfPR', amount:150, log:'Adult Link gained 150 Pressure' },
+  { type:'onSelfDestroyed', tag:'adultLink_reform', action:'custom_adultLinkRevive' }
+]);
+regEffect('loz-007-ganon',        { type:'summonCondition', tag:'ganon_cond',   action:'tributeByName', tributeName:'ganondorf' });
+regEffect('loz-016-hyrule',       { type:'fieldAuraCP',    tag:'hyrule_cp',    cpBoostAll:500, targetKind:'warrior' });
+regEffect('loz-018-watertemple',  { type:'fieldAuraCP',    tag:'waterTemple',  cpBoostAll:500, targetAlignment:'water' });
+regEffect('loz-019-foresttemple', [
+  { type:'fieldAuraCP', tag:'forestTemple_earth', cpBoostAll:500, targetAlignment:'earth' },
+  { type:'fieldAuraCP', tag:'forestTemple_wind',  cpBoostAll:500, targetAlignment:'wind' }
+]);
+regEffect('loz-020-spirittemple', { type:'fieldAuraCP',    tag:'spiritTemple', cpBoostAll:500, targetAlignment:'dark' });
+
+// ─── MGM ADDITIONS ───
+regEffect('mgm-001-megaman',   { type:'continuous',     tag:'megaman_handPR',   action:'custom_megamanHandPR' });
+regEffect('mgm-004-roll',      { type:'continuous',     tag:'roll_noDirectAtk', action:'cannotAttackDirectly' });
+regEffect('mgm-005-pharohman', { type:'onSummon',       tag:'pharoh_draw',      action:'draw', count:1, log:'drew 1 card on summon' });
+regEffect('mgm-007-torchman',  { type:'onBattleResult', tag:'torch_killBoost',  resultType:'kill', action:'custom_torchmanKill' });
+regEffect('mgm-008-torchman',  { type:'onFlip',         tag:'torch_flipSearch', action:'custom_torchmanFlip' });
+regEffect('mgm-009-heatman', [
+  { type:'summonCondition',  tag:'heatman_cond',    action:'tributeByName', tributeName:'torch man' },
+  { type:'pierce',           tag:'heatman_pierce',  mode:'difference' },
+  { type:'onAttackDeclared', tag:'heatman_forceCP', action:'switchSelfToCPAfterAttack' }
+]);
+regEffect('mgm-010-freezeman', { type:'activated',  tag:'freeze_coin',    action:'custom_freezemanCoin', oncePerTurn:true });
+regEffect('mgm-014-wackoman',  { type:'continuous', tag:'wacko_voidPR',   action:'custom_wackomanVoidPR' });
+regEffect('mgm-015-elecman',   { type:'onSummon',   tag:'elec_destroy',   action:'custom_elecmanSummon' });
+
+// ─── S-M ADDITIONS ───
+regEffect('s-m-010-superman',  { type:'continuous', tag:'superman_immune', action:'custom_supermanImmune' });
+regEffect('s-m-015-iceman',    { type:'onBattleDamage', tag:'iceman_discard', action:'oppDiscardRandom', directOnly:true, log:'Iceman forced a discard after direct attack' });
+regEffect('s-m-016-jeangrey',  { type:'activated',  tag:'jean_control',  action:'custom_jeanGreyControl', cost:1000, oncePerTurn:true });
+
+// ─── SLM ADDITIONS ───
+regEffect('slm-014-shineaquaillusion',    { type:'fieldAuraPR', tag:'shineAqua',    prBoostAll:400, targetNameIncludes:'mercury', scope:'self' });
+regEffect('slm-019-burningmadala',        { type:'fieldAuraPR', tag:'burningMadala', prBoostAll:400, targetNameIncludes:'mars',   scope:'self' });
+regEffect('slm-023-lovemechain',          { type:'fieldAuraPR', tag:'loveMeChain',  prBoostAll:400, targetNameIncludes:'venus',   scope:'self' });
+regEffect('slm-012-mizunoami',     { type:'activated', tag:'ami_ssMercury',  action:'custom_amiSsMercury' });
+regEffect('slm-013-sailormercury', { type:'continuous', tag:'mercury_direct', action:'custom_mercuryDirect' });
+regEffect('slm-017-sailormars',    { type:'activated', tag:'mars_tribute',   action:'custom_sailorMarsTribute' });
+
+// ─── TT1 ADDITIONS ───
+regEffect('tt1-001-robin',    { type:'continuous',  tag:'robin_batman',  condition:'namedAllyOnField', conditionName:'batman', prBoost:300 });
+regEffect('tt1-002-cyborg',   { type:'continuous',  tag:'cyborg_110',    action:'custom_cyborgImmune' });
+regEffect('tt1-009-titanstower', { type:'fieldAuraPR', tag:'titansTower', prBoostAll:400, targetNameIncludesAny:['beast boy','cyborg','raven','robin','starfire'], scope:'self' });
+regEffect('tt1-013-aqualad',  { type:'continuous',  tag:'aqualad_immune', condition:'namedFieldActive', conditionName:'deep sea', action:'immuneToEffectsAndAttacks' });
+regEffect('tt1-014-deepsea', [
+  { type:'fieldAuraPR', tag:'tt1DeepSea_water', prBoostAll: 400, targetAlignment:'water' },
+  { type:'fieldAuraPR', tag:'tt1DeepSea_fire',  prBoostAll:-500, targetAlignment:'fire' }
+]);
+regEffect('tt1-015-hotspot', { type:'continuous', tag:'hotspot_immune', condition:'namedFieldActive', conditionName:'volcano', action:'immuneToPalm' });
+
+// ─── YYH ADDITIONS ───
+regEffect('yyh-003-botan',     { type:'continuous',    tag:'botan_aura',      action:'custom_botanAura' });
+regEffect('yyh-009-genkai',    { type:'continuous',    tag:'genkai_boost',    condition:'namedAllyOnField', conditionName:'yusuke', action:'custom_genkaiYusukeBoost' });
+regEffect('yyh-017-kayko',     { type:'onFlip',        tag:'kayko_search',    action:'custom_kaykoFlip' });
+regEffect('yyh-018-koenma',    { type:'onFlip',        tag:'koenma_ss',       action:'custom_koenmaFlip' });
+regEffect('yyh-019-kurama',    { type:'activated',     tag:'kurama_choice',   action:'custom_kuramaChoice' });
+regEffect('yyh-020-kuwabara',  { type:'onBattleResult', tag:'kuwabara_kill',  resultType:'kill', action:'boostSelfPR', amount:100, permanent:true, log:'Kuwabara permanently gained 100 Pressure' });
+regEffect('yyh-030-yokokurama',{ type:'onFlip',        tag:'yoko_flip',       action:'custom_yokoKuramaFlip' });
+regEffect('yyh-031-yukina', [
+  { type:'onFlip',     tag:'yukina_flip',    action:'custom_yukinaFlip' },
+  { type:'continuous', tag:'yukina_protect', action:'custom_yukinaProtect' }
+]);
+regEffect('yyh-032-yusuke', [
+  { type:'onBattleResult', tag:'yusuke_counter', resultType:'kill', action:'custom_yusukeKillCounter' },
+  { type:'activated',      tag:'yusuke_remove',  action:'custom_yusukeRemoveCounter' }
+]);
+regEffect('yyh-004-bui', { type:'activated', tag:'bui_discard', action:'custom_buiDiscardBoost', oncePerTurn:true });
+
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PATCH 56 — BULK SCRIPTING: OP1, BL1, AOT, BRO, BLC, DND, GCK, HLP, SL1,
+//            DBZ, DB1, DBS, FF7, INU, HLS, RKN, TUV, CC1, SS1
+// Strategy: use existing generic action types wherever possible; custom_ only
+//           for truly unique logic. Keeps engine maintainable.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── OP1 (ONE PIECE) ───
+regEffect('op1-001-roronoazoro',    { type:'continuous',    tag:'zoro_tripleAtk',   action:'tripleAttack' });
+regEffect('op1-002-nami',           { type:'onSummon',      tag:'nami_reorder',     action:'custom_namiReorder' });
+regEffect('op1-003-usopp',          { type:'activated',     tag:'usopp_peek',       action:'custom_usoppPeek', oncePerTurn:true });
+regEffect('op1-004-vinsmokesanji',  { type:'doubleAttack',  tag:'sanji_dbl' });
+regEffect('op1-005-tonytonychopper',{ type:'standbyChiGain', tag:'chopper_chi',     amount:300, condition:'namedKindOnField', conditionKind:'Pirate' });
+regEffect('op1-006-nicorobin',      [
+  { type:'onSummon',    tag:'robin_voidPalm', action:'custom_robinSummon' },
+  { type:'activated',   tag:'robin_destroyOpp', action:'custom_robinActivated', cost:800, oncePerTurn:true }
+]);
+regEffect('op1-007-franky',         { type:'activated',     tag:'franky_prBoost',   action:'custom_frankyBoost', oncePerTurn:true });
+regEffect('op1-008-brook',          { type:'onSelfDestroyed', tag:'brook_revive',   action:'custom_brookRevive' });
+regEffect('op1-009-jinbe',          { type:'continuous',    tag:'jinbe_damageShield', action:'halveDirectDamage' });
+regEffect('op1-000-monkeydluffy',   { type:'onBattleResult', tag:'luffy_kill',      resultType:'kill', action:'draw', count:1, log:'drew 1 card after destroying a Catalyst' });
+regEffect('op1-010-portgasdace',    { type:'onBattleDamage', tag:'ace_directBurn',  action:'custom_aceBurn', directOnly:true });
+regEffect('op1-014-trafalgarlaw',   { type:'activated',     tag:'law_swap',         action:'custom_lawSwap',    cost:1000, oncePerTurn:true });
+regEffect('op1-037-whitebeardslegacy',     { type:'onBattleDamage', tag:'whitebeard_burn', action:'burnOpponent', damage:500, directOnly:false, log:'Whitebeard inflicted 500 extra damage' });
+
+// ─── BL1 (BLUE LOCK) ───
+regEffect('bl1-000-yoichiisagi',    { type:'onBattleResult', tag:'isagi_killDraw',  resultType:'kill', action:'draw', count:1, log:'drew 1 after destroying a Catalyst' });
+regEffect('bl1-001-megurubachira',  { type:'onBattleResult', tag:'bachira_negate',  resultType:'capture', action:'custom_bachiraNegate' });
+regEffect('bl1-002-rensukekunigami',{ type:'doubleAttack',   tag:'kunigami_dbl' });
+regEffect('bl1-003-hyomachigiri',   { type:'onBattleResult', tag:'chigiri_killDraw',resultType:'kill', action:'draw', count:1, log:'drew 1 after destroying a Catalyst' });
+regEffect('bl1-004-nijironanase',   { type:'onSummon',       tag:'nanase_ss',       action:'custom_nanaseSummon' });
+regEffect('bl1-006-gingagamaru',    { type:'activated',      tag:'gaga_shield',     action:'custom_gagaShield', oncePerTurn:true });
+regEffect('bl1-007-aoshitokimitsu', { type:'onSummon',       tag:'toki_destroy',    action:'custom_tokimitsuSummon' });
+
+// ─── AOT (ATTACK ON TITAN) ───
+regEffect('aot-004-arminarlert',    { type:'standbyChiGain', tag:'armin_chi',       amount:500, condition:'namedAllyOnField', conditionName:'erwin the great' });
+regEffect('aot-005-hangezoe',       { type:'activated',      tag:'hange_peek',      action:'custom_hangePeek', oncePerTurn:true });
+regEffect('aot-006-jeankirstein',   { type:'continuous',     tag:'jean_cpBoost',    condition:'hasFieldTrick', cpBoost:300 });
+regEffect('aot-007-conniespringer', { type:'onTakeBattleDamage', tag:'connie_draw', action:'drawThenDiscard' });
+regEffect('aot-008-sashablouse',    { type:'standbyChiGain', tag:'sasha_chi',       amount:300 });
+regEffect('aot-009-reinerbraun',    { type:'continuous',     tag:'reiner_armor',    action:'halveDirectDamage' });
+regEffect('aot-010-annieleonhart',  { type:'onFlip',         tag:'annie_destroy',   action:'destroyFacedownCatalyst' });
+
+// ─── BRO (BORUTO) ───
+regEffect('bro-001-saradauchiha',   { type:'activated',      tag:'sarada_peek',     action:'custom_saradaPeek', oncePerTurn:true });
+regEffect('bro-002-mitsuki',        { type:'activated',      tag:'mitsuki_boost',   action:'custom_mitsukiBoost', oncePerTurn:true });
+regEffect('bro-003-kawaki',         { type:'activated',      tag:'kawaki_karma',    action:'custom_kawakiKarma', oncePerTurn:true });
+regEffect('bro-004-narutouzumakiseventhhokage', { type:'activated', tag:'naruto7th_clone', action:'custom_naruto7thClone', oncePerTurn:true });
+regEffect('bro-005-sasukeuchiharogue', { type:'onSummon',    tag:'sasuke_trickNuke',action:'custom_sasukeTrickNuke' });
+regEffect('bro-006-code',           { type:'continuous',     tag:'code_discardBoost',action:'custom_codeBoost' });
+regEffect('bro-007-daemon',         { type:'standbyBurn',    tag:'daemon_burn',     damage:500 });
+regEffect('bro-008-eida',           { type:'activated',      tag:'eida_negate',     action:'negateDestroyEffect', oncePerTurn:true });
+
+// ─── BLC (BLEACH) ───
+regEffect('blc-004-rukiakuchiki',   { type:'continuous',     tag:'rukia_chiBoost',  condition:'namedAllyOnField', conditionName:'ichigo the great', action:'custom_rukiaChi' });
+regEffect('blc-005-renjiabarai',    { type:'continuous',     tag:'renji_fieldPR',   condition:'hasFieldTrick', prBoost:300 });
+regEffect('blc-006-uryuishida',     { type:'onTakeBattleDamage', tag:'uryu_draw',   action:'draw', count:1, log:'Uryu drew 1 after taking damage' });
+regEffect('blc-007-orihimeinoue',   { type:'activated',      tag:'orihime_chi',     action:'custom_orihimeChi', oncePerTurn:true });
+regEffect('blc-008-yasutorachadsado',{ type:'onAllyCatalystDestroyed', tag:'chad_prBoost', action:'boostSelfPR', amount:300, log:'Chad gained 300 Pressure' });
+
+// ─── DND (DUNGEON & DANDADAN) ───
+regEffect('dnd-004-airashiratori',  { type:'continuous',     tag:'aira_boost',      condition:'namedAllyOnField', conditionName:'momo the great', prBoost:300 });
+regEffect('dnd-005-jijijinenjoji',  { type:'activated',      tag:'jiji_chiGain',    action:'custom_jijiDiscard', oncePerTurn:true });
+regEffect('dnd-006-evileye',        { type:'onTakeBattleDamage', tag:'evileye_pr',  action:'boostSelfPR', amount:300, log:'Evil Eye gained 300 Pressure after taking damage' });
+regEffect('dnd-007-vamola',         { type:'continuous',     tag:'vamola_cpBoost',  condition:'hasFieldTrick', cpBoost:200 });
+regEffect('dnd-008-serpoalien',     { type:'onSummon',       tag:'serpo_discard',   action:'custom_serpoDiscard' });
+
+// ─── GCK (GUSHING OVER MAGICAL GIRLS) ───
+regEffect('gck-004-tamsy',          { type:'onTakeBattleDamage', tag:'tamsy_pr',    action:'boostSelfPR', amount:300, log:'Tamsy gained 300 Pressure' });
+regEffect('gck-005-amo',            { type:'onAnyPalmUsed',  tag:'amo_cpBoost',     side:'self', action:'boostSelfCP', amount:200, log:'Amo gained 200 Counter Pressure' });
+regEffect('gck-006-semiu',          { type:'onSummon',       tag:'semiu_chi',       action:'gainChi', amount:500, log:'Semiu gained 500 Chi on summon' });
+regEffect('gck-007-enginescrew',    { type:'continuous',     tag:'crew_boost',      condition:'namedAllyOnField', conditionName:'enjin the great', prBoost:400 });
+regEffect('gck-008-jinkiscrapguard',{ type:'activated',      tag:'jinki_setCard',   action:'custom_jinkiSet', oncePerTurn:true });
+
+// ─── HLP (HELL'S PARADISE) ───
+regEffect('hlp-004-tenzayamada',    { type:'onSummon',       tag:'tenza_setCon',    action:'custom_tenzaSetConcealed' });
+regEffect('hlp-005-nurugai',        { type:'onTargeted',     tag:'nurugai_chi',     action:'gainChi', amount:500, log:'Nurugai gained 500 Chi when targeted' });
+regEffect('hlp-006-shion',          { type:'continuous',     tag:'shion_cpBoost',   condition:'hasFieldTrick', cpBoost:400 });
+regEffect('hlp-007-mei',            { type:'onTakeBattleDamage', tag:'mei_chi',     action:'gainChi', amount:300, log:'Mei gained 300 Chi after taking battle damage' });
+regEffect('hlp-008-rientensen',     { type:'continuous',     tag:'rien_oppMore',    action:'custom_rienBoost' });
+regEffect('hlp-005-nurugai',     { type:'activated',      tag:'taoist_tag',      action:'gainChi', amount:300, log:'Gained 300 Chi' });
+
+// ─── SL1 (SOLO LEVELING) ───
+regEffect('sl1-001-shadowsoldierigris',   { type:'onSummon',    tag:'igris_token',    action:'custom_igrisToken' });
+regEffect('sl1-002-shadowbeastberu',      { type:'continuous',  tag:'beru_multiAtk',  action:'attackAllOpponentCatalysts' });
+regEffect('sl1-003-shadowknightiron',     { type:'pierce',      tag:'iron_facedown',  mode:'facedownDestroy' });
+regEffect('sl1-004-shadowmagekaisel',     { type:'onSummon',    tag:'kaisel_destroy', action:'custom_kaiselDestroy' });
+regEffect('sl1-005-chahaein',             { type:'onBattleResult', tag:'cha_draw',    resultType:'kill', action:'draw', count:1, log:'drew 1 after destroying a Shadow' });
+regEffect('sl1-006-choijongin',           { type:'activated',   tag:'choi_trickNuke', action:'destroyOneTrick', cost:600, oncePerTurn:true });
+regEffect('sl1-007-baekyoonho',           { type:'onBattleResult', tag:'baek_search', resultType:'kill', action:'custom_baekSearch' });
+regEffect('sl1-008-gogunhee',             { type:'activated',   tag:'go_negate',      action:'negateDestroyEffect', oncePerTurn:true });
+regEffect('sl1-009-thomasandre',               { type:'continuous',  tag:'thomas_kaiserBoost', condition:'namedAllyOnField', conditionName:'kaisel', prBoost:400 });
+regEffect('sl1-013-minbyunggyu',          { type:'onSummon',    tag:'min_boost',      action:'custom_minBoost' });
+
+// ─── DBZ (DRAGON BALL Z) ───
+regEffect('dbz-003-supersaiyan2',    { type:'equip',          tag:'ss2_equip',       prBoost:600, targetNameIncludes:'super saiyan' });
+regEffect('dbz-004-gokusupersaiyan3',{ type:'summonCondition',tag:'ss3_tribute',     action:'tributeByName', tributeName:'goku - super saiyan' });
+regEffect('dbz-004-gokusupersaiyan3',{ type:'doubleAttack',   tag:'ss3_dbl' });
+regEffect('dbz-006-vegetasupersaiyan4', { type:'summonCondition', tag:'ss4v_ritual', action:'custom_ss4VegetaRitual', summonRestriction:'cannotNormalSummon' });
+regEffect('dbz-007-gokusupersaiyan4',   { type:'summonCondition', tag:'ss4g_ritual', action:'custom_ss4GokuRitual',   summonRestriction:'cannotNormalSummon' });
+regEffect('dbz-007-gokusupersaiyan4',   { type:'doubleAttack',    tag:'ss4_dbl' });
+regEffect('dbz-009-saiyanfury',      { type:'concealedScript', tag:'saiyanFury',     action:'custom_saiyanFury' });
+regEffect('dbz-012-younggohansupersaiyan', [
+  { type:'summonCondition', tag:'youngSSCond', action:'custom_youngGohanSSCond', summonRestriction:'cannotNormalSummon' },
+  { type:'doubleAttack',    tag:'youngSS_dbl' }
+]);
+regEffect('db1-054-krillin',         { type:'onBattleDamage', tag:'krillin_search',  action:'custom_krillinSearch', directOnly:false });
+regEffect('dbs-014-android18',       { type:'continuous',     tag:'android18_boost', condition:'namedAllyOnField', conditionName:'android 17', prBoost:500 });
+regEffect('dbz-021-majinbuu',        { type:'onSummon',       tag:'majin_absorb',    action:'custom_majinBuuSummon' });
+regEffect('dbs-005-beerusgodofdestruction',          { type:'onBattleDamage', tag:'beerus_bonus',    action:'burnOpponent', damage:400, log:'Beerus inflicted 400 extra damage' });
+regEffect('dbs-009-jiren',           { type:'continuous',     tag:'jiren_damagePR',  action:'custom_jirenDamagePR' });
+regEffect('dbs-011-zamasufused',     { type:'continuous',     tag:'zamasu_cpImmune', condition:'inCPPosition', action:'immuneToAttacks' });
+
+// ─── DB1 (DRAGON BALL 1) ───
+regEffect('db1-003-fullmoon',        { type:'fieldAuraPR',   tag:'fullmoon_pr',     prBoostAll:300, targetKindsAny:['Beast','Saiyan'] });
+regEffect('db1-006-grandpagohan',    { type:'onSelfDestroyed', tag:'gramp_search',  action:'custom_grandpaGohanSearch' });
+regEffect('db1-016-emperorpilaf',    { type:'onFlip',        tag:'pilaf_flip',      action:'custom_pilafFlip' });
+regEffect('db1-019-shu',             { type:'onFlip',        tag:'shu_flip',        action:'custom_shuFlip' });
+regEffect('db1-020-theoxking',       { type:'continuous',    tag:'oxking_pr',       action:'custom_oxKingAura' });
+regEffect('db1-024-chibichichi',          { type:'continuous',    tag:'chichi_gohanBoost', condition:'namedAllyOnField', conditionName:'young gohan', prBoost:400 });
+regEffect('db1-012-masterroshitheturtlehermit',     { type:'onBattleResult', tag:'roshi_draw',     resultType:'kill', action:'draw', count:1, log:'Master Roshi drew 1' });
+regEffect('db1-046-oolongtheshapeshifter',          { type:'activated',     tag:'oolong_copy',     action:'custom_oolongCopy', oncePerTurn:true });
+regEffect('db1-048-puar',            { type:'activated',     tag:'puar_copy',       action:'custom_puurCopy', oncePerTurn:true });
+
+// ─── DBS (DRAGON BALL SUPER) ───
+regEffect('dbs-000-songokusupersaiyanblue', { type:'doubleAttack', tag:'gokuBlue_dbl' });
+regEffect('dbs-001-vegetasupersaiyanblue',  { type:'continuous',   tag:'vegBlue_voidBoost', action:'custom_vegBlueBoost' });
+regEffect('dbs-003-gohanultimateform',      { type:'onBattleCalc', tag:'gohanUlt_fieldPR',  action:'custom_gohanUltBoost' });
+regEffect('dbs-005-beerusgodofdestruction', { type:'onSummon',     tag:'beerus_nuke',        action:'custom_beerusNuke' });
+regEffect('dbs-007-friezagoldenform',       { type:'onBattleResult', tag:'frieza_burn',       resultType:'kill', action:'custom_friezaBurn' });
+regEffect('dbs-008-hit',                    { type:'continuous',   tag:'hit_dbs_immune',     action:'custom_hitDBSImmune' });
+regEffect('dbs-009-jiren',                  { type:'continuous',   tag:'jiren_dbs_damagePR', action:'custom_jirenDBSPR' });
+regEffect('dbs-011-zamasufused',            { type:'continuous',   tag:'zamasu_dbs_CPimmune', condition:'inCPPosition', action:'immuneToAttacks' });
+regEffect('dbs-018-toppogodofdestructioncandidate',                  { type:'continuous',   tag:'toppo_immune',       action:'immuneToEffects', condition:'inCPPosition' });
+
+// ─── FF7 (FINAL FANTASY VII) ───
+regEffect('ff7-009-yuffiekisaragithevillian', { type:'continuous',    tag:'yuffieVillain_steal', action:'custom_yuffieVillainSteal' });
+regEffect('ff7-000-cloudstrife',              { type:'onBattleResult', tag:'cloud_kill',          resultType:'kill', action:'draw', count:1, log:'Cloud drew 1 after destroying' });
+regEffect('ff7-011-aeristrance',              { type:'standbyChiGain', tag:'aeris_heal',          amount:300 });
+regEffect('ff7-002-tifalockheart',      { type:'doubleAttack',   tag:'tifaTrance_dbl' });
+regEffect('ff7-003-barrettwallace',     { type:'continuous',     tag:'barrett_palmImm',    action:'palmImmunity' });
+regEffect('ff7-019-redxiiitrance',            { type:'onSummon',       tag:'redXIII_search',     action:'custom_redXIIISearch' });
+regEffect('ff7-014-cidtrance',                { type:'onBattleDamage', tag:'cid_burnAlt',        action:'burnOpponent', damage:300, log:'Cid inflicted 300 extra damage' });
+regEffect('ff7-018-yuffietrance',             { type:'onBattleResult', tag:'yuffieTrance_rfg',  resultType:'kill', action:'rfgVoid', log:'removed destroyed Catalyst from game' });
+
+// ─── INU (INUYASHA) ───
+regEffect('inu-001-inuyasha',         { type:'onBattleDamage',   tag:'inu_draw',          action:'draw', count:1, directOnly:true, log:'Inuyasha drew 1 after direct attack' });
+regEffect('inu-002-inuyashathehuman', { type:'standbyChiCost',   tag:'inuHuman_cost',     cost:500, destroyIfCantPay:false });
+regEffect('inu-003-inuyashafullblooded', { type:'summonCondition', tag:'inuFull_tribute', action:'tributeByName', tributeName:'inu-yasha' });
+regEffect('inu-003-inuyashafullblooded', { type:'doubleAttack',   tag:'inuFull_dbl' });
+regEffect('inu-006-kagome',           { type:'onBattleDamage',   tag:'kagome_draw',       action:'draw', count:1, directOnly:true, log:'Kagome drew 1 after direct attack' });
+regEffect('inu-012-sangothedemonexterminator',            { type:'onBattleResult',   tag:'sango_kill',        resultType:'kill', action:'draw', count:1, log:'Sango drew 1 after a kill' });
+regEffect('inu-010-miroku',           { type:'activated',        tag:'miroku_rfg',        action:'custom_mirokuRFG', cost:1000, oncePerTurn:true });
+regEffect('inu-008-shippo',           { type:'onFlip',           tag:'shippo_flip',       action:'custom_shippoFlip' });
+regEffect('inu-015-kikyo',            { type:'onSelfDestroyed',  tag:'kikyo_destroy',     action:'custom_kikyoDestroy' });
+regEffect('inu-014-sesshomaru',       { type:'pierce',           tag:'sess_pierce',       mode:'difference' });
+regEffect('inu-014-sesshomaru',       { type:'onBattleResult',   tag:'sess_kill',         resultType:'kill', action:'custom_sessKill' });
+
+// ─── HLS (HELLSING) ───
+regEffect('hls-000-alucardunsealed',  { type:'summonCondition', tag:'alu_unsealed_cond', action:'custom_alucardUnsealedSummon', summonRestriction:'cannotNormalSummon' });
+regEffect('hls-001-incognito',        { type:'summonCondition', tag:'incog_cond',        action:'custom_incognitoSummon', summonRestriction:'cannotNormalSummon' });
+regEffect('hls-007-alucard',          { type:'activated',       tag:'alu_ascend',        action:'custom_alucardAscend' });
+regEffect('hls-007-alucard', { type:'doubleAttack', tag:'alu_unleash_dbl' });
+regEffect('hls-007-alucard', { type:'onBattleResult', tag:'alu_unleash_kill', resultType:'kill', action:'custom_alucardKill' });
+regEffect('hls-015-walter',           { type:'standbyBurn',     tag:'walter_burn',       damage:300 });
+regEffect('hls-012-integralhellsing',          { type:'continuous',      tag:'integra_alucBoost', condition:'namedAllyOnField', conditionName:'alucard', prBoost:500 });
+
+// ─── RKN (RUROUNI KENSHIN) ───
+regEffect('rkn-001-himurakenshin',    { type:'continuous',      tag:'kenshin_sakaboNegate', condition:'equipped', equipName:'sakabato', action:'negateOpponentEffects' });
+regEffect('rkn-004-sanosuke',         { type:'onBattleDamage',  tag:'sano_burn',            action:'burnOpponent', damage:500, directOnly:false, log:'Sanosuke dealt 500 extra damage at end of Battle Phase' });
+regEffect('rkn-005-himurahitokiribattousai', [
+  { type:'summonCondition', tag:'battousai_cond', action:'tributeByName', tributeName:'himura kenshin' },
+  { type:'doubleAttack',    tag:'battousai_dbl' }
+]);
+regEffect('rkn-006-myojinyahiko',     { type:'doubleAttack',    tag:'yahiko_dbl' });
+regEffect('rkn-007-kamiyakaoru',      { type:'activated',       tag:'kaoru_chi',           action:'custom_kaoruTribute' });
+regEffect('rkn-020-aoshi',            { type:'doubleAttack',    tag:'aoshi_dbl' });
+regEffect('rkn-009-megumi',           { type:'standbyChiGain',  tag:'megumi_chi',          amount:500 });
+
+// ─── TUV (TENCHI MUYO) ───
+regEffect('tuv-001-tenchimasaki',     { type:'onFlip',          tag:'tenchi_ssRyoko',      action:'custom_tenchiFlip' });
+regEffect('tuv-002-ryoko',            { type:'activated',       tag:'ryoko_control',       action:'custom_ryokoControl', cost:2000, oncePerTurn:true });
+regEffect('tuv-004-ayeka',            { type:'activated',       tag:'ayeka_tribute',       action:'custom_ayekaTribute' });
+regEffect('tuv-005-droppingthetowel', { type:'palmScript',      tag:'towel_search',        action:'custom_droppingTheTowel' });
+regEffect('tuv-006-mihoshi',          { type:'activated',       tag:'mihoshi_ss',          action:'custom_mihoshiSS', cost:1000 });
+regEffect('tuv-007-sasami',           { type:'onFlip',          tag:'sasami_flip',         action:'custom_sasamiFlip' });
+regEffect('tuv-008-tsunami',          { type:'summonCondition', tag:'tsunami_cond',        action:'tributeByName', tributeName:'sasami' });
+regEffect('tuv-009-washu',       { type:'continuous',      tag:'washu_chiGain',       action:'custom_washuChi' });
+
+// ─── CC1 (CHRONO CROSS + Misc.) — key scripted cards ───
+regEffect('cc1-001-pip',              { type:'handActivated',   tag:'pip_battle',          action:'custom_pipBattle' });
+regEffect('cc1-004-starky',           { type:'onSummon',        tag:'starky_search',       action:'searchByName', names:['starky'], log:'searched another Starky' });
+regEffect('cc1-005-kidd',             { type:'continuous',      tag:'kidd_boost',          condition:'namedAllyOnField', conditionName:'serge', prBoost:500 });
+regEffect('cc1-010-anemotor',         { type:'fieldAuraPR',     tag:'anemotor_earth',      prBoostAll:300, targetAlignment:'earth', scope:'both', prBoostMode:'negative_opponent' });
+regEffect('cc1-002-lynx',             { type:'onSummon',        tag:'lynx_hand',           action:'custom_lynxSummon' });
+regEffect('cc1-034-korcha',           { type:'onBattleDamage',  tag:'korcha_direct',       action:'draw', count:1, directOnly:true, log:'Korcha drew 1 after direct attack' });
+regEffect('cc1-078-acaciasgt',           { type:'onFlip',          tag:'acacia_search',       action:'custom_acaciaFlip' });
+regEffect('cc1-034-korcha',            { type:'onBattleDamage',  tag:'orcha_burn',          action:'burnOpponent', damage:300, log:'Orcha inflicted 300 extra damage' });
+regEffect('cc1-079-riddel',           { type:'continuous',      tag:'riddel_palmImm',      action:'palmImmunity' });
+regEffect('cc1-000-serge',            { type:'continuous',      tag:'serge_kiddBoost',     action:'custom_sergeKiddBoost' });
+regEffect('cc1-024-fargo',            { type:'onBattleResult',  tag:'fargo_kill',          resultType:'kill', action:'draw', count:1, log:'Fargo drew 1 after a kill' });
+regEffect('cc1-033-karsh',            { type:'pierce',          tag:'karsh_pierce',        mode:'difference' });
+regEffect('cc1-042-zoah',             { type:'continuous',      tag:'zoah_pr',             action:'custom_zoahPR' });
+regEffect('cc1-040-slash',            { type:'pierce',          tag:'slash_pierce',        mode:'difference' });
+
+// ─── SS1 (MISC/CROSSOVER) ───
+regEffect('ss1-001-noneedfor',        { type:'palmScript',      tag:'noNeed_reset',   action:'custom_noNeedFor' });
+regEffect('ss1-004-archangel',        { type:'continuous',      tag:'arch_immune',    condition:'paidCost', cost:800, action:'custom_archangelImmune' });
+regEffect('ss1-005-blitzgundam',      { type:'continuous',      tag:'blitz_cpKill',   action:'custom_blitzCP' });
+regEffect('ss1-009-selfdestruct',     { type:'activated',       tag:'selfDestruct',   action:'custom_selfDestruct' });
+regEffect('ss1-009-shippotheshapeshifter', { type:'activated',  tag:'shippoShifter',  action:'custom_shippoShifter', cost:750 });
+regEffect('ss1-009-miniboomer',       { type:'palmScript',      tag:'miniBoomer',     action:'custom_miniBoomer' });
+regEffect('ss1-107-hakudoushi',       { type:'standbyCountdown',tag:'haku_countdown', count:3, action:'custom_hakudoushiGo' });
+
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PATCH 57 — AUTO-GENERATED COVERAGE (pattern-matched from card descriptions)
+// Uses existing action types only. Custom actions flagged with '_' are no-ops
+// until implemented — cards still register but won't trigger custom logic.
+// ═══════════════════════════════════════════════════════════════════════════
+
+regEffect('aot-019-wallmariafield', {"type": "onTakeBattleDamage", "tag": "aot-019-wallmariafield_dmgDraw", "action": "draw", "count": 1, "log": "drew 1 after taking damage"});
+regEffect('aot-023-scoutchargethegreat', {"type": "palmScript", "tag": "aot-023-scoutchargethegreat_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('bl1-032-bluelockcounter', {"type": "palmScript", "tag": "bl1-032-bluelockcounter_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('bro-000-borutouzumaki', {"type": "onBattleResult", "tag": "bro-000-borutouzumaki_killDraw", "resultType": "kill", "action": "draw", "count": 1, "log": "drew 1 card(s) after a kill"});
+regEffect('bro-012-metallee', {"type": "doubleAttack", "tag": "bro-012-metallee_dbl"});
+regEffect('bro-026-scientificninjatool', {"type": "onBattleResult", "tag": "bro-026-scientificninjatool_killBoost", "resultType": "kill", "action": "boostSelfPR", "amount": 600, "log": "gained 600 Pressure after a kill"});
+regEffect('cbb-007-theredtail', {"type": "equip", "tag": "cbb-007-theredtail_equip", "prBoost": 200, "targetNameIncludes": "faye"});
+regEffect('cbb-008-thehammerhead', {"type": "equip", "tag": "cbb-008-thehammerhead_equip", "prBoost": 200, "targetNameIncludes": "jet"});
+regEffect('cc1-006-dragonfortress', {"type": "onBattleDamage", "tag": "cc1-006-dragonfortress_burn", "action": "burnOpponent", "damage": 500, "directOnly": true, "log": "inflicted 500 extra damage on direct attack"});
+regEffect('cc1-030-greendragon', {"type": "palmScript", "tag": "cc1-030-greendragon_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('cc1-053-timedevourer', {"type": "palmScript", "tag": "cc1-053-timedevourer_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('db1-004-oozaruthegiantape', {"type": "palmScript", "tag": "db1-004-oozaruthegiantape_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('db1-022-kamehamehawave', [{"type": "pierce", "tag": "db1-022-kamehamehawave_pierce", "mode": "difference"}, {"type": "equip", "tag": "db1-022-kamehamehawave_equip", "prBoost": 800, "targetNameIncludes": "goku"}]);
+regEffect('db1-025-chichisspecialhelmet', {"type": "equip", "tag": "db1-025-chichisspecialhelmet_equip", "prBoost": 1500, "targetNameIncludes": "chi-chi"});
+regEffect('dbs-020-ribriannesupermagicalgirl', {"type": "activated", "tag": "dbs-020-ribriannesupermagicalgirl_chi", "action": "gainChi", "amount": 600, "oncePerTurn": true, "log": "gained 600 Chi"});
+regEffect('dbs-042-godkibarrier', {"type": "palmScript", "tag": "dbs-042-godkibarrier_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('dnd-023-occultcounterthegreat', {"type": "palmScript", "tag": "dnd-023-occultcounterthegreat_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('gck-012-giverapprentice', {"type": "onTakeBattleDamage", "tag": "gck-012-giverapprentice_dmgDraw", "action": "draw", "count": 1, "log": "drew 1 after taking damage"});
+regEffect('gck-019-theheapfield', {"type": "activated", "tag": "gck-019-theheapfield_chi", "action": "gainChi", "amount": 200, "oncePerTurn": true, "log": "gained 200 Chi"});
+regEffect('gds-017-mobilesuitzuoot', {"type": "palmScript", "tag": "gds-017-mobilesuitzuoot_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('ggx-009-faust', {"type": "palmScript", "tag": "ggx-009-faust_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('ggx-031-wingsoflight', {"type": "palmScript", "tag": "ggx-031-wingsoflight_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('hlp-015-taodisciple', {"type": "activated", "tag": "hlp-015-taodisciple_chi", "action": "gainChi", "amount": 200, "oncePerTurn": true, "log": "gained 200 Chi"});
+regEffect('hlp-019-shinsenkyofield', {"type": "activated", "tag": "hlp-019-shinsenkyofield_chi", "action": "gainChi", "amount": 300, "oncePerTurn": true, "log": "gained 300 Chi"});
+regEffect('kh1-008-hercules', {"type": "palmScript", "tag": "kh1-008-hercules_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('kh1-020-hades', {"type": "onBattleDamage", "tag": "kh1-020-hades_burn", "action": "burnOpponent", "damage": 200, "directOnly": true, "log": "inflicted 200 extra damage on direct attack"});
+regEffect('kh1-023-destiny', {"type": "palmScript", "tag": "kh1-023-destiny_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('loz-023-goronssword', {"type": "equip", "tag": "loz-023-goronssword_equip", "prBoost": 1000, "targetNameIncludes": "king goron"});
+regEffect('mb1-010-fireflower', {"type": "pierce", "tag": "mb1-010-fireflower_pierce", "mode": "difference"});
+regEffect('mb1-017-koopatroopassecret', [{"type": "onBattleDamage", "tag": "mb1-017-koopatroopassecret_burn", "action": "burnOpponent", "damage": 300, "directOnly": true, "log": "inflicted 300 extra damage on direct attack"}, {"type": "palmScript", "tag": "mb1-017-koopatroopassecret_wipeTricks", "action": "destroyAllPalmConcealed"}]);
+regEffect('mb1-029-fireball', {"type": "onBattleDamage", "tag": "mb1-029-fireball_burn", "action": "burnOpponent", "damage": 800, "directOnly": true, "log": "inflicted 800 extra damage on direct attack"});
+regEffect('mgm-019-woodman', {"type": "onBattleResult", "tag": "mgm-019-woodman_killBoost", "resultType": "kill", "action": "boostSelfPR", "amount": 400, "log": "gained 400 Pressure after a kill"});
+regEffect('mgm-020-numberman', {"type": "palmScript", "tag": "mgm-020-numberman_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('mgm-026-tornado', {"type": "palmScript", "tag": "mgm-026-tornado_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('nar-017-akamaru', {"type": "palmScript", "tag": "nar-017-akamaru_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('nar-036-kakashistraining', {"type": "equip", "tag": "nar-036-kakashistraining_equip", "prBoost": 400, "targetNameIncludes": "kakashi"});
+regEffect('nar-037-jiraiyastraining', {"type": "equip", "tag": "nar-037-jiraiyastraining_equip", "prBoost": 800, "targetNameIncludes": "jiraiya"});
+regEffect('nar-042-soldierpill', {"type": "pierce", "tag": "nar-042-soldierpill_pierce", "mode": "difference"});
+regEffect('nar-043-swordofkusanagi', {"type": "palmScript", "tag": "nar-043-swordofkusanagi_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('nar-050-nyobimonkeykingenma', {"type": "palmScript", "tag": "nar-050-nyobimonkeykingenma_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('op1-015-eustasskid', {"type": "palmScript", "tag": "op1-015-eustasskid_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('rkn-002-sakabato', {"type": "equip", "tag": "rkn-002-sakabato_equip", "prBoost": 700, "targetNameIncludes": "himura"});
+regEffect('rkn-013-rifle', {"type": "equip", "tag": "rkn-013-rifle_equip", "prBoost": 300, "targetNameIncludes": "gunman"});
+regEffect('rkn-031-spikedclub', {"type": "palmScript", "tag": "rkn-031-spikedclub_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('rkn-035-timbey', {"type": "equip", "tag": "rkn-035-timbey_equip", "prBoost": 800, "targetNameIncludes": "unuma usui"});
+regEffect('rkn-036-lochin', {"type": "equip", "tag": "rkn-036-lochin_equip", "prBoost": 800, "targetNameIncludes": "unuma usui"});
+regEffect('s-m-007-loislane', {"type": "equip", "tag": "s-m-007-loislane_equip", "prBoost": 1000, "targetNameIncludes": "clark kent"});
+regEffect('s-m-025-greenlantern', {"type": "palmScript", "tag": "s-m-025-greenlantern_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('s-m-026-hawkgirl', {"type": "pierce", "tag": "s-m-026-hawkgirl_pierce", "mode": "difference"});
+regEffect('s-m-039-greenlaternsring', {"type": "equip", "tag": "s-m-039-greenlaternsring_equip", "prBoost": 400, "targetNameIncludes": "green lantern"});
+regEffect('sh2-015-poison', {"type": "onBattleDamage", "tag": "sh2-015-poison_burn", "action": "burnOpponent", "damage": 1000, "directOnly": true, "log": "inflicted 1000 extra damage on direct attack"});
+regEffect('sh2-023-drottooctavius', {"type": "doubleAttack", "tag": "sh2-023-drottooctavius_dbl"});
+regEffect('slm-024-sailorjupiter', {"type": "palmScript", "tag": "slm-024-sailorjupiter_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('ss1-010-flushoutyouropponent', {"type": "palmScript", "tag": "ss1-010-flushoutyouropponent_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('ss1-016-midvalleythehornfreak11thgunghogun', {"type": "palmScript", "tag": "ss1-016-midvalleythehornfreak11thgunghogun_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('ss1-000-tidus', {"type": "doubleAttack", "tag": "ss1-000-tidus_dbl"});
+regEffect('ss1-000-bigbrothersflame', {"type": "equip", "tag": "ss1-000-bigbrothersflame_equip", "prBoost": 300, "targetNameIncludes": "x"});
+regEffect('ss1-000-shadowlord', {"type": "pierce", "tag": "ss1-000-shadowlord_pierce", "mode": "difference"});
+regEffect('ss1-000-saistrikernightwarrior', {"type": "palmScript", "tag": "ss1-000-saistrikernightwarrior_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('t2f-002-hell', {"type": "fieldAuraPR", "tag": "t2f-002-hell_aura", "prBoostAll": 300, "targetKind": "Demon"});
+regEffect('t2f-003-earth', {"type": "fieldAuraPR", "tag": "t2f-003-earth_aura", "prBoostAll": 400, "targetKind": "Human"});
+regEffect('t2f-004-worlddomination', {"type": "fieldAuraPR", "tag": "t2f-004-worlddomination_aura", "prBoostAll": 300, "targetKind": "Villian"});
+regEffect('t2f-005-justice', {"type": "fieldAuraPR", "tag": "t2f-005-justice_aura", "prBoostAll": 400, "targetKind": "Hero"});
+regEffect('t2f-007-Void', {"type": "fieldAuraPR", "tag": "t2f-007-Void_aura", "prBoostAll": 200, "targetKind": "Zombie"});
+regEffect('t2f-008-colosseum', {"type": "fieldAuraPR", "tag": "t2f-008-colosseum_aura", "prBoostAll": 200, "targetKind": "Warrior"});
+regEffect('t2f-009-ancientsanctuary', {"type": "palmScript", "tag": "t2f-009-ancientsanctuary_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('t2f-015-mechanismfactory', {"type": "fieldAuraPR", "tag": "t2f-015-mechanismfactory_aura", "prBoostAll": 300, "targetKind": "Machine"});
+regEffect('t2f-021-wayofthesamurai', {"type": "palmScript", "tag": "t2f-021-wayofthesamurai_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('t2f-024-beckoningshadows', {"type": "fieldAuraPR", "tag": "t2f-024-beckoningshadows_aura", "prBoostAll": 300, "targetKind": "Fiend"});
+regEffect('t2f-025-wilderness', {"type": "fieldAuraPR", "tag": "t2f-025-wilderness_aura", "prBoostAll": 300, "targetKind": "Beast"});
+regEffect('tt1-019-nightwing', {"type": "palmScript", "tag": "tt1-019-nightwing_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('tt1-021-wildebeest', {"type": "pierce", "tag": "tt1-021-wildebeest_pierce", "mode": "difference"});
+regEffect('tt1-026-redx', {"type": "palmScript", "tag": "tt1-026-redx_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('tt1-027-xblast', {"type": "palmScript", "tag": "tt1-027-xblast_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('tuv-024-lasercannons', {"type": "onBattleDamage", "tag": "tuv-024-lasercannons_burn", "action": "burnOpponent", "damage": 500, "directOnly": true, "log": "inflicted 500 extra damage on direct attack"});
+regEffect('tuv-027-spacevillian', {"type": "palmScript", "tag": "tuv-027-spacevillian_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('dbz-013-younggohansupersaiyan2', {"type": "doubleAttack", "tag": "dbz-013-younggohansupersaiyan2_dbl"});
+regEffect('dbz-027-kidbuu', {"type": "palmScript", "tag": "dbz-027-kidbuu_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('dbz-029-saiyanspelldestroyer', {"type": "palmScript", "tag": "dbz-029-saiyanspelldestroyer_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('dbz-033-gohanmysticsaiyan', {"type": "palmScript", "tag": "dbz-033-gohanmysticsaiyan_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('ff7-015-cloudtrance', {"type": "pierce", "tag": "ff7-015-cloudtrance_pierce", "mode": "difference"});
+regEffect('ff7-020-ultimaweapon', {"type": "equip", "tag": "ff7-020-ultimaweapon_equip", "prBoost": 700, "targetNameIncludes": "cloud"});
+regEffect('ff7-021-premiumheart', {"type": "equip", "tag": "ff7-021-premiumheart_equip", "prBoost": 700, "targetNameIncludes": "tifa"});
+regEffect('ff7-023-missingscore', {"type": "equip", "tag": "ff7-023-missingscore_equip", "prBoost": 700, "targetNameIncludes": "barret"});
+regEffect('ff7-022-limitedmoon', {"type": "equip", "tag": "ff7-022-limitedmoon_equip", "prBoost": 600, "targetNameIncludes": "red xiii"});
+regEffect('ff7-024-princessguard', {"type": "equip", "tag": "ff7-024-princessguard_equip", "prBoost": 1000, "targetNameIncludes": "aeris"});
+regEffect('ff7-025-hpshout', {"type": "equip", "tag": "ff7-025-hpshout_equip", "prBoost": 400, "targetNameIncludes": "cait sith"});
+regEffect('ff7-026-venusgospel', {"type": "equip", "tag": "ff7-026-venusgospel_equip", "prBoost": 600, "targetNameIncludes": "cid"});
+regEffect('ff7-027-conformer', {"type": "equip", "tag": "ff7-027-conformer_equip", "prBoost": 700, "targetNameIncludes": "yuffie"});
+regEffect('ff7-028-deathpenalty', {"type": "equip", "tag": "ff7-028-deathpenalty_equip", "prBoost": 1000, "targetNameIncludes": "vincent"});
+regEffect('ff7-037-cloudsstrife', {"type": "palmScript", "tag": "ff7-037-cloudsstrife_wipeTricks", "action": "destroyAllPalmConcealed"});
+regEffect('hls-016-strings', [{"type": "pierce", "tag": "hls-016-strings_pierce", "mode": "difference"}, {"type": "equip", "tag": "hls-016-strings_equip", "prBoost": 500, "targetNameIncludes": "walter"}]);
+regEffect('hls-018-hellsing454casullgun', {"type": "equip", "tag": "hls-018-hellsing454casullgun_equip", "prBoost": 300, "targetNameIncludes": "alucard"});
+regEffect('hls-034-armscorp', {"type": "equip", "tag": "hls-034-armscorp_equip", "prBoost": 700, "targetNameIncludes": "incognito"});
+regEffect('hls-035-thejackal', {"type": "equip", "tag": "hls-035-thejackal_equip", "prBoost": 500, "targetNameIncludes": "alucard"});
+regEffect('inu-014-kilalatransformed', {"type": "doubleAttack", "tag": "inu-014-kilalatransformed_dbl"});
+regEffect('inu-015-sesshomarutransformed', {"type": "pierce", "tag": "inu-015-sesshomarutransformed_pierce", "mode": "difference"});
+regEffect('inu-117-kagura', {"type": "doubleAttack", "tag": "inu-117-kagura_dbl"});
+regEffect('kir-017-warpstar', {"type": "equip", "tag": "kir-017-warpstar_equip", "prBoost": 700, "targetNameIncludes": "kirby"});
+regEffect('kir-018-dededesmallet', {"type": "equip", "tag": "kir-018-dededesmallet_equip", "prBoost": 1000, "targetNameIncludes": "king dedede"});
+regEffect('kir-028-waddledeesspear', {"type": "equip", "tag": "kir-028-waddledeesspear_equip", "prBoost": 500, "targetNameIncludes": "waddle dee"});
+regEffect('kir-029-metaknightssword', {"type": "equip", "tag": "kir-029-metaknightssword_equip", "prBoost": 500, "targetNameIncludes": "meta knight"});
+regEffect('syd-007-eternityeight', {"type": "onBattleDamage", "tag": "syd-007-eternityeight_burn", "action": "burnOpponent", "damage": 500, "directOnly": true, "log": "inflicted 500 extra damage on direct attack"});
+regEffect('syd-020-mainlandbrainwashingsystem', {"type": "standbyBurn", "tag": "syd-020-mainlandbrainwashingsystem_burn", "damage": 500});
+regEffect('syd-038-whitetrick', {"type": "pierce", "tag": "syd-038-whitetrick_pierce", "mode": "difference"});
+regEffect('yyh-028-togoro110', {"type": "palmScript", "tag": "yyh-028-togoro110_wipeTricks", "action": "destroyAllPalmConcealed"});
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PATCH 57B — MANUAL SIGNATURE/HIGH-VALUE CARD SCRIPTING
+// Cards that pattern-matching missed but have clear, buildable effects
+// ═══════════════════════════════════════════════════════════════════════════
+
+// AOT
+regEffect('aot-011-zekeyeager',       { type:'activated',     tag:'zeke_discardBurn', action:'custom_zekeDiscardBurn', oncePerTurn:true });
+regEffect('aot-012-bertholdthoover',  { type:'continuous',    tag:'bert_fieldDebuff', condition:'hasFieldTrick', action:'custom_bertFieldDebuff' });
+regEffect('aot-015-wallguard',        { type:'continuous',    tag:'wall_debuff',      condition:'hasFieldTrick', action:'custom_bertFieldDebuff' });
+regEffect('aot-021-odmburst',         { type:'palmScript',    tag:'odmBurst',         action:'custom_odmBurst' });
+regEffect('aot-022-flashcut',         { type:'palmScript',    tag:'flashCut',         action:'custom_flashCut' });
+regEffect('aot-023-scoutchargethegreat',{ type:'concealedScript',tag:'scoutCharge',  action:'custom_negateAndDestroy' });
+regEffect('aot-024-titancounterhold', { type:'concealedScript',tag:'titanCounter',   action:'custom_negateEffect' });
+regEffect('aot-025-scoutregistry',    { type:'palmScript',    tag:'scoutReg',        action:'custom_searchAOTCatalyst' });
+regEffect('aot-026-fieldorders',      { type:'palmScript',    tag:'fieldOrders',     action:'custom_searchFieldTrick' });
+
+// BL1
+regEffect('bl1-011-jinpachiego',      { type:'continuous',    tag:'jinpachi_lock',   action:'custom_blockOppSS' });
+regEffect('bl1-012-kaisergagamaru',   { type:'concealedScript',tag:'kaiserNegate',   action:'custom_payNegateAttack' });
+regEffect('bl1-016-seishironagi',     { type:'continuous',    tag:'nagi_battleGrow', action:'custom_nagiBattleGrow' });
+
+// BLC
+regEffect('blc-009-kisukeurahara',    { type:'activated',     tag:'kisuke_setPalm',  action:'custom_discardSetPalm', oncePerTurn:true });
+regEffect('blc-013-ulquiorra',        { type:'activated',     tag:'ulqui_discardDraw',action:'drawThenDiscard', oncePerTurn:true });
+regEffect('blc-014-hollowswarm',      { type:'onBattleResult',tag:'hollow_swarm',    resultType:'kill', action:'custom_bothDiscard' });
+
+// BRO
+regEffect('bro-009-jigen',            { type:'activated',     tag:'jigen_destroy',   action:'destroyOneTrick', oncePerTurn:true });
+regEffect('bro-014-chochoakimichi',   { type:'activated',     tag:'chocho_switch',   action:'custom_chochoSwitch', oncePerTurn:true });
+regEffect('bro-015-himawariuzumaki',  { type:'fieldAuraPR',   tag:'himawari_boost',  prBoostAll:200, targetNameIncludesAny:['boruto','naruto'], scope:'self' });
+regEffect('bro-020-isshikiotsutsukithegreat',{ type:'onSummon',tag:'isshikiGrt',     action:'custom_isshiki' });
+
+// CBB
+regEffect('cbb-003-edward',           { type:'activated',     tag:'ed_controlMachine',action:'custom_edControlMachine', cost:500, oncePerTurn:true });
+regEffect('cbb-018-gatheringofthesyndicate',{ type:'palmScript',tag:'gatherSyn',     action:'custom_summonSyndicateElders' });
+
+// CC1 — high-value adds
+regEffect('cc1-009-frozenflame',      { type:'equip',         tag:'frozenFlame_equip',prBoost:1000 });
+regEffect('cc1-015-bookofvirtue',     { type:'palmScript',    tag:'bookVirtue',      action:'custom_searchSergeKiddKorcha' });
+regEffect('cc1-018-bornagain',        { type:'palmScript',    tag:'bornAgain',       action:'custom_bornAgainRevive' });
+
+// CT1
+regEffect('ct1-009-homesweethome',    { type:'fieldAuraPR',   tag:'homeSweet',       prBoostAll:200, targetNameIncludesAny:['chrono','marle','luccia','frog','robo'], scope:'self' });
+regEffect('ct1-010-hunger',           { type:'palmScript',    tag:'hungerChi',       action:'custom_hungerChi' });
+regEffect('ct1-011-janus',            { type:'continuous',    tag:'janus_palmImmune', action:'custom_janusPalmImmune' });
+regEffect('ct1-017-magusscastle',     { type:'palmScript',    tag:'magusCastle',     action:'custom_magusCastleSummon' });
+
+// DB1
+regEffect('db1-049-wolffangfist',     { type:'palmScript',    tag:'wolfFang',        action:'custom_wolfFang' });
+
+// DBS
+regEffect('dbs-017-kalelegendarysupersaiyan',{ type:'onAnyVoidSend',tag:'kale_grow', action:'boostSelfPR', amount:400, log:'Kale gained 400 Pressure' });
+regEffect('dbs-029-hakai',            { type:'palmScript',    tag:'hakai',           action:'custom_hakai' });
+regEffect('dbs-043-fusiondanceforced', { type:'palmScript',   tag:'fusionForced',    action:'custom_fusionForced' });
+regEffect('dbs-044-gokuspromise',     { type:'onAllyCatalystDestroyed', tag:'gokuPromise', action:'custom_gokuPromise' });
+
+// DBZ
+regEffect('dbz-028-forcefield',       { type:'palmScript',    tag:'forceField',      action:'custom_battleShield' });
+regEffect('dbz-034-gohansbooks',      { type:'fieldAuraPR',   tag:'gohanBooks',      prBoostAll:600, targetNameIncludes:'gohan', scope:'self' });
+regEffect('dbz-037-senzubean',        { type:'palmScript',    tag:'senzu',           action:'custom_gainChi1000' });
+regEffect('dbz-039-videl',            { type:'continuous',    tag:'videl_gohan',     condition:'namedAllyOnField', conditionName:'gohan', prBoost:500 });
+
+// DND
+regEffect('dnd-009-acrobaticsilky',   { type:'onSelfDestroyed',tag:'silkyDraw',      action:'draw', count:1, log:'Acrobatic Silky drew 1 on destroy' });
+regEffect('dnd-010-mrmantisshrimp',   { type:'onBattleResult',tag:'mantis_kill',    resultType:'kill', action:'gainChi', amount:300, log:'Mr. Mantis Shrimp gained 300 Chi' });
+regEffect('dnd-012-spiralghost',      { type:'onBattleResult',tag:'spiral_discard', resultType:'kill', action:'custom_bothDiscard' });
+
+// FF7
+regEffect('ff7-034-trancemagicnegator',{ type:'concealedScript',tag:'tranceNeg',     action:'custom_payNegateEffect' });
+
+// GCK
+regEffect('gck-009-cleanerunit',      { type:'onSelfDestroyed',tag:'cleaner_chi',    action:'gainChi', amount:300, log:'Cleaner Unit gained 300 Chi on destroy' });
+regEffect('gck-014-zodyl',            { type:'activated',     tag:'zodyl_destroy',   action:'custom_zodylDestroy', oncePerTurn:true });
+regEffect('gck-023-heapverdictthegreat',{ type:'concealedScript',tag:'heapNegate',   action:'custom_negateAndDestroy' });
+
+// GDS
+regEffect('gds-006-ailestrikerpack',  { type:'equip',         tag:'aile_equip',      prBoost:500, targetNameIncludes:'strike gundam' });
+regEffect('gds-007-launcherstrikerpack',{ type:'equip',       tag:'launcher_equip',  cpBoost:500, targetNameIncludes:'strike gundam' });
+regEffect('gds-008-swordstrikerpack', { type:'equip',         tag:'sword_equip',     prBoost:600, targetNameIncludes:'strike gundam' });
+regEffect('gds-012-yazkjule',         { type:'equip',         tag:'yazk_equip',      prBoost:400, cpBoost:400, targetKindsAny:['Mobile Suit','Gundam'] });
+
+// GGX
+regEffect('ggx-015-venom',            { type:'onFlip',        tag:'venom_flip',      action:'custom_venomFlip' });
+regEffect('ggx-016-testament',        { type:'onAttackedBy',  tag:'testament_debuff', action:'custom_testamentDebuff' });
+regEffect('ggx-018-slayer',           { type:'onBattleResult',tag:'slayer_kill',    resultType:'kill', action:'boostSelfPR', amount:300, log:'Slayer gained 300 Pressure' });
+regEffect('ggx-018-ino',              { type:'onBattleResult',tag:'ino_kill',       resultType:'kill', action:'draw', count:1, log:'I-No drew 1 card' });
+
+// HLP
+regEffect('hlp-009-mudantensen',      { type:'activated',     tag:'mudan_discard',   action:'custom_discardBoost', oncePerTurn:true });
+regEffect('hlp-010-toma',             { type:'onSelfDestroyed',tag:'toma_drawDisc', action:'drawThenDiscard' });
+regEffect('hlp-011-azachobe',         { type:'activated',     tag:'aza_burn',        action:'custom_azaChobeBurn', oncePerTurn:true });
+
+// HLS
+regEffect('hls-002-incognitoscall',   { type:'palmScript',    tag:'incogCall',       action:'custom_searchAlucardUnsealed' });
+regEffect('hls-010-furgusson',        { type:'fieldAuraPR',   tag:'furgusson',       prBoostAll:500, targetNameIncludes:'hellsing army', scope:'self' });
+regEffect('hls-013-thehellsingarmy',  { type:'continuous',    tag:'army_vsZombie',   action:'custom_bonusVsZombie' });
+
+// INU
+regEffect('inu-005-windscar',         { type:'palmScript',    tag:'windScar',        action:'custom_windScar' });
+regEffect('inu-016-soulsnatchers',    { type:'continuous',    tag:'soulSnatch',      action:'custom_kikyoPalmImmune' });
+
+// KH1
+regEffect('kh1-004-wonderland',       { type:'concealedScript',tag:'wonderland',     action:'custom_negateAndRFG' });
+regEffect('kh1-005-halloweentown',    { type:'palmScript',    tag:'halloweenTown',   action:'custom_halloweenTown' });
+regEffect('kh1-022-hadescup',         { type:'palmScript',    tag:'hadesCup',        action:'custom_searchHades' });
+regEffect('kh1-024-aliceinwonderland',{ type:'palmScript',    tag:'aliceW',          action:'custom_rfgTwoToDestroy' });
+
+// KIR
+regEffect('kir-011-chilly',           { type:'fieldAuraPR',   tag:'chilly',          prBoostAll:300, targetAlignment:'water', scope:'self' });
+regEffect('kir-019-nmepricedrop',     { type:'palmScript',    tag:'nmePriceDrop',    action:'custom_nmePriceDrop' });
+regEffect('kir-021-nmesalesguy',      { type:'palmScript',    tag:'nmeSalesGuy',     action:'custom_nmeSalesGuy' });
+
+// LOZ
+regEffect('loz-008-mastersword',      { type:'equip',         tag:'masterSword',     prBoost:500, targetNameIncludes:'child link' });
+regEffect('loz-009-hyrulianshield',   { type:'concealedScript',tag:'hyrulShield',    action:'custom_negateAttack' });
+regEffect('loz-022-linkspast',        { type:'palmScript',    tag:'linksPast',       action:'custom_linksPast' });
+
+// MB1
+regEffect('mb1-001-itsamemario',      { type:'palmScript',    tag:'itsame',          action:'custom_searchMiniMarioLuigi' });
+regEffect('mb1-014-princesspeachscry',{ type:'palmScript',    tag:'peachCry',        action:'custom_boostMarioLuigi' });
+regEffect('mb1-021-lakituscloud',     { type:'palmScript',    tag:'lakitusCloud',    action:'custom_ssLakitu' });
+
+// MGM
+regEffect('mgm-016-magicman',         { type:'onFlip',        tag:'magic_recycle',   action:'custom_voidToHand' });
+regEffect('mgm-017-sharkman',         { type:'onBattleResult',tag:'shark_kill',     resultType:'kill', action:'boostSelfPR', amount:500, log:'Shark Man gained 500 Pressure' });
+regEffect('mgm-021-widesword',        { type:'equip',         tag:'wideSword',       prBoost:400, targetNameIncludesAny:['mega man','proto man'] });
+
+// NAR
+regEffect('nar-004-itachi',           { type:'activated',     tag:'itachi_debuff',   action:'custom_itachiDebuff' });
+regEffect('nar-028-shukaku',          { type:'summonCondition',tag:'shukakuCond',   action:'custom_shukakuCond' });
+regEffect('nar-029-manda',            { type:'summonCondition',tag:'mandaCond',     action:'custom_summoningJutsu' });
+regEffect('nar-030-gamabunto',        { type:'summonCondition',tag:'gamaCond',      action:'custom_summoningJutsu' });
+
+// OP1 additions
+regEffect('op1-013-shanks',           { type:'activated',     tag:'shanks_negate',   action:'negateDestroyEffect', oncePerTurn:true });
+regEffect('op1-016-boahancock',       { type:'onAttackedBy',  tag:'hancock_coin',    action:'custom_hancockCoin' });
+regEffect('op1-024-devilfruitawakening',{ type:'palmScript',  tag:'devilFruit',      action:'custom_devilFruitAwaken' });
+regEffect('op1-025-goingmerrythousandsunny',{ type:'standbyChiGain',tag:'goingMerry',amount:300, action:'custom_perPirate' });
+
+// RKN additions
+regEffect('rkn-010-multiplestrikes',  { type:'palmScript',    tag:'multStrike',      action:'custom_multipleStrikes' });
+regEffect('rkn-011-patriotdefenders', { type:'concealedScript',tag:'patriotDef',     action:'custom_payNegateAttackHighLvl' });
+regEffect('rkn-013-rifle',            { type:'equip',         tag:'rifle',           prBoost:600, targetNameIncludes:'gunman' });
+regEffect('rkn-014-raijuta',          { type:'onBattleResult',tag:'raijuta_grow',   resultType:'kill', action:'boostSelfPR', amount:500, log:'Raijuta gained 500 Pressure' });
+
+// S-M additions
+regEffect('s-m-024-thing',            { type:'concealedScript',tag:'thing_negate',   action:'custom_negateAttackBurn' });
+regEffect('s-m-027-scarletwitch',     { type:'palmScript',    tag:'scarletDraw3',    action:'custom_scarletWitch' });
+
+// SH2
+regEffect('sh2-002-thepunisher',      { type:'onAttackDeclared',tag:'punisher_return',action:'custom_returnSelfToHandEOT' });
+regEffect('sh2-003-profressorxbarrier',{ type:'concealedScript',tag:'profXBarr',    action:'custom_destroyAndRFG' });
+regEffect('sh2-004-kraventhehunter',  { type:'continuous',    tag:'kraven_beast',    action:'custom_kravenBeastBoost' });
+regEffect('sh2-010-wolverine',        { type:'continuous',    tag:'wolv_regen',      action:'custom_wolverineRegen' });
+
+// SL1 additions
+regEffect('sl1-000-sungjinwoo',       { type:'activated',     tag:'sung_token',      action:'custom_sungShadowToken', cost:500, oncePerTurn:true });
+regEffect('sl1-010-monarchantares',   { type:'onBattleResult',tag:'antares_shadowize',resultType:'kill', action:'custom_shadowizeDestroyed' });
+regEffect('sl1-011-monarchlegia',     { type:'activated',     tag:'legia_destroy',   action:'custom_legiaDestroy', oncePerTurn:true });
+regEffect('sl1-012-monarchbaran',     { type:'activated',     tag:'baran_wipeSS',    action:'custom_baranWipeSS', cost:1000 });
+
+// SLM
+regEffect('slm-005-supersailormoon',  { type:'onBattleResult',tag:'ssMoon_return', resultType:'kill', action:'custom_returnDestroyedToDeck' });
+regEffect('slm-007-moontiara',        { type:'palmScript',    tag:'moonTiara',       action:'custom_moonTiara' });
+
+// SNC
+regEffect('snc-009-eggmansgreed',     { type:'palmScript',    tag:'eggGreed',        action:'custom_eggmanDraw3' });
+regEffect('snc-012-chaosemeraldsgathering',{ type:'palmScript',tag:'chaosEmerald',   action:'custom_ssSuperSonic' });
+regEffect('snc-026-10coins',          { type:'equip',         tag:'10coins_equip',   prBoost:300 });
+
+// SS1
+regEffect('ss1-011-megaenergybomb',   { type:'palmScript',    tag:'megaBomb',        action:'custom_megaEnergyBomb' });
+regEffect('ss1-010-multiplestrikes',  { type:'palmScript',    tag:'ss1_multStrike',  action:'custom_multipleStrikes' });
+regEffect('ss1-026-ishinshishi',      { type:'palmScript',    tag:'ishinShi',        action:'custom_ishinShishi' });
+regEffect('ss1-017-darkside',         { type:'palmScript',    tag:'darkSide',        action:'custom_darkSide' });
+
+// SYD
+regEffect('syd-002-altercost',        { type:'fieldAuraPR',   tag:'altCost',         prBoostAll:-2000, targetNameIncludesAny:['alter','alteruser'], scope:'both' });
+
+// T2F additional
+regEffect('t2f-014-fullmoon',         { type:'fieldAuraPR',   tag:'t2fFullMoon',     prBoostAll:300, targetNameIncludes:'wolf' });
+regEffect('t2f-016-dojo',             { type:'fieldAuraPR',   tag:'dojo',            prBoostAll:400, targetNameIncludes:'fighter' });
+regEffect('t2f-018-supercomputer',    { type:'fieldAuraPR',   tag:'superComp',       prBoostAll:300, targetNameIncludes:'hacker' });
+regEffect('t2f-019-xaviersschoolforthegifted', { type:'fieldAuraPR', tag:'xavierSchool', prBoostAll:300, targetKind:'Mutant' });
+
+// TT1 additions
+regEffect('tt1-022-tram',             { type:'fieldAuraPR',   tag:'tram',            prBoostAll:300, targetKind:'Machine', scope:'self' });
+regEffect('tt1-024-slade',            { type:'continuous',    tag:'slade_lowerLvl',  action:'custom_sladeLowerLvl' });
+
+// TUV additions
+regEffect('tuv-011-planetjurai',      { type:'fieldAuraPR',   tag:'planetJurai',     prBoostAll:400, targetAlignment:'earth' });
+regEffect('tuv-012-ryoohki',          { type:'activated',     tag:'ryoohki_tribute', action:'custom_ryoohkiTribute', oncePerTurn:true });
+regEffect('tuv-013-carrot',           { type:'onSelfDestroyed',tag:'carrot_burn',   action:'burnOpponent', damage:300, log:'Carrot inflicted 300 damage when sent to Void' });
+
+// WR1 additions
+regEffect('wr1-011-flowerofthemoon',  { type:'palmScript',    tag:'flowerMoon',      action:'custom_ssCheza' });
+regEffect('wr1-012-researchingcheza', { type:'palmScript',    tag:'researchCheza',   action:'custom_searchCheza' });
+regEffect('wr1-016-cherdegre',        { type:'standbyFlipEffect', tag:'cher_search', action:'custom_searchResearch' });
+regEffect('wr1-018-harmonasinfluence',{ type:'palmScript',    tag:'harmona',         action:'custom_harmona' });
+
+// YYH additions
+regEffect('yyh-005-drichigaki',       { type:'onFlip',        tag:'drIchi_half',     action:'custom_halvePressure' });
+regEffect('yyh-016-karasu',           { type:'activated',     tag:'karasu_coin',     action:'custom_karasuCoin' });
+regEffect('yyh-001-atsuko',           { type:'equip',         tag:'atsuko_equip',    prBoost:500 });
+
+
 // ─── RESOLVE REGISTRY BY ACTUAL CARD IDs ───
 // The registrations above use placeholder IDs. We need to map them
 // to real card IDs from the database. This runs once at load time.
@@ -1226,36 +1965,36 @@ function resolveRegistryIds() {
   const nameToPlaceholder = {
     'reese the great\'s gundam': 'anm-000-reesethegreatsgundam',
     'isshiki otsutsuki - the great': 'dbs-000-isshikiotsutsuki',
-    'isagi - the great': 'bl1-000-isagithegreat',
-    'monkey d. luffy - the great': 'op1-000-monkeydluffythegreat',
-    'kenpachi the great': 'blc-000-kenpachithegreat',
-    'okarun the great': 'dnd-000-okarunthegreat',
-    'sae itoshi - the great': 'bl1-000-saeitoshithegreat',
-    'marshall d. teach - the great': 'op1-000-marshalldteachthegreat',
+    'isagi - the great': 'bl1-022-isagithegreat',
+    'monkey d. luffy - the great': 'op1-020-monkeydluffythegreat',
+    'kenpachi the great': 'blc-003-kenpachithegreat',
+    'okarun the great': 'dnd-001-okarunthegreat',
+    'sae itoshi - the great': 'bl1-023-saeitoshithegreat',
+    'marshall d. teach - the great': 'op1-021-marshalldteachthegreat',
     'gabimaru the great': 'hlp-000-gabimaruthegreat',
-    'turbo granny the great': 'dnd-000-turbogrannythegreat',
-    'aizen the great': 'blc-000-aizenthegreat',
-    'erwin the great': 'aot-000-erwinthegreat',
+    'turbo granny the great': 'dnd-002-turbogrannythegreat',
+    'aizen the great': 'blc-001-aizenthegreat',
+    'erwin the great': 'aot-002-erwinthegreat',
     'momo the great': 'dnd-000-momothegreat',
-    'byakuya the great': 'blc-000-byakuyathegreat',
-    'enjin the great': 'gck-000-enjinthegreat',
-    'chobei the great': 'hlp-000-chobeithegreat',
+    'byakuya the great': 'blc-002-byakuyathegreat',
+    'enjin the great': 'gck-001-enjinthegreat',
+    'chobei the great': 'hlp-003-chobeithegreat',
     'ichigo the great': 'blc-000-ichigothegreat',
-    'sagiri the great': 'hlp-000-sagirithegreat',
+    'sagiri the great': 'hlp-001-sagirithegreat',
     'eren the great': 'aot-000-erenthegreat',
-    'riyo the great': 'gck-000-riyothegreat',
+    'riyo the great': 'gck-003-riyothegreat',
     'gohan - the great saiyaman': 'dbz-000-gohan',
-    'levi the great': 'aot-000-levithegreat',
-    'mikasa the great': 'aot-000-mikasathegreat',
+    'levi the great': 'aot-001-levithegreat',
+    'mikasa the great': 'aot-003-mikasathegreat',
     'rudo the great': 'gck-000-rudothegreat',
-    'monarch antares - the great': 'sl1-000-monarchantaresthegreat',
-    'sung jinwoo - the great': 'sl1-000-sungjinwoothegreat',
+    'monarch antares - the great': 'sl1-020-monarchantaresthegreat',
+    'sung jinwoo - the great': 'sl1-019-sungjinwoothegreat',
     'seiko the great': 'dnd-000-seikothegreat',
     'vegeta - the great': 'dbs-000-vegetathegreat',
     'zanka the great': 'gck-000-zankathegreat',
     'yuzuriha the great': 'hlp-000-yuzurihathegreat',
-    'boruto uzumaki - the great': 'bro-000-borutouzumakithegreat',
-    'goku - the great': 'dbs-000-gokuthegreat',
+    'boruto uzumaki - the great': 'bro-019-borutouzumakithegreat',
+    'goku - the great': 'dbs-025-gokuthegreat',
     'ace the great': 'anm-000-acethegreat',
   };
 
@@ -1374,6 +2113,66 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
           addLog(state, `Effect Script: Destin Special Summoned ${ssCard?.name || 'a Warrior'} from hand (cannot attack this turn).`);
         }
       }
+    } else if (eff.action === 'custom_magusSearch') {
+      const alone = p.catalysts.filter(Boolean).length <= 1;
+      if (alone) {
+        const found = addCardToHandFromDeckByPredicate(state, playerIdx, c => cardNameHas(c,'magus') || /magus.*castle/i.test(c.name||''));
+        if (found) addLog(state, `Effect Script: Magus searched ${found.name}.`);
+      }
+    } else if (eff.action === 'custom_roboDebuff') {
+      const opp = state.players[1-playerIdx];
+      const z = opp.catalysts.findIndex(Boolean);
+      if (z >= 0) { opp.catalysts[z].atkMod = (opp.catalysts[z].atkMod||0)-300; addLog(state,`Effect Script: Robo reduced ${getCard(opp.catalysts[z].cardId)?.name||'a Catalyst'} by 300 Pressure.`); }
+    } else if (eff.action === 'custom_kisameParalyze') {
+      const opp = state.players[1-playerIdx];
+      const z = opp.catalysts.findIndex(Boolean);
+      if (z >= 0) {
+        opp.catalysts[z].cannotAttackThisTurn = true;
+        p._kisameSkipDraw = true;
+        addLog(state,`Effect Script: Kisame paralyzed ${getCard(opp.catalysts[z].cardId)?.name||'a Catalyst'}. Your next Draw Phase is skipped.`);
+      }
+    } else if (eff.action === 'custom_kankuroPuppet') {
+      const ez = getFirstEmptyCatalystZone(state,playerIdx);
+      if (ez >= 0) {
+        p.catalysts[ez]={cardId:'__puppet_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Puppet Token',tokenPR:1200,tokenCP:1000};
+        addLog(state,'Effect Script: Kankuro placed a Puppet Token (1200/1000).');
+      }
+    } else if (eff.action === 'custom_garaOnSummon') {
+      const gz = p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'gara'));
+      if (gz >= 0) { p.catalysts[gz].position='cp'; p.catalysts[gz]._garaCanAtkFromCP=true; addLog(state,'Effect Script: Gara switched to Defense and can still attack.'); }
+    } else if (eff.action === 'custom_hinataSummon') {
+      const nejiHand = p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'neji'));
+      const nejiVoid = p.void.findIndex(id=>cardNameHas(getCard(id)||{},'neji'));
+      const ez = getFirstEmptyCatalystZone(state,playerIdx);
+      if (ez >= 0) {
+        let nId;
+        if (nejiHand>=0) { [nId]=p.hand.splice(nejiHand,1); }
+        else if (nejiVoid>=0) { [nId]=p.void.splice(nejiVoid,1); }
+        if (nId) { p.catalysts[ez]={cardId:nId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false}; registerSpecialSummon(state,playerIdx,'Hinata'); addLog(state,`Effect Script: Hinata Special Summoned ${getCard(nId)?.name||'Neji'}.`); }
+      }
+    } else if (eff.action === 'custom_nidaimeBlock') {
+      p._nidaimeBlockTurns=2; state._nidaimeOwner=playerIdx;
+      addLog(state,'Effect Script: Nidaime blocked opponent attacks for 2 turns (acts as Deep Sea).');
+    } else if (eff.action === 'custom_quentSSBlue') {
+      const bi = p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'blue - wolf mode'));
+      if (bi >= 0) {
+        const ez = getFirstEmptyCatalystZone(state,playerIdx);
+        if (ez >= 0) {
+          const [bId]=p.hand.splice(bi,1);
+          p.catalysts[ez]={cardId:bId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};
+          registerSpecialSummon(state,playerIdx,'Quent Yaiden');
+          addLog(state,`Effect Script: Quent Yaiden Special Summoned ${getCard(bId)?.name||'Blue Wolf Mode'} from hand.`);
+        }
+      }
+    } else if (eff.action === 'custom_eggbotTokens') {
+      let placed=0;
+      for (let i=0;i<2;i++) { const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0) break; p.catalysts[ez]={cardId:'__minibot_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Minibot Token',tokenPR:500,tokenCP:1000}; placed++; }
+      if (placed) addLog(state,`Effect Script: Dr. Robotnik Eggbot placed ${placed} Minibot Token(s).`);
+    } else if (eff.action === 'custom_elecmanSummon') {
+      const opp=state.players[1-playerIdx];
+      const oz=opp.catalysts.findIndex(Boolean);
+      if (oz>=0) { const c=getCard(opp.catalysts[oz].cardId); opp.void.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null; p.kills++; addLog(state,`Effect Script: ElecMan destroyed ${c?.name||'a Catalyst'} on summon. +1 Kill.`); checkWinConditions(state); }
+
     }
   }
 }
@@ -1694,6 +2493,28 @@ function runRegisteredOnBattleResult(state, attackerPlayer, attackerZone, defend
         const found = addCardToHandFromVoidByPredicate(state, attackerPlayer, c => c.cardType === 'Palm Trick');
         if (found) addLog(state, `Effect Script: Yamcha - the Bandit recovered ${found.name} from the Void.`);
       }
+    } else if (eff.action === 'custom_queenZealChi') {
+      const diff = (result && typeof result.prdiff === 'number') ? result.prdiff : 0;
+      if (diff > 0) { state.players[attackerPlayer].chi = Math.min(state.players[attackerPlayer].chi+diff,99999); addLog(state,`Effect Script: Queen Zeal gained ${diff} Chi.`); }
+    } else if (eff.action === 'custom_shadowKillBoost') {
+      const lc=getCard(state.players[defenderPlayer]?.void?.slice(-1)[0]);
+      if(lc&&cardNameHas(lc,'sonic')&&!cardNameHas(lc,"sonic's partner")){slot.atkMod=(slot.atkMod||0)+500;addLog(state,'Effect Script: Shadow the Evil +500 Pressure for destroying a Sonic card.');}
+    } else if (eff.action === 'custom_reeveKillBoost') {
+      const lc=getCard(state.players[defenderPlayer]?.void?.slice(-1)[0]);
+      if(lc&&cardNameHas(lc,'knuckles')){slot.atkMod=(slot.atkMod||0)+500;addLog(state,'Effect Script: Reeve the Evil +500 Pressure for destroying a Knuckles card.');}
+    } else if (eff.action === 'custom_donaldKill') {
+      slot.atkMod=(slot.atkMod||0)+300; slot.cpMod=(slot.cpMod||0)+300;
+      addLog(state,'Effect Script: Donald Duck permanently gained 300 PR and CP.');
+    } else if (eff.action === 'custom_kyKillDebuff') {
+      slot.atkMod=(slot.atkMod||0)-100;
+      addLog(state,'Effect Script: Ky Kiske lost 100 Pressure from its own kill.');
+    } else if (eff.action === 'custom_torchmanKill') {
+      slot.atkMod=(slot.atkMod||0)+500; slot._torchBoostTemporal=true;
+      addLog(state,'Effect Script: Torch Man gained 500 Pressure until next Standby.');
+    } else if (eff.action === 'custom_yusukeKillCounter') {
+      slot._yusukeCounters=Math.min((slot._yusukeCounters||0)+1,2);
+      addLog(state,`Effect Script: Yusuke counter (${slot._yusukeCounters}/2). Remove 2 to destroy 1 field card.`);
+
     } else if (eff.action === 'custom_teengohan') {
       const live = state.players[attackerPlayer].catalysts[attackerZone];
       if (!live) continue;
@@ -2229,6 +3050,54 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
         }
       }
       if (summoned) addLog(state, `Effect Script: Ayeka Masaki re-formed ${summoned} Fusion material Catalyst(s) from the Void.`);
+    } else if (eff.action === 'custom_aylaDestroy') {
+      const opp=state.players[1-ownerPlayer];
+      const tgts=[];
+      for(let z=0;z<5;z++) if(opp.tricks[z]) tgts.push({player:1-ownerPlayer,zone:z});
+      if(opp.fieldTrick) tgts.push({player:1-ownerPlayer,zone:'fieldTrick'});
+      if(tgts.length) { destroyTrickTarget(state,tgts[0],'Ayla'); addLog(state,'Effect Script: Ayla destroyed 1 opponent Trick on destroy.'); }
+    } else if (eff.action === 'custom_marioRevive') {
+      const vi=owner.void.findIndex(id=>cardNameHas(getCard(id)||{},'mini-mario'));
+      const ez=getFirstEmptyCatalystZone(state,ownerPlayer);
+      if(vi>=0&&ez>=0){const[rId]=owner.void.splice(vi,1);owner.catalysts[ez]={cardId:rId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};addLog(state,'Effect Script: Mario revived Mini-Mario from Void.');}
+    } else if (eff.action === 'custom_luigiRevive') {
+      const vi=owner.void.findIndex(id=>cardNameHas(getCard(id)||{},'mini-luigi'));
+      const ez=getFirstEmptyCatalystZone(state,ownerPlayer);
+      if(vi>=0&&ez>=0){const[rId]=owner.void.splice(vi,1);owner.catalysts[ez]={cardId:rId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};addLog(state,'Effect Script: Luigi revived Mini-Luigi from Void.');}
+    } else if (eff.action === 'custom_fireMarioRevive') {
+      const vi=owner.void.findIndex(id=>cardNameHas(getCard(id)||{},'mario')&&!cardNameHas(getCard(id)||{},'fire'));
+      const ez=getFirstEmptyCatalystZone(state,ownerPlayer);
+      if(vi>=0&&ez>=0){const[rId]=owner.void.splice(vi,1);owner.catalysts[ez]={cardId:rId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};addLog(state,'Effect Script: Fire Mario revived Mario from Void.');}
+    } else if (eff.action === 'custom_fireLuigiRevive') {
+      const vi=owner.void.findIndex(id=>cardNameHas(getCard(id)||{},'luigi')&&!cardNameHas(getCard(id)||{},'fire'));
+      const ez=getFirstEmptyCatalystZone(state,ownerPlayer);
+      if(vi>=0&&ez>=0){const[rId]=owner.void.splice(vi,1);owner.catalysts[ez]={cardId:rId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};addLog(state,'Effect Script: Fire Luigi revived Luigi from Void.');}
+    } else if (eff.action === 'custom_koopaRevive') {
+      const res=specialSummonFromDeckByPredicate(state,ownerPlayer,c=>/koopa troopa/i.test(c.name||''),'Koopa Troopa');
+      addLog(state,res.ok?'Effect Script: Koopa Troopa Special Summoned another from Deck.':`Effect Script: Koopa Troopa — no copy in Deck. (${res.msg})`);
+    } else if (eff.action === 'custom_wolfReviveOnce') {
+      if(!state._wolfRevived) state._wolfRevived={};
+      if(!state._wolfRevived[cardId]){
+        state._wolfRevived[cardId]=true;
+        queueDelayedRevive(state,ownerPlayer,cardId,{});
+        addLog(state,`Effect Script: ${getCard(cardId)?.name||'Wolf'} will revive next Ignition Phase (once only).`);
+      } else addLog(state,`Effect Script: ${getCard(cardId)?.name||'Wolf'} already used its once-per-duel revive.`);
+    } else if (eff.action === 'custom_zatoEddie') {
+      const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,ownerPlayer,c=>/^eddie$/i.test(c.name||''),'Zato-1');
+      addLog(state,res.ok?'Effect Script: Zato-1 Special Summoned Eddie.':`Effect Script: Zato-1 — no Eddie found. (${res.msg})`);
+    } else if (eff.action === 'custom_baikenEndBP') {
+      if(ctx&&ctx.reason==='battle'&&state.activePlayer!==ownerPlayer){state._endBattlePhaseNow=true;addLog(state,"Effect Script: Baiken's destruction ends the opponent's Battle Phase.");}
+    } else if (eff.action === 'rfgSelf') {
+      const vi=owner.void.indexOf(cardId);
+      if(vi>=0) owner.void.splice(vi,1);
+      owner.rfg.push(cardId);
+      addLog(state,`Effect Script: ${getCard(cardId)?.name||'A card'} removed from game instead of going to Void.`);
+    } else if (eff.action === 'custom_adultLinkRevive') {
+      const vi=owner.void.findIndex(id=>/child link #[13]/i.test(getCard(id)?.name||''));
+      const ez=getFirstEmptyCatalystZone(state,ownerPlayer);
+      if(vi>=0&&ez>=0){const[rId]=owner.void.splice(vi,1);owner.catalysts[ez]={cardId:rId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};addLog(state,'Effect Script: Adult Link revived Child Link from Void.');}
+      else addLog(state,'Effect Script: Adult Link — no Child Link in Void to revive.');
+
     }
   }
 }
@@ -5229,6 +6098,2740 @@ class CTFNet {
   }
 }
 
+
+// ════════════════════════════════════════════════════════════════════════════
+// PATCH 55 — CUSTOM HANDLER IMPLEMENTATIONS
+// ════════════════════════════════════════════════════════════════════════════
+
+// CT1
+function custom_lavosDie(state, playerIdx) {
+  const p=state.players[playerIdx], opp=state.players[1-playerIdx];
+  const roll=Math.floor(Math.random()*6)+1;
+  addLog(state,`Effect Script: Lavos rolled ${roll}.`);
+  if (roll<=3) {
+    const z=opp.catalysts.findIndex(Boolean);
+    if(z>=0){const c=getCard(opp.catalysts[z].cardId);opp.void.push(opp.catalysts[z].cardId);opp.catalysts[z]=null;p.kills++;addLog(state,`Effect Script: Lavos (1-3) destroyed ${c?.name||'a Catalyst'}. +1 Kill.`);checkWinConditions(state);}
+  } else if (roll<=5) {
+    const tgts=getAllDestroyableTrickTargets(state);
+    if(tgts.length){destroyTrickTarget(state,tgts.find(t=>t.player!==playerIdx)||tgts[0],'Lavos');addLog(state,'Effect Script: Lavos (4-5) destroyed 1 Trick.');}
+  } else {
+    let n=0;
+    for(let i=4;i>=0;i--) if(opp.catalysts[i]){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;p.kills++;n++;}
+    addLog(state,`Effect Script: Lavos (6) destroyed all ${n} opponent Catalyst(s). +${n} Kill(s).`);
+    checkWinConditions(state);
+  }
+}
+
+// NAR
+function custom_narutoChoice(state, playerIdx, choice) {
+  const p=state.players[playerIdx], opp=state.players[1-playerIdx];
+  const myZ=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'naruto'));
+  if(myZ<0){addLog(state,'Effect Script: Naruto not on field.');return;}
+  const slot=p.catalysts[myZ];
+  const c=choice||'1';
+  if(c==='1') {
+    if(p.chi<1000){addLog(state,'Effect Script: Naruto (1) needs 1000 Chi.');return;}
+    p.chi-=1000; slot.atkMod=(slot.atkMod||0)+1200; slot.tempAtkMod=(slot.tempAtkMod||0)+1200;
+    addLog(state,'Effect Script: Naruto (1) paid 1000 Chi, +1200 Pressure until End Phase.');
+  } else if(c==='2') {
+    if(p.chi<1500){addLog(state,'Effect Script: Naruto (2) needs 1500 Chi.');return;}
+    const oz=opp.catalysts.findIndex(Boolean); if(oz<0){addLog(state,'Effect Script: Naruto (2) — no target.');return;}
+    const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: Naruto (2) — no empty zone.');return;}
+    p.chi-=1500;
+    const stolen=opp.catalysts[oz]; opp.catalysts[oz]=null;
+    p.catalysts[ez]={...stolen,_stolenThisTurn:true}; addLog(state,`Effect Script: Naruto (2) took control of ${getCard(stolen.cardId)?.name||'a Catalyst'}.`);
+  } else {
+    if(p.chi<600){addLog(state,'Effect Script: Naruto (3) needs 600 Chi.');return;}
+    const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: Naruto (3) — no zone.');return;}
+    p.chi-=600;
+    p.catalysts[ez]={cardId:'__kageBushin__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Kage Bushin Token',tokenPR:500,tokenCP:500};
+    addLog(state,'Effect Script: Naruto (3) placed Kage Bushin Token (500/500).');
+  }
+}
+function custom_sasukeCopyPR(state, playerIdx) {
+  const p=state.players[playerIdx]; if(p.chi<700){addLog(state,'Effect Script: Sasuke needs 700 Chi.');return;}
+  const myZ=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'sasuke'));
+  const oz=state.players[1-playerIdx].catalysts.findIndex(Boolean);
+  if(myZ<0||oz<0){addLog(state,'Effect Script: Sasuke — no valid target.');return;}
+  p.chi-=700;
+  const tPR=getEffectivePressure(state,1-playerIdx,oz);
+  const myPR=getEffectivePressure(state,playerIdx,myZ);
+  p.catalysts[myZ].atkMod=(p.catalysts[myZ].atkMod||0)+(tPR-myPR);
+  addLog(state,`Effect Script: Sasuke matched ${getCard(state.players[1-playerIdx].catalysts[oz].cardId)?.name||'target'} at ${tPR} Pressure.`);
+}
+function custom_kakashiCopy(state, playerIdx) {
+  if(state._kakashiUsed){addLog(state,'Effect Script: Kakashi already used Copy this Duel.');return;}
+  const p=state.players[playerIdx]; if(p.chi<1000){addLog(state,'Effect Script: Kakashi needs 1000 Chi.');return;}
+  const myZ=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'kakashi'));
+  if(myZ<0){addLog(state,'Effect Script: Kakashi not on field.');return;}
+  let bestZ=-1,bestPR=-1;
+  for(let i=0;i<5;i++){if(state.players[1-playerIdx].catalysts[i]){const pr=getEffectivePressure(state,1-playerIdx,i);if(pr>bestPR){bestPR=pr;bestZ=i;}}}
+  if(bestZ<0){addLog(state,'Effect Script: Kakashi — nothing to copy.');return;}
+  p.chi-=1000; state._kakashiUsed=true;
+  const copyId=state.players[1-playerIdx].catalysts[bestZ].cardId;
+  const effs=getAllCardEffects(copyId);
+  if(!EFFECT_REGISTRY[p.catalysts[myZ].cardId]) EFFECT_REGISTRY[p.catalysts[myZ].cardId]=[];
+  for(const e of effs) EFFECT_REGISTRY[p.catalysts[myZ].cardId].push({...e,_copiedByKakashi:true,tag:'kakashi_'+e.tag});
+  addLog(state,`Effect Script: Kakashi copied ${getCard(copyId)?.name||'target'}'s effects.`);
+}
+function custom_tsunadeRevive(state, playerIdx) {
+  const p=state.players[playerIdx]; if(p.chi<1000){addLog(state,'Effect Script: Tsunade needs 1000 Chi.');return;}
+  const vi=p.void.findIndex(id=>cardNameHas(getCard(id)||{},'tsunade'));
+  if(vi<0){addLog(state,'Effect Script: No Tsunade in Void.');return;}
+  const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: No empty zone.');return;}
+  p.chi-=1000;
+  const[tId]=p.void.splice(vi,1);
+  p.catalysts[ez]={cardId:tId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:1600,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};
+  registerSpecialSummon(state,playerIdx,'Tsunade');
+  addLog(state,'Effect Script: Tsunade revived from Void (2000/2800).');
+}
+function custom_orochimaruSS(state, playerIdx) {
+  if(!state._orochiUses) state._orochiUses={};
+  const k=`p${playerIdx}`;
+  if((state._orochiUses[k]||0)>=2){addLog(state,'Effect Script: Orochimaru already used SS twice this Duel.');return;}
+  const p=state.players[playerIdx];
+  const tZ=p.catalysts.findIndex(Boolean); if(tZ<0){addLog(state,'Effect Script: Orochimaru needs a Catalyst to tribute.');return;}
+  const hi=p.hand.findIndex(id=>{const c=getCard(id);return c&&c.cardType==='Catalyst'&&Number(c.pr||0)<=2000;});
+  if(hi<0){addLog(state,'Effect Script: Orochimaru — no valid Catalyst (≤2000 PR) in hand.');return;}
+  const[sId]=p.hand.splice(hi,1);
+  p.void.push(p.catalysts[tZ].cardId); p.catalysts[tZ]=null;
+  const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){p.hand.push(sId);addLog(state,'Effect Script: Orochimaru — no empty zone.');return;}
+  p.catalysts[ez]={cardId:sId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};
+  registerSpecialSummon(state,playerIdx,'Orochimaru');
+  state._orochiUses[k]=(state._orochiUses[k]||0)+1;
+  addLog(state,`Effect Script: Orochimaru SS'd ${getCard(sId)?.name||'a Catalyst'} (${state._orochiUses[k]}/2 uses).`);
+}
+function custom_sandaimeRFG(state, playerIdx) {
+  const p=state.players[playerIdx], opp=state.players[1-playerIdx];
+  const oz=opp.catalysts.findIndex(Boolean); if(oz<0){addLog(state,'Effect Script: Sandaime — no opponent Catalyst.');return;}
+  const c=getCard(opp.catalysts[oz].cardId);
+  opp.rfg.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null;
+  const myZ=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'sandaime'));
+  if(myZ>=0) p.catalysts[myZ].cannotAttackThisTurn=true;
+  addLog(state,`Effect Script: Sandaime removed ${c?.name||'a Catalyst'} from game. Sandaime cannot attack this turn.`);
+}
+
+// MB1
+function custom_yoshiToken(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0) return;
+  p.catalysts[ez]={cardId:'__yoshi_egg__',position:'cp',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:true,isToken:true,tokenName:"Yoshi's Egg Token",tokenPR:400,tokenCP:400};
+  addLog(state,"Effect Script: Yoshi placed Yoshi's Egg Token (400/400) in Defense.");
+}
+function custom_lakituToken(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0) return;
+  p.catalysts[ez]={cardId:'__spiny_egg__',position:'cp',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:true,isToken:true,tokenName:'Spiny Egg Token',tokenPR:0,tokenCP:2000};
+  addLog(state,'Effect Script: Lakitu placed Spiny Egg Token (0/2000) in Defense.');
+}
+
+// GGX
+function custom_mayFlip(state, playerIdx) {
+  const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,playerIdx,c=>/^johnny$/i.test(c.name||''),'May');
+  addLog(state,res.ok?'Effect Script: May (Flip) SS\'d Johnny.':`Effect Script: May — no Johnny found. (${res.msg})`);
+}
+function custom_axlRaven(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const axlZones=[];
+  for(let i=0;i<5;i++) if(p.catalysts[i]&&cardNameHas(getCard(p.catalysts[i].cardId)||{},'axl low')) axlZones.push(i);
+  if(axlZones.length<2) return;
+  for(const z of axlZones){p.void.push(p.catalysts[z].cardId);p.catalysts[z]=null;}
+  const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,playerIdx,c=>/^raven$/i.test(c.name||''),'Axl Low');
+  addLog(state,res.ok?`Effect Script: Axl Low tributed ${axlZones.length} copies and SS'd Raven.`:`Effect Script: Axl Low tributed but no Raven found. (${res.msg})`);
+}
+
+// KIR
+function custom_dededeWaddle(state, playerIdx) {
+  const p=state.players[playerIdx]; if(p.chi<500){addLog(state,'Effect Script: King DeDeDe needs 500 Chi.');return;}
+  const res=specialSummonFromDeckByPredicate(state,playerIdx,c=>/waddle dee/i.test(c.name||''),'King DeDeDe');
+  if(!res.ok){addLog(state,`Effect Script: King DeDeDe — no Waddle Dee in Deck. (${res.msg})`);return;}
+  p.chi-=500; addLog(state,'Effect Script: King DeDeDe paid 500 Chi, SS\'d Waddle Dee.');
+}
+function custom_krackoNuke(state, playerIdx) {
+  const p=state.players[playerIdx]; if(p.chi<1500){addLog(state,'Effect Script: Kracko needs 1500 Chi.');return;}
+  p.chi-=1500; let n=0;
+  for(const pl of state.players){
+    for(let z=0;z<5;z++) if(pl.tricks[z]&&!pl.tricks[z].isLibra){pl.void.push(pl.tricks[z].cardId);pl.tricks[z]=null;n++;}
+    if(pl.fieldTrick){pl.void.push(pl.fieldTrick.cardId);pl.fieldTrick=null;n++;}
+  }
+  addLog(state,`Effect Script: Kracko paid 1500 Chi and destroyed ${n} Trick(s)/Field Trick(s).`);
+}
+function custom_dynabladeNuke(state, playerIdx) {
+  const p=state.players[playerIdx]; if(p.chi<1500){addLog(state,'Effect Script: Dyna Blade needs 1500 Chi.');return;}
+  if(state._dynabladeUsed){addLog(state,'Effect Script: Dyna Blade already used this Duel.');return;}
+  p.chi-=1500; state._dynabladeUsed=true;
+  const opp=state.players[1-playerIdx]; let n=0;
+  for(let i=4;i>=0;i--) if(opp.catalysts[i]){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;p.kills++;n++;}
+  addLog(state,`Effect Script: Dyna Blade destroyed ${n} Catalyst(s). +${n} Kill(s).`);
+  checkWinConditions(state);
+}
+function custom_poponTribute(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'popon'));
+  if(z<0){addLog(state,'Effect Script: Popon not on field.');return;}
+  p.void.push(p.catalysts[z].cardId); p.catalysts[z]=null;
+  p.chi=Math.min(p.chi+1000,99999);
+  addLog(state,'Effect Script: Popon tributed itself, +1000 Chi.');
+}
+
+// MGM
+function custom_megamanHandPR(state, playerIdx) {
+  const z=state.players[playerIdx].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'mega man'));
+  if(z<0) return;
+  const count=state.players[playerIdx].hand.length;
+  const base=Number(getCard(state.players[playerIdx].catalysts[z].cardId)?.pr||0);
+  state.players[playerIdx].catalysts[z].atkMod=count*400-base;
+  state.players[playerIdx].catalysts[z].cpMod=count*400-base;
+}
+function custom_wackomanVoidPR(state, playerIdx) {
+  const z=state.players[playerIdx].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'wacko man'));
+  if(z<0) return;
+  const count=state.players[playerIdx].void.length;
+  const base=Number(getCard(state.players[playerIdx].catalysts[z].cardId)?.pr||0);
+  state.players[playerIdx].catalysts[z].atkMod=count*400-base;
+  state.players[playerIdx].catalysts[z].cpMod=count*400-base;
+}
+function custom_torchmanFlip(state, playerIdx) {
+  const found=addCardToHandFromDeckByPredicate(state,playerIdx,c=>c.cardType==='Palm Trick'&&/equip/i.test(c.sub||''));
+  addLog(state,found?`Effect Script: Torch Man (Flip) added ${found.name}.`:'Effect Script: Torch Man (Flip) — no Equip Trick in Deck.');
+}
+function custom_freezemanCoin(state, playerIdx) {
+  const p=state.players[playerIdx]; let h=0;
+  for(let i=0;i<3;i++) if(Math.random()<.5) h++;
+  addLog(state,`Effect Script: Freeze Man flipped 3 coins — ${h} heads.`);
+  if(h>=2){
+    const opp=state.players[1-playerIdx]; const z=opp.catalysts.findIndex(Boolean);
+    if(z>=0){const c=getCard(opp.catalysts[z].cardId);opp.void.push(opp.catalysts[z].cardId);opp.catalysts[z]=null;p.kills++;addLog(state,`Effect Script: Freeze Man destroyed ${c?.name||'a Catalyst'}. +1 Kill.`);checkWinConditions(state);}
+  }
+}
+
+// SLM
+function custom_amiSsMercury(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'mizuno ami'));
+  if(z<0){addLog(state,'Effect Script: Mizuno Ami not on field.');return;}
+  p.void.push(p.catalysts[z].cardId); p.catalysts[z]=null;
+  const res=specialSummonFromDeckByPredicate(state,playerIdx,c=>/sailor mercury/i.test(c.name||'')&&c.id!=='slm-015-supersailormercury','Mizuno Ami');
+  addLog(state,res.ok?'Effect Script: Mizuno Ami tributed herself to SS Sailor Mercury.':`Effect Script: Mizuno Ami — no Sailor Mercury in Deck. (${res.msg})`);
+}
+function custom_sailorMarsTribute(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const z=p.catalysts.findIndex(Boolean); if(z<0){addLog(state,'Effect Script: Sailor Mars needs a tribute.');return;}
+  p.void.push(p.catalysts[z].cardId); p.catalysts[z]=null;
+  for(const pl of state.players) pl.chi=Math.max(0,pl.chi-1000);
+  addLog(state,'Effect Script: Sailor Mars tributed 1 Catalyst, dealt 1000 damage to both players.');
+  checkWinConditions(state);
+}
+
+// S-M
+function custom_jeanGreyControl(state, playerIdx) {
+  const p=state.players[playerIdx]; if(p.chi<1000){addLog(state,'Effect Script: Jean Grey needs 1000 Chi.');return;}
+  const opp=state.players[1-playerIdx];
+  const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown); if(oz<0){addLog(state,'Effect Script: Jean Grey — no face-up opponent Catalyst.');return;}
+  const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: Jean Grey — no empty zone.');return;}
+  p.chi-=1000; p._jeanGreySkipNextDraw=true;
+  const stolen=opp.catalysts[oz]; opp.catalysts[oz]=null;
+  p.catalysts[ez]={...stolen,_jeanControlled:true};
+  addLog(state,`Effect Script: Jean Grey paid 1000 Chi, took control of ${getCard(stolen.cardId)?.name||'a Catalyst'} until End Phase. Skip your next Draw Phase.`);
+}
+
+// YYH
+function custom_koenmaFlip(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const hi=p.hand.findIndex(id=>{const c=getCard(id);return c&&c.cardType==='Catalyst'&&Number(c.level||0)<=4&&(cardHasKind(c,'Demon')||cardHasKind(c,'Spirit'));});
+  if(hi<0){addLog(state,'Effect Script: Koenma — no Demon/Spirit ≤Lv4 in hand.');return;}
+  const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: No empty zone.');return;}
+  const[sId]=p.hand.splice(hi,1);
+  p.catalysts[ez]={cardId:sId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};
+  registerSpecialSummon(state,playerIdx,'Koenma');
+  addLog(state,`Effect Script: Koenma (Flip) SS'd ${getCard(sId)?.name||'a Demon/Spirit'}.`);
+}
+function custom_kaykoFlip(state, playerIdx) {
+  const found=addCardToHandFromDeckByPredicate(state,playerIdx,c=>c.cardType==='Catalyst'&&Number(c.level||0)<=4&&cardHasKind(c,'Human'));
+  addLog(state,found?`Effect Script: Kayko (Flip) searched ${found.name}.`:'Effect Script: Kayko — no Human Lv4 or lower in Deck.');
+}
+function custom_kuramaChoice(state, playerIdx, choice) {
+  const p=state.players[playerIdx];
+  if(!choice||choice==='draw'){
+    if(p.chi<1500){addLog(state,'Effect Script: Kurama (draw) needs 1500 Chi.');return;}
+    p.chi-=1500; drawCard(state,playerIdx); addLog(state,'Effect Script: Kurama paid 1500 Chi, drew 1 card.');
+  } else {
+    if(p.chi<1000){addLog(state,'Effect Script: Kurama (destroy) needs 1000 Chi.');return;}
+    const tgts=getAllDestroyableTrickTargets(state);
+    if(!tgts.length){addLog(state,'Effect Script: Kurama — no Trick to destroy.');return;}
+    p.chi-=1000; destroyTrickTarget(state,tgts.find(t=>t.player!==playerIdx)||tgts[0],'Kurama');
+    addLog(state,'Effect Script: Kurama paid 1000 Chi, destroyed a Trick.');
+  }
+}
+function custom_yukinaFlip(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const hi=p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'kuwabara')||cardNameHas(getCard(id)||{},'hiei'));
+  if(hi<0){addLog(state,'Effect Script: Yukina — no Kuwabara or Hiei in hand.');return;}
+  const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: No empty zone.');return;}
+  const[sId]=p.hand.splice(hi,1);
+  p.catalysts[ez]={cardId:sId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};
+  registerSpecialSummon(state,playerIdx,'Yukina');
+  addLog(state,`Effect Script: Yukina (Flip) SS'd ${getCard(sId)?.name||'Kuwabara/Hiei'}.`);
+}
+function custom_yokoKuramaFlip(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'yoko kurama'));
+  if(z<0) return;
+  const roll=Math.floor(Math.random()*2);
+  if(roll===0){
+    const opp=state.players[1-playerIdx]; const oz=opp.catalysts.findIndex(Boolean);
+    if(oz>=0){opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;p.kills++;addLog(state,'Effect Script: Yoko Kurama (Flip HEADS) destroyed 1 opponent Catalyst. +1 Kill.');checkWinConditions(state);}
+  } else {
+    p.catalysts[z].cannotAttackThisTurn=true;
+    addLog(state,'Effect Script: Yoko Kurama (Flip TAILS) cannot attack this turn.');
+  }
+}
+function custom_yusukeRemoveCounter(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'yusuke')&&!cardNameHas(getCard(s.cardId)||{},'fired up'));
+  if(z<0){addLog(state,'Effect Script: Yusuke not on field.');return;}
+  const slot=p.catalysts[z];
+  if((slot._yusukeCounters||0)<2){addLog(state,`Effect Script: Yusuke needs 2 counters (has ${slot._yusukeCounters||0}).`);return;}
+  slot._yusukeCounters-=2;
+  const opp=state.players[1-playerIdx]; const oz=opp.catalysts.findIndex(Boolean);
+  if(oz>=0){opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;p.kills++;addLog(state,'Effect Script: Yusuke removed 2 counters, destroyed 1 Catalyst. +1 Kill.');checkWinConditions(state);}
+  else addLog(state,'Effect Script: Yusuke removed 2 counters — no target.');
+}
+function custom_buiDiscardBoost(state, playerIdx) {
+  const p=state.players[playerIdx]; if(!p.hand.length){addLog(state,'Effect Script: Bui — no card to discard.');return;}
+  const idx=Math.floor(Math.random()*p.hand.length);
+  const[dId]=p.hand.splice(idx,1); p.void.push(dId);
+  const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'bui'));
+  if(z>=0){p.catalysts[z].atkMod=(p.catalysts[z].atkMod||0)+300;p.catalysts[z].tempAtkMod=(p.catalysts[z].tempAtkMod||0)+300;}
+  addLog(state,`Effect Script: Bui discarded ${getCard(dId)?.name||'a card'}, +300 Pressure until End Phase.`);
+}
+
+// CBB
+function custom_fayeFlip(state, playerIdx) {
+  const p=state.players[playerIdx];
+  const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'faye valentine'));
+  if(z<0) return;
+  p.catalysts[z].atkMod=(p.catalysts[z].atkMod||0)+600;
+  addLog(state,'Effect Script: Faye Valentine (Flip) +600 Pressure.');
+}
+function custom_jetAura(state, playerIdx) {
+  // Continuous: boost Spike and Faye — handled by fieldAuraPR via inferred string effects
+}
+function custom_gunfightMirror(state, playerIdx, damage) {
+  const p=state.players[playerIdx], opp=state.players[1-playerIdx];
+  const hasWarrior=p.catalysts.some(s=>s&&cardHasKind(getCard(s.cardId)||{},'Warrior'));
+  if(!hasWarrior) return;
+  opp.chi=Math.max(0,opp.chi-damage);
+  addLog(state,`Effect Script: Gun Fight mirrored ${damage} Battle Damage to opponent.`);
+  checkWinConditions(state);
+}
+
+// ─── ACTIVATED DISPATCH — hooks into engine's activated-ability runner ───
+// Any 'activated' effect whose action starts with 'custom_' is routed here.
+function dispatchPatch55Activated(state, playerIdx, actionName, manual) {
+  if (actionName === 'custom_lavosDie')           custom_lavosDie(state, playerIdx);
+  else if (actionName === 'custom_gigaGaiaShield') { const p=state.players[playerIdx];if(p.chi<500){addLog(state,'Effect Script: Giga Gaia needs 500 Chi.');return;}p.chi-=500;p._gigaGaiaShieldThisTurn=true;addLog(state,'Effect Script: Giga Gaia paid 500 Chi — next Concealed Trick targeting it is negated.'); }
+  else if (actionName === 'custom_motherBrainDestroy') { const p=state.players[playerIdx],opp=state.players[1-playerIdx];if(p.chi<2000){addLog(state,'Effect Script: Mother Brain needs 2000 Chi.');return;}const z=opp.catalysts.findIndex(s=>s&&!s.faceDown&&getAllCardEffects(s.cardId).length>0);if(z<0){addLog(state,'Effect Script: Mother Brain — no face-up effect Catalyst.');return;}p.chi-=2000;const c=getCard(opp.catalysts[z].cardId);opp.void.push(opp.catalysts[z].cardId);opp.catalysts[z]=null;p.kills++;addLog(state,`Effect Script: Mother Brain paid 2000 Chi, destroyed ${c?.name||'an effect Catalyst'}. +1 Kill.`);checkWinConditions(state); }
+  else if (actionName === 'custom_narutoChoice')   custom_narutoChoice(state, playerIdx, manual&&manual.choice);
+  else if (actionName === 'custom_sasukeCopyPR')   custom_sasukeCopyPR(state, playerIdx);
+  else if (actionName === 'custom_kakashiCopy')    custom_kakashiCopy(state, playerIdx);
+  else if (actionName === 'custom_tsunadeRevive')  custom_tsunadeRevive(state, playerIdx);
+  else if (actionName === 'custom_orochimaruSS')   custom_orochimaruSS(state, playerIdx);
+  else if (actionName === 'custom_sandaimeRFG')    custom_sandaimeRFG(state, playerIdx);
+  else if (actionName === 'custom_dededeWaddle')   custom_dededeWaddle(state, playerIdx);
+  else if (actionName === 'custom_krackoNuke')     custom_krackoNuke(state, playerIdx);
+  else if (actionName === 'custom_dynabladeNuke')  custom_dynabladeNuke(state, playerIdx);
+  else if (actionName === 'custom_poponTribute')   custom_poponTribute(state, playerIdx);
+  else if (actionName === 'custom_amiSsMercury')   custom_amiSsMercury(state, playerIdx);
+  else if (actionName === 'custom_sailorMarsTribute') custom_sailorMarsTribute(state, playerIdx);
+  else if (actionName === 'custom_jeanGreyControl') custom_jeanGreyControl(state, playerIdx);
+  else if (actionName === 'custom_kuramaChoice')   custom_kuramaChoice(state, playerIdx, manual&&manual.choice);
+  else if (actionName === 'custom_yusukeRemoveCounter') custom_yusukeRemoveCounter(state, playerIdx);
+  else if (actionName === 'custom_buiDiscardBoost') custom_buiDiscardBoost(state, playerIdx);
+  else if (actionName === 'custom_freezemanCoin')  custom_freezemanCoin(state, playerIdx);
+  else if (actionName === 'custom_axlRaven')       custom_axlRaven(state, playerIdx);
+  return { ok:true };
+}
+window.dispatchPatch55Activated = dispatchPatch55Activated;
+
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PATCH 56 — CUSTOM HANDLER IMPLEMENTATIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// OP1
+function custom_namiReorder(state,pi){const p=state.players[pi];if(p.deck.length<3)return;const top3=p.deck.splice(0,3);top3.sort(()=>Math.random()-.5);p.deck.unshift(...top3);addLog(state,'Effect Script: Nami reordered top 3 deck cards.');}
+function custom_robinSummon(state,pi){const found=addCardToHandFromVoidByPredicate(state,pi,c=>c.cardType==='Palm Trick');if(found)addLog(state,`Effect Script: Nico Robin added ${found.name} from Void.`);}
+function custom_robinActivated(state,pi){const p=state.players[pi];if(p.chi<800){addLog(state,'Effect Script: Nico Robin needs 800 Chi.');return;}const oz=state.players[1-pi].catalysts.findIndex(s=>s&&!s.faceDown);if(oz<0){addLog(state,'Effect Script: Nico Robin — no face-up opponent Catalyst.');return;}p.chi-=800;const c=getCard(state.players[1-pi].catalysts[oz].cardId);state.players[1-pi].void.push(state.players[1-pi].catalysts[oz].cardId);state.players[1-pi].catalysts[oz]=null;p.kills++;addLog(state,`Effect Script: Nico Robin destroyed ${c?.name||'a Catalyst'}. +1 Kill.`);checkWinConditions(state);}
+function custom_frankyBoost(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'franky'));if(z<0)return;p.catalysts[z].atkMod=(p.catalysts[z].atkMod||0)+500;p.catalysts[z].cannotAttackThisTurn=true;addLog(state,'Effect Script: Franky +500 Pressure until End Phase. Cannot attack this turn.');}
+function custom_brookRevive(state,pi){queueDelayedRevive(state,pi,state.players[pi].void.slice(-1)[0]||'',{});addLog(state,'Effect Script: Brook will revive next Ignition Phase.');}
+function custom_aceBurn(state,pi){state.players[1-pi].chi=Math.max(0,state.players[1-pi].chi-500);addLog(state,'Effect Script: Portgas D. Ace inflicted 500 extra direct attack damage.');checkWinConditions(state);}
+function custom_lawSwap(state,pi){const p=state.players[pi],opp=state.players[1-pi];if(p.chi<1000){addLog(state,'Effect Script: Law needs 1000 Chi.');return;}const mz=p.catalysts.findIndex(Boolean),oz=opp.catalysts.findIndex(Boolean);if(mz<0||oz<0){addLog(state,'Effect Script: Law — need Catalysts on both fields.');return;}p.chi-=1000;const tmp=p.catalysts[mz];p.catalysts[mz]=opp.catalysts[oz];opp.catalysts[oz]=tmp;addLog(state,`Effect Script: Law swapped ${getCard(p.catalysts[mz].cardId)?.name||'a Catalyst'} with ${getCard(opp.catalysts[oz].cardId)?.name||'a Catalyst'}.`);}
+function custom_kidKill(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'kid'));if(z>=0){state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+300;addLog(state,'Effect Script: Kid permanently gained 300 Pressure.');}};
+function custom_bachiraNegate(state,pi){addLog(state,'Effect Script: Bachira negated attack and gained 300 Pressure (capture trigger).');const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'bachira'));if(z>=0)state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+300;}
+function custom_nanaseSummon(state,pi){const p=state.players[pi];const idx=p.hand.findIndex(id=>{const c=getCard(id);return c&&c.cardType==='Catalyst'&&Number(c.level||0)<=3&&cardHasKind(c,'Warrior');});if(idx<0){addLog(state,'Effect Script: Nanase — no Warrior Lv3 or lower in hand.');return;}const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0)return;const[sId]=p.hand.splice(idx,1);p.catalysts[ez]={cardId:sId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};registerSpecialSummon(state,pi,'Nanase');addLog(state,`Effect Script: Nanase SS'd ${getCard(sId)?.name||'a Warrior Lv3'}.`);}
+function custom_kuonSwitch(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Kuon — no opponent Catalyst.');return;}const slot=opp.catalysts[oz];slot.position=slot.position==='atk'?'cp':'atk';addLog(state,`Effect Script: Kuon switched ${getCard(slot.cardId)?.name||'a Catalyst'} to ${slot.position.toUpperCase()}.`);}
+function custom_gagaShield(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'gagamaru'));if(z>=0){p.catalysts[z]._gagaShieldThisTurn=true;addLog(state,'Effect Script: Gagamaru negates the next attack targeting an ally this Battle Phase.');}}
+function custom_tokimitsuSummon(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&Number(getCard(s.cardId)?.cp||0)<Number(getCard(opp.catalysts[opp.catalysts.findIndex(Boolean)]?.cardId)?.cp||999));if(oz>=0){opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;state.players[pi].kills++;addLog(state,`Effect Script: Tokimitsu destroyed the opponent's lowest CP Catalyst. +1 Kill.`);checkWinConditions(state);}}
+
+// AOT
+function custom_historiaHeal(state,pi){state.players[pi].chi=Math.min(state.players[pi].chi+500,99999);addLog(state,'Effect Script: Historia gained 500 Chi on summon.');}
+function custom_bertBurn(state,pi){state.players[1-pi].chi=Math.max(0,state.players[1-pi].chi-800);addLog(state,'Effect Script: Bertholdt inflicted 800 damage on destroy.');checkWinConditions(state);}
+function custom_hangePeek(state,pi){const p=state.players[pi];if(!p.deck.length){addLog(state,'Effect Script: Hange — empty deck.');return;}const c=getCard(p.deck[0]);if(c&&c.cardType!=='Catalyst'){const d=p.deck.shift();p.void.push(d);addLog(state,`Effect Script: Hange peeked ${c?.name||'top card'} — it was a Trick, discarded.`);}else addLog(state,`Effect Script: Hange peeked top card: ${c?.name||'unknown'}.`);}
+
+// BRO
+function custom_saradaPeek(state,pi){const opp=state.players[1-pi];if(!opp.hand.length){addLog(state,'Effect Script: Sarada — opponent hand empty.');return;}const idx=Math.floor(Math.random()*opp.hand.length);const c=getCard(opp.hand[idx]);const discarded=opp.hand.splice(idx,1)[0];opp.void.push(discarded);addLog(state,`Effect Script: Sarada looked at opponent's hand and discarded ${c?.name||'a card'}.`);}
+function custom_mitsukiBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'mitsuki'));if(z<0)return;state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+500;state.players[pi].catalysts[z].cpMod=(state.players[pi].catalysts[z].cpMod||0)+500;addLog(state,'Effect Script: Mitsuki +500 PR/CP until End Phase.');}
+function custom_kawakiKarma(state,pi){if(!state._kawakiCounters)state._kawakiCounters=0;if(state._kawakiCounters<1){addLog(state,'Effect Script: Kawaki has no Karma Counters.');return;}state._kawakiCounters--;const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Kawaki — no opponent Catalyst.');return;}opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;state.players[pi].kills++;addLog(state,`Effect Script: Kawaki removed 1 Karma Counter, destroyed 1 Catalyst. +1 Kill.`);checkWinConditions(state);}
+function custom_naruto7thClone(state,pi){const p=state.players[pi];const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: No zone for Shadow Clone Token.');return;}p.catalysts[ez]={cardId:'__shadowClone__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Shadow Clone Token',tokenPR:1000,tokenCP:800};addLog(state,'Effect Script: Naruto (7th Hokage) SS\'d a Shadow Clone Token (1000/800).');}
+function custom_sasukeTrickNuke(state,pi){const tgts=getAllDestroyableTrickTargets(state).filter(t=>t.player!==pi).slice(0,2);for(const t of tgts)destroyTrickTarget(state,t,'Sasuke Uchiha Rogue');addLog(state,`Effect Script: Sasuke Rogue destroyed ${tgts.length} Palm/Concealed Trick(s) on summon.`);}
+function custom_codeBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'code'));if(z<0)return;const discards=state._codeDiscardCount||0;state.players[pi].catalysts[z].atkMod=discards*300;}
+
+// BLC
+function custom_rukiaChi(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'rukia'));if(z>=0){state.players[pi].chi=Math.min(state.players[pi].chi+300,99999);addLog(state,'Effect Script: Rukia Kuchiki gained 300 Chi (Ichigo on field).');}}
+function custom_orihimeChi(state,pi){if(state.players[pi].chi<0){addLog(state,'Effect Script: Orihime needs 0+ Chi.');return;}state.players[pi].chi=Math.min(state.players[pi].chi+600,99999);addLog(state,'Effect Script: Orihime Inoue gained 600 Chi.');}
+function custom_jinjikSet(state,pi){const p=state.players[pi];const hi=p.hand.findIndex(id=>getCard(id)?.cardType==='Palm Trick');if(hi<0){addLog(state,'Effect Script: Jinki — no Palm Trick in hand.');return;}const[pid]=p.hand.splice(hi,1);const tz=p.tricks.findIndex(s=>!s);if(tz<0){p.hand.push(pid);addLog(state,'Effect Script: Jinki — no empty trick zone.');return;}p.tricks[tz]={cardId:pid,faceDown:true};addLog(state,`Effect Script: Jinki set ${getCard(pid)?.name||'a Palm Trick'} face-down.`);}
+function custom_lelouchSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>c.cardType==='Catalyst'&&Number(c.level||0)<=4);if(found)addLog(state,`Effect Script: Lelouch searched ${found.name} after a kill.`);}
+
+// DND
+function custom_jijiDiscard(state,pi){const p=state.players[pi];if(!p.hand.length){addLog(state,'Effect Script: Jiji — no card to discard.');return;}const i=Math.floor(Math.random()*p.hand.length);const[d]=p.hand.splice(i,1);p.void.push(d);p.chi=Math.min(p.chi+300,99999);addLog(state,`Effect Script: Jiji discarded ${getCard(d)?.name||'a card'}, +300 Chi.`);}
+function custom_serpoDiscard(state,pi){const opp=state.players[1-pi];if(!opp.hand.length)return;const i=Math.floor(Math.random()*opp.hand.length);const[d]=opp.hand.splice(i,1);opp.void.push(d);addLog(state,`Effect Script: Serpo Alien forced opponent to discard ${getCard(d)?.name||'a card'}.`);}
+function custom_octoRevive(state,pi){queueDelayedRevive(state,pi,state.players[pi].void.slice(-1)[0]||'',{});addLog(state,'Effect Script: Octo Alien triggered a revive from Void next Ignition Phase.');}
+
+// GCK
+function custom_baroqueShield(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'baroquebarobal'));if(z>=0)state.players[pi].catalysts[z]._immunePalm=true;}
+
+// HLP
+function custom_tenzaSetConcealed(state,pi){const p=state.players[pi];const hi=p.hand.findIndex(id=>getCard(id)?.cardType==='Concealed Trick');if(hi<0){addLog(state,'Effect Script: Tenza — no Concealed Trick in hand.');return;}const[tid]=p.hand.splice(hi,1);const tz=p.tricks.findIndex(s=>!s);if(tz<0){p.hand.push(tid);addLog(state,'Effect Script: Tenza — no trick zone.');return;}p.tricks[tz]={cardId:tid,faceDown:true};addLog(state,`Effect Script: Tenza set ${getCard(tid)?.name||'a Concealed Trick'} face-down.`);}
+function custom_rienBoost(state,pi){const p=state.players[pi],opp=state.players[1-pi];const myCards=p.catalysts.filter(Boolean).length+p.tricks.filter(Boolean).length+(p.fieldTrick?1:0);const oppCards=opp.catalysts.filter(Boolean).length+opp.tricks.filter(Boolean).length+(opp.fieldTrick?1:0);const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'rien'));if(z>=0)p.catalysts[z].atkMod=(oppCards>myCards)?300:0;}
+function custom_yujiSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>c.cardType==='Catalyst'&&cardHasKind(c,'Warrior'));if(found)addLog(state,`Effect Script: Yuji searched ${found.name} after a kill.`);}
+
+// SL1
+function custom_igrisToken(state,pi){const p=state.players[pi];const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0)return;p.catalysts[ez]={cardId:'__shadow_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Shadow Token',tokenPR:800,tokenCP:800};addLog(state,'Effect Script: Shadow Soldier Igris SS\'d a Shadow Token (800/800).');}
+function custom_kaiselDestroy(state,pi){const opp=state.players[1-pi];const faceDowns=[];for(let i=0;i<5;i++)if(opp.catalysts[i]&&opp.catalysts[i].faceDown)faceDowns.push(i);for(const z of faceDowns){opp.void.push(opp.catalysts[z].cardId);opp.catalysts[z]=null;state.players[pi].kills++;}addLog(state,`Effect Script: Shadow Mage Kaisel destroyed ${faceDowns.length} face-down Catalyst(s). +${faceDowns.length} Kill(s).`);if(faceDowns.length)checkWinConditions(state);}
+function custom_baekSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'hunter'));if(found)addLog(state,`Effect Script: Baek Yoon-ho searched ${found.name} after a kill.`);}
+function custom_minBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'min byung'));if(z>=0){state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+500;addLog(state,'Effect Script: Min Byung-Gyu +500 Pressure on summon.');}}
+
+// DBZ
+function custom_ss4VegetaRitual(state,pi){const p=state.players[pi];const bi=p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'vegeta - super saiyan'));if(bi<0){addLog(state,'Effect Script: SS4 Vegeta needs Vegeta SS in hand to activate.');return;}const[sId]=p.hand.splice(bi,1);p.void.push(sId);const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: No empty zone.');return;}addLog(state,'Effect Script: Vegeta SS4 Special Summoned via Vegeta SS sacrifice.');}
+function custom_ss4GokuRitual(state,pi){const p=state.players[pi];const bi=p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'goku - super saiyan'));if(bi<0){addLog(state,'Effect Script: SS4 Goku needs Goku SS in hand to activate.');return;}const[sId]=p.hand.splice(bi,1);p.void.push(sId);addLog(state,'Effect Script: Goku SS4 Special Summoned via Goku SS sacrifice.');}
+function custom_saiyanFury(state,pi){const p=state.players[pi];const si=p.void.findIndex(id=>cardNameHas(getCard(id)||{},'saiyan'));if(si<0){addLog(state,'Effect Script: Saiyan Fury — no Saiyan in Void.');return;}const[sId]=p.void.splice(si,1);const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: No empty zone.');return;}p.catalysts[ez]={cardId:sId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};registerSpecialSummon(state,pi,'Saiyan Fury');addLog(state,`Effect Script: Saiyan Fury revived ${getCard(sId)?.name||'a Saiyan'} after opponent destroyed one.`);}
+function custom_youngGohanSSCond(state,pi){const p=state.players[pi];if(p.catalysts.filter(Boolean).length>1){addLog(state,'Effect Script: Young Gohan SS — field must be empty.');return;}addLog(state,'Effect Script: Young Gohan SS condition met (sole Catalyst).');}
+function custom_krillinSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'android'));if(found)addLog(state,`Effect Script: Krillin searched ${found.name} after inflicting damage.`);}
+function custom_majinBuuSummon(state,pi){const opp=state.players[1-pi];for(let i=0;i<5;i++){if(opp.catalysts[i]&&opp.catalysts[i].faceDown){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;state.players[pi].kills++;}}addLog(state,'Effect Script: Majin Buu destroyed all face-down Catalysts on opponent field.');checkWinConditions(state);}
+function custom_hitImmune(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'hit'));if(z>=0)state.players[pi].catalysts[z]._immunePalmConcealed=true;}
+function custom_jirenDamagePR(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'jiren'));if(z<0)return;const dmg=state._jirenDamageTaken||0;state.players[pi].catalysts[z].atkMod=Math.floor(dmg/100)*200;}
+function custom_beerusNuke(state,pi){const p=state.players[pi],opp=state.players[1-pi];let n=0;for(let i=4;i>=0;i--){if(opp.catalysts[i]){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;p.kills++;n++;}if(p.catalysts[i]&&!cardNameHas(getCard(p.catalysts[i].cardId)||{},'beerus')){p.void.push(p.catalysts[i].cardId);p.catalysts[i]=null;n++;}}addLog(state,`Effect Script: Beerus destroyed all other Catalysts (${n} total).`);checkWinConditions(state);}
+function custom_friezaBurn(state,pi){state.players[1-pi].chi=Math.max(0,state.players[1-pi].chi-600);addLog(state,'Effect Script: Frieza (Golden Form) inflicted 600 damage after a kill.');checkWinConditions(state);}
+function custom_hitDBSImmune(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'hit'));if(z>=0)state.players[pi].catalysts[z]._immunePalmConcealed=true;}
+function custom_jirenDBSPR(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'jiren'));if(z<0)return;const dmg=state._jirenDBSDamage||0;state.players[pi].catalysts[z].atkMod=Math.floor(dmg/100)*200;}
+function custom_vegBlueBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'vegeta - super saiyan blue'));if(z<0)return;const count=state.players[pi].void.filter(id=>cardHasKind(getCard(id)||{},'Saiyan')).length;state.players[pi].catalysts[z].atkMod=count*300;}
+function custom_gohanUltBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'gohan - ultimate'));if(z<0)return 0;const fieldCount=state.players[0].catalysts.filter(Boolean).length+state.players[1].catalysts.filter(Boolean).length;return fieldCount*400;}
+
+// DB1
+function custom_grandpaGohanSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'goku'));if(found)addLog(state,`Effect Script: Grandpa Gohan searched ${found.name} on destroy.`);}
+function custom_pilafFlip(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'mai')||cardNameHas(c,'shu'));if(found)addLog(state,`Effect Script: Emperor Pilaf (Flip) added ${found.name} to hand.`);}
+function custom_shuFlip(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'mai')||cardNameHas(c,'emperor pilaf'));if(found)addLog(state,`Effect Script: Shu (Flip) added ${found.name} to hand.`);}
+function custom_oxKingAura(state,pi){const p=state.players[pi];const hasFire=p.catalysts.some(s=>s&&cardNameHas(getCard(s.cardId)||{},'ox king'));if(!hasFire)return;for(let z=0;z<5;z++){const s=p.catalysts[z];if(s&&cardHasAlignment(getCard(s.cardId)||{},'Fire'))s.atkMod=(s.atkMod||0)+200;}}
+function custom_oolongCopy(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Oolong — no opponent Catalyst to copy form.');return;}const target=getCard(opp.catalysts[oz].cardId);addLog(state,`Effect Script: Oolong copied the form of ${target?.name||'a Catalyst'} (flavour — stats matching not yet enforced).`);}
+function custom_puurCopy(state,pi){addLog(state,'Effect Script: Puar copied a form (flavour effect, cosmetic only).');}
+
+// FF7
+function custom_yuffieVillainSteal(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'yuffie kisaragi - the villian'));if(z<0)return;state.players[pi].catalysts[z]._canStealEquip=true;}
+function custom_sephirothWipe(state,pi){const opp=state.players[1-pi];let n=0;for(let i=4;i>=0;i--){if(opp.catalysts[i]&&!getCard(opp.catalysts[i].cardId)?.great){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;state.players[pi].kills++;n++;}}addLog(state,`Effect Script: Sephiroth (Trance) wiped ${n} non-Great Catalysts. +${n} Kill(s).`);checkWinConditions(state);}
+function custom_redXIIISearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardHasKind(c,'Beast'));if(found)addLog(state,`Effect Script: Red XIII (Trance) searched ${found.name}.`);}
+
+// INU
+function custom_mirokuRFG(state,pi){const p=state.players[pi];if(p.chi<1000){addLog(state,'Effect Script: Miroku needs 1000 Chi.');return;}const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&cardHasKind(getCard(s.cardId)||{},'Demon'));if(oz<0){addLog(state,'Effect Script: Miroku — no Demon-type opponent Catalyst.');return;}p.chi-=1000;const c=getCard(opp.catalysts[oz].cardId);opp.rfg.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;p.kills++;addLog(state,`Effect Script: Miroku paid 1000 Chi and banished ${c?.name||'a Demon'}. +1 Kill.`);checkWinConditions(state);}
+function custom_shippoFlip(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz>=0){opp.catalysts[oz].atkMod=(opp.catalysts[oz].atkMod||0)-400;addLog(state,'Effect Script: Shippo (Flip) reduced an opponent Catalyst by 400 Pressure.');}}
+function custom_kikyoDestroy(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz>=0){opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;state.players[pi].kills++;addLog(state,'Effect Script: Kikyo destroyed 1 opponent Catalyst on destroy. +1 Kill.');checkWinConditions(state);}}
+function custom_sessKill(state,pi){state.players[pi].chi=Math.min(state.players[pi].chi+500,99999);addLog(state,'Effect Script: Sesshomaru gained 500 Chi after a kill.');}
+function custom_bankotsuGrow(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'bankotsu'));if(z>=0){state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+200;addLog(state,'Effect Script: Bankotsu permanently +200 Pressure after a kill.');}}
+
+// HLS
+function custom_alucardUnsealedSummon(state,pi){const p=state.players[pi];const seals=['hls-003-firstsealbreaker','hls-004-secondsealbraker','hls-005-thirdsealbreaker','hls-006-finalsealbreaker'];const hasAll=seals.every(s=>p.void.includes(s)||p.rfg.includes(s)||p.hand.find(id=>id===s));if(!hasAll){addLog(state,'Effect Script: Alucard Unsealed needs all 4 Seal Breakers in Void/RFG/Hand.');return;}addLog(state,'Effect Script: Alucard Unsealed condition met.');}
+function custom_incognitoSummon(state,pi){const p=state.players[pi];const si=p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'seal'));if(si<0){addLog(state,'Effect Script: Incognito needs a Seal card in hand.');return;}const[sId]=p.hand.splice(si,1);p.void.push(sId);addLog(state,`Effect Script: Incognito SS'd via discarding ${getCard(sId)?.name||'a Seal'}.`);}
+function custom_alucardAscend(state,pi){const p=state.players[pi];const vi=p.void.findIndex(id=>id==='hls-006-finalsealbreaker');if(vi<0){addLog(state,'Effect Script: Alucard needs Final Seal Breaker in Void.');return;}const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,pi,c=>cardNameHas(c,'alucard - seal unleashed'),'Alucard');addLog(state,res.ok?'Effect Script: Alucard ascended to Seal Unleashed form.':`Effect Script: Alucard Ascend — no Seal Unleashed found. (${res.msg})`);}
+function custom_alucardKill(state,pi){state.players[pi].chi=Math.min(state.players[pi].chi+600,99999);addLog(state,'Effect Script: Alucard (Seal Unleashed) gained 600 Chi after a kill.');}
+
+// RKN
+function custom_kaoruTribute(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'kamiya kaoru'));if(z<0){addLog(state,'Effect Script: Kamiya Kaoru not on field.');return;}const pr=Number(getCard(p.catalysts[z].cardId)?.pr||0);p.void.push(p.catalysts[z].cardId);p.catalysts[z]=null;p.chi=Math.min(p.chi+pr,99999);addLog(state,`Effect Script: Kamiya Kaoru tributed herself, +${pr} Chi.`);}
+function custom_shishioChi(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'makoto shishio'));if(z>=0&&!state._shishioUsedChi){p.chi=Math.min(p.chi+500,99999);state._shishioUsedChi=true;addLog(state,'Effect Script: Makoto Shishio gained 500 Chi (once per turn).');}}
+function custom_hanyaDebuff(state,pi){const opp=state.players[1-pi];const z=opp.catalysts.findIndex(Boolean);if(z>=0){opp.catalysts[z].atkMod=(opp.catalysts[z].atkMod||0)-300;addLog(state,`Effect Script: Hanya reduced ${getCard(opp.catalysts[z].cardId)?.name||'a Catalyst'} by 300 Pressure.`);}}
+
+// TUV
+function custom_tenchiFlip(state,pi){const res=specialSummonFromDeckByPredicate(state,pi,c=>cardNameHas(c,'ryoko'),'Tenchi Masaki');addLog(state,res.ok?'Effect Script: Tenchi (Flip) SS\'d Ryoko from Deck.':`Effect Script: Tenchi — no Ryoko in Deck. (${res.msg})`);}
+function custom_ryokoControl(state,pi){const p=state.players[pi];if(p.chi<2000){addLog(state,'Effect Script: Ryoko needs 2000 Chi.');return;}const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Ryoko — no opponent Catalyst.');return;}const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: Ryoko — no empty zone.');return;}p.chi-=2000;const stolen=opp.catalysts[oz];opp.catalysts[oz]=null;p.catalysts[ez]={...stolen,_stolenByRyoko:true};addLog(state,`Effect Script: Ryoko paid 2000 Chi, took control of ${getCard(stolen.cardId)?.name||'a Catalyst'}.`);}
+function custom_ayekaTribute(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'ayeka'));if(z<0)return;p.void.push(p.catalysts[z].cardId);p.catalysts[z]=null;const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,pi,c=>cardNameHas(c,'tsunami'),'Ayeka');addLog(state,res.ok?'Effect Script: Ayeka tributed herself to SS Tsunami.':`Effect Script: Ayeka — no Tsunami to summon. (${res.msg})`);}
+function custom_droppingTheTowel(state,pi){const found=addCardToHandFromDeckByNameToken(state,pi,['nudity']);if(found)addLog(state,`Effect Script: Dropping The Towel added ${found.name} from Deck.`);}
+function custom_mihoshiSS(state,pi){const p=state.players[pi];if(p.chi<1000){addLog(state,'Effect Script: Mihoshi needs 1000 Chi.');return;}const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,pi,c=>cardNameHas(c,'mihoshi')&&c.cardType==='Catalyst','Mihoshi');addLog(state,res.ok?'Effect Script: Mihoshi SS\'d from hand/deck/void.':`Effect Script: Mihoshi SS failed. (${res.msg})`);if(res.ok)p.chi-=1000;}
+function custom_sasamiFlip(state,pi){const p=state.players[pi];for(let i=0;i<2;i++){if(p.void.length){const id=p.void.pop();p.deck.push(id);}}p.deck.sort(()=>Math.random()-.5);addLog(state,'Effect Script: Sasami (Flip) returned 2 Void cards to Deck and shuffled.');}
+function custom_washuChi(state,pi){if(!state._washuApplied){state._washuApplied=true;state.players[pi].chi=Math.min(state.players[pi].chi+300,99999);addLog(state,'Effect Script: Washu granted 300 Chi (once per turn).');}}
+function custom_kagatoNuke(state,pi){const p=state.players[pi],opp=state.players[1-pi];let n=0;for(let i=4;i>=0;i--){if(opp.catalysts[i]){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;p.kills++;n++;}}addLog(state,`Effect Script: Kagato destroyed ${n} opponent Catalyst(s). +${n} Kill(s).`);checkWinConditions(state);}
+
+// CC1
+function custom_pipBattle(state,pi){const p=state.players[pi];const idx=p.hand.findIndex(id=>id===p.hand.find(id2=>cardNameHas(getCard(id2)||{},'pip')));if(idx>=0){const[d]=p.hand.splice(idx,1);p.void.push(d);}addLog(state,'Effect Script: Pip: discard during opponent\'s Battle Phase to (flavour — timing window effect).');}
+function custom_turnabout(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz>=0){const pr=getEffectivePressure(state,1-pi,oz);const cp=getEffectiveCP(state,1-pi,oz);const slot=opp.catalysts[oz];slot.atkMod=(slot.atkMod||0)+(cp-pr);slot.cpMod=(slot.cpMod||0)+(pr-cp);addLog(state,`Effect Script: Turnabout swapped ${getCard(slot.cardId)?.name||'a Catalyst'}'s ATK and DEF.`);}}
+function custom_lynxSummon(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>c.cardType==='Palm Trick');if(found)addLog(state,`Effect Script: Lynx searched ${found.name} on summon.`);}
+function custom_acaciaFlip(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>c.cardType==='Catalyst'&&Number(c.level||0)<=4);if(found)addLog(state,`Effect Script: Acacia (Flip) searched ${found.name}.`);}
+function custom_sergeKiddBoost(state,pi){const sergeZ=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'serge'));const kiddZ=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'kidd'));if(sergeZ>=0&&kiddZ>=0){state.players[pi].catalysts[sergeZ].atkMod=(state.players[pi].catalysts[sergeZ].atkMod||0)+200;state.players[pi].catalysts[kiddZ].atkMod=(state.players[pi].catalysts[kiddZ].atkMod||0)+200;}}
+function custom_spriggCopy(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz<0){addLog(state,'Effect Script: Sprigg — no face-up target.');return;}const copyId=opp.catalysts[oz].cardId;const effs=getAllCardEffects(copyId);const spZ=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'sprigg'));if(spZ<0) return;if(!EFFECT_REGISTRY[state.players[pi].catalysts[spZ].cardId])EFFECT_REGISTRY[state.players[pi].catalysts[spZ].cardId]=[];for(const e of effs)EFFECT_REGISTRY[state.players[pi].catalysts[spZ].cardId].push({...e,_copiedBySprigg:true,tag:'sprigg_'+e.tag});addLog(state,`Effect Script: Sprigg copied ${getCard(copyId)?.name||'target'}'s effects (once per duel).`);}
+function custom_glennKill(state,pi){const res=specialSummonFromVoidByPredicate(state,pi,c=>cardNameHas(c,'serge')||cardNameHas(c,'kidd'),'Glenn');addLog(state,res.ok?'Effect Script: Glenn SS\'d a Serge/Kidd from Void after a kill.':`Effect Script: Glenn — no Serge/Kidd in Void. (${res.msg})`);}
+function custom_funguyPoison(state,pi){if(!state._funguyPoison)state._funguyPoison={};if(!state._funguyPoison[1-pi]){state._funguyPoison[1-pi]=true;addLog(state,'Effect Script: Funguy infected opponent with Poison — will lose 200 Chi each Standby Phase.');}}
+function custom_porrexSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'radical dreamers'));if(found)addLog(state,`Effect Script: Porrex searched ${found.name} after a kill.`);}
+function custom_neoFioPalmBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'neo fio'));if(z<0)return;const palmCount=state.players[pi].tricks.filter(s=>s&&getCard(s.cardId)?.cardType==='Palm Trick').length;state.players[pi].catalysts[z].atkMod=palmCount*300;}
+function custom_zoahPR(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'zoah'));if(z<0)return;const c=getCard(state.players[pi].catalysts[z].cardId);const base=Number(c?.cp||0);state.players[pi].catalysts[z].atkMod=base-Number(c?.pr||0);}
+function custom_darioToken(state,pi){const p=state.players[pi];const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0)return;p.catalysts[ez]={cardId:'__dario_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Dario Token',tokenPR:600,tokenCP:600};addLog(state,'Effect Script: Dario placed a Token (600/600) on summon.');}
+function custom_dittoCopy(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz<0){addLog(state,'Effect Script: Ditto — no face-up target.');return;}const dittoZ=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'ditto'));if(dittoZ<0)return;const tCard=getCard(opp.catalysts[oz].cardId);state.players[pi].catalysts[dittoZ].atkMod=Number(tCard?.pr||0)-Number(getCard(state.players[pi].catalysts[dittoZ].cardId)?.pr||0);state.players[pi].catalysts[dittoZ].cpMod=Number(tCard?.cp||0)-Number(getCard(state.players[pi].catalysts[dittoZ].cardId)?.cp||0);addLog(state,`Effect Script: Ditto copied ${tCard?.name||'target'}'s stats.`);}
+function custom_prismBounce(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz<0){addLog(state,'Effect Script: Prism — no face-up target.');return;}const bounced=opp.catalysts[oz];opp.catalysts[oz]=null;opp.hand.push(bounced.cardId);addLog(state,`Effect Script: Prism returned ${getCard(bounced.cardId)?.name||'a Catalyst'} to opponent hand.`);}
+
+// SS1
+function custom_noNeedFor(state,pi){for(const pl of state.players){const hand=[...pl.hand];pl.hand=[];pl.void.push(...hand);}for(const pl of state.players){for(let z=0;z<5;z++){if(pl.catalysts[z]){pl.rfg.push(pl.catalysts[z].cardId);pl.catalysts[z]=null;}}if(pl.fieldTrick){pl.rfg.push(pl.fieldTrick.cardId);pl.fieldTrick=null;}for(let z=0;z<5;z++){if(pl.tricks[z]){pl.rfg.push(pl.tricks[z].cardId);pl.tricks[z]=null;}}}addLog(state,'Effect Script: No Need For... — both players discarded hands, all field cards removed from game.');}
+function custom_selfDestruct(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardHasKind(getCard(s.cardId)||{},'Machine'));if(z<0){addLog(state,'Effect Script: Self Destruct needs a Machine-type Catalyst.');return;}const c=getCard(p.catalysts[z].cardId);p.rfg.push(p.catalysts[z].cardId);p.catalysts[z]=null;const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz>=0){opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;p.kills++;addLog(state,`Effect Script: Self Destruct removed ${c?.name||'a Machine'} from game and destroyed 1 opponent Catalyst. +1 Kill.`);checkWinConditions(state);}else addLog(state,`Effect Script: Self Destruct removed ${c?.name||'a Machine'} but found no opponent Catalyst.`);}
+function custom_archangelImmune(state,pi){const p=state.players[pi];if(p.chi<800){return;}p.chi-=800;const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'arch angel'));if(z>=0){p.catalysts[z]._archangelImmune=true;addLog(state,'Effect Script: Arch Angel paid 800 Chi — immune to effects this turn.');}}
+function custom_blitzCP(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'blitz gundam'));if(z>=0)state.players[pi].catalysts[z]._blitzCPDestroy=true;}
+function custom_shippoShifter(state,pi){const p=state.players[pi];if(p.chi<750){addLog(state,'Effect Script: Shippo the Shapeshifter needs 750 Chi.');return;}const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Shippo — no opponent Catalyst to copy.');return;}p.chi-=750;const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'shippo'));if(z<0)return;const tCard=getCard(opp.catalysts[oz].cardId);p.catalysts[z].atkMod=Number(tCard?.pr||0)-Number(getCard(p.catalysts[z].cardId)?.pr||0);p.catalysts[z].cpMod=Number(tCard?.cp||0)-Number(getCard(p.catalysts[z].cardId)?.cp||0);addLog(state,`Effect Script: Shippo paid 750 Chi and copied ${tCard?.name||'target'}'s stats.`);}
+function custom_miniBoomer(state,pi){const opp=state.players[1-pi];const damage=opp.hand.length*300;opp.chi=Math.max(0,opp.chi-damage);addLog(state,`Effect Script: Mini Boomer inflicted ${damage} Chi damage (300 x ${opp.hand.length} cards in opponent's hand).`);checkWinConditions(state);}
+function custom_hakudoushiGo(state,pi){const p=state.players[pi];const opp=state.players[1-pi];let n=0;for(let i=4;i>=0;i--){if(opp.catalysts[i]){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;p.kills++;n++;}}addLog(state,`Effect Script: Hakudoushi (counters reached 3) destroyed ${n} opponent Catalyst(s). +${n} Kill(s).`);checkWinConditions(state);}
+
+// ─── PATCH 56 ACTIVATED DISPATCH EXTENSION ───────────────────────────────────
+const _p55dispatch = window.dispatchPatch55Activated;
+window.dispatchPatch55Activated = function(state, pi, action, manual) {
+  // Try P55 first
+  if (_p55dispatch) _p55dispatch(state, pi, action, manual);
+  // P56 additions
+  const M = {
+    custom_namiReorder: custom_namiReorder,
+    custom_robinActivated: custom_robinActivated,
+    custom_frankyBoost: custom_frankyBoost,
+    custom_lawSwap: custom_lawSwap,
+    custom_usoppPeek: (s,p) => { const opp=s.players[1-p]; if(!opp.hand.length)return; const c=getCard(opp.hand[Math.floor(Math.random()*opp.hand.length)]); addLog(s,`Effect Script: Usopp peeked 1 face-down card — it is a ${c?.cardType||'card'}.`); },
+    custom_kuonSwitch: custom_kuonSwitch,
+    custom_kawakiKarma: custom_kawakiKarma,
+    custom_naruto7thClone: custom_naruto7thClone,
+    custom_sasukeTrickNuke: custom_sasukeTrickNuke,
+    custom_orihimeChi: custom_orihimeChi,
+    custom_jijiDiscard: custom_jijiDiscard,
+    custom_krackoNuke: custom_krackoNuke,
+    custom_dynabladeNuke: custom_dynabladeNuke,
+    custom_poponTribute: custom_poponTribute,
+    custom_alucardAscend: custom_alucardAscend,
+    custom_mirokuRFG: custom_mirokuRFG,
+    custom_kaoruTribute: custom_kaoruTribute,
+    custom_ryokoControl: custom_ryokoControl,
+    custom_ayekaTribute: custom_ayekaTribute,
+    custom_mihoshiSS: custom_mihoshiSS,
+    custom_kagatoNuke: custom_kagatoNuke,
+    custom_spriggCopy: custom_spriggCopy,
+    custom_dittoCopy: custom_dittoCopy,
+    custom_selfDestruct: custom_selfDestruct,
+    custom_shippoShifter: custom_shippoShifter,
+    custom_beerusNuke: custom_beerusNuke,
+    custom_noNeedFor: (s,p) => { custom_noNeedFor(s,p); },
+    custom_mitsukiBoost: custom_mitsukiBoost,
+    custom_saradaPeek: custom_saradaPeek,
+    custom_hangePeek: custom_hangePeek,
+    custom_sephirothWipe: custom_sephirothWipe,
+    custom_jinkiSet: custom_jinjikSet,
+    custom_tenzaSetConcealed: custom_tenzaSetConcealed,
+    custom_dededeWaddle: custom_dededeWaddle,
+  };
+  if (M[action]) M[action](state, pi, manual);
+};
+
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PATCH 57B — CUSTOM HANDLER IMPLEMENTATIONS (stubs + light logic)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// AOT handlers
+function custom_zekeDiscardBurn(state, pi) {
+  const p = state.players[pi];
+  if (!p.hand.length) { addLog(state,'Effect Script: Zeke Yeager — no card to discard.'); return; }
+  const i = Math.floor(Math.random()*p.hand.length);
+  const[d]=p.hand.splice(i,1); p.void.push(d);
+  state.players[1-pi].chi = Math.max(0, state.players[1-pi].chi - 300);
+  addLog(state, `Effect Script: Zeke Yeager discarded ${getCard(d)?.name||'a card'}, inflicted 300 damage.`);
+  checkWinConditions(state);
+}
+function custom_bertFieldDebuff(state, pi) {
+  const opp = state.players[1-pi];
+  for (let z=0; z<5; z++) {
+    if (opp.catalysts[z]) opp.catalysts[z]._bertDebuff = 200;
+  }
+}
+function custom_odmBurst(state, pi) {
+  const p = state.players[pi];
+  const z = p.catalysts.findIndex(s=>s && /attack on titan/i.test(getCard(s.cardId)?.set||getCard(s.cardId)?.setName||''));
+  if (z<0) { addLog(state,'Effect Script: ODM Burst — no AOT Catalyst.'); return; }
+  p.catalysts[z].atkMod = (p.catalysts[z].atkMod||0) + 600;
+  p.catalysts[z].tempAtkMod = (p.catalysts[z].tempAtkMod||0) + 600;
+  addLog(state,`Effect Script: ODM Burst gave ${getCard(p.catalysts[z].cardId)?.name||'an AOT Catalyst'} +600 Pressure.`);
+}
+function custom_flashCut(state, pi) {
+  const targets = [];
+  for (const pl of state.players)
+    for (let z=0;z<5;z++) if (pl.catalysts[z] && !pl.catalysts[z].faceDown) targets.push([pl, z]);
+  if (!targets.length) return;
+  const [tp, tz] = targets[0];
+  tp.catalysts[tz].atkMod = (tp.catalysts[tz].atkMod||0) - 700;
+  tp.catalysts[tz].tempAtkMod = (tp.catalysts[tz].tempAtkMod||0) - 700;
+  addLog(state,`Effect Script: Flash Cut reduced ${getCard(tp.catalysts[tz].cardId)?.name||'a Catalyst'} by 700 Pressure.`);
+}
+function custom_negateAndDestroy(state, pi) {
+  if (state.chain && state.chain.length) {
+    const top = state.chain[state.chain.length-1];
+    top.negated = true;
+    addLog(state,'Effect Script: Scout Charge negated the activation and destroyed it.');
+  }
+}
+function custom_negateEffect(state, pi) {
+  if (state.chain && state.chain.length) {
+    state.chain[state.chain.length-1].negated = true;
+    addLog(state,'Effect Script: Titan Counterhold negated a Catalyst effect.');
+  }
+}
+function custom_searchAOTCatalyst(state, pi) {
+  const found = addCardToHandFromDeckByPredicate(state, pi, c => /aot/i.test(c.id||''));
+  if (found) addLog(state, `Effect Script: Scout Registry searched ${found.name}.`);
+}
+function custom_searchFieldTrick(state, pi) {
+  const found = addCardToHandFromDeckByPredicate(state, pi, c => c.cardType === 'Field Trick');
+  if (found) addLog(state, `Effect Script: Field Orders searched ${found.name}.`);
+}
+
+// BL1
+function custom_blockOppSS(state, pi) { state.players[1-pi]._blockSpecialSummon = true; }
+function custom_payNegateAttack(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 800) return;
+  p.chi -= 800;
+  if (state.currentAttack) state.currentAttack.negated = true;
+  addLog(state,'Effect Script: Kaiser Gagamaru paid 800 Chi and negated the attack.');
+}
+function custom_nagiBattleGrow(state, pi) {
+  const z = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'nagi'));
+  if (z<0) return;
+  const destroyed = state._battlePhaseDestroyed || 0;
+  state.players[pi].catalysts[z].atkMod = destroyed * 300;
+}
+
+// BLC
+function custom_discardSetPalm(state, pi) {
+  const p = state.players[pi];
+  if (!p.hand.length) return;
+  const idx = Math.floor(Math.random()*p.hand.length);
+  const[d]=p.hand.splice(idx,1); p.void.push(d);
+  const pi2 = p.hand.findIndex(id=>getCard(id)?.cardType==='Palm Trick');
+  if (pi2>=0) {
+    const[pId]=p.hand.splice(pi2,1);
+    const tz=p.tricks.findIndex(s=>!s);
+    if (tz>=0) { p.tricks[tz]={cardId:pId,faceDown:true}; addLog(state,`Effect Script: Kisuke discarded ${getCard(d)?.name||'a card'} and set ${getCard(pId)?.name||'a Palm Trick'}.`); }
+    else p.hand.push(pId);
+  }
+}
+function custom_bothDiscard(state, pi) {
+  for (const pl of state.players) {
+    if (!pl.hand.length) continue;
+    const i = Math.floor(Math.random()*pl.hand.length);
+    const[d]=pl.hand.splice(i,1); pl.void.push(d);
+  }
+  addLog(state,'Effect Script: Both players discarded 1 card.');
+}
+
+// BRO
+function custom_chochoSwitch(state, pi) {
+  const z = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'chocho'));
+  if (z<0) return;
+  const slot = state.players[pi].catalysts[z];
+  slot.position = slot.position==='atk' ? 'cp' : 'atk';
+  slot._chochoBoosted = true;
+  if (slot.position === 'atk') slot.atkMod = (slot.atkMod||0) + 800; // approximates 2300 PR temp
+  addLog(state,`Effect Script: Chocho switched to ${slot.position.toUpperCase()}.`);
+}
+
+// CBB
+function custom_edControlMachine(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 500) return;
+  const opp = state.players[1-pi];
+  const oz = opp.catalysts.findIndex(s=>s && cardHasKind(getCard(s.cardId)||{},'Machine'));
+  if (oz < 0) { addLog(state,'Effect Script: Edward — no opponent Machine.'); return; }
+  const ez = getFirstEmptyCatalystZone(state, pi);
+  if (ez < 0) return;
+  p.chi -= 500;
+  const stolen = opp.catalysts[oz]; opp.catalysts[oz] = null;
+  p.catalysts[ez] = {...stolen, _stolenByEd: true};
+  addLog(state,`Effect Script: Edward paid 500 Chi and took control of ${getCard(stolen.cardId)?.name||'a Machine'}.`);
+}
+
+// CC1
+function custom_searchSergeKiddKorcha(state, pi) {
+  const found = addCardToHandFromDeckByNameToken(state, pi, ['serge','kidd','korcha']);
+  if (found) addLog(state,`Effect Script: Book of Virtue added ${found.name}.`);
+}
+function custom_bornAgainRevive(state, pi) {
+  const res = specialSummonFromVoidByPredicate(state, pi, c => ['serge','kidd','korcha'].some(t=>cardNameHas(c,t)), 'Born Again');
+  addLog(state, res.ok ? 'Effect Script: Born Again Special Summoned from Void.' : `Effect Script: Born Again — no valid target. (${res.msg})`);
+}
+
+// CT1
+function custom_hungerChi(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 1000) return;
+  p.chi -= 1000;
+  let setCount = 0;
+  for (let z=0;z<5;z++) if (p.tricks[z] && p.tricks[z].faceDown) setCount++;
+  p.chi = Math.min(p.chi + (setCount * 500), 99999);
+  addLog(state,`Effect Script: Hunger paid 1000 Chi, gained ${setCount*500} Chi (500 per face-down Trick).`);
+}
+function custom_janusPalmImmune(state, pi) {
+  const z = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'janus'));
+  if (z<0) return;
+  const allies = state.players[pi].catalysts.filter((s,i)=>s && i!==z).length;
+  if (allies > 0) state.players[pi].catalysts[z]._immunePalm = true;
+}
+function custom_magusCastleSummon(state, pi) {
+  const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, pi, c => cardNameHas(c,'magus scythe master'), "Magus's Castle");
+  addLog(state, res.ok ? "Effect Script: Magus's Castle SS'd Magus Scythe Master." : `Effect Script: Magus's Castle — no target. (${res.msg})`);
+}
+
+// DB1 / DBS / DBZ
+function custom_wolfFang(state, pi) {
+  const p = state.players[pi];
+  const hasYamcha = p.catalysts.some(s=>s && cardNameHas(getCard(s.cardId)||{},'yamcha'));
+  if (!hasYamcha) { addLog(state,'Effect Script: Wolf-Fang Fist needs Yamcha on field.'); return; }
+  const opp = state.players[1-pi];
+  const oz = opp.catalysts.findIndex(Boolean);
+  if (oz>=0) {
+    opp.void.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null; p.kills++;
+    addLog(state,'Effect Script: Wolf-Fang Fist destroyed 1 Catalyst. +1 Kill.');
+    checkWinConditions(state);
+  }
+}
+function custom_hakai(state, pi) {
+  const opp = state.players[1-pi];
+  const oz = opp.catalysts.findIndex(Boolean);
+  if (oz>=0) {
+    opp.rfg.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null; state.players[pi].kills++;
+    addLog(state,'Effect Script: Hakai removed 1 Catalyst from the game permanently.');
+    checkWinConditions(state);
+  }
+}
+function custom_fusionForced(state, pi) {
+  const opp = state.players[1-pi];
+  const kindCount = {};
+  for (let z=0;z<5;z++) {
+    if (opp.catalysts[z]) {
+      const kinds = (getCard(opp.catalysts[z].cardId)?.kinds||[]);
+      for (const k of kinds) kindCount[k] = (kindCount[k]||0) + 1;
+    }
+  }
+  const targetKind = Object.entries(kindCount).find(([k,v])=>v>=2);
+  if (!targetKind) { addLog(state,'Effect Script: Fusion Dance Forced — no 2+ same-type Catalysts.'); return; }
+  let destroyed = 0;
+  for (let z=0;z<5 && destroyed<2;z++) {
+    if (opp.catalysts[z] && (getCard(opp.catalysts[z].cardId)?.kinds||[]).includes(targetKind[0])) {
+      opp.void.push(opp.catalysts[z].cardId); opp.catalysts[z]=null; state.players[pi].kills++; destroyed++;
+    }
+  }
+  opp.chi = Math.max(0, opp.chi - 1000);
+  addLog(state,`Effect Script: Fusion Dance Forced destroyed ${destroyed} ${targetKind[0]} Catalyst(s) and inflicted 1000 damage.`);
+  checkWinConditions(state);
+}
+function custom_gokuPromise(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 800) return false;
+  p.chi -= 800;
+  addLog(state,'Effect Script: Goku\'s Promise paid 800 Chi to prevent destruction.');
+  return true;
+}
+function custom_battleShield(state, pi) {
+  state._battleShieldTurn = state.turn;
+  addLog(state,'Effect Script: Force Field prevented all battle destruction this turn.');
+}
+function custom_gainChi1000(state, pi) {
+  state.players[pi].chi = Math.min(state.players[pi].chi + 1000, 99999);
+  addLog(state,'Effect Script: Senzu Bean gained 1000 Chi.');
+}
+
+// GCK
+function custom_zodylDestroy(state, pi) {
+  const p = state.players[pi];
+  if (!p.hand.length) return;
+  const i = Math.floor(Math.random()*p.hand.length);
+  const[d]=p.hand.splice(i,1); p.void.push(d);
+  const opp = state.players[1-pi];
+  for (let z=0;z<5;z++) {
+    if (opp.catalysts[z] && opp.catalysts[z].faceDown) {
+      opp.void.push(opp.catalysts[z].cardId); opp.catalysts[z]=null; p.kills++;
+      addLog(state,`Effect Script: Zodyl discarded ${getCard(d)?.name||'a card'} and destroyed a face-down Catalyst.`);
+      checkWinConditions(state);
+      return;
+    }
+  }
+}
+
+// FF7
+function custom_payNegateEffect(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 700) return;
+  p.chi -= 700;
+  if (state.chain && state.chain.length) state.chain[state.chain.length-1].negated = true;
+  addLog(state,'Effect Script: Trance Magic Negator paid 700 Chi and negated a Trick.');
+}
+
+// HLS
+function custom_searchAlucardUnsealed(state, pi) {
+  const found = addCardToHandFromDeckByPredicate(state, pi, c => cardNameHas(c,'alucard - unsealed'));
+  if (found) addLog(state,`Effect Script: Incognito's call searched ${found.name}.`);
+}
+function custom_bonusVsZombie(state, pi) {
+  const z = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'hellsing army'));
+  if (z<0) return;
+  state.players[pi].catalysts[z]._vsZombieBonus = 1000;
+}
+
+// INU
+function custom_windScar(state, pi) {
+  const p = state.players[pi];
+  const hasInu = p.catalysts.some(s=>s && cardNameHas(getCard(s.cardId)||{},'inu-yasha'));
+  const hasTetsaiga = p.catalysts.some(s=>s && s._equipTetsaiga);
+  if (!hasInu) { addLog(state,'Effect Script: Wind Scar needs Inu-Yasha on field.'); return; }
+  let destroyed = 0;
+  const opp = state.players[1-pi];
+  for (let z=4;z>=0;z--) {
+    if (opp.catalysts[z]) {
+      opp.void.push(opp.catalysts[z].cardId); opp.catalysts[z]=null; p.kills++; destroyed++;
+    }
+  }
+  addLog(state,`Effect Script: Wind Scar destroyed ${destroyed} opponent Catalyst(s). +${destroyed} Kill(s).`);
+  checkWinConditions(state);
+}
+function custom_kikyoPalmImmune(state, pi) {
+  const p = state.players[pi];
+  for (let z=0;z<5;z++) {
+    if (p.catalysts[z] && cardNameHas(getCard(p.catalysts[z].cardId)||{},'kikyo')) {
+      p.catalysts[z]._immunePalm = true;
+      p.catalysts[z]._immuneConcealed = true;
+    }
+  }
+}
+
+// KH1
+function custom_negateAndRFG(state, pi) {
+  if (state.chain && state.chain.length) {
+    const top = state.chain[state.chain.length-1];
+    top.negated = true;
+    if (top.cardId) {
+      const src = state.players[top.controller];
+      if (src) src.rfg.push(top.cardId);
+    }
+    addLog(state,'Effect Script: Wonderland negated and removed a Concealed Trick from game.');
+  }
+}
+function custom_halloweenTown(state, pi) {
+  const p = state.players[pi];
+  if (p.hand.length < 3) return;
+  for (let i=0;i<3;i++) { const[d]=p.hand.splice(0,1); p.void.push(d); }
+  for (let i=0;i<2;i++) {
+    const res = specialSummonFromVoidByPredicate(state, pi, c => cardHasKind(c,'Zombie'), 'Halloween Town');
+    if (!res.ok) break;
+  }
+  addLog(state,'Effect Script: Halloween Town discarded 3 cards and SS\'d up to 2 Zombies.');
+}
+function custom_searchHades(state, pi) {
+  const found = addCardToHandFromDeckByPredicate(state, pi, c => /^hades$/i.test(c.name||''));
+  if (found) addLog(state,`Effect Script: Hades Cup searched ${found.name}.`);
+}
+function custom_rfgTwoToDestroy(state, pi) {
+  const p = state.players[pi];
+  const voidCats = p.void.filter(id => getCard(id)?.cardType==='Catalyst');
+  if (voidCats.length < 2) { addLog(state,'Effect Script: Alice in Wonderland needs 2 Catalysts in Void.'); return; }
+  for (let i=0;i<2;i++) {
+    const idx = p.void.findIndex(id => getCard(id)?.cardType==='Catalyst');
+    const[rm]=p.void.splice(idx,1); p.rfg.push(rm);
+  }
+  const opp = state.players[1-pi];
+  const oz = opp.catalysts.findIndex(Boolean);
+  if (oz>=0) {
+    opp.void.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null; p.kills++;
+    addLog(state,'Effect Script: Alice in Wonderland removed 2 Catalysts to destroy 1 opponent Catalyst.');
+    checkWinConditions(state);
+  }
+}
+
+// KIR
+function custom_nmePriceDrop(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 220) return;
+  p.chi -= 220;
+  const res = specialSummonFromHandByPredicate(state, pi, c => c.cardType==='Catalyst' && Number(c.pr||0) <= 1000, 'N.M.E Price Drop');
+  addLog(state, res.ok ? 'Effect Script: N.M.E Price Drop SS\'d a ≤1000 Pressure Catalyst.' : `Effect Script: N.M.E Price Drop — no target. (${res.msg})`);
+}
+function custom_nmeSalesGuy(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 500) return;
+  p.chi -= 500;
+  const res = specialSummonFromHandByPredicate(state, pi, c => c.cardType==='Catalyst' && Number(c.level||0) <= 4 && cardHasAlignment(c,'Dark'), 'N.M.E Sales Guy');
+  addLog(state, res.ok ? 'Effect Script: N.M.E Sales Guy SS\'d a Dark ≤Lv4 Catalyst.' : `Effect Script: N.M.E Sales Guy — no target. (${res.msg})`);
+}
+
+// LOZ
+function custom_negateAttack(state, pi) {
+  if (state.currentAttack) state.currentAttack.negated = true;
+  addLog(state,'Effect Script: Hyrulian Shield negated the attack.');
+}
+function custom_linksPast(state, pi) {
+  const p = state.players[pi];
+  const hi = p.hand.findIndex(id => cardNameHas(getCard(id)||{},'adult link'));
+  if (hi < 0) { addLog(state,'Effect Script: Link\'s Past needs Adult Link in hand.'); return; }
+  const[d]=p.hand.splice(hi,1); p.void.push(d);
+  const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, pi, c => cardNameHas(c,'shadow link'), "Link's Past");
+  addLog(state, res.ok ? "Effect Script: Link's Past SS'd Shadow Link." : `Effect Script: Link's Past — no Shadow Link. (${res.msg})`);
+}
+
+// MB1
+function custom_searchMiniMarioLuigi(state, pi) {
+  const found = addCardToHandFromDeckByNameToken(state, pi, ['mini-mario','mini-luigi']);
+  if (found) addLog(state,`Effect Script: It's a me. Mario! searched ${found.name}.`);
+}
+function custom_boostMarioLuigi(state, pi) {
+  const p = state.players[pi];
+  const z = p.catalysts.findIndex(s=>s && (cardNameHas(getCard(s.cardId)||{},'mario') || cardNameHas(getCard(s.cardId)||{},'luigi')));
+  if (z<0) return;
+  p.catalysts[z].atkMod = (p.catalysts[z].atkMod||0) + 700;
+  p.catalysts[z].tempAtkMod = (p.catalysts[z].tempAtkMod||0) + 700;
+  addLog(state,`Effect Script: Princess Peach's Cry +700 Pressure to ${getCard(p.catalysts[z].cardId)?.name}.`);
+}
+function custom_ssLakitu(state, pi) {
+  const res = specialSummonFromHandByPredicate(state, pi, c => /^lakitu$/i.test(c.name||''), "Lakitu's Cloud");
+  addLog(state, res.ok ? "Effect Script: Lakitu's Cloud SS'd Lakitu." : `Effect Script: Lakitu's Cloud — no Lakitu. (${res.msg})`);
+}
+
+// MGM
+function custom_voidToHand(state, pi) {
+  const p = state.players[pi];
+  const idx = p.void.findIndex(id => getCard(id)?.cardType==='Catalyst');
+  if (idx>=0) {
+    const[id]=p.void.splice(idx,1); p.hand.push(id);
+    addLog(state,`Effect Script: Magic Man returned ${getCard(id)?.name||'a Catalyst'} to hand.`);
+  }
+}
+
+// NAR
+function custom_itachiDebuff(state, pi) {
+  const p = state.players[pi];
+  const amt = Math.floor(p.chi/100)*100;
+  if (amt === 0) { addLog(state,'Effect Script: Itachi needs at least 100 Chi.'); return; }
+  const req = Math.min(amt, 2000);
+  if (p.chi < req) return;
+  p.chi -= req;
+  if (state.currentAttack) {
+    const slot = state.players[1-pi].catalysts[state.currentAttack.attackerZone];
+    if (slot) { slot.atkMod = (slot.atkMod||0) - req; slot.tempAtkMod = (slot.tempAtkMod||0) - req; }
+  }
+  addLog(state,`Effect Script: Itachi paid ${req} Chi, reduced attacker by ${req} Pressure.`);
+}
+function custom_shukakuCond(state, pi) {
+  const p = state.players[pi];
+  const garaZ = p.catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'gara'));
+  if (garaZ < 0) { addLog(state,'Effect Script: Shukaku needs Gara on field.'); return; }
+  p.void.push(p.catalysts[garaZ].cardId); p.catalysts[garaZ] = null;
+}
+function custom_summoningJutsu(state, pi) {
+  // Cards SS'd by Summoning no Jutsu - validated at summon time
+  addLog(state,'Effect Script: Summoning Jutsu summon condition acknowledged.');
+}
+
+// OP1
+function custom_hancockCoin(state, pi, zoneIdx, attackerPlayer, attackerZone) {
+  if (Math.random() < 0.5) {
+    if (state.currentAttack) state.currentAttack.negated = true;
+    addLog(state,'Effect Script: Boa Hancock coin flip HEADS — attack negated.');
+  } else addLog(state,'Effect Script: Boa Hancock coin flip TAILS — attack continues.');
+}
+function custom_devilFruitAwaken(state, pi) {
+  const p = state.players[pi];
+  const z = p.catalysts.findIndex(s=>s && cardHasKind(getCard(s.cardId)||{},'Pirate'));
+  if (z<0) { addLog(state,'Effect Script: Devil Fruit Awakening needs a Pirate Catalyst.'); return; }
+  p.catalysts[z].atkMod = (p.catalysts[z].atkMod||0) + 800;
+  p.catalysts[z].tempAtkMod = (p.catalysts[z].tempAtkMod||0) + 800;
+  addLog(state,`Effect Script: Devil Fruit Awakening gave ${getCard(p.catalysts[z].cardId)?.name} +800 Pressure.`);
+}
+
+// RKN
+function custom_multipleStrikes(state, pi) {
+  const p = state.players[pi];
+  const z = p.catalysts.findIndex(s=>s && Number(getCard(s.cardId)?.level||0) <= 4);
+  if (z<0) return;
+  p.catalysts[z].extraAttackThisTurn = (p.catalysts[z].extraAttackThisTurn||0) + 2;
+  addLog(state,`Effect Script: Multiple Strikes gave ${getCard(p.catalysts[z].cardId)?.name||'a Catalyst'} 2 extra attacks.`);
+}
+function custom_payNegateAttackHighLvl(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 1000) return;
+  p.chi -= 1000;
+  if (state.currentAttack) state.currentAttack.negated = true;
+  addLog(state,'Effect Script: Patriot Defenders paid 1000 Chi and negated a Lv4+ attack.');
+}
+
+// SH2
+function custom_returnSelfToHandEOT(state, pi) {
+  const z = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'punisher'));
+  if (z>=0) state.players[pi].catalysts[z]._returnToHandEOT = true;
+}
+function custom_destroyAndRFG(state, pi) {
+  if (state.currentAttack) {
+    const slot = state.players[1-pi].catalysts[state.currentAttack.attackerZone];
+    if (slot) {
+      state.players[1-pi].rfg.push(slot.cardId);
+      state.players[1-pi].catalysts[state.currentAttack.attackerZone] = null;
+      state.currentAttack.negated = true;
+      state.players[pi].kills++;
+      addLog(state,'Effect Script: Professor X Barrier destroyed the attacker and removed it from game.');
+      checkWinConditions(state);
+    }
+  }
+}
+function custom_kravenBeastBoost(state, pi) {
+  const z = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'kraven'));
+  if (z<0) return;
+  let beasts = 0;
+  for (const pl of state.players)
+    for (let zz=0;zz<5;zz++) {
+      if (pl.catalysts[zz]) {
+        const c = getCard(pl.catalysts[zz].cardId);
+        if (cardHasKind(c,'Beast') || cardHasKind(c,'Winged Beast') || cardHasKind(c,'Beast-Warrior')) beasts++;
+      }
+    }
+  state.players[pi].catalysts[z].atkMod = beasts * 500;
+}
+function custom_wolverineRegen(state, pi) {
+  const z = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'wolverine'));
+  if (z>=0) state.players[pi].catalysts[z]._noBattleDamage = true;
+}
+
+// SL1
+function custom_sungShadowToken(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 500) return;
+  p.chi -= 500;
+  const ez = getFirstEmptyCatalystZone(state, pi);
+  if (ez<0) return;
+  p.catalysts[ez] = {cardId:'__shadow_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Shadow Token',tokenPR:800,tokenCP:800};
+  addLog(state,'Effect Script: Sung Jinwoo paid 500 Chi and SS\'d a Shadow Token.');
+}
+function custom_shadowizeDestroyed(state, pi) {
+  const p = state.players[pi];
+  const ez = getFirstEmptyCatalystZone(state, pi);
+  if (ez<0) return;
+  p.catalysts[ez] = {cardId:'__shadow_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Shadow Token',tokenPR:1000,tokenCP:1000};
+  addLog(state,'Effect Script: Monarch Antares turned a destroyed Catalyst into a Shadow Token.');
+}
+function custom_legiaDestroy(state, pi) {
+  const p = state.players[pi]; const opp = state.players[1-pi];
+  const oz = opp.catalysts.findIndex(Boolean);
+  if (oz<0) return;
+  const pr = getEffectivePressure(state, 1-pi, oz);
+  opp.void.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null; p.kills++;
+  opp.chi = Math.max(0, opp.chi - Math.floor(pr/2));
+  addLog(state,`Effect Script: Monarch Legia destroyed 1 Catalyst and inflicted ${Math.floor(pr/2)} damage.`);
+  checkWinConditions(state);
+}
+function custom_baranWipeSS(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 1000) return;
+  p.chi -= 1000;
+  let n = 0;
+  for (const pl of state.players)
+    for (let z=4;z>=0;z--)
+      if (pl.catalysts[z] && pl.catalysts[z]._specialSummoned) {
+        pl.void.push(pl.catalysts[z].cardId); pl.catalysts[z] = null;
+        if (pl !== p) p.kills++;
+        n++;
+      }
+  addLog(state,`Effect Script: Monarch Baran paid 1000 Chi, destroyed ${n} Special Summoned Catalyst(s).`);
+  checkWinConditions(state);
+}
+
+// SLM
+function custom_returnDestroyedToDeck(state, pi) {
+  // After destroying a Catalyst in battle, can return it to top of own deck
+  // Handled via void lookup
+  const opp = state.players[1-pi];
+  if (opp.void.length) {
+    const id = opp.void.pop();
+    opp.deck.unshift(id);
+    addLog(state,`Effect Script: Super Sailor Moon returned ${getCard(id)?.name||'destroyed Catalyst'} to top of deck.`);
+  }
+}
+function custom_moonTiara(state, pi) {
+  const p = state.players[pi];
+  const maxDestroy = Math.min(5, Math.floor(p.chi/1500));
+  if (maxDestroy === 0) { addLog(state,'Effect Script: Moon Tiara — need 1500+ Chi.'); return; }
+  let destroyed = 0;
+  for (const pl of state.players)
+    for (let z=4;z>=0 && destroyed<maxDestroy;z--)
+      if (pl.catalysts[z]) {
+        pl.void.push(pl.catalysts[z].cardId); pl.catalysts[z]=null;
+        if (pl !== p) p.kills++;
+        destroyed++;
+      }
+  p.chi -= destroyed * 1500;
+  addLog(state,`Effect Script: Moon Tiara paid ${destroyed*1500} Chi and destroyed ${destroyed} Catalyst(s).`);
+  checkWinConditions(state);
+}
+
+// SNC
+function custom_eggmanDraw3(state, pi) {
+  const p = state.players[pi];
+  const hasEggman = p.catalysts.some(s=>s && cardNameHas(getCard(s.cardId)||{},'dr. eggman'));
+  if (!hasEggman) { addLog(state,'Effect Script: Eggman\'s Greed needs Dr. Eggman.'); return; }
+  for (let i=0;i<3;i++) drawCard(state, pi);
+  addLog(state,'Effect Script: Eggman\'s Greed drew 3 cards.');
+}
+function custom_ssSuperSonic(state, pi) {
+  const p = state.players[pi];
+  const hi = p.hand.findIndex(id => cardNameHas(getCard(id)||{},'sonic') && !cardNameHas(getCard(id)||{},'super'));
+  if (hi<0) return;
+  const[d]=p.hand.splice(hi,1); p.void.push(d);
+  const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, pi, c => cardNameHas(c,'super sonic'), 'Chaos Emerald\'s Gathering');
+  addLog(state, res.ok ? 'Effect Script: Chaos Emerald\'s Gathering SS\'d Super Sonic.' : `Effect Script: — no target. (${res.msg})`);
+}
+
+// SS1
+function custom_megaEnergyBomb(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 3000 || p.hand.length < 2) return;
+  p.chi -= 3000;
+  for (let i=0;i<2;i++) { const[d]=p.hand.splice(0,1); p.void.push(d); }
+  const opp = state.players[1-pi];
+  opp.void.push(...opp.hand); opp.hand = [];
+  opp.chi = Math.max(0, opp.chi - 3000);
+  addLog(state,'Effect Script: Mega Energy Bomb emptied opponent\'s hand and dealt 3000 damage.');
+  checkWinConditions(state);
+}
+function custom_ishinShishi(state, pi) {
+  const p = state.players[pi];
+  for (const pl of state.players)
+    for (let z=0;z<5;z++)
+      if (pl.catalysts[z]) {
+        pl.catalysts[z].atkMod = (pl.catalysts[z].atkMod||0) + 1500;
+        pl.catalysts[z].tempAtkMod = (pl.catalysts[z].tempAtkMod||0) + 1500;
+        break;
+      }
+  addLog(state,'Effect Script: Ishin Shishi gave +1500 Pressure until end of turn.');
+}
+function custom_darkSide(state, pi) {
+  let n = 0;
+  for (const pl of state.players)
+    for (let z=4;z>=0;z--)
+      if (pl.catalysts[z]) {
+        pl.void.push(pl.catalysts[z].cardId); pl.catalysts[z]=null;
+        if (pl !== state.players[pi]) state.players[pi].kills++;
+        n++;
+      }
+  addLog(state,`Effect Script: Dark Side destroyed all ${n} Catalysts on the field.`);
+  checkWinConditions(state);
+}
+
+// TUV
+function custom_ryoohkiTribute(state, pi) {
+  const p = state.players[pi];
+  const cz = p.catalysts.findIndex(s=>s && /^carrot$/i.test(getCard(s.cardId)?.name||''));
+  const myZ = p.catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'ryo-ohki'));
+  if (cz<0 || myZ<0) return;
+  p.void.push(p.catalysts[cz].cardId); p.catalysts[cz]=null;
+  p.catalysts[myZ].atkMod = (p.catalysts[myZ].atkMod||0) + 500;
+  addLog(state,'Effect Script: Ryo-ohki tributed Carrot, +500 Pressure permanently.');
+}
+
+// WR1
+function custom_ssCheza(state, pi) {
+  const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, pi, c => /^cheza$/i.test(c.name||''), 'Flower Of The Moon');
+  addLog(state, res.ok ? 'Effect Script: Flower Of The Moon SS\'d Cheza.' : `Effect Script: — no Cheza. (${res.msg})`);
+}
+function custom_searchCheza(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 200) return;
+  p.chi -= 200;
+  const found = addCardToHandFromDeckByPredicate(state, pi, c => /^cheza$/i.test(c.name||''));
+  if (found) addLog(state,`Effect Script: Researching Cheza paid 200 Chi, added ${found.name}.`);
+}
+function custom_searchResearch(state, pi) {
+  const found = addCardToHandFromDeckByPredicate(state, pi, c => /research/i.test(c.name||''));
+  if (found) addLog(state,`Effect Script: Cher Degre searched ${found.name}.`);
+}
+function custom_harmona(state, pi) {
+  const p = state.players[pi];
+  if (p.chi < 500) return;
+  p.chi -= 500;
+  const darciaZ = p.catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'darcia'));
+  if (darciaZ>=0) {
+    p.catalysts[darciaZ]._immunePalm = true;
+    p.catalysts[darciaZ]._immuneConcealed = true;
+  }
+  addLog(state,"Effect Script: Harmona's Influence paid 500 Chi — Darcia is immune this turn.");
+}
+
+// YYH
+function custom_halvePressure(state, pi) {
+  const targets = [];
+  for (const pl of state.players)
+    for (let z=0;z<5;z++) if (pl.catalysts[z]) targets.push([pl, z]);
+  if (!targets.length) return;
+  const [tp, tz] = targets[0];
+  const c = getCard(tp.catalysts[tz].cardId);
+  const half = Math.floor(Number(c?.pr||0)/2);
+  tp.catalysts[tz].atkMod = (tp.catalysts[tz].atkMod||0) - half;
+  addLog(state,`Effect Script: Dr Ichigaki halved ${c?.name||'a Catalyst'}'s Pressure.`);
+}
+function custom_karasuCoin(state, pi) {
+  const heads = Math.random() < 0.5;
+  if (heads) {
+    const opp = state.players[1-pi];
+    const oz = opp.catalysts.findIndex(Boolean);
+    if (oz>=0) {
+      opp.void.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null; state.players[pi].kills++;
+      addLog(state,'Effect Script: Karasu HEADS — destroyed 1 Catalyst.');
+      checkWinConditions(state);
+    }
+  } else {
+    const myZ = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'karasu'));
+    if (myZ>=0) {
+      state.players[pi].void.push(state.players[pi].catalysts[myZ].cardId);
+      state.players[pi].catalysts[myZ] = null;
+      addLog(state,'Effect Script: Karasu TAILS — Karasu destroyed itself.');
+    }
+  }
+}
+
+// Generic negate (already exists as negateDestroyEffect in engine; fallback here)
+function custom_negateAttackBurn(state, pi) {
+  if (state.currentAttack) {
+    state.currentAttack.negated = true;
+    state.players[1-pi].chi = Math.max(0, state.players[1-pi].chi - 500);
+    addLog(state,'Effect Script: Thing negated the attack and inflicted 500 damage.');
+    checkWinConditions(state);
+  }
+}
+function custom_scarletWitch(state, pi) {
+  const p = state.players[pi];
+  for (let i=0;i<3;i++) drawCard(state, pi);
+  p._skipDrawPhases = 3;
+  addLog(state,'Effect Script: Scarlet Witch drew 3 cards, skipped next 3 Draw Phases.');
+}
+
+// Placeholder stubs for patterns that need deeper state wiring
+function custom_isshiki(state, pi) {
+  const opp = state.players[1-pi];
+  for (let z=0;z<5;z++) {
+    if (opp.catalysts[z]) {
+      const c = getCard(opp.catalysts[z].cardId);
+      opp.catalysts[z].atkMod = -(Number(c?.pr||0)-1);
+      opp.catalysts[z].cpMod = -(Number(c?.cp||0)-1);
+    }
+  }
+  addLog(state,'Effect Script: Isshiki reduced all opponent Catalysts to 1/1 permanently.');
+}
+function custom_summonSyndicateElders(state, pi) {
+  const res = specialSummonFromHandOrDeckByPredicate ? specialSummonFromHandOrDeckByPredicate(state, pi, c => cardNameHas(c,'syndicate elders'), 'Gathering of the Syndicate') : {ok:false,msg:'unavailable'};
+  addLog(state, res.ok ? 'Effect Script: Gathering of the Syndicate SS\'d Syndicate Elders.' : `Effect Script: — no Syndicate Elders. (${res.msg})`);
+}
+function custom_venomFlip(state, pi) {
+  let n = 0;
+  for (const pl of state.players)
+    for (let z=0;z<5;z++)
+      if (pl.catalysts[z] && !pl.catalysts[z].faceDown && Number(getCard(pl.catalysts[z].cardId)?.cp||0) < 1500) {
+        pl.void.push(pl.catalysts[z].cardId); pl.catalysts[z]=null;
+        if (pl !== state.players[pi]) state.players[pi].kills++;
+        n++;
+      }
+  addLog(state,`Effect Script: Venom (Flip) destroyed ${n} face-up Catalyst(s) with <1500 CP.`);
+  checkWinConditions(state);
+}
+function custom_testamentDebuff(state, pi, zoneIdx, attackerPlayer, attackerZone) {
+  const slot = state.players[attackerPlayer]?.catalysts?.[attackerZone];
+  if (slot) {
+    slot.atkMod = (slot.atkMod||0) - 300;
+    addLog(state,`Effect Script: Testament reduced attacker by 300 Pressure.`);
+  }
+}
+function custom_discardBoost(state, pi) {
+  const p = state.players[pi];
+  if (!p.hand.length) return;
+  const[d]=p.hand.splice(0,1); p.void.push(d);
+  const z = p.catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'mu dan'));
+  if (z>=0) {
+    p.catalysts[z].atkMod = (p.catalysts[z].atkMod||0) + 500;
+    p.catalysts[z].tempAtkMod = (p.catalysts[z].tempAtkMod||0) + 500;
+  }
+  addLog(state,'Effect Script: Mu Dan discarded 1 card, +500 Pressure.');
+}
+function custom_azaChobeBurn(state, pi) {
+  const p = state.players[pi];
+  const hasChobei = p.catalysts.some(s=>s && cardNameHas(getCard(s.cardId)||{},'chobei'));
+  if (!hasChobei) return;
+  state.players[1-pi].chi = Math.max(0, state.players[1-pi].chi - 300);
+  addLog(state,'Effect Script: Aza Chobe inflicted 300 damage.');
+  checkWinConditions(state);
+}
+function custom_sladeLowerLvl(state, pi) {
+  const opp = state.players[1-pi];
+  for (let z=0;z<5;z++)
+    if (opp.catalysts[z] && Number(getCard(opp.catalysts[z].cardId)?.level||0) <= 4)
+      opp.catalysts[z]._immunized = false; // strip other effects
+}
+
+// ─── Extend activated dispatcher with P57B handlers ─────────────────────────
+const _p57a = window.dispatchPatch55Activated;
+window.dispatchPatch55Activated = function(state, pi, action, manual) {
+  if (_p57a) _p57a(state, pi, action, manual);
+  const M = {
+    custom_zekeDiscardBurn, custom_chochoSwitch, custom_edControlMachine,
+    custom_hungerChi, custom_wolfFang, custom_hakai, custom_fusionForced,
+    custom_gainChi1000, custom_zodylDestroy, custom_payNegateEffect,
+    custom_nmePriceDrop, custom_nmeSalesGuy, custom_linksPast,
+    custom_searchMiniMarioLuigi, custom_boostMarioLuigi, custom_ssLakitu,
+    custom_voidToHand, custom_itachiDebuff, custom_devilFruitAwaken,
+    custom_multipleStrikes, custom_sungShadowToken, custom_legiaDestroy,
+    custom_baranWipeSS, custom_moonTiara, custom_eggmanDraw3, custom_ssSuperSonic,
+    custom_megaEnergyBomb, custom_ishinShishi, custom_darkSide,
+    custom_ryoohkiTribute, custom_ssCheza, custom_searchCheza, custom_harmona,
+    custom_karasuCoin, custom_scarletWitch, custom_isshiki,
+    custom_summonSyndicateElders, custom_discardBoost, custom_azaChobeBurn,
+    custom_searchAlucardUnsealed, custom_searchHades, custom_rfgTwoToDestroy,
+    custom_halloweenTown, custom_venomFlip
+  };
+  if (M[action]) M[action](state, pi, manual);
+};
+
+// Palm/concealed script dispatcher extension
+const _origPalmP57 = window._palmScriptP57 || function(){};
+window._palmScriptP57 = function(state, pi, card, manual) {
+  const action = card?._action;
+  if (!action) return;
+  const PalmM = {
+    custom_odmBurst, custom_flashCut, custom_searchAOTCatalyst,
+    custom_searchFieldTrick, custom_searchSergeKiddKorcha,
+    custom_bornAgainRevive, custom_magusCastleSummon, custom_battleShield
+  };
+  if (PalmM[action]) PalmM[action](state, pi, manual);
+};
+
+
 window.computeStateHash = computeStateHash;
 window.exportMatchLog = exportMatchLog;
 window.generatePostMatchSummary = generatePostMatchSummary;
+
+// ═══════════════════════════════════════════════════════════════════
+// PATCH 55 — SET-BY-SET CARD EFFECT SCRIPTING
+// Sets: CT1 · MB1 · NAR · SNC · WR1 (zero → scripted)
+//       CBB · GGX · KH1 · KIR · LOZ · MGM · S-M · SLM · TT1 · YYH (partial → extended)
+// ═══════════════════════════════════════════════════════════════════
+
+// ─── CT1 (Chrono Trigger) ───────────────────────────────────────────
+regEffect('ct1-012-lavos',              { type:'summonCondition',   tag:'lavosRitual',      action:'ritualSummon', ritualSpell:'aproaching doom' });
+regEffect('ct1-012-lavos',              { type:'activated',         tag:'lavosDice',        action:'custom_lavosDice' });
+regEffect('ct1-000-aproachingdoom',     { type:'palmScript',        tag:'lavosRitualPalm',  action:'custom_lavosRitual' });
+regEffect('ct1-001-aylaprehystoricwarrior', { type:'onSelfDestroyed', tag:'aylaDestroy',   action:'custom_aylaDestroy' });
+regEffect('ct1-002-beforethecastle',    { type:'onBattleDamage',    tag:'beforeCastleDisc', action:'oppDiscardRandom', log:'forced opponent to discard after battle damage' });
+regEffect('ct1-003-blacktyranno',       { type:'onBattleDamage',    tag:'blackTyrannoDraw', action:'draw', count:1, minDamage:500, log:'drew 1 card after dealing 500+ damage' });
+regEffect('ct1-004-crono',              { type:'onBattleDamage',    tag:'cronoDraw',        action:'custom_crono' });
+regEffect('ct1-005-epoch',              { type:'fieldAuraPR',       tag:'epochPR',          prBoostAll:200, targetNameIncludes:['robo','luccia','chrono','ayla','frog'] });
+regEffect('ct1-005-epoch',              { type:'fieldAuraCP',       tag:'epochCP',          cpBoostAll:500, targetNameIncludes:['robo','luccia','chrono','ayla','frog'] });
+regEffect('ct1-015-magus',              { type:'onSummon',          tag:'magusSearch',      action:'custom_magusSearch' });
+regEffect('ct1-016-magusscythemaster',  { type:'summonCondition',   tag:'magusScytheRitual', action:'ritualSummon', ritualSpell:"magus's castle" });
+regEffect('ct1-016-magusscythemaster',  { type:'activated',         tag:'magusScytheRFG',   action:'custom_magusScytheRFG', cost:0 });
+regEffect('ct1-019-motherbrain',        { type:'activated',         tag:'motherBrainDestroy', action:'custom_motherBrainDestroy', cost:2000 });
+regEffect('ct1-021-queenzeal',          { type:'onBattleResult',    tag:'queenZealChi',     resultType:'kill', action:'custom_queenZealChi' });
+regEffect('ct1-022-robo',               { type:'onSummon',          tag:'roboDebuff',       action:'custom_roboDebuff' });
+regEffect('ct1-025-zeal',               { type:'continuous',        tag:'zealBlock2000',    action:'blockHighPRAttack', minPR:2000 });
+
+// ─── MB1 (Mario Bros) ───────────────────────────────────────────────
+regEffect('mb1-005-mario',   { type:'summonCondition', tag:'marioSS',    action:'custom_marioSS', summonRestriction:'cannotNormalSummon' });
+regEffect('mb1-005-mario',   { type:'onSelfDestroyed', tag:'marioRevive',action:'custom_marioRevive' });
+regEffect('mb1-006-luigi',   { type:'summonCondition', tag:'luigiSS',    action:'custom_luigiSS', summonRestriction:'cannotNormalSummon' });
+regEffect('mb1-006-luigi',   { type:'onSelfDestroyed', tag:'luigiRevive',action:'custom_luigiRevive' });
+regEffect('mb1-007-magicmushroom', { type:'continuous', tag:'mmushPRAura', action:'boostAllPRCP', amount:300 });
+regEffect('mb1-009-yoshi',   { type:'onBattleDamage',  tag:'yoshiEgg',   action:'custom_yoshiEgg' });
+regEffect('mb1-011-firemario', { type:'summonCondition', tag:'fireMarioSS', action:'custom_fireMarioSS', summonRestriction:'cannotNormalSummon' });
+regEffect('mb1-011-firemario', { type:'pierce',         tag:'fireMarioPierce', mode:'difference' });
+regEffect('mb1-011-firemario', { type:'onSelfDestroyed', tag:'fireMarioRevive', action:'custom_fireMarioRevive' });
+regEffect('mb1-012-fireluigi', { type:'summonCondition', tag:'fireLuigiSS', action:'custom_fireLuigiSS', summonRestriction:'cannotNormalSummon' });
+regEffect('mb1-012-fireluigi', { type:'pierce',          tag:'fireLuigiPierce', mode:'difference' });
+regEffect('mb1-012-fireluigi', { type:'onSelfDestroyed', tag:'fireLuigiRevive', action:'custom_fireLuigiRevive' });
+regEffect('mb1-016-koopatroopa', { type:'onSelfDestroyed', tag:'koopaRevive', action:'custom_koopaRevive' });
+regEffect('mb1-022-lakitu',  { type:'summonCondition', tag:'lakituRitual',  action:'ritualSummon', ritualSpell:"lakitu's cloud" });
+regEffect('mb1-022-lakitu',  { type:'onBattleDamage',  tag:'lakituSpinyEgg', directOnly:true, action:'custom_lakituEgg' });
+regEffect('mb1-024-chompchomp', { type:'continuous',   tag:'chompDebuff',  action:'debuffOpponentAll', amount:-600, statKey:'pr' });
+regEffect('mb1-027-princesspeach', { type:'onFlip',    tag:'peachSearch',  action:'searchByName', names:["princess peach's cry"], log:"searched Princess Peach's Cry" });
+regEffect('mb1-031-bulletbillthebulletlauncher', { type:'summonCondition', tag:'bulletBillSS', action:'custom_bulletBillSS', summonRestriction:'cannotNormalSummon' });
+
+// ─── NAR (Naruto) ───────────────────────────────────────────────────
+regEffect('nar-001-zabuza',    { type:'continuous', tag:'zabuza_deepsea_immune', action:'custom_zabuza_immune' });
+regEffect('nar-002-haku',      { type:'continuous', tag:'haku_deepsea_dbl',     action:'custom_haku_dbl' });
+regEffect('nar-003-kisame',    { type:'onSummon',   tag:'kisameParalyze',       action:'custom_kisame' });
+regEffect('nar-005-naruto',    { type:'activated',  tag:'narutoChoice',         action:'custom_naruto' });
+regEffect('nar-006-sasuke',    { type:'activated',  tag:'sasukeCopyPR',         action:'custom_sasukeCopyPR', cost:700 });
+regEffect('nar-007-sakura',    { type:'onFlip',     tag:'sakuraFlip',           action:'custom_sakuraFlip' });
+regEffect('nar-008-kankuro',   { type:'onSummon',   tag:'kankuroPuppet',        action:'custom_kankuro' });
+regEffect('nar-010-gara',      { type:'onSummon',   tag:'garaDef',              action:'custom_garaSwitch' });
+regEffect('nar-010-gara',      { type:'continuous', tag:'garaCanAtkFromDef',    action:'canAttackFromCP' });
+regEffect('nar-010-gara',      { type:'activated',  tag:'garaPRBoost',          action:'custom_garaPR', cost:1000 });
+regEffect('nar-011-rocklee',   { type:'doubleAttack', tag:'rockleeDbl',         cost:500 });
+regEffect('nar-012-neji',      { type:'continuous', tag:'nejiProtect',          condition:'namedAllyOnField', conditionName:'hinata', action:'cannotBeAttacked' });
+regEffect('nar-014-shino',     { type:'onFlip',     tag:'shinoCounters',        action:'custom_shinoFlip' });
+regEffect('nar-015-hinata',    { type:'continuous', tag:'hinataProtect',        condition:'namedAllyOnField', conditionName:'neji', action:'cannotBeAttacked' });
+regEffect('nar-015-hinata',    { type:'onSummon',   tag:'hinataSS',             action:'custom_hinataSummon' });
+regEffect('nar-018-ino',       { type:'onFlip',     tag:'inoFlip',              action:'custom_inoFlip' });
+regEffect('nar-019-shikamaru', { type:'continuous', tag:'shikamaruDef',         action:'custom_shikamaruContinuous' });
+regEffect('nar-020-chouji',    { type:'pierce',     tag:'choujiPierce',         mode:'difference' });
+regEffect('nar-021-kabuto',    { type:'continuous', tag:'kabutoZeroDmg',        action:'custom_kabutoImmune' });
+regEffect('nar-022-kakashi',   { type:'activated',  tag:'kakashiCopy',          action:'custom_kakashiCopy', cost:1000, oncePerDuel:true });
+regEffect('nar-023-legendaryyamininfromthehiddenstone', { type:'onSelfDestroyed', tag:'yaminNinChi', action:'custom_yaminNin' });
+regEffect('nar-024-iruka',     { type:'continuous', tag:'irukaIndestructible',  action:'indestructibleByBattle' });
+regEffect('nar-026-tsunade',   { type:'activated',  tag:'tsunadeRevive',        action:'custom_tsunade', cost:1000, oncePerSummon:true });
+regEffect('nar-027-orochimaru', { type:'activated', tag:'orochimaruSS',         action:'custom_orochimaru', maxUses:2 });
+regEffect('nar-033-nidaime',   { type:'onSummon',   tag:'nidaimeBlock',         action:'custom_nidaime' });
+regEffect('nar-033-nidaime',   { type:'continuous', tag:'nidaimeDeepSea',       action:'actsAsDeepSea' });
+regEffect('nar-034-sandaime',  { type:'activated',  tag:'sandaimeRFG',          action:'custom_sandaimeRFG' });
+regEffect('nar-047-betrayalofthesand', { type:'concealedScript', tag:'betrayalNegate', action:'custom_betrayalOfSand', cost:1000 });
+
+// ─── SNC (Sonic the Hedgehog) ───────────────────────────────────────
+regEffect('snc-001-sonicthehedgehog',  { type:'continuous',  tag:'sonicImmuneWeak',  action:'custom_sonicImmune' });
+regEffect('snc-002-sonicthedefender', { type:'onTargeted',   tag:'sonicDefenderSuicide', action:'custom_sonicDefender' });
+regEffect('snc-003-sonictheattacker', { type:'pierce',       tag:'sonicAttackerFacedown', mode:'facedownDestroy' });
+regEffect('snc-004-tails',            { type:'doubleAttack', tag:'tailsDbl' });
+regEffect('snc-005-sonicspartnertails', { type:'continuous', tag:'tailsPartnerBoost', action:'custom_tailsPartnerBoost' });
+regEffect('snc-007-drrobotnikeggbot', { type:'onSummon',     tag:'eggbotTokens',     action:'custom_eggbotTokens' });
+regEffect('snc-007-drrobotnikeggbot', { type:'onBattleResult', tag:'eggbotKillBoost', resultType:'kill', action:'boostSelfPR', amount:200, condition:'killedNameIncludes', killedNameIncludes:'sonic', log:'gained 200 Pressure after destroying a Sonic card' });
+regEffect('snc-013-supersonic',        { type:'summonCondition', tag:'superSonicRitual', action:'ritualSummon', ritualSpell:"chaos emerald's gathering" });
+regEffect('snc-013-supersonic',        { type:'doubleAttack', tag:'superSonicDbl' });
+regEffect('snc-013-supersonic',        { type:'standbyUpkeep', tag:'superSonicChi',    action:'payChi', amount:600, destroyIfCant:true });
+regEffect('snc-016-selfworkerknuckles', { type:'continuous', tag:'selfWorkerForce',   action:'custom_selfWorkerKnuckles' });
+regEffect('snc-022-emeraldhill',        { type:'fieldAuraPR', tag:'emeraldHillBoost', prBoostAll:400, scope:'self', targetNameIncludes:['sonic','tails','knuckles'] });
+regEffect('snc-023-shadowtheevil',      { type:'onBattleResult', tag:'shadowKillBoost', resultType:'kill', action:'custom_shadowKillBoost' });
+regEffect('snc-024-reevetheevil',       { type:'onBattleResult', tag:'reeveKillBoost', resultType:'kill', action:'custom_reeveKillBoost' });
+
+// ─── WR1 (Wolf's Rain) ──────────────────────────────────────────────
+regEffect('wr1-001-kiba',          { type:'activated',    tag:'kibaUpgrade',     action:'custom_kibaUpgrade' });
+regEffect('wr1-002-kibathelonewolf', { type:'onSelfDestroyed', tag:'kibaRevive', action:'custom_wolfReviveOnce', tag2:'kibaLoneWolfReviveUsed' });
+regEffect('wr1-004-tsumewolfmode', { type:'onSelfDestroyed', tag:'tsumeRevive',  action:'custom_wolfReviveOnce', tag2:'tsumeReviveUsed' });
+regEffect('wr1-006-higewolfmode',  { type:'onSelfDestroyed', tag:'higeRevive',   action:'custom_wolfReviveOnce', tag2:'higeReviveUsed' });
+regEffect('wr1-007-toboe',         { type:'continuous',   tag:'toboeBoost',      condition:'namedAllyOnField', conditionName:'tsume', prBoost:400 });
+regEffect('wr1-007-toboewolfmode', { type:'onSelfDestroyed', tag:'toboeRevive',  action:'custom_wolfReviveOnce', tag2:'toboeReviveUsed' });
+regEffect('wr1-009-thewilderness', { type:'fieldAuraPR',  tag:'wildernessBoost', prBoostAll:300, scope:'self', targetNameIncludes:'wolf' });
+regEffect('wr1-010-cheza',         { type:'summonCondition', tag:'chezaRitual',  action:'ritualSummon', ritualSpell:'flower of the moon' });
+regEffect('wr1-010-cheza',         { type:'continuous',   tag:'chezaWolfProtect', action:'custom_chezaProtect' });
+regEffect('wr1-013-quentyaiden',   { type:'onSummon',     tag:'quentSS',         action:'custom_quentSummon' });
+regEffect('wr1-015-bluewolfmode',  { type:'continuous',   tag:'blueBoost',       condition:'namedAllyOnField', conditionName:'quent yaiden', prBoost:300 });
+regEffect('wr1-017-hubblebowski',  { type:'continuous',   tag:'hubbProtect',     action:'custom_hubbLebowski' });
+
+// ─── CBB additions ──────────────────────────────────────────────────
+regEffect('cbb-000-spikespiegel',  { type:'pierce',       tag:'spikeFacedown',   mode:'facedownDestroy' });
+regEffect('cbb-001-fayevalentine', { type:'onFlip',       tag:'fayeFlipBoost',   action:'custom_fayeFlip' });
+regEffect('cbb-002-jetblack',      { type:'continuous',   tag:'jetBlackAura',    prBoost:200, condition:'namedAllyOnField', conditionNameAny:['spike','faye'] });
+regEffect('cbb-006-theswordfishii',{ type:'equip',        tag:'swordfishEquip',  prBoost:500, targetNameIncludes:'spike' });
+regEffect('cbb-009-edshackingskills', { type:'continuous', tag:'edHackingDebuff', action:'custom_edHacking' });
+regEffect('cbb-016-gunfight',      { type:'concealedScript', tag:'gunfightMirror', action:'custom_gunfight' });
+
+// ─── GGX (Guilty Gear) additions ────────────────────────────────────
+regEffect('ggx-002-kykiske',      { type:'onBattleResult', tag:'kyKillDebuff', resultType:'kill', action:'custom_kySelfDebuff' });
+regEffect('ggx-002-kykiske',      { type:'continuous',     tag:'kyNoDirectAtk', action:'cannotAttackDirect' });
+regEffect('ggx-003-may',          { type:'onFlip',         tag:'mayFlipJohnny', action:'custom_mayFlip' });
+regEffect('ggx-003-may',          { type:'continuous',     tag:'mayJohnnyProtect', condition:'namedAllyOnField', conditionName:'johnny', action:'cannotBeAttacked' });
+regEffect('ggx-004-milliarage',   { type:'continuous',     tag:'milliaEddiePR',  action:'custom_milliaContinuous' });
+regEffect('ggx-005-zato1',        { type:'onSelfDestroyed', tag:'zato1Eddie',    action:'custom_zato1Destroyed' });
+regEffect('ggx-006-eddie',        { type:'summonCondition', tag:'eddieSummonCond', action:'custom_eddieCondition' });
+regEffect('ggx-006-eddie',        { type:'standbyUpkeep',   tag:'eddieCPDecay',  action:'custom_eddieDecay' });
+regEffect('ggx-007-potemkin',     { type:'onAttackDeclared', tag:'potemkinSwitch', action:'custom_potemkinAttack' });
+regEffect('ggx-008-chippzanuff',  { type:'doubleAttack',    tag:'chippDbl',      noDirectIfUsed:true });
+regEffect('ggx-010-baiken',       { type:'onSelfDestroyed', tag:'baikenEndBattle', action:'custom_baikenEndBattle' });
+regEffect('ggx-011-jamkuradoberi',{ type:'onFlip',          tag:'jamCoin',       action:'custom_jamFlip' });
+regEffect('ggx-012-johnny',       { type:'onAttackDeclared', tag:'johnnyCoin',   action:'custom_johnnyCoin' });
+regEffect('ggx-013-axllow',       { type:'continuous',      tag:'axlRavenTrigger', action:'custom_axlContinuous' });
+regEffect('ggx-014-raven',        { type:'continuous',      tag:'ravenIndestructible', action:'indestructibleByBattle' });
+regEffect('ggx-014-raven',        { type:'onSelfDestroyed', tag:'ravenRFG',      action:'rfgSelf' });
+
+// ─── KH1 additions ──────────────────────────────────────────────────
+regEffect('kh1-002-sora',         { type:'continuous',   tag:'soraBoost',       action:'custom_soraContinuous' });
+regEffect('kh1-003-agrabah',      { type:'standbyUpkeep', tag:'agrabahChi',     action:'custom_agrabahStandby' });
+regEffect('kh1-006-donaldduck',   { type:'onBattleResult', tag:'donaldBoost',   resultType:'kill', action:'custom_donaldKill' });
+regEffect('kh1-007-airpirate',    { type:'onFlip',        tag:'airPirateReturn', action:'custom_airPirateFlip' });
+regEffect('kh1-012-queenofhearts',{ type:'standbyUpkeep', tag:'queenDiscard',   action:'custom_queenOfHeartsStandby' });
+regEffect('kh1-013-pluto',        { type:'onBattleDamage', tag:'plutoDirect',   directOnly:true, action:'oppDiscardRandom', log:'forced opponent to discard 1 card' });
+regEffect('kh1-014-aladdin',      { type:'activated',     tag:'aladdinCoin',    action:'custom_aladdinCoin' });
+regEffect('kh1-015-flounder',     { type:'doubleAttack',  tag:'flounderDbl' });
+regEffect('kh1-018-screwdriver',  { type:'continuous',    tag:'screwdriverDouble', action:'custom_screwdriverContinuous' });
+
+// ─── KIR (Kirby) additions ───────────────────────────────────────────
+regEffect('kir-001-kirbytheswordsman', { type:'summonCondition', tag:'kirbySwordSS', action:'custom_kirbyTransform', summonRestriction:'cannotNormalSummon' });
+regEffect('kir-001-kirbytherock',      { type:'summonCondition', tag:'kirbyRockSS',  action:'custom_kirbyTransform', summonRestriction:'cannotNormalSummon' });
+regEffect('kir-001-kirbytheninja',     { type:'summonCondition', tag:'kirbyNinjaSS', action:'custom_kirbyTransform', summonRestriction:'cannotNormalSummon' });
+regEffect('kir-001-kirbythemagician',  { type:'summonCondition', tag:'kirbyMageSS',  action:'custom_kirbyTransform', summonRestriction:'cannotNormalSummon' });
+regEffect('kir-001-kingdedede',        { type:'activated', tag:'dededeWaddlee',     action:'custom_dededeSummon', cost:500 });
+regEffect('kir-001-metaknight',        { type:'continuous', tag:'metaKnightNoDirect', action:'cannotAttackDirect' });
+regEffect('kir-001-escargoon',         { type:'continuous', tag:'escargoonBoost',    condition:'namedAllyOnField', conditionName:'king dedede', prBoost:500 });
+regEffect('kir-010-masher',            { type:'pierce',     tag:'masherFacedown',    mode:'facedownDestroy' });
+regEffect('kir-011-kracko',            { type:'activated',  tag:'krackoNukeTricks',  action:'custom_krackoNuke', cost:1500 });
+regEffect('kir-011-dynablade',         { type:'activated',  tag:'dynabladNuke',      action:'custom_dynablade', cost:1500, oncePerDuel:true });
+regEffect('kir-011-popon',             { type:'activated',  tag:'poponSacrifice',    action:'custom_poponTribute' });
+
+// ─── LOZ (Legend of Zelda) additions ────────────────────────────────
+regEffect('loz-004-adultlink',    { type:'summonCondition', tag:'adultLinkSS',    action:'custom_adultLinkSummon' });
+regEffect('loz-004-adultlink',    { type:'pierce',          tag:'adultLinkPierce', mode:'difference' });
+regEffect('loz-004-adultlink',    { type:'onBattleDamage',  tag:'adultLinkGrow',  action:'custom_adultLinkGrow' });
+regEffect('loz-004-adultlink',    { type:'onSelfDestroyed', tag:'adultLinkRevive', action:'custom_adultLinkRevive' });
+regEffect('loz-005-princesszelda',{ type:'continuous',      tag:'zeldaLinkBoost', action:'custom_zeldaContinuous' });
+regEffect('loz-007-ganon',        { type:'summonCondition', tag:'ganonSS',        action:'tributeByName', tributeName:'ganondorf' });
+regEffect('loz-016-hyrule',       { type:'fieldAuraCP',     tag:'hyruleCP',       cpBoostAll:500, targetKind:'warrior' });
+regEffect('loz-018-watertemple',  { type:'fieldAuraCP',     tag:'waterTempleCP',  cpBoostAll:500, targetAlignment:'water' });
+regEffect('loz-019-foresttemple', { type:'fieldAuraCP',     tag:'forestTempleEarth', cpBoostAll:500, targetAlignmentsAny:['earth','wind'] });
+regEffect('loz-020-spirittemple', { type:'fieldAuraCP',     tag:'spiritTempleCP', cpBoostAll:500, targetAlignment:'dark' });
+
+// ─── MGM (Mega Man) additions ───────────────────────────────────────
+regEffect('mgm-001-megaman',      { type:'continuous',  tag:'megamanDynPR',    action:'custom_megamanPR' });
+regEffect('mgm-003-gutsman',      { type:'continuous',  tag:'gutsmanTrap',     action:'custom_gutsmanTrap' });
+regEffect('mgm-004-roll',         { type:'continuous',  tag:'rollNoDirect',    action:'cannotAttackDirect' });
+regEffect('mgm-005-pharohman',    { type:'onSummon',    tag:'pharohDraw',      action:'draw', count:1, log:'drew 1 card on summon' });
+regEffect('mgm-007-torchman',     { type:'onBattleResult', tag:'torchKillPR',  resultType:'kill', action:'custom_torchmanKill' });
+regEffect('mgm-008-torchman',     { type:'onFlip',      tag:'torchFlipEquip',  action:'custom_torchmanFlip' });
+regEffect('mgm-009-heatman',      { type:'summonCondition', tag:'heatmanTribute', action:'tributeByName', tributeName:'torch man' });
+regEffect('mgm-009-heatman',      { type:'pierce',      tag:'heatmanPierce',   mode:'difference' });
+regEffect('mgm-009-heatman',      { type:'onAttackDeclared', tag:'heatmanSwitch', action:'switchToCPAfterAttack' });
+regEffect('mgm-010-freezeman',    { type:'activated',   tag:'freezemanCoin',   action:'custom_freezeman' });
+regEffect('mgm-014-wackoman',     { type:'continuous',  tag:'wackomanDynPR',   action:'custom_wackomanPR' });
+regEffect('mgm-015-elecman',      { type:'onSummon',    tag:'elecmanDestroy',  action:'custom_elecman' });
+
+// ─── S-M (Marvel/DC) additions ──────────────────────────────────────
+regEffect('s-m-010-superman',     { type:'continuous',  tag:'supermanProtect', action:'custom_supermanImmune' });
+regEffect('s-m-002-archangel',    { type:'continuous',  tag:'archangelBoost',  action:'custom_archangelBoost' });
+regEffect('s-m-003-beast',        { type:'continuous',  tag:'beastWarriorImmune', action:'zeroDmgFromWarriors' });
+regEffect('s-m-008-lucasbishop',  { type:'onSelfDestroyed', tag:'bishopReturn', action:'custom_bishopReturn' });
+regEffect('s-m-012-cyclops',      { type:'standbyUpkeep', tag:'cyclopsBurn',   action:'burnOpponent', amount:500, log:'inflicted 500 damage (Cyclops battle phase burn)' });
+regEffect('s-m-013-emmafrost',    { type:'activated',   tag:'emmaFrost',       action:'custom_emmaFrost', cost:500 });
+regEffect('s-m-014-gambit',       { type:'onSummon',    tag:'gambitCoin',      action:'custom_gambitCoin' });
+regEffect('s-m-015-iceman',       { type:'onBattleDamage', tag:'icemanDirect', directOnly:true, action:'oppDiscardRandom', log:'forced opponent to discard after direct attack' });
+regEffect('s-m-016-jeangrey',     { type:'activated',   tag:'jeanGreyControl', action:'custom_jeanGrey', cost:1000, oncePerTurn:true });
+regEffect('s-m-019-magneto',      { type:'continuous',  tag:'magnetoPR',       action:'custom_magnetoContinuous' });
+regEffect('s-m-020-blackcat',     { type:'onBattleDamage', tag:'blackCatDiscard', action:'custom_blackCat' });
+
+// ─── SLM (Sailor Moon) additions ────────────────────────────────────
+regEffect('slm-014-shineaquaillusion', { type:'fieldAuraPR', tag:'shineAquaBoost', prBoostAll:400, targetNameIncludes:'mercury' });
+regEffect('slm-013-sailormercury',     { type:'continuous',  tag:'mercuryDirectAtk', action:'custom_mercuryDirect' });
+regEffect('slm-017-sailormars',        { type:'activated',   tag:'marsNuke',        action:'custom_sailorMarsNuke' });
+regEffect('slm-012-mizunoami',         { type:'activated',   tag:'mizunoSS',        action:'custom_mizunoSS' });
+regEffect('slm-019-burningmadala',     { type:'fieldAuraPR', tag:'burningMadalaBoost', prBoostAll:400, targetNameIncludes:'mars' });
+regEffect('slm-023-lovemechain',       { type:'fieldAuraPR', tag:'loveMeChainBoost', prBoostAll:400, targetNameIncludes:'venus' });
+regEffect('slm-027-lightningrod',      { type:'fieldAuraPR', tag:'lightningRodBoost', prBoostAll:400, targetNameIncludes:'jupiter' });
+regEffect('slm-031-deathrebornrevolution', { type:'fieldAuraPR', tag:'deathRebornBoost', prBoostAll:400, targetNameIncludes:'saturn' });
+
+// ─── TT1 (Teen Titans) additions ────────────────────────────────────
+regEffect('tt1-001-robin',         { type:'continuous',  tag:'robinBatmanBoost', condition:'namedAllyOnField', conditionName:'batman', prBoost:300 });
+regEffect('tt1-002-cyborg',        { type:'continuous',  tag:'cyborgIndestructible', action:'custom_cyborgIndestructible' });
+regEffect('tt1-005-beastboy',      { type:'onBattlePhaseStart', tag:'beastboyCoin', action:'custom_beastboyCoin' });
+regEffect('tt1-006-110percent',    { type:'equip',       tag:'110percentEquip',   prBoost:300, targetKindsAny:['machine','warrior'] });
+regEffect('tt1-007-birdarangs',    { type:'equip',       tag:'birdarangsEquip',   prBoost:300, targetNameIncludesAny:['robin','nightwing'] });
+regEffect('tt1-007-birdarangs',    { type:'onBattleDamage', tag:'birdarangsMill', action:'custom_birdarangsMill' });
+regEffect('tt1-008-freezedisks',   { type:'continuous',  tag:'freezeDisksLock',   action:'custom_freezeDisks' });
+regEffect('tt1-009-titanstower',   { type:'fieldAuraPR', tag:'titansTowerBoost',  prBoostAll:400, scope:'self', targetNameIncludesAny:['beast boy','cyborg','raven','robin','starfire'] });
+regEffect('tt1-011-terra',         { type:'onAttackDeclared', tag:'terraCoin',     action:'custom_terraCoin' });
+regEffect('tt1-013-aqualad',       { type:'continuous',  tag:'aqualadDeepSea',    action:'custom_aqualadDeepSea' });
+regEffect('tt1-014-deepsea',       [
+  { type:'fieldAuraPR', tag:'deepSeaWater',  prBoostAll:400, targetAlignment:'water', scope:'self' },
+  { type:'fieldAuraPR', tag:'deepSeaFire',   prBoostAll:-500, targetAlignment:'fire' }
+]);
+regEffect('tt1-015-hotspot',       { type:'continuous',  tag:'hotSpotVolcano',    action:'custom_hotSpotImmune' });
+
+// ─── YYH additions ──────────────────────────────────────────────────
+regEffect('yyh-003-botan',         { type:'continuous',  tag:'botanTeamBoost',    action:'custom_botanAura' });
+regEffect('yyh-009-genkai',        { type:'continuous',  tag:'genkaiYusukeBoost', action:'custom_genkaiContinuous' });
+regEffect('yyh-017-kayko',         { type:'onFlip',      tag:'kaykoFlip',         action:'custom_kaykoFlip' });
+regEffect('yyh-018-koenma',        { type:'onFlip',      tag:'koenmaFlip',        action:'custom_koenmaFlip' });
+regEffect('yyh-019-kurama',        { type:'activated',   tag:'kuramaChoice',      action:'custom_kurama' });
+regEffect('yyh-030-yokokurama',    { type:'summonCondition', tag:'yokoKuramaSS',  action:'custom_yokoKuramaSS' });
+regEffect('yyh-030-yokokurama',    { type:'onFlip',      tag:'yokoCoin',          action:'custom_yokoCoin' });
+regEffect('yyh-020-kuwabara',      { type:'onBattleResult', tag:'kuwabaraPR',     resultType:'kill', action:'custom_kuwabaraKill' });
+regEffect('yyh-032-yusuke',        { type:'onBattleResult', tag:'yusukeCounter',  resultType:'kill', action:'custom_yusukeCounter' });
+regEffect('yyh-032-yusuke',        { type:'activated',   tag:'yusukeCounterUse',  action:'custom_yusukeCounterUse' });
+regEffect('yyh-033-yusukefiredup', { type:'summonCondition', tag:'yusukeFiredUpSS', action:'custom_yusukeFiredUpSS' });
+regEffect('yyh-033-yusukefiredup', { type:'onBattleResult', tag:'yusukeFiredCounter', resultType:'kill', action:'custom_yusukeFiredCounter' });
+regEffect('yyh-031-yukina',        { type:'onFlip',      tag:'yukinaFlip',        action:'custom_yukinaFlip' });
+regEffect('yyh-031-yukina',        { type:'continuous',  tag:'yukinaProtect',     action:'custom_yukinaProtect' });
+regEffect('yyh-004-bui',           { type:'activated',   tag:'buiDiscard',        action:'custom_bui' });
+
+// ═══════════════════════════════════════════════════════════════════
+// PATCH 55 CUSTOM HANDLER FUNCTIONS
+// These extend runOnSelfDestroyed, runRegisteredOnSummon, and
+// the various dispatch points via newly registered callbacks.
+// ═══════════════════════════════════════════════════════════════════
+
+// ── Helper: check if Deep Sea / Nidaime is active on any player's field ──
+function isDeepSeaActive(state) {
+  for (let p = 0; p < 2; p++) {
+    const ft = state.players[p].fieldTrick;
+    if (ft && !ft.faceDown) {
+      const fc = getCard(ft.cardId);
+      if (fc && /deep sea/i.test(fc.name || '')) return true;
+    }
+    for (let z = 0; z < 5; z++) {
+      const slot = state.players[p].catalysts[z];
+      if (slot && slot._actsAsDeepSea) return true;
+    }
+  }
+  return false;
+}
+
+// ── Helper: spawn a token into first empty zone ──
+function spawnToken(state, playerIdx, tokenName, pr, cp, opts) {
+  const zone = getFirstEmptyCatalystZone(state, playerIdx);
+  if (zone < 0) return false;
+  state.players[playerIdx].catalysts[zone] = Object.assign({
+    cardId: `__token_${tokenName.toLowerCase().replace(/\s+/g,'_')}__`,
+    position: opts && opts.position || 'atk', faceDown: false,
+    attackedThisTurn: false, atkMod: 0, cpMod: 0,
+    extraAttackThisTurn: 0, cannotAttackThisTurn: false,
+    isToken: true, tokenName, tokenPR: pr, tokenCP: cp
+  }, opts || {});
+  return true;
+}
+
+// ─── CT1 handlers ───────────────────────────────────────────────────
+function p55_lavosDice(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Lavos is not on your field.' };
+  if (isEffectUsed(state, playerIdx, slot.cardId, 'lavosDice')) return { ok:false, msg:'Lavos already used this ability this turn.' };
+  const opp = state.players[1 - playerIdx];
+  const roll = Math.floor(Math.random() * 6) + 1;
+  addLog(state, `Effect Script: Lavos rolled a ${roll}.`);
+  if (roll <= 3) {
+    const tz = opp.catalysts.findIndex(Boolean);
+    if (tz >= 0) {
+      const tc = getCard(opp.catalysts[tz].cardId);
+      runOnSelfDestroyed(state, 1-playerIdx, opp.catalysts[tz].cardId, { reason:'Lavos' });
+      opp.void.push(opp.catalysts[tz].cardId);
+      opp.catalysts[tz] = null;
+      state.players[playerIdx].kills++;
+      addLog(state, `Effect Script: Lavos (1-3) destroyed ${tc?.name || 'a Catalyst'}.`);
+    }
+  } else if (roll <= 5) {
+    let destroyed = 0;
+    for (let z = 0; z < 5; z++) {
+      if (opp.tricks[z]) { opp.void.push(opp.tricks[z].cardId); opp.tricks[z] = null; destroyed++; }
+      if (opp.fieldTrick) { opp.void.push(opp.fieldTrick.cardId); opp.fieldTrick = null; destroyed++; }
+    }
+    addLog(state, `Effect Script: Lavos (4-5) destroyed ${destroyed} Palm/Concealed Trick(s).`);
+  } else {
+    // 6: destroy all opponent Catalysts
+    let killed = 0;
+    for (let z = 0; z < 5; z++) {
+      if (opp.catalysts[z]) {
+        runOnSelfDestroyed(state, 1-playerIdx, opp.catalysts[z].cardId, { reason:'Lavos 6' });
+        opp.void.push(opp.catalysts[z].cardId);
+        opp.catalysts[z] = null;
+        killed++;
+      }
+    }
+    state.players[playerIdx].kills += killed;
+    addLog(state, `Effect Script: Lavos (6) destroyed all ${killed} opponent Catalyst(s).`);
+    checkWinConditions(state);
+  }
+  markEffectUsed(state, playerIdx, slot.cardId, 'lavosDice');
+  return { ok:true };
+}
+window.p55_lavosDice = p55_lavosDice;
+
+function p55_magusSearch(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  const anyOther = p.catalysts.some((s, i) => i !== zoneIdx && s);
+  if (anyOther) return; // only triggers if alone
+  const found = addCardToHandFromDeckByPredicate(state, playerIdx,
+    c => /magus/i.test(c.name || '') || /magus.s castle/i.test(c.name || ''));
+  if (found) addLog(state, `Effect Script: Magus searched ${found.name} from the Deck.`);
+}
+
+function p55_magusScytheRFG(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Magus Scythe Master is not on your field.' };
+  if (state.phaseName !== 'ignition') return { ok:false, msg:'This effect activates during Standby Phase.' };
+  const p = state.players[playerIdx];
+  if (p.hand.length < 2) return { ok:false, msg:'Must discard 2 cards.' };
+  // Discard 2 random from hand
+  for (let i = 0; i < 2; i++) {
+    const ri = Math.floor(Math.random() * p.hand.length);
+    p.void.push(p.hand.splice(ri, 1)[0]);
+  }
+  // RFG 1 Catalyst from either field
+  const opp = state.players[1 - playerIdx];
+  const tz = opp.catalysts.findIndex(Boolean);
+  if (tz >= 0) {
+    const tc = getCard(opp.catalysts[tz].cardId);
+    opp.rfg.push(opp.catalysts[tz].cardId);
+    opp.catalysts[tz] = null;
+    addLog(state, `Effect Script: Magus Scythe Master discarded 2 cards to Remove ${tc?.name || 'a Catalyst'} from game.`);
+  } else addLog(state, 'Effect Script: Magus Scythe Master discarded 2 cards but found no Catalyst to remove.');
+  return { ok:true };
+}
+window.p55_magusScytheRFG = p55_magusScytheRFG;
+
+function p55_queenZealChi(state, attackerPlayer, attackerZone, ctx) {
+  // Gain Chi equal to the PR difference that killed the opponent
+  const diff = ctx && ctx.prdiff ? Number(ctx.prdiff) : 0;
+  if (diff > 0) {
+    state.players[attackerPlayer].chi += diff;
+    addLog(state, `Effect Script: Queen Zeal gained ${diff} Chi from destroying an Attack-position Catalyst.`);
+  }
+}
+
+// ─── MB1 handlers ───────────────────────────────────────────────────
+function p55_marioSS(state, playerIdx, cardId) {
+  // Must tribute Mini-Mario while Magic Mushroom (Field) is active
+  const p = state.players[playerIdx];
+  const hasMushroom = p.fieldTrick && !p.fieldTrick.faceDown && /magic mushroom/i.test(getCard(p.fieldTrick.cardId)?.name || '');
+  if (!hasMushroom) return { ok:false, msg:'Magic Mushroom (Field) must be active to summon Mario.' };
+  const miniIdx = p.catalysts.findIndex(s => s && /mini.mario/i.test(getCard(s.cardId)?.name || ''));
+  if (miniIdx < 0) return { ok:false, msg:'Tribute Mini-Mario to summon Mario.' };
+  runOnSelfDestroyed(state, playerIdx, p.catalysts[miniIdx].cardId, { reason:'tribute' });
+  p.void.push(p.catalysts[miniIdx].cardId);
+  p.catalysts[miniIdx] = null;
+  return { ok:true };
+}
+window.p55_marioSS = p55_marioSS;
+
+// ─── NAR handlers ───────────────────────────────────────────────────
+function p55_naruto(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Naruto is not on your field.' };
+  const p = state.players[playerIdx];
+  // Prompt via game state — for now, auto-choose cheapest available
+  if (p.chi >= 600) {
+    // Choice 3: Kage Bushin token (600 Chi)
+    p.chi -= 600;
+    const spawned = spawnToken(state, playerIdx, 'Kage Bushin Token', 500, 500);
+    addLog(state, spawned ? 'Effect Script: Naruto placed a Kage Bushin Token (500/500).' : 'Effect Script: Naruto tried to place a token but had no empty zone.');
+  }
+  markEffectUsed(state, playerIdx, slot.cardId, 'narutoChoice');
+  return { ok:true };
+}
+window.p55_naruto = p55_naruto;
+
+function p55_kisame(state, playerIdx, zoneIdx) {
+  const opp = state.players[1 - playerIdx];
+  const tz = opp.catalysts.findIndex(Boolean);
+  if (tz >= 0) {
+    opp.catalysts[tz].cannotAttackThisTurn = true;
+    opp.catalysts[tz]._kisameParalyze = true;
+    const tname = getCard(opp.catalysts[tz].cardId)?.name || 'a Catalyst';
+    addLog(state, `Effect Script: Kisame paralyzed ${tname} from attacking.`);
+    // Skip next draw: mark on state
+    state.players[playerIdx]._skipNextDraw = (state.players[playerIdx]._skipNextDraw || 0) + 1;
+    addLog(state, 'Effect Script: Kisame — you must skip your next draw phase.');
+  }
+}
+
+function p55_kankuro(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  const emptyZone = getFirstEmptyCatalystZone(state, playerIdx);
+  if (emptyZone < 0) return;
+  p.catalysts[emptyZone] = {
+    cardId: '__puppet_token__', position: 'atk', faceDown: false,
+    attackedThisTurn: false, atkMod: 0, cpMod: 0,
+    extraAttackThisTurn: 0, cannotAttackThisTurn: false,
+    isToken: true, tokenName: 'Puppet Token', tokenPR: 1200, tokenCP: 1000
+  };
+  // Find Kankuro and mark the protection logic
+  const kankuroZone = p.catalysts.findIndex((s, i) => i !== emptyZone && s && s.cardId === (state.players[playerIdx].catalysts[zoneIdx] && state.players[playerIdx].catalysts[zoneIdx].cardId));
+  if (state.players[playerIdx].catalysts[zoneIdx]) {
+    state.players[playerIdx].catalysts[zoneIdx]._kankuroWithPuppet = true;
+  }
+  addLog(state, 'Effect Script: Kankuro placed a Puppet Token (1200/1000).');
+}
+
+function p55_nidaime(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  slot._actsAsDeepSea = true;
+  slot._blockOppAttackTurns = 2;
+  slot._blockOppAttackOwner = playerIdx;
+  state._nidaimeBlockUntilTurn = (state.turn || 0) + 2;
+  state._nidaimePlayerIdx = 1 - playerIdx; // opponent can't attack
+  addLog(state, 'Effect Script: Nidaime — opponent cannot attack for 2 turns and acts as Deep Sea.');
+}
+
+// ─── SNC handlers ───────────────────────────────────────────────────
+function p55_eggbotTokens(state, playerIdx, zoneIdx) {
+  let spawned = 0;
+  for (let i = 0; i < 2; i++) {
+    if (spawnToken(state, playerIdx, 'Minibot Token', 500, 1000)) spawned++;
+  }
+  addLog(state, `Effect Script: Dr. Robotnik Eggbot spawned ${spawned} Minibot Token(s) (500/1000).`);
+}
+
+function p55_shadowKillBoost(state, attackerPlayer, attackerZone, ctx) {
+  const slot = state.players[attackerPlayer].catalysts[attackerZone];
+  if (!slot) return;
+  const killed = ctx && ctx.killedCardId ? getCard(ctx.killedCardId) : null;
+  if (killed && /sonic/i.test(killed.name || '') && !/sonic.*partner/i.test(killed.name || '')) {
+    slot.atkMod = Number(slot.atkMod || 0) + 500;
+    addLog(state, `Effect Script: Shadow, the Evil gained 500 Pressure after destroying a Sonic card.`);
+  }
+}
+
+// ─── WR1 handlers ───────────────────────────────────────────────────
+function p55_wolfReviveOnce(state, ownerPlayer, cardId, eff) {
+  const tag = eff && eff.tag2 || 'wolfReviveUsed';
+  if (state.players[ownerPlayer][tag]) return; // once per duel
+  state.players[ownerPlayer][tag] = true;
+  queueDelayedRevive(state, ownerPlayer, cardId, {});
+  addLog(state, `Effect Script: ${getCard(cardId)?.name || 'Wolf'} will revive on your next Standby Phase (once per duel).`);
+}
+
+function p55_chezaProtect(state) {
+  // Called during continuous check: Wolf-named cards cannot be destroyed by battle
+  // This sets a flag the battle system reads
+  for (let p = 0; p < 2; p++) {
+    const pl = state.players[p];
+    const hasCheza = pl.catalysts.some(s => s && /cheza/i.test(getCard(s.cardId)?.name || ''));
+    pl._chezaWolfProtect = hasCheza;
+  }
+}
+
+function p55_quentSummon(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  const blueIdx = p.hand.findIndex(id => /blue.*wolf mode/i.test(getCard(id)?.name || ''));
+  if (blueIdx >= 0) {
+    const emptyZone = getFirstEmptyCatalystZone(state, playerIdx);
+    if (emptyZone >= 0) {
+      const blueId = p.hand.splice(blueIdx, 1)[0];
+      p.catalysts[emptyZone] = { cardId:blueId, position:'atk', faceDown:false, attackedThisTurn:false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false };
+      registerSpecialSummon(state, playerIdx, 'Quent Yaiden');
+      addLog(state, `Effect Script: Quent Yaiden Special Summoned ${getCard(blueId)?.name || 'Blue - Wolf Mode'} from hand.`);
+    }
+  }
+}
+
+// ─── CBB handlers ───────────────────────────────────────────────────
+function p55_fayeFlip(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  slot.atkMod = Number(slot.atkMod || 0) + 600;
+  slot._fayeBoostUntilOppEnd = (state.turn || 0) + 1;
+  addLog(state, 'Effect Script: Faye Valentine gained 600 Pressure until end of opponent\'s next turn.');
+}
+
+function p55_edHacking(state, sourcePlayerIdx) {
+  // Continuous: -300 PR for each of controller's Catalysts on field per opponent's Catalyst on field
+  // Simplified: blanket -300 PR on opponent field per own Catalyst count
+  const ownCount = state.players[sourcePlayerIdx].catalysts.filter(Boolean).length;
+  const opp = state.players[1 - sourcePlayerIdx];
+  for (let z = 0; z < 5; z++) {
+    if (opp.catalysts[z]) {
+      opp.catalysts[z]._edHackingDebuff = ownCount * 300;
+    }
+  }
+}
+
+// ─── GGX handlers ───────────────────────────────────────────────────
+function p55_kySelfDebuff(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  slot.atkMod = Number(slot.atkMod || 0) - 100;
+  addLog(state, 'Effect Script: Ky Kiske lost 100 Pressure after destroying a Catalyst.');
+}
+
+function p55_mayFlip(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  const johnnySrc = p.hand.findIndex(id => /^johnny$/i.test(getCard(id)?.name || ''));
+  if (johnnySrc >= 0) {
+    const jId = p.hand.splice(johnnySrc, 1)[0];
+    const emptyZone = getFirstEmptyCatalystZone(state, playerIdx);
+    if (emptyZone >= 0) {
+      p.catalysts[emptyZone] = { cardId:jId, position:'atk', faceDown:false, attackedThisTurn:false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false };
+      registerSpecialSummon(state, playerIdx, 'May (flip)');
+      addLog(state, `Effect Script: May's flip summoned Johnny from hand.`);
+    }
+  } else {
+    // Try deck
+    const res = specialSummonFromDeckByPredicate(state, playerIdx, c => /^johnny$/i.test(c.name || ''), 'May (flip)');
+    if (res.ok) addLog(state, 'Effect Script: May\'s flip summoned Johnny from the Deck.');
+    else { const rv = specialSummonFromVoidByPredicate(state, playerIdx, c => /^johnny$/i.test(c.name || ''), 'May (flip)'); if(rv.ok) addLog(state,'Effect Script: May\'s flip summoned Johnny from the Void.'); }
+  }
+}
+
+function p55_zato1Destroyed(state, ownerPlayer, cardId) {
+  const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, ownerPlayer, c => /^eddie$/i.test(c.name || ''), 'Zato-1');
+  if (res.ok) addLog(state, 'Effect Script: Zato-1 Special Summoned Eddie from hand/deck/Void.');
+}
+
+function p55_eddieDecay(state, playerIdx) {
+  // During end phase, if Eddie didn't destroy a Catalyst this turn, -100 CP
+  for (let z = 0; z < 5; z++) {
+    const slot = state.players[playerIdx].catalysts[z];
+    if (!slot) continue;
+    const c = getCard(slot.cardId);
+    if (!c || !/^eddie$/i.test(c.name || '')) continue;
+    if (!slot._eddieDestroyedThisTurn) {
+      slot.cpMod = Number(slot.cpMod || 0) - 100;
+      const effectiveCp = Number(c.cp || 0) + Number(slot.cpMod || 0);
+      addLog(state, `Effect Script: Eddie decayed — CP is now ${effectiveCp}.`);
+      if (effectiveCp <= 0) {
+        runOnSelfDestroyed(state, playerIdx, slot.cardId, { reason:'Eddie decay' });
+        state.players[playerIdx].void.push(slot.cardId);
+        state.players[playerIdx].rfg.push(state.players[playerIdx].void.pop()); // RFG instead
+        state.players[playerIdx].catalysts[z] = null;
+        addLog(state, 'Effect Script: Eddie reached 0 CP and was removed from game.');
+      }
+    }
+    slot._eddieDestroyedThisTurn = false; // reset for next turn
+  }
+}
+
+function p55_baikenEndBattle(state, ownerPlayer, cardId, ctx) {
+  if (ctx && ctx.reason === 'battle') {
+    state._forceEndBattlePhase = true;
+    addLog(state, 'Effect Script: Baiken — the Battle Phase ends.');
+  }
+}
+
+function p55_jamFlip(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  const heads = Math.random() < 0.5;
+  if (heads) { p.chi += 2000; addLog(state, 'Effect Script: Jam Kuradoberi (heads) — gained 2000 Chi.'); }
+  else { p.chi = Math.max(0, p.chi - 2000); addLog(state, 'Effect Script: Jam Kuradoberi (tails) — lost 2000 Chi.'); }
+}
+
+function p55_johnnyCoin(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const heads = Math.random() < 0.5;
+  if (heads) {
+    slot._johnnyBattleBoost = 500;
+    addLog(state, 'Effect Script: Johnny (heads) — gains +500 Pressure for this battle.');
+  } else addLog(state, 'Effect Script: Johnny (tails) — no Pressure boost.');
+}
+
+function p55_axlContinuous(state, playerIdx) {
+  const p = state.players[playerIdx];
+  const axlZones = p.catalysts.map((s, i) => s && /^axl low$/i.test(getCard(s.cardId)?.name||'') ? i : -1).filter(i => i >= 0);
+  if (axlZones.length >= 2) {
+    // Tribute all Axl Low, SS Raven
+    for (const z of axlZones) {
+      p.void.push(p.catalysts[z].cardId);
+      p.catalysts[z] = null;
+    }
+    const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, playerIdx, c => /^raven$/i.test(c.name||''), 'Axl Low');
+    if (res.ok) addLog(state, `Effect Script: Axl Low — all Axl Low tributed to summon Raven.`);
+  }
+}
+
+// ─── KH1 handlers ───────────────────────────────────────────────────
+function p55_soraContinuous(state, playerIdx) {
+  const p = state.players[playerIdx];
+  const hasSora = p.catalysts.some(s => s && /^sora$/i.test(getCard(s.cardId)?.name||''));
+  if (!hasSora) return;
+  for (let z = 0; z < 5; z++) {
+    const slot = p.catalysts[z];
+    if (!slot) continue;
+    const c = getCard(slot.cardId);
+    if (c && (/donald duck/i.test(c.name||'')||/goofy/i.test(c.name||'')||/mickey mouse/i.test(c.name||''))) {
+      slot._soraBoost = 500;
+    }
+  }
+}
+
+function p55_agrabahStandby(state, playerIdx) {
+  for (let p = 0; p < 2; p++) state.players[p].chi += 100;
+  addLog(state, 'Effect Script: Agrabah — both players gained 100 Chi.');
+}
+
+function p55_donaldKill(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  slot.atkMod = Number(slot.atkMod || 0) + 300;
+  slot.cpMod  = Number(slot.cpMod  || 0) + 300;
+  addLog(state, 'Effect Script: Donald Duck gained +300 Pressure and +300 Counter Pressure permanently.');
+}
+
+function p55_airPirateFlip(state, playerIdx, zoneIdx) {
+  const opp = state.players[1 - playerIdx];
+  const tz = opp.catalysts.findIndex(Boolean);
+  if (tz >= 0) {
+    const tc = getCard(opp.catalysts[tz].cardId);
+    opp.hand.push(opp.catalysts[tz].cardId);
+    opp.catalysts[tz] = null;
+    addLog(state, `Effect Script: Air Pirate returned ${tc?.name||'a Catalyst'} to its owner's hand.`);
+  }
+}
+
+function p55_queenOfHeartsStandby(state, playerIdx) {
+  const opp = state.players[1 - playerIdx];
+  if (opp.hand.length > 0) {
+    const ri = Math.floor(Math.random() * opp.hand.length);
+    const disc = opp.hand.splice(ri, 1)[0];
+    opp.void.push(disc);
+    addLog(state, `Effect Script: Queen of Hearts forced opponent to discard ${getCard(disc)?.name||'a card'}.`);
+  }
+}
+
+function p55_aladdinCoin(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Aladdin is not on your field.' };
+  let heads = 0;
+  for (let i = 0; i < 5; i++) if (Math.random() < 0.5) heads++;
+  const p = state.players[playerIdx];
+  if (heads >= 3) {
+    for (let i = 0; i < 3; i++) drawCard(state, playerIdx);
+    addLog(state, `Effect Script: Aladdin (${heads} heads) — drew 3 cards.`);
+  } else {
+    for (let i = 0; i < 2 && p.hand.length > 0; i++) {
+      const ri = Math.floor(Math.random() * p.hand.length);
+      p.void.push(p.hand.splice(ri,1)[0]);
+    }
+    addLog(state, `Effect Script: Aladdin (${heads} heads) — discarded 2 cards.`);
+  }
+  markEffectUsed(state, playerIdx, slot.cardId, 'aladdinCoin');
+  return { ok:true };
+}
+window.p55_aladdinCoin = p55_aladdinCoin;
+
+// ─── KIR handlers ───────────────────────────────────────────────────
+function p55_kirbyTransformCondition(state, playerIdx) {
+  const p = state.players[playerIdx];
+  return p.catalysts.some(s => s && /^kirby$/i.test(getCard(s.cardId)?.name||''));
+}
+
+function p55_krackoNuke(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  if (p.chi < 1500) return { ok:false, msg:'Need 1500 Chi.' };
+  p.chi -= 1500;
+  let destroyed = 0;
+  for (let pl = 0; pl < 2; pl++) {
+    const pl_ = state.players[pl];
+    for (let z = 0; z < 5; z++) {
+      const t = pl_.tricks[z];
+      if (t) { pl_.void.push(t.cardId); pl_.tricks[z] = null; destroyed++; }
+    }
+    if (pl_.fieldTrick) { pl_.void.push(pl_.fieldTrick.cardId); pl_.fieldTrick = null; destroyed++; }
+  }
+  addLog(state, `Effect Script: Kracko paid 1500 Chi and destroyed ${destroyed} Palm/Concealed Trick(s).`);
+  return { ok:true };
+}
+window.p55_krackoNuke = p55_krackoNuke;
+
+function p55_dynablade(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  if (p.chi < 1500) return { ok:false, msg:'Need 1500 Chi.' };
+  if (isEffectUsed(state, playerIdx, p.catalysts[zoneIdx]?.cardId||'', 'dynabladNuke')) return { ok:false, msg:'Already used this duel.' };
+  p.chi -= 1500;
+  let destroyed = 0;
+  const myCard = p.catalysts[zoneIdx]?.cardId;
+  for (let pl = 0; pl < 2; pl++) {
+    const pl_ = state.players[pl];
+    for (let z = 0; z < 5; z++) {
+      const s = pl_.catalysts[z];
+      if (s && s.cardId !== myCard) {
+        runOnSelfDestroyed(state, pl, s.cardId, { reason:'Dyna Blade' });
+        pl_.void.push(s.cardId);
+        pl_.catalysts[z] = null;
+        destroyed++;
+      }
+    }
+  }
+  addLog(state, `Effect Script: Dyna Blade paid 1500 Chi and destroyed ${destroyed} Catalyst(s) (excluding itself).`);
+  markEffectUsed(state, playerIdx, myCard, 'dynabladNuke');
+  return { ok:true };
+}
+window.p55_dynablade = p55_dynablade;
+
+function p55_poponTribute(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  const slot = p.catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Popon is not on your field.' };
+  runOnSelfDestroyed(state, playerIdx, slot.cardId, { reason:'Popon tribute' });
+  p.void.push(slot.cardId);
+  p.catalysts[zoneIdx] = null;
+  p.chi += 1000;
+  addLog(state, 'Effect Script: Popon was tributed — gained 1000 Chi.');
+  return { ok:true };
+}
+window.p55_poponTribute = p55_poponTribute;
+
+// ─── LOZ handlers ───────────────────────────────────────────────────
+function p55_adultLinkGrow(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  slot.atkMod = Number(slot.atkMod || 0) + 150;
+  addLog(state, 'Effect Script: Adult Link gained +150 Pressure from dealing damage.');
+}
+
+function p55_adultLinkRevive(state, ownerPlayer, cardId) {
+  const res = specialSummonFromHandOrVoidByPredicate(state, ownerPlayer,
+    c => /child link #[13]/i.test(c.name||''), 'Adult Link');
+  if (res.ok) addLog(state, 'Effect Script: Adult Link revived Child Link #1 or #3 in Defense position.');
+}
+
+function p55_zeldaContinuous(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const p = state.players[playerIdx];
+  const linkCount = [
+    ...p.catalysts.filter(Boolean).map(s=>getCard(s.cardId)),
+    ...p.void.map(getCard)
+  ].filter(c => c && /link/i.test(c.name||'') && !/shadow link/i.test(c.name||'')).length;
+  slot.atkMod = linkCount * 400;
+}
+
+// ─── MGM handlers ───────────────────────────────────────────────────
+function p55_megamanPR(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const handCount = state.players[playerIdx].hand.length;
+  const base = getCard(slot.cardId);
+  slot.atkMod = handCount * 400 - Number(base?.pr || 0);
+  slot.cpMod  = handCount * 400 - Number(base?.cp || 0);
+}
+
+function p55_wackomanPR(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const voidCount = state.players[playerIdx].void.length;
+  const base = getCard(slot.cardId);
+  slot.atkMod = voidCount * 400 - Number(base?.pr || 0);
+  slot.cpMod  = voidCount * 400 - Number(base?.cp || 0);
+}
+
+function p55_elecman(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const opp = state.players[1 - playerIdx];
+  const ownField = state.players[playerIdx].catalysts.filter(Boolean);
+  if (ownField.length <= 1) {
+    // Must destroy self if alone
+    runOnSelfDestroyed(state, playerIdx, slot.cardId, { reason:'ElecMan alone' });
+    state.players[playerIdx].void.push(slot.cardId);
+    state.players[playerIdx].catalysts[zoneIdx] = null;
+    addLog(state, 'Effect Script: ElecMan had no other targets and destroyed itself.');
+    return;
+  }
+  const tz = opp.catalysts.findIndex(Boolean);
+  if (tz >= 0) {
+    const tc = getCard(opp.catalysts[tz].cardId);
+    runOnSelfDestroyed(state, 1-playerIdx, opp.catalysts[tz].cardId, { reason:'ElecMan' });
+    opp.void.push(opp.catalysts[tz].cardId);
+    opp.catalysts[tz] = null;
+    state.players[playerIdx].kills++;
+    addLog(state, `Effect Script: ElecMan destroyed ${tc?.name||'a Catalyst'} on summon.`);
+    checkWinConditions(state);
+  }
+}
+
+function p55_torchmanKill(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  slot.atkMod = Number(slot.atkMod || 0) + 500;
+  slot._torchBoostDecayTurn = (state.turn || 0) + 1;
+  addLog(state, 'Effect Script: Torch Man gained +500 Pressure until next Standby Phase.');
+}
+
+function p55_torchmanFlip(state, playerIdx, zoneIdx) {
+  const found = addCardToHandFromDeckByPredicate(state, playerIdx, c => c.sub === 'Equip' && c.cardType === 'Palm Trick');
+  if (found) addLog(state, `Effect Script: Torch Man (flip) searched ${found.name} equip Palm Trick from Deck.`);
+}
+
+function p55_freezeman(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Freeze Man not on field.' };
+  if (isEffectUsed(state, playerIdx, slot.cardId, 'freezemanCoin')) return { ok:false, msg:'Already used this turn.' };
+  let heads = 0;
+  for (let i = 0; i < 3; i++) if (Math.random() < 0.5) heads++;
+  addLog(state, `Effect Script: Freeze Man flipped 3 coins — ${heads} head(s).`);
+  if (heads >= 2) {
+    const opp = state.players[1 - playerIdx];
+    const tz = opp.catalysts.findIndex(Boolean);
+    if (tz >= 0) {
+      const tc = getCard(opp.catalysts[tz].cardId);
+      runOnSelfDestroyed(state, 1-playerIdx, opp.catalysts[tz].cardId, { reason:'Freeze Man' });
+      opp.void.push(opp.catalysts[tz].cardId);
+      opp.catalysts[tz] = null;
+      state.players[playerIdx].kills++;
+      addLog(state, `Effect Script: Freeze Man destroyed ${tc?.name||'a Catalyst'}.`);
+      checkWinConditions(state);
+    }
+  }
+  markEffectUsed(state, playerIdx, slot.cardId, 'freezemanCoin');
+  return { ok:true };
+}
+window.p55_freezeman = p55_freezeman;
+
+// ─── S-M handlers ───────────────────────────────────────────────────
+function p55_supermanImmune(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const p = state.players[playerIdx];
+  const allies = ['wonder-woman','green lantern','flash','hawk girl','batman'];
+  const hasAlly = p.catalysts.some(s => {
+    if (!s) return false;
+    const c = getCard(s.cardId);
+    return c && allies.some(a => new RegExp(a,'i').test(c.name||''));
+  });
+  slot._immunePalm = hasAlly;
+  slot._immuneConcealed = hasAlly;
+}
+
+function p55_archangelBoost(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const p = state.players[playerIdx];
+  const wingCount = p.catalysts.filter(s => {
+    const c = s && getCard(s.cardId);
+    return c && (c.kinds||[]).some(k => /winged.beast/i.test(k));
+  }).length;
+  slot.atkMod = wingCount * 500;
+  slot.cpMod  = wingCount * 500;
+}
+
+function p55_bishopReturn(state, ownerPlayer, cardId) {
+  const found = addCardToHandFromVoidByPredicate(state, ownerPlayer,
+    c => c.cardType === 'Catalyst' && Number(c.pr||0) <= 1500);
+  if (found) addLog(state, `Effect Script: Lucas Bishop returned ${found.name} from the Void to hand.`);
+}
+
+function p55_emmaFrost(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Emma Frost not on field.' };
+  const p = state.players[playerIdx];
+  if (p.chi < 500) return { ok:false, msg:'Need 500 Chi.' };
+  if (isEffectUsed(state, playerIdx, slot.cardId, 'emmaFrost')) return { ok:false, msg:'Already used this turn.' };
+  p.chi -= 500;
+  slot._indestructibleByBattle = true;
+  slot.cannotAttackThisTurn = true;
+  markEffectUsed(state, playerIdx, slot.cardId, 'emmaFrost');
+  addLog(state, 'Effect Script: Emma Frost — cannot be destroyed by battle this turn and cannot attack.');
+  return { ok:true };
+}
+window.p55_emmaFrost = p55_emmaFrost;
+
+function p55_gambitCoin(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  const heads = Math.random() < 0.5;
+  if (heads) {
+    drawCard(state, playerIdx); drawCard(state, playerIdx);
+    addLog(state, 'Effect Script: Gambit (heads) — drew 2 cards.');
+  } else {
+    const discarded = [...p.hand];
+    p.void.push(...discarded);
+    p.hand.length = 0;
+    addLog(state, `Effect Script: Gambit (tails) — discarded entire hand (${discarded.length} card(s)).`);
+  }
+}
+
+function p55_jeanGrey(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Jean Grey not on field.' };
+  const p = state.players[playerIdx];
+  if (p.chi < 1000) return { ok:false, msg:'Need 1000 Chi.' };
+  if (isEffectUsed(state, playerIdx, slot.cardId, 'jeanGreyControl')) return { ok:false, msg:'Already used this turn.' };
+  p.chi -= 1000;
+  const res = runGenericTakeControl(state, playerIdx, slot.cardId, { faceUpOnly:true, oncePerTurn:false }, null, 'Jean Grey');
+  if (!res.ok) return { ok:false, msg:res.msg };
+  p._skipNextDraw = (p._skipNextDraw || 0) + 1;
+  markEffectUsed(state, playerIdx, slot.cardId, 'jeanGreyControl');
+  addLog(state, 'Effect Script: Jean Grey — took control of a Catalyst; will skip next draw phase.');
+  return { ok:true };
+}
+window.p55_jeanGrey = p55_jeanGrey;
+
+function p55_magnetoContinuous(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  let palmCount = 0;
+  for (let p = 0; p < 2; p++) {
+    const pl = state.players[p];
+    for (let z = 0; z < 5; z++) {
+      const t = pl.tricks[z];
+      if (t && !t.faceDown) palmCount++;
+    }
+    if (pl.fieldTrick && !pl.fieldTrick.faceDown) palmCount++;
+  }
+  slot.atkMod = palmCount * 300;
+}
+
+function p55_blackCat(state, attackerPlayer, attackerZone, damage) {
+  const opp = state.players[1 - attackerPlayer];
+  if (opp.hand.length > 0) {
+    const ri = Math.floor(Math.random() * opp.hand.length);
+    const disc = opp.hand.splice(ri, 1)[0];
+    opp.rfg.push(disc); // also RFGs it
+    addLog(state, `Effect Script: Black Cat — opponent discarded and removed ${getCard(disc)?.name||'a card'} from game.`);
+  }
+}
+
+// ─── SLM handlers ───────────────────────────────────────────────────
+function p55_mercuryDirect(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const p = state.players[playerIdx];
+  const hasShine = p.fieldTrick && !p.fieldTrick.faceDown && /shine aqua illusion/i.test(getCard(p.fieldTrick.cardId)?.name||'');
+  slot._canDirectAttackHalf = hasShine;
+}
+
+function p55_sailorMarsNuke(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Sailor Mars not on field.' };
+  if (isEffectUsed(state, playerIdx, slot.cardId, 'marsNuke')) return { ok:false, msg:'Already used this turn.' };
+  const p = state.players[playerIdx];
+  const sacrificeZ = p.catalysts.findIndex((s, i) => i !== zoneIdx && s);
+  if (sacrificeZ < 0) return { ok:false, msg:'No Catalyst to tribute.' };
+  runOnSelfDestroyed(state, playerIdx, p.catalysts[sacrificeZ].cardId, { reason:'Sailor Mars' });
+  p.void.push(p.catalysts[sacrificeZ].cardId);
+  p.catalysts[sacrificeZ] = null;
+  for (let pl = 0; pl < 2; pl++) { state.players[pl].chi = Math.max(0, state.players[pl].chi - 1000); }
+  addLog(state, 'Effect Script: Sailor Mars — tributed a Catalyst to deal 1000 damage to both players.');
+  markEffectUsed(state, playerIdx, slot.cardId, 'marsNuke');
+  checkWinConditions(state);
+  return { ok:true };
+}
+window.p55_sailorMarsNuke = p55_sailorMarsNuke;
+
+function p55_mizunoSS(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Mizuno Ami not on field.' };
+  const p = state.players[playerIdx];
+  runOnSelfDestroyed(state, playerIdx, slot.cardId, { reason:'tribute for Sailor Mercury' });
+  p.void.push(slot.cardId);
+  p.catalysts[zoneIdx] = null;
+  const res = specialSummonFromDeckByPredicate(state, playerIdx, c => /^sailor mercury$/i.test(c.name||''), 'Mizuno Ami');
+  if (!res.ok) { addLog(state, 'Effect Script: Mizuno Ami could not find Sailor Mercury in the Deck.'); return { ok:false, msg:'No Sailor Mercury in Deck.' }; }
+  addLog(state, 'Effect Script: Mizuno Ami tributed herself to summon Sailor Mercury from Deck.');
+  return { ok:true };
+}
+window.p55_mizunoSS = p55_mizunoSS;
+
+// ─── TT1 handlers ───────────────────────────────────────────────────
+function p55_cyborgIndestructible(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const p = state.players[playerIdx];
+  // Check if equipped with "110 PERCENT"
+  const has110 = p.tricks.some(t => t && !t.faceDown && /110 percent/i.test(getCard(t.cardId)?.name||''));
+  slot._indestructibleByBattle = has110;
+}
+
+function p55_beastboyCoin(state, playerIdx) {
+  for (let z = 0; z < 5; z++) {
+    const slot = state.players[playerIdx].catalysts[z];
+    if (!slot) continue;
+    const c = getCard(slot.cardId);
+    if (!c || !/beast boy/i.test(c.name||'')) continue;
+    if (isEffectUsed(state, playerIdx, slot.cardId, 'beastboyCoin')) continue;
+    const heads = Math.random() < 0.5;
+    if (heads) {
+      const roll = Math.floor(Math.random() * 6) + 1;
+      slot.atkMod = roll * 350 - Number(c.pr||0);
+      if (roll === 6) slot.extraAttackThisTurn = (slot.extraAttackThisTurn||0) + 1;
+      addLog(state, `Effect Script: Beast Boy (heads) rolled ${roll} — PR set to ${roll*350}${roll===6?' and may attack twice':''}.`);
+    } else {
+      slot.position = 'def';
+      addLog(state, 'Effect Script: Beast Boy (tails) — switched to Defense position.');
+    }
+    markEffectUsed(state, playerIdx, slot.cardId, 'beastboyCoin');
+  }
+}
+
+function p55_birdarangsMill(state, attackerPlayer, attackerZone) {
+  const opp = state.players[1 - attackerPlayer];
+  for (let i = 0; i < 2 && opp.deck.length > 0; i++) {
+    opp.void.push(opp.deck.shift());
+  }
+  addLog(state, 'Effect Script: Bird-A-Rangs — opponent milled 2 cards from top of Deck.');
+}
+
+function p55_freezeDisksContinuous(state, playerIdx) {
+  // Find any Freeze-Disks trick on the field and enforce lock
+  for (let p = 0; p < 2; p++) {
+    const pl = state.players[p];
+    for (let z = 0; z < 5; z++) {
+      const t = pl.tricks[z];
+      if (!t || t.faceDown) continue;
+      const tc = getCard(t.cardId);
+      if (!tc || !/freeze.disks/i.test(tc.name||'')) continue;
+      // The locked target is stored on the trick slot
+      const lockedZone = t._freezeLockedZone;
+      const lockedPlayer = t._freezeLockedPlayer;
+      if (typeof lockedPlayer === 'number' && typeof lockedZone === 'number') {
+        const ls = state.players[lockedPlayer].catalysts[lockedZone];
+        if (ls) ls.cannotAttackThisTurn = true;
+      }
+    }
+  }
+}
+
+function p55_terraCoin(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  if (isEffectUsed(state, playerIdx, slot.cardId, 'terraCoin')) return;
+  const c = getCard(slot.cardId);
+  const base = Number(c?.pr||0);
+  const r1 = Math.random() < 0.5, r2 = Math.random() < 0.5;
+  if (r1 && r2) {
+    slot.atkMod = Number(slot.atkMod||0) + base;
+    addLog(state, `Effect Script: Terra (both heads) — Pressure doubled to ${base*2}.`);
+  } else if (!r1 && !r2) {
+    slot.atkMod = Number(slot.atkMod||0) - Math.floor(base/2);
+    addLog(state, `Effect Script: Terra (both tails) — Pressure halved to ${Math.floor(base/2)}.`);
+  } else {
+    addLog(state, 'Effect Script: Terra (mixed) — no change.');
+  }
+  markEffectUsed(state, playerIdx, slot.cardId, 'terraCoin');
+}
+
+function p55_aqualadDeepSea(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const active = isDeepSeaActive(state);
+  slot._immunePalm = active;
+  slot._immuneConcealed = active;
+  slot._cannotBeAttacked = active;
+}
+
+function p55_hotSpotImmune(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const p = state.players[playerIdx];
+  const volcanoActive = p.fieldTrick && !p.fieldTrick.faceDown && /^volcano$/i.test(getCard(p.fieldTrick.cardId)?.name||'');
+  slot._immunePalm = volcanoActive;
+}
+
+// ─── YYH handlers ───────────────────────────────────────────────────
+function p55_botanAura(state, playerIdx) {
+  const p = state.players[playerIdx];
+  const hasBotan = p.catalysts.some(s => s && /^botan$/i.test(getCard(s.cardId)?.name||''));
+  if (!hasBotan) return;
+  const boostedNames = /hiei|yusuke|kurama|kuwab|genkai/i;
+  for (let z = 0; z < 5; z++) {
+    const slot = p.catalysts[z];
+    if (!slot) continue;
+    const c = getCard(slot.cardId);
+    if (c && boostedNames.test(c.name||'')) slot.atkMod = Number(slot.atkMod||0) + 500;
+  }
+}
+
+function p55_genkaiContinuous(state, playerIdx) {
+  const p = state.players[playerIdx];
+  const hasGenkai = p.catalysts.some(s => s && /^genkai$/i.test(getCard(s.cardId)?.name||''));
+  if (!hasGenkai) return;
+  // Yusuke +300
+  for (let z = 0; z < 5; z++) {
+    const slot = p.catalysts[z];
+    if (!slot) continue;
+    const c = getCard(slot.cardId);
+    if (c && /yusuke/i.test(c.name||'')) slot.atkMod = Number(slot.atkMod||0) + 300;
+    // Humans can't be attacked
+    if (c && (c.kinds||[]).some(k => /human/i.test(k))) slot._cannotBeAttacked = true;
+  }
+}
+
+function p55_kaykoFlip(state, playerIdx, zoneIdx) {
+  const found = addCardToHandFromDeckByPredicate(state, playerIdx,
+    c => c.cardType === 'Catalyst' && Number(c.level||0) <= 4 && (c.kinds||[]).some(k => /human/i.test(k)));
+  if (found) addLog(state, `Effect Script: Kayko searched ${found.name} from Deck.`);
+}
+
+function p55_koenmaFlip(state, playerIdx, zoneIdx) {
+  const res = specialSummonFromHandByPredicate(state, playerIdx,
+    c => c.cardType === 'Catalyst' && Number(c.level||0) <= 4 && (c.kinds||[]).some(k => /demon|spirit/i.test(k)), 'Koenma');
+  if (res.ok) addLog(state, 'Effect Script: Koenma summoned a Lvl 4 or lower Demon/Spirit from hand.');
+}
+
+function p55_kurama(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Kurama not on field.' };
+  const p = state.players[playerIdx];
+  if (isEffectUsed(state, playerIdx, slot.cardId, 'kuramaChoice')) return { ok:false, msg:'Already used this turn.' };
+  // Choose cheapest available: draw for 1500, destroy trick for 1000
+  if (p.chi >= 1000) {
+    // Prefer trick destruction if there's a target
+    const opp = state.players[1 - playerIdx];
+    const trickTarget = opp.tricks.findIndex(t => t) >= 0 || opp.fieldTrick;
+    if (trickTarget && p.chi >= 1000) {
+      p.chi -= 1000;
+      let destroyed = false;
+      for (let z = 0; z < 5 && !destroyed; z++) {
+        if (opp.tricks[z]) { opp.void.push(opp.tricks[z].cardId); opp.tricks[z] = null; destroyed = true; }
+      }
+      if (!destroyed && opp.fieldTrick) { opp.void.push(opp.fieldTrick.cardId); opp.fieldTrick = null; destroyed = true; }
+      addLog(state, 'Effect Script: Kurama (1000 Chi) destroyed a Palm/Concealed Trick.');
+    }
+  } else if (p.chi >= 1500) {
+    p.chi -= 1500;
+    drawCard(state, playerIdx);
+    addLog(state, 'Effect Script: Kurama (1500 Chi) drew 1 card.');
+  } else return { ok:false, msg:'Not enough Chi (need 1000 or 1500).' };
+  markEffectUsed(state, playerIdx, slot.cardId, 'kuramaChoice');
+  return { ok:true };
+}
+window.p55_kurama = p55_kurama;
+
+function p55_kuwabaraKill(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  slot.atkMod = Number(slot.atkMod||0) + 100;
+  addLog(state, 'Effect Script: Kuwabara gained +100 Pressure permanently.');
+}
+
+function p55_yusukeCounter(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  slot._yusukeCounters = Math.min(2, Number(slot._yusukeCounters||0) + 1);
+  addLog(state, `Effect Script: Yusuke gained a counter (${slot._yusukeCounters}/2).`);
+}
+
+function p55_yusukeCounterUse(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Yusuke not on field.' };
+  if (Number(slot._yusukeCounters||0) < 2) return { ok:false, msg:'Need 2 counters on Yusuke.' };
+  slot._yusukeCounters = 0;
+  const opp = state.players[1 - playerIdx];
+  const tz = opp.catalysts.findIndex(Boolean);
+  if (tz >= 0) {
+    const tc = getCard(opp.catalysts[tz].cardId);
+    runOnSelfDestroyed(state, 1-playerIdx, opp.catalysts[tz].cardId, { reason:'Yusuke counters' });
+    opp.void.push(opp.catalysts[tz].cardId);
+    opp.catalysts[tz] = null;
+    state.players[playerIdx].kills++;
+    addLog(state, `Effect Script: Yusuke removed 2 counters to destroy ${tc?.name||'a Catalyst'}.`);
+    checkWinConditions(state);
+  } else addLog(state, 'Effect Script: Yusuke removed 2 counters but found no target.');
+  return { ok:true };
+}
+window.p55_yusukeCounterUse = p55_yusukeCounterUse;
+
+function p55_yukinaFlip(state, playerIdx, zoneIdx) {
+  const p = state.players[playerIdx];
+  const res = specialSummonFromHandByPredicate(state, playerIdx,
+    c => /^(kuwabara|hiei)$/i.test(c.name||''), 'Yukina');
+  if (res.ok) addLog(state, 'Effect Script: Yukina summoned Kuwabara or Hiei from hand.');
+}
+
+function p55_yukinaProtect(state, playerIdx) {
+  const p = state.players[playerIdx];
+  const hasYukina = p.catalysts.some(s => s && /^yukina$/i.test(getCard(s.cardId)?.name||''));
+  if (!hasYukina) return;
+  for (let z = 0; z < 5; z++) {
+    const slot = p.catalysts[z];
+    if (!slot) continue;
+    const c = getCard(slot.cardId);
+    if (c && /^(kuwabara|hiei)$/i.test(c.name||'')) slot._cannotBeAttacked = true;
+  }
+}
+
+function p55_bui(state, playerIdx, zoneIdx) {
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return { ok:false, msg:'Bui not on field.' };
+  const p = state.players[playerIdx];
+  if (isEffectUsed(state, playerIdx, slot.cardId, 'buiDiscard')) return { ok:false, msg:'Already used this turn.' };
+  if (p.hand.length === 0) return { ok:false, msg:'No cards in hand to discard.' };
+  const ri = Math.floor(Math.random() * p.hand.length);
+  const disc = p.hand.splice(ri, 1)[0];
+  p.void.push(disc);
+  slot.atkMod = Number(slot.atkMod||0) + 300;
+  slot._buiBoostUntilEnd = true;
+  markEffectUsed(state, playerIdx, slot.cardId, 'buiDiscard');
+  addLog(state, `Effect Script: Bui discarded ${getCard(disc)?.name||'a card'} to gain +300 Pressure this turn.`);
+  return { ok:true };
+}
+window.p55_bui = p55_bui;
+
+// ─── YYH Yusuke Fired Up ─────────────────────────────────────────────
+function p55_yusukeFiredUpSS(state, playerIdx) {
+  const p = state.players[playerIdx];
+  // Must tribute Yusuke equipped with Spirit Orb
+  const yusukeZone = p.catalysts.findIndex(s => s && /^yusuke$/i.test(getCard(s.cardId)?.name||''));
+  if (yusukeZone < 0) return { ok:false, msg:'Tribute Yusuke equipped with Spirit Orb.' };
+  const hasOrb = p.tricks.some(t => t && !t.faceDown && /spirit orb/i.test(getCard(t.cardId)?.name||''));
+  if (!hasOrb) return { ok:false, msg:'Yusuke must be equipped with Spirit Orb.' };
+  runOnSelfDestroyed(state, playerIdx, p.catalysts[yusukeZone].cardId, { reason:'tribute for Yusuke Fired Up' });
+  p.void.push(p.catalysts[yusukeZone].cardId);
+  p.catalysts[yusukeZone] = null;
+  return { ok:true };
+}
+
+// ─── Dispatch hook extensions for runRegisteredOnSummon ──────────────
+const _origRunRegisteredOnSummon = runRegisteredOnSummon;
+function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
+  _origRunRegisteredOnSummon(state, playerIdx, zoneIdx);
+  const slot = state.players[playerIdx].catalysts[zoneIdx];
+  if (!slot) return;
+  const effects = getAllCardEffects(slot.cardId);
+  for (const eff of effects) {
+    if (eff.type !== 'onSummon') continue;
+    if (eff.action === 'custom_magusSearch') { p55_magusSearch(state, playerIdx, zoneIdx); }
+    else if (eff.action === 'custom_kisame')   { p55_kisame(state, playerIdx, zoneIdx); }
+    else if (eff.action === 'custom_kankuro')  { p55_kankuro(state, playerIdx, zoneIdx); }
+    else if (eff.action === 'custom_garaSwitch') {
+      const slot2 = state.players[playerIdx].catalysts[zoneIdx];
+      if (slot2) { slot2.position = 'def'; addLog(state, 'Effect Script: Gara switched to Defense position on summon.'); }
+    }
+    else if (eff.action === 'custom_hinataSummon') {
+      const res = specialSummonFromHandOrVoidByPredicate(state, playerIdx, c => /^neji$/i.test(c.name||''), 'Hinata');
+      if (res.ok) addLog(state, 'Effect Script: Hinata Special Summoned Neji from hand/Void.');
+    }
+    else if (eff.action === 'custom_nidaime')    { p55_nidaime(state, playerIdx, zoneIdx); }
+    else if (eff.action === 'custom_roboDebuff') {
+      const opp = state.players[1 - playerIdx];
+      const tz = opp.catalysts.findIndex(Boolean);
+      if (tz >= 0) { opp.catalysts[tz].atkMod = Number(opp.catalysts[tz].atkMod||0) - 300; addLog(state, `Effect Script: Robo reduced ${getCard(opp.catalysts[tz].cardId)?.name||'a Catalyst'}'s Pressure by 300.`); }
+    }
+    else if (eff.action === 'custom_eggbotTokens') { p55_eggbotTokens(state, playerIdx, zoneIdx); }
+    else if (eff.action === 'custom_quentSummon')   { p55_quentSummon(state, playerIdx, zoneIdx); }
+    else if (eff.action === 'custom_elecman')        { p55_elecman(state, playerIdx, zoneIdx); }
+    else if (eff.action === 'custom_gambitCoin')     { p55_gambitCoin(state, playerIdx, zoneIdx); }
+    else if (eff.action === 'draw') {
+      for (let i = 0; i < (eff.count||1); i++) drawCard(state, playerIdx);
+      addLog(state, `Effect Script: ${getCard(slot.cardId)?.name} ${eff.log||'drew a card'}.`);
+    }
+  }
+}
+
+// ─── Dispatch hook extensions for runOnSelfDestroyed ─────────────────
+const _origRunOnSelfDestroyed = runOnSelfDestroyed;
+function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
+  _origRunOnSelfDestroyed(state, ownerPlayer, cardId, ctx);
+  for (const eff of getCardEffects(cardId)) {
+    if (eff.type !== 'onSelfDestroyed') continue;
+    if (eff.action === 'custom_aylaDestroy') {
+      const opp = state.players[1 - ownerPlayer];
+      let destroyed = false;
+      for (let z = 0; z < 5 && !destroyed; z++) {
+        if (opp.tricks[z]) { opp.void.push(opp.tricks[z].cardId); opp.tricks[z] = null; destroyed = true; }
+      }
+      if (!destroyed && opp.fieldTrick) { opp.void.push(opp.fieldTrick.cardId); opp.fieldTrick = null; destroyed = true; }
+      addLog(state, destroyed ? 'Effect Script: Ayla destroyed an opponent Palm/Concealed Trick.' : 'Effect Script: Ayla found no trick to destroy.');
+    }
+    else if (eff.action === 'custom_wolfReviveOnce') { p55_wolfReviveOnce(state, ownerPlayer, cardId, eff); }
+    else if (eff.action === 'custom_koopaRevive') {
+      const res = specialSummonFromDeckByPredicate(state, ownerPlayer, c => /koopa troopa/i.test(c.name||''), 'Koopa Troopa');
+      if (res.ok) addLog(state, 'Effect Script: Koopa Troopa summoned another Koopa Troopa from Deck.');
+    }
+    else if (eff.action === 'custom_marioRevive') {
+      const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /^mini.mario$/i.test(c.name||''), 'Mario');
+      if (res.ok) addLog(state, 'Effect Script: Mario summoned Mini-Mario from Void on destruction.');
+    }
+    else if (eff.action === 'custom_luigiRevive') {
+      const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /^mini.luigi$/i.test(c.name||''), 'Luigi');
+      if (res.ok) addLog(state, 'Effect Script: Luigi summoned Mini-Luigi from Void on destruction.');
+    }
+    else if (eff.action === 'custom_fireMarioRevive') {
+      const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /^mario$/i.test(c.name||''), 'Fire Mario');
+      if (res.ok) addLog(state, 'Effect Script: Fire Mario summoned Mario from Void on destruction.');
+    }
+    else if (eff.action === 'custom_fireLuigiRevive') {
+      const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /^luigi$/i.test(c.name||''), 'Fire Luigi');
+      if (res.ok) addLog(state, 'Effect Script: Fire Luigi summoned Luigi from Void on destruction.');
+    }
+    else if (eff.action === 'custom_adultLinkRevive') { p55_adultLinkRevive(state, ownerPlayer, cardId); }
+    else if (eff.action === 'custom_bishopReturn')    { p55_bishopReturn(state, ownerPlayer, cardId); }
+    else if (eff.action === 'custom_zato1Destroyed')  { p55_zato1Destroyed(state, ownerPlayer, cardId); }
+    else if (eff.action === 'custom_baikenEndBattle') { p55_baikenEndBattle(state, ownerPlayer, cardId, ctx); }
+    else if (eff.action === 'rfgSelf') {
+      // RFG instead of Void
+      const vIdx = state.players[ownerPlayer].void.indexOf(cardId);
+      if (vIdx >= 0) { state.players[ownerPlayer].void.splice(vIdx,1); state.players[ownerPlayer].rfg.push(cardId); }
+      addLog(state, `Effect Script: ${getCard(cardId)?.name||'A Catalyst'} was removed from game instead of going to the Void.`);
+    }
+  }
+}
+
+// ─── Expose activated handlers globally ──────────────────────────────
+window.p55_lavosDice       = p55_lavosDice;
+window.p55_magusScytheRFG  = p55_magusScytheRFG;
+window.p55_naruto          = p55_naruto;
+window.p55_aladdinCoin     = p55_aladdinCoin;
+window.p55_krackoNuke      = p55_krackoNuke;
+window.p55_dynablade       = p55_dynablade;
+window.p55_poponTribute    = p55_poponTribute;
+window.p55_freezeman       = p55_freezeman;
+window.p55_emmaFrost       = p55_emmaFrost;
+window.p55_jeanGrey        = p55_jeanGrey;
+window.p55_kurama          = p55_kurama;
+window.p55_sailorMarsNuke  = p55_sailorMarsNuke;
+window.p55_mizunoSS        = p55_mizunoSS;
+window.p55_bui             = p55_bui;
+window.p55_yusukeCounterUse = p55_yusukeCounterUse;
+window.p55_queenZealChi    = p55_queenZealChi;
+
+// ─── Continuous effect checks called from the aura/upkeep loop ────────
+function runP55ContinuousEffects(state, playerIdx) {
+  p55_botanAura(state, playerIdx);
+  p55_genkaiContinuous(state, playerIdx);
+  p55_freezeDisksContinuous(state, playerIdx);
+  p55_chezaProtect(state);
+  p55_axlContinuous(state, playerIdx);
+  for (let z = 0; z < 5; z++) {
+    const slot = state.players[playerIdx].catalysts[z];
+    if (!slot) continue;
+    const effs = getAllCardEffects(slot.cardId);
+    for (const eff of effs) {
+      if (eff.action === 'custom_soraContinuous')     p55_soraContinuous(state, playerIdx);
+      if (eff.action === 'custom_megamanPR')          p55_megamanPR(state, playerIdx, z);
+      if (eff.action === 'custom_wackomanPR')         p55_wackomanPR(state, playerIdx, z);
+      if (eff.action === 'custom_magnetoContinuous')  p55_magnetoContinuous(state, playerIdx, z);
+      if (eff.action === 'custom_supermanImmune')     p55_supermanImmune(state, playerIdx, z);
+      if (eff.action === 'custom_archangelBoost')     p55_archangelBoost(state, playerIdx, z);
+      if (eff.action === 'custom_mercuryDirect')      p55_mercuryDirect(state, playerIdx, z);
+      if (eff.action === 'custom_cyborgIndestructible') p55_cyborgIndestructible(state, playerIdx, z);
+      if (eff.action === 'custom_aqualadDeepSea')     p55_aqualadDeepSea(state, playerIdx, z);
+      if (eff.action === 'custom_hotSpotImmune')      p55_hotSpotImmune(state, playerIdx, z);
+      if (eff.action === 'custom_zeldaContinuous')    p55_zeldaContinuous(state, playerIdx, z);
+      if (eff.action === 'custom_yukinaProtect')      p55_yukinaProtect(state, playerIdx);
+    }
+  }
+}
+window.runP55ContinuousEffects = runP55ContinuousEffects;
+
+// ─── Standby upkeep additions for Patch 55 ────────────────────────────
+(function patchP55Standby() {
+  const _orig = typeof runStarterIgnitionUpkeep === 'function' ? runStarterIgnitionUpkeep : null;
+  if (!_orig) return;
+  // Wrapping the upkeep to add Agrabah, Queen of Hearts, Deep Sea/Zeal costs
+  const p55StandbyAddon = function(state, playerIdx) {
+    p55_agrabahStandby_check(state, playerIdx);
+    p55_queenOfHeartsStandby_check(state, playerIdx);
+    p55_eddieDecay(state, playerIdx);
+    p55_beastboyCoin_check(state, playerIdx);
+  };
+  function p55_agrabahStandby_check(state, playerIdx) {
+    for (let p = 0; p < 2; p++) {
+      const ft = state.players[p].fieldTrick;
+      if (ft && !ft.faceDown && /^agrabah$/i.test(getCard(ft.cardId)?.name||'')) {
+        if (state._agrabahLastTurn !== state.turn) {
+          p55_agrabahStandby(state, playerIdx);
+          state._agrabahLastTurn = state.turn;
+        }
+        break;
+      }
+    }
+  }
+  function p55_queenOfHeartsStandby_check(state, playerIdx) {
+    for (let z = 0; z < 5; z++) {
+      const slot = state.players[playerIdx].catalysts[z];
+      if (!slot) continue;
+      if (/queen of hearts/i.test(getCard(slot.cardId)?.name||'')) {
+        p55_queenOfHeartsStandby(state, playerIdx);
+      }
+    }
+  }
+  function p55_beastboyCoin_check(state, playerIdx) {
+    if (state.phaseName === 'battle') p55_beastboyCoin(state, playerIdx);
+  }
+  // Attach to window so play.html upkeep loop can call it
+  window.runP55StandbyAddon = p55StandbyAddon;
+})();
+
+// ═══════════════════════════════════════════════════════════════════
+// END PATCH 55
+// ═══════════════════════════════════════════════════════════════════
