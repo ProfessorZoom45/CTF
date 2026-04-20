@@ -3,614 +3,297 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <title>About Us — Carry The Flame</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
-<meta name="description" content="About Carry The Flame — the first free-to-play custom online trading card game. Learn the rules, style, systems, and live Patch 42 features behind the flame.">
+<meta name="theme-color" content="#0d0d0d">
+<meta name="description" content="Two guys from Buffalo who built a trading card game from scratch. No studio. No funding. Just a vision and a grind.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
-/* Google Fonts loaded via <link> in <head> for better LCP — see preconnect tags above */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --coal:#0d0d0d;
+  --coal-light:#181818;
+  --coal-mid:#222;
+  --line:rgba(255,106,0,.12);
+  --flame:#ff6a00;
+  --amber:#ffb347;
+  --gold:#ffd26b;
+  --ash:#888;
+  --ash-light:#aaa;
+  --white:#f5f0e8;
+  --cream:#e0d8c8;
+  --fd:'Bebas Neue',sans-serif;
+  --fl:'Barlow Condensed',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --fm:'Space Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--coal);color:var(--white);font-family:var(--fb);line-height:1.65;overflow-x:hidden}
+a{color:var(--flame);text-decoration:none}
+a:hover{color:var(--amber)}
 
-:root {
-  --bg: #050505;
-  --bg-soft: #0c0c0c;
-  --panel: rgba(19, 11, 8, 0.92);
-  --panel-2: rgba(30, 14, 8, 0.96);
-  --line: rgba(255, 128, 38, 0.20);
-  --line-strong: rgba(255, 176, 93, 0.38);
-  --text: #f7efe5;
-  --muted: #c7b6a2;
-  --ash: #8d7d70;
-  --flame: #ff5b16;
-  --flame-2: #ff7a1f;
-  --ember: #b93b00;
-  --gold: #ffd26b;
-  --shadow: 0 16px 48px rgba(0,0,0,0.42);
-  --max: 1200px;
-}
+/* NAV */
+nav{position:fixed;top:0;left:0;width:100%;z-index:100;background:rgba(13,13,13,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.ni{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.5rem}
+.brand{font-family:var(--fd);font-size:1.5rem;letter-spacing:2px;color:var(--flame)}.brand b{color:var(--white);font-weight:400}
+.nl{display:flex;gap:1.6rem;list-style:none}
+.nl a{font-family:var(--fl);font-weight:600;font-size:.9rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--cream);transition:color .2s}
+.nl a:hover,.nl a.on{color:var(--flame)}
+.mt{display:none;background:none;border:none;color:var(--flame);font-size:1.4rem;cursor:pointer}
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, rgba(255,90,20,0.08), transparent 28%), var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  overflow-x: hidden;
-}
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:0 1.5rem;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(255,106,0,.06),transparent 65%);pointer-events:none}
+.hi{max-width:860px;margin:0 auto;padding-top:7rem;padding-bottom:5rem;position:relative;z-index:1}
+.kicker{font-family:var(--fm);font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--flame);display:block;margin-bottom:1.2rem}
+.h1{font-family:var(--fd);font-size:clamp(4rem,10vw,8.5rem);line-height:.92;letter-spacing:2px;text-transform:uppercase;color:var(--white)}
+.h1 em{color:var(--flame);font-style:normal}
+.rule{width:54px;height:3px;background:var(--flame);margin:1.8rem 0}
+.lead{font-size:clamp(1rem,2vw,1.25rem);color:var(--cream);max-width:580px;line-height:1.75}
+.badge{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--fm);font-size:.65rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--ash);border:1px solid rgba(255,255,255,.08);padding:.35rem .75rem;margin-bottom:1.8rem}
 
-a { color: inherit; }
-.page, .topbar, .masthead, .content-grid, footer { position: relative; z-index: 1; }
+/* WRAP */
+.wrap{max-width:900px;margin:0 auto;padding:5rem 1.5rem}
+.wrap+.wrap{padding-top:0}
+hr.div{border:none;border-top:1px solid var(--line)}
+.lbl{font-family:var(--fm);font-size:.67rem;letter-spacing:3px;text-transform:uppercase;color:var(--flame);display:block;margin-bottom:.8rem}
 
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  backdrop-filter: blur(10px);
-  background: rgba(0,0,0,0.72);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.topbar-inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0.95rem 1.2rem;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: space-between;
-}
-.brand {
-  text-decoration: none;
-  color: var(--text);
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 2px;
-  font-size: 1.5rem;
-}
-.brand span { color: var(--gold); }
-.nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.9rem;
-  align-items: center;
-}
-.nav a {
-  text-decoration: none;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-}
-.nav a:hover { color: var(--gold); }
+/* FOUNDERS */
+.founders{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+.fc{background:var(--coal-light);border:1px solid var(--line);padding:2rem;position:relative;overflow:hidden;transition:border-color .25s}
+.fc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--flame),var(--amber))}
+.fc:hover{border-color:rgba(255,106,0,.28)}
+.ftag{font-family:var(--fm);font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--ash);display:block;margin-bottom:.4rem}
+.fname{font-family:var(--fd);font-size:2.4rem;letter-spacing:2px;color:var(--flame);line-height:1;margin-bottom:.25rem}
+.frole{font-family:var(--fl);font-size:.85rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:.9rem}
+.fbio{font-size:.9rem;color:var(--cream);line-height:1.72}
+.fquote{margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.07);font-size:.82rem;color:var(--ash-light);font-style:italic;line-height:1.55}
 
-.masthead {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 3.8rem 1.2rem 1.8rem;
-}
-.masthead-card {
-  background: linear-gradient(180deg, rgba(32,14,8,0.95), rgba(12,12,12,0.95));
-  border: 1px solid var(--line-strong);
-  border-radius: 28px;
-  padding: 2rem;
-  box-shadow: var(--shadow);
-}
-.kicker {
-  display: inline-block;
-  color: var(--gold);
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  font-size: 0.8rem;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  margin-bottom: 0.9rem;
-}
-.h1 {
-  margin: 0;
-  font-size: clamp(2.9rem, 7vw, 5.6rem);
-  line-height: 0.92;
-  text-transform: uppercase;
-  letter-spacing: 2.5px;
-  font-family: 'Bebas Neue', sans-serif;
-}
-.h1 .gold { color: var(--gold); }
-.deckline {
-  margin: 1rem 0 0;
-  font-size: clamp(1.05rem, 2vw, 1.25rem);
-  color: var(--muted);
-  max-width: 860px;
-  line-height: 1.7;
-}
-.deckline strong { color: var(--gold); }
-.pill-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 1.25rem;
-}
-.pill {
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,0.03);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 0.55rem 0.95rem;
-  font-size: 0.9rem;
-}
+/* ORIGIN */
+.oh2{font-family:var(--fd);font-size:clamp(2.2rem,6vw,4rem);letter-spacing:2px;text-transform:uppercase;line-height:.95;margin-bottom:1.5rem}
+.oh2 em{color:var(--flame);font-style:normal}
+.obody p{font-size:1rem;color:var(--cream);line-height:1.85;max-width:700px}
+.obody p+p{margin-top:1.1rem}
 
-.masthead-visual {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 1.2rem 1.2rem;
-}
-.feature-visual {
-  margin: 0;
-  background: linear-gradient(180deg, rgba(30,14,8,0.95), rgba(10,10,10,0.96));
-  border: 1px solid var(--line-strong);
-  border-radius: 28px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-.feature-visual img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.feature-visual figcaption {
-  padding: 1rem 1.2rem 1.15rem;
-  color: var(--muted);
-  font-size: 0.95rem;
-  line-height: 1.7;
-}
-.feature-visual strong { color: var(--gold); }
+/* PULLQUOTE */
+.pq{margin:3rem 0;padding:1.75rem 2rem 1.75rem 2.25rem;border-left:4px solid var(--flame);background:rgba(255,106,0,.04)}
+.pq p{font-family:var(--fl);font-size:clamp(1.1rem,2.5vw,1.55rem);font-weight:600;letter-spacing:.4px;color:var(--white);line-height:1.55}
+.pq cite{display:block;margin-top:.6rem;font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--ash)}
 
-.content-grid {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 1.2rem 4rem;
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
-  gap: 1.4rem;
-}
-.sidebar {
-  position: sticky;
-  top: 5.8rem;
-  align-self: start;
-}
-.side-card, .article-card, .stat-card, .callout, .cta-box {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-}
-.side-card {
-  padding: 1.2rem;
-}
-.side-title {
-  margin: 0 0 0.9rem;
-  color: var(--gold);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.92rem;
-  font-family: 'Barlow Condensed', sans-serif;
-}
-.side-list {
-  display: grid;
-  gap: 0.35rem;
-}
-.side-list a {
-  text-decoration: none;
-  color: var(--muted);
-  padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.side-list a:hover { color: var(--gold); }
+/* STATS */
+.stats{display:flex;flex-wrap:wrap;border:1px solid var(--line);margin:2rem 0}
+.stat{flex:1;min-width:150px;padding:1.5rem 1.75rem;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.sn{font-family:var(--fd);font-size:3rem;color:var(--flame);line-height:1;display:block}
+.sl{font-family:var(--fl);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--ash);display:block;margin-top:.2rem}
 
-.article-card {
-  padding: 1.4rem;
-}
-.article-card + .article-card { margin-top: 1.1rem; }
-.article-card h2 {
-  margin: 0 0 0.7rem;
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  line-height: 1;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-family: 'Bebas Neue', sans-serif;
-}
-.article-card h3 {
-  margin: 1.1rem 0 0.45rem;
-  color: var(--gold);
-  text-transform: uppercase;
-  letter-spacing: 1.4px;
-  font-size: 1rem;
-  font-family: 'Barlow Condensed', sans-serif;
-}
-.article-card p {
-  margin: 0.72rem 0;
-  color: var(--text);
-  line-height: 1.8;
-  font-size: 1rem;
-}
-.article-card p.lead {
-  color: var(--muted);
-  font-size: 1.04rem;
-}
-.publication {
-  color: var(--ash);
-  font-size: 0.95rem;
-  line-height: 1.75;
-}
-.snap-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
-  margin-top: 1rem;
-}
-.stat-card {
-  padding: 1rem;
-  background: var(--panel-2);
-}
-.stat-card .num {
-  display: block;
-  font-size: 2rem;
-  line-height: 1;
-  color: var(--gold);
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 1px;
-}
-.stat-card .label {
-  display: block;
-  margin-top: 0.35rem;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.5;
-}
-.callout {
-  margin-top: 1rem;
-  padding: 1rem 1.1rem;
-  border-left: 4px solid var(--flame);
-}
-.callout strong { color: var(--gold); }
-.dual {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-.mini-list {
-  margin: 0.6rem 0 0;
-  padding-left: 1.1rem;
-  color: var(--muted);
-  line-height: 1.75;
-}
-.mini-list li + li { margin-top: 0.35rem; }
-.cta-box {
-  padding: 1.25rem;
-  margin-top: 1rem;
-  background: linear-gradient(180deg, rgba(42,18,8,0.96), rgba(18,11,8,0.94));
-}
-.btn-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem;
-  margin-top: 1rem;
-}
-.btn {
-  display: inline-block;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  padding: 0.9rem 1.35rem;
-  clip-path: polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
-}
-.btn.primary {
-  color: white;
-  background: linear-gradient(135deg, var(--flame), var(--ember));
-}
-.btn.ghost {
-  color: var(--gold);
-  border: 2px solid rgba(255, 176, 93, 0.45);
-  background: rgba(255,255,255,0.03);
-}
-footer {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 1.2rem 3rem;
-}
-.footer-card {
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding-top: 1.2rem;
-  color: var(--ash);
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
+/* BELIEFS */
+.beliefs{margin-top:2rem;display:grid;gap:1px;background:var(--line)}
+.brow{background:var(--coal);padding:1.75rem 2rem;display:flex;gap:1.5rem;transition:background .2s}
+.brow:hover{background:var(--coal-light)}
+.bnum{font-family:var(--fd);font-size:2.2rem;color:rgba(255,106,0,.18);line-height:1;flex-shrink:0;width:2.4rem;padding-top:.1rem}
+.btitle{font-family:var(--fl);font-size:.95rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--white);margin-bottom:.3rem}
+.btext{font-size:.88rem;color:var(--ash-light);line-height:1.65}
 
-@media (max-width: 980px) {
-  .content-grid { grid-template-columns: 1fr; }
-  .sidebar { position: static; }
-  .snap-grid, .dual { grid-template-columns: 1fr; }
-}
+/* CTF GRID */
+.ctf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line);margin-top:2rem}
+.ctf-cell{background:var(--coal);padding:1.5rem}
+.ctf-head{font-family:var(--fl);font-size:.82rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--flame);margin-bottom:.4rem}
+.ctf-body{font-size:.85rem;color:var(--ash-light);line-height:1.65}
 
-@media (max-width: 640px) {
-  .topbar-inner { align-items: flex-start; flex-direction: column; }
-  .masthead-card, .article-card, .side-card { padding: 1.1rem; }
-  .h1 { font-size: clamp(2.5rem, 13vw, 4.3rem); }
+/* CTA */
+.cta{margin-top:4rem;padding:2.5rem;border:1px solid rgba(255,106,0,.18);text-align:center}
+.cta h3{font-family:var(--fd);font-size:2.2rem;letter-spacing:2px;color:var(--white);margin-bottom:.5rem}
+.cta p{color:var(--ash-light);font-size:.95rem;margin-bottom:1.5rem}
+.btn{display:inline-block;padding:.7rem 2.2rem;font-family:var(--fl);font-weight:700;font-size:.9rem;letter-spacing:2px;text-transform:uppercase;transition:all .2s}
+.btn-fire{background:var(--flame);color:#000}.btn-fire:hover{background:var(--amber);color:#000;transform:translateY(-2px)}
+.btn-line{border:1px solid rgba(255,106,0,.35);color:var(--flame);margin-left:1rem}.btn-line:hover{background:rgba(255,106,0,.07);color:var(--flame)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--line);padding:2rem 1.5rem;margin-top:3rem}
+.fi{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.fbrand{font-family:var(--fd);font-size:1rem;letter-spacing:2px;color:var(--flame)}
+.flinks{display:flex;gap:1.5rem;flex-wrap:wrap}
+.flinks a{font-family:var(--fl);font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash)}.flinks a:hover{color:var(--flame)}
+.fcopy{font-size:.72rem;color:var(--ash);width:100%}
+
+/* ANIM */
+@keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.hi>*{animation:up .65s ease both}
+.kicker{animation-delay:.05s}.badge{animation-delay:.08s}.h1{animation-delay:.12s}.rule{animation-delay:.22s}.lead{animation-delay:.28s}
+
+/* MOBILE */
+@media(max-width:700px){
+  .nl{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1.2rem 1.5rem;gap:1rem}
+  .nl.open{display:flex}
+  .mt{display:block}
+  .founders{grid-template-columns:1fr}
+  .stats{flex-direction:column}.stat{border-right:none;border-bottom:1px solid var(--line)}.stat:last-child{border-bottom:none}
+  .btn-line{margin-left:0;margin-top:.75rem;display:block;text-align:center}
+  .fi{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="topbar-inner">
-    <a class="brand" href="index.html">CARRY THE <span>FLAME</span></a>
-    <nav class="nav">
+<nav>
+  <div class="ni">
+    <a href="index.html" class="brand">CARRY THE <b>FLAME</b></a>
+    <button class="mt" onclick="document.querySelector('.nl').classList.toggle('open')">&#9776;</button>
+    <ul class="nl">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rules.html">Rules</a></li>
+      <li><a href="cards.html">Cards</a></li>
+      <li><a href="deckbuilder.html">Deck Builder</a></li>
+      <li><a href="play.html">Play</a></li>
+      <li><a href="About_Us.html" class="on">About</a></li>
+      <li><a href="submit.html">Submit Cards</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hi">
+    <span class="badge">&#128205; Buffalo, New York</span>
+    <span class="kicker">The people behind the cards</span>
+    <h1 class="h1">We Built<br><em>This</em><br>Ourselves.</h1>
+    <div class="rule"></div>
+    <p class="lead">No studio. No publisher. No funding round. Two guys from Buffalo with a vision, a grind, and a game that refuses to cost you a dime to play.</p>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- FOUNDERS -->
+<div class="wrap">
+  <span class="lbl">The Founders</span>
+  <div class="founders">
+
+    <div class="fc">
+      <span class="ftag">Co-Founder &amp; Architect</span>
+      <div class="fname">Dr. Zoom</div>
+      <div class="frole">Co-Founder &amp; Visionary</div>
+      <p class="fbio">The original blueprint. Dr. Zoom is the mind behind Carry The Flame — the rules engine, the card systems, the lore, the business structure. If it exists in CTF, he had a hand in designing it. Strategist, builder, and the reason this thing exists at all.</p>
+      <p class="fquote">"I don't wait for permission to build. If I can see it, I can make it real."</p>
+    </div>
+
+    <div class="fc">
+      <span class="ftag">Co-Founder &amp; Executor</span>
+      <div class="fname">Newz</div>
+      <div class="frole">Co-Founder &amp; Executor</div>
+      <p class="fbio">The silent force who makes things move. Newz doesn't talk about what he does — he shows up and executes. Partner, co-builder, and witness from day one. Where Dr. Zoom draws the vision, Newz locks it in and makes sure it doesn't stay theoretical.</p>
+      <p class="fquote">"Keep your head down, keep moving. The work speaks for itself."</p>
+    </div>
+
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ORIGIN -->
+<div class="wrap">
+  <span class="lbl">How It Started</span>
+  <h2 class="oh2">Started in <em>Buffalo.</em><br>Built on nothing<br>but conviction.</h2>
+  <div class="obody">
+    <p>CTF didn't come out of a game jam or an accelerator program. It started because two people from Buffalo, New York believed a real trading card game — original rules, original cards, a real engine — could be built from scratch. No budget. No team. No roadmap handed down from a publisher.</p>
+    <p>What started as a passion project got treated like a real product. Rules were locked. Systems were tested. Cards were iterated on. The website was built, the deck builder was built, the multiplayer client was built. Over 2,000 cards across dozens of sets, all designed from the ground up and all completely free to play.</p>
+    <p>That's what Carry The Flame means — not just a game, but a way of working. You carry what matters. You don't set it down because it's hard. You build anyway, in silence, until the work proves itself.</p>
+  </div>
+
+  <div class="pq">
+    <p>"A passion project turned real product — because we refused to let it stay a passion project."</p>
+    <cite>— Dr. Zoom &amp; Newz, Co-Founders, Buffalo NY</cite>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- STATS -->
+<div class="wrap">
+  <span class="lbl">By the Numbers</span>
+  <div class="stats">
+    <div class="stat"><span class="sn">2,382+</span><span class="sl">Cards Designed</span></div>
+    <div class="stat"><span class="sn">59</span><span class="sl">Card Sets</span></div>
+    <div class="stat"><span class="sn">100%</span><span class="sl">Free to Play</span></div>
+    <div class="stat"><span class="sn">2</span><span class="sl">People Built This</span></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- BELIEFS -->
+<div class="wrap">
+  <span class="lbl">How We Operate</span>
+  <h2 style="font-family:var(--fd);font-size:clamp(1.8rem,4vw,3rem);letter-spacing:2px;text-transform:uppercase;margin-bottom:2rem;line-height:1">Four rules<br>we don't break.</h2>
+  <div class="beliefs">
+    <div class="brow"><span class="bnum">01</span><div><div class="btitle">Free means free.</div><p class="btext">CTF will never have a paywall, a subscription tier, or a premium card pack. Every card, every match, every patch — free. That is not a tagline. It is a locked design constraint.</p></div></div>
+    <div class="brow"><span class="bnum">02</span><div><div class="btitle">Feast &amp; Jam — build small, run fast, repeat.</div><p class="btext">Ship something real. Watch how it behaves. Fix what is broken. Improve what works. Do not wait until it is perfect. Perfect is an excuse to never launch.</p></div></div>
+    <div class="brow"><span class="bnum">03</span><div><div class="btitle">Quiet moves.</div><p class="btext">Build in silence. Go public only when you have proof. We do not hype what we have not made. The work earns the attention — the announcement is just confirmation.</p></div></div>
+    <div class="brow"><span class="bnum">04</span><div><div class="btitle">Consistency over hype.</div><p class="btext">You can fake excitement. You cannot fake 59 sets of original cards and a working engine. Show up every day. Put the reps in. That is the whole plan.</p></div></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- WHAT CTF IS -->
+<div class="wrap">
+  <span class="lbl">What CTF Actually Is</span>
+  <div style="font-family:var(--fd);font-size:clamp(2rem,5vw,3.5rem);letter-spacing:2px;text-transform:uppercase;line-height:1;margin-bottom:.75rem">The first <span style="color:var(--flame)">free</span> custom<br>online trading card game.</div>
+  <p style="font-size:.95rem;color:var(--ash-light);max-width:640px;line-height:1.7;margin-bottom:2rem">A fully original TCG. Three simultaneous win conditions. A locked 7-phase turn structure. Over 2,300 cards across 59 sets. Playable in your browser. No download. No cost. No catch.</p>
+  <div class="ctf-grid">
+    <div class="ctf-cell"><div class="ctf-head">Digital Only</div><p class="ctf-body">No physical version. No printing. No supply chain. A clean browser experience that works on anything with an internet connection.</p></div>
+    <div class="ctf-cell"><div class="ctf-head">Original IP</div><p class="ctf-body">Every card is original. Original rules, original characters, original art direction. CTF is not a fan game. It is its own thing built from the floor up.</p></div>
+    <div class="ctf-cell"><div class="ctf-head">Player-Submitted</div><p class="ctf-body">Players submit cards. Accepted cards carry their creator's name. If you build with us, your tag goes in the game permanently.</p></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- CTA -->
+<div class="wrap">
+  <div class="cta">
+    <h3>Want In?</h3>
+    <p>Play a match. Submit a card. Sign up to beta test. We are building this in public and we want real players at the table.</p>
+    <a href="play.html" class="btn btn-fire">Play Now</a>
+    <a href="mailto:changethewrld@outlook.com?subject=GAME%20TESTER" class="btn btn-line">Become a Tester</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fi">
+    <div class="fbrand">CARRY THE FLAME</div>
+    <div class="flinks">
       <a href="index.html">Home</a>
+      <a href="rules.html">Rules</a>
       <a href="cards.html">Cards</a>
       <a href="deckbuilder.html">Deck Builder</a>
-      <a href="submit.html">Create Cards</a>
-      <a href="mailto:changethewrld@outlook.com?subject=GAME%20TESTER">Game Tester</a>
-    </nav>
-  </div>
-</header>
-
-<main class="page">
-  <section class="masthead">
-    <div class="masthead-card">
-      <span class="kicker">About Us • Patch 42 Ember Guide</span>
-      <h1 class="h1">Carry The Flame <span class="gold">About Us</span></h1>
-      <p class="deckline">
-        <strong>Carry The Flame</strong> is the <strong>first free-to-play custom online trading card game</strong> — a browser-first battle game where players build decks, forge their own style, and create cards to use against opponents and friends.
-      </p>
-      <div class="pill-row">
-        <span class="pill">Free to Play</span>
-        <span class="pill">Browser-First</span>
-        <span class="pill">Custom Card Forge</span>
-        <span class="pill">10,000 Chi</span>
-        <span class="pill">3 Win Paths</span>
-        <span class="pill">7 Turn Phases</span>
-      </div>
+      <a href="play.html">Play</a>
+      <a href="submit.html">Submit Cards</a>
     </div>
-  </section>
-
-  <section class="masthead-visual">
-    <figure class="feature-visual">
-      <img src="images/about-guide.jpg" alt="Carry The Flame rules and systems infographic showing Chi KO, 7 Kills, 7 Extractions, the custom forge, and core rules like the Shotgun Rule and deck-out handling.">
-      <figcaption><strong>Patch 42 at a glance:</strong> this visual breaks down the three win paths, the custom forge, and core rule reminders in one fiery snapshot before you dive into the full About Us guide.</figcaption>
-    </figure>
-  </section>
-
-  <div class="content-grid">
-    <aside class="sidebar">
-      <div class="side-card">
-        <h2 class="side-title">On This Page</h2>
-        <div class="side-list">
-          <a href="#opening-spark">Opening Spark</a>
-          <a href="#snapshot">Live Patch 42 Snapshot</a>
-          <a href="#what-makes-ctf-different">What Makes CTF Different</a>
-          <a href="#card-families">Card Families</a>
-          <a href="#how-you-win">How You Win</a>
-          <a href="#special-systems">Special Systems</a>
-          <a href="#custom-forge">Custom Card Forge</a>
-          <a href="#live-code">What The Code Is Doing</a>
-          <a href="#still-being-forged">What Is Still Being Forged</a>
-          <a href="#final-ember">Final Ember</a>
-        </div>
-      </div>
-    </aside>
-
-    <div>
-      <section class="article-card" id="opening-spark">
-        <h2>Opening Spark</h2>
-        <p class="publication">
-          Publication note: this About Us page is based on the live Patch 42 bundle itself — especially README.md, INSTALL.txt, assets/js/data.js, assets/js/engine.js, play_inline.js, submit.html, the card effect audit, the fusion audit, the ritual-removal patch log, and the smoke-test reports. Older documents may mention different totals, but this page follows the live behavior and numbers inside the inspected Patch 42 repo.
-        </p>
-        <p class="lead">
-          Carry The Flame does not feel like a copy wearing somebody else’s costume. From the first click, the project pushes its own mood: black screens, ember-glow accents, fire-framed card art, browser duels, custom deck building, and a battle board that feels more like a showdown than a spreadsheet.
-        </p>
-        <p>
-          The heart of CTF is bigger than “play our cards.” It is also “step into the forge.” That matters because CTF is built around a bold idea: players should not only battle with the game’s cards, they should also be able to design new ones, submit them, and help shape the world. That mix of strategy, style, ownership, and expression is what gives the project its own heat.
-        </p>
-        <div class="callout">
-          <strong>Tagline:</strong> Build your deck. Forge your style. Carry your own flame into battle.
-        </div>
-      </section>
-
-      <section class="article-card" id="snapshot">
-        <h2>Live Patch 42 Snapshot</h2>
-        <p class="lead">
-          Patch 42 is already a real, playable browser package. It has live data, a working rules engine, a deck builder, a duel screen, a custom card submit page, and a scripting layer that is already handling named cards and tested interactions.
-        </p>
-        <div class="snap-grid">
-          <div class="stat-card"><span class="num">1606</span><span class="label">Live cards in data.js</span></div>
-          <div class="stat-card"><span class="num">41</span><span class="label">Live sets in the inspected bundle</span></div>
-          <div class="stat-card"><span class="num">4944</span><span class="label">Lines of engine code</span></div>
-          <div class="stat-card"><span class="num">130</span><span class="label">Named engine functions</span></div>
-          <div class="stat-card"><span class="num">130</span><span class="label">regEffect entries wired in</span></div>
-          <div class="stat-card"><span class="num">44 / 44</span><span class="label">Fusion cards matched to engine specs</span></div>
-        </div>
-        <div class="dual" style="margin-top:1rem;">
-          <div class="callout">
-            <strong>Card family split:</strong><br>
-            759 Catalysts • 495 Palm Tricks • 199 Concealed Tricks • 38 Counter Tricks • 71 Field Tricks • 44 Fusion cards
-          </div>
-          <div class="callout">
-            <strong>Alignment leaders:</strong><br>
-            Dark 229 • Light 170 • Earth 160 • Wind 96 • Fire 80 • Water 48 • Thunder 7
-          </div>
-        </div>
-      </section>
-
-      <section class="article-card" id="what-makes-ctf-different">
-        <h2>What Makes CTF Different</h2>
-        <p>
-          CTF is a browser-first anime-and-video-game crossover card battle built around three active victory paths, a locked seven-phase turn structure, reactive chains, Libra summons, fusion power plays, and a living custom-card forge. It is not trying to feel like a museum piece. It feels like a game still hot enough to shape.
-        </p>
-        <p>
-          The site already includes the front page, rules page, glossary, cards browser, deck builder, duel page, checklist page, and custom-card submit page. You can run it locally with no framework pipeline, and it is shaped for GitHub Pages with a manifest and service worker so it behaves more like a lightweight app shell than a plain static website.
-        </p>
-        <p>
-          Online play is designed around room codes with PeerJS/WebRTC. The duel flow supports deck selection, room creation, joining by code, Hot-Seat mode, Solo Sandbox mode, reconnect scaffolding, rematches, result-card exports, duel logs, and post-match summaries. That means the project is not just a card database. It is already trying to be a usable game product.
-        </p>
-      </section>
-
-      <section class="article-card" id="card-families">
-        <h2>Card Families</h2>
-        <p>
-          The live data shows six cardType values, but the cleanest way to understand CTF is as five main families plus one faster branch. The main families are <strong>Catalyst</strong>, <strong>Palm Trick</strong>, <strong>Concealed Trick</strong>, <strong>Field Trick</strong>, and <strong>Fusion</strong>. <strong>Counter Trick</strong> is the highest-speed branch of the Concealed side.
-        </p>
-        <h3>Catalysts</h3>
-        <p>
-          Catalysts are the bodies on the field. They attack, defend, block lanes, serve as tribute fuel, become Libra scales, get captured, and push all three win paths.
-        </p>
-        <h3>Palm Tricks</h3>
-        <p>
-          Palm Tricks are proactive and strictly your-turn cards. They do not jump into chains as responses. They are the move that starts the fire, not the shield thrown after the spark is already flying.
-        </p>
-        <h3>Concealed & Counter Tricks</h3>
-        <p>
-          Concealed Tricks are reactive traps. Counter Tricks are the sharper speed lane. Once a Counter Trick enters the chain, only another Counter Trick can answer it.
-        </p>
-        <h3>Field Tricks & Fusion</h3>
-        <p>
-          Field Tricks reshape the battlefield. Fusion cards live in the Fusion Deck and come out through exact material logic. The fusion audit showing 44 Fusion cards matched to 44 engine specs is a strong sign that this lane is already real, not cosmetic.
-        </p>
-        <div class="callout">
-          CTF also tries hard to speak its own language. Monster became <strong>Catalyst</strong>. Spell became <strong>Palm Trick</strong>. Trap became <strong>Concealed Trick</strong>. Life Points became <strong>Chi</strong>. Graveyard became <strong>Void</strong>. ATK and DEF became <strong>Pressure</strong> and <strong>Counter Pressure</strong>.
-        </div>
-      </section>
-
-      <section class="article-card" id="how-you-win">
-        <h2>How You Win</h2>
-        <p>
-          Carry The Flame runs three victory paths at the same time: <strong>Chi KO</strong>, <strong>7 Kills</strong>, and <strong>7 Extractions</strong>. Chi starts at 10,000 in the live engine. If Chi hits zero, that win takes priority. After that, the game checks 7 Kills, then 7 Extractions.
-        </p>
-        <div class="dual">
-          <div>
-            <h3>Chi KO</h3>
-            <p>Push direct damage and battle damage until the opponent’s Chi drops to zero.</p>
-            <h3>7 Kills</h3>
-            <p>Battle destruction matters. This path tracks combat kills, not every random destroy effect.</p>
-          </div>
-          <div>
-            <h3>7 Extractions</h3>
-            <p>Beat defending non-Great Catalysts, capture them into your Box, then convert them into extraction progress later.</p>
-            <h3>Deck-out rule</h3>
-            <p>The live build does not auto-lose on deck-out. If you cannot draw, the engine skips the draw and the duel continues.</p>
-          </div>
-        </div>
-        <p>
-          The turn structure is hard-locked to seven phases: Turn Start, Draw, Ignition, Action, Battle, Resolution, and End. The first player still draws on turn one, but that player’s first Battle Phase is skipped so the duel gets a chance to breathe before early pressure starts.
-        </p>
-        <p>
-          Battle is also where CTF feels different. ATK vs ATK is straightforward: the bigger Pressure wins, the loser goes to the Void, Chi damage is dealt by the difference, and a Kill is counted. ATK vs DEF changes everything. A normal defender that loses gets captured into the Box instead of just dying. That is the lane that feeds Extractions.
-        </p>
-      </section>
-
-      <section class="article-card" id="special-systems">
-        <h2>Special Systems That Make CTF Feel Different</h2>
-        <h3>Shotgun Rule</h3>
-        <p>
-          Every Special Summon gives the opponent a draw in the live Patch 42 engine. That puts a real tax on explosive turns. You can still pop off, but the other player gets ammunition while you do it.
-        </p>
-        <h3>Libra</h3>
-        <p>
-          Libra Summon can bring out up to five Catalysts at once as long as their Levels fall strictly between the two scale values. The whole Libra Summon only counts as one Special Summon toward the hard cap.
-        </p>
-        <h3>Great Cards</h3>
-        <p>
-          Great Cards are powerful and heavily protected from Box abuse. Beat one in defense and it goes to the Void instead of being captured. Great Cards also cannot be used as End Phase sacrifices in the current build.
-        </p>
-        <h3>Ritual Clean-Up</h3>
-        <p>
-          Patch 42 removes the Ritual group from live card data and rewrites those legacy cards into cleaner Special Summon wording. That cleanup matters because it sharpens CTF’s own identity instead of dragging old imported system clutter around.
-        </p>
-      </section>
-
-      <section class="article-card" id="custom-forge">
-        <h2>The Custom Card Forge</h2>
-        <p>
-          This is the feature younger players are going to lock onto immediately. Patch 42 already ships a live submission page where a player can design a five-card mini-set. That set includes three Normal Catalysts, one Great Fusion Catalyst, and one Trick Card.
-        </p>
-        <p>
-          The forge is not chaos. It uses rules. Players split a shared stat budget across their non-Fusion Catalysts, obey level caps and stat caps, build one exact fusion out of two chosen materials, and write clean text for the Trick and Fusion pieces. Then the page exports JSON and opens an email handoff for review.
-        </p>
-        <div class="callout">
-          The message is simple: CTF is not only saying “play the game.” It is saying <strong>“step into authorship.”</strong>
-        </div>
-      </section>
-
-      <section class="article-card" id="live-code">
-        <h2>What The Code Is Really Doing</h2>
-        <p>
-          The engine is not a toy script that only flips cards and hopes for the best. It builds player state, opening hands, turn and phase tracking, chain state, pending responses, discard windows, per-turn usage tracking, summon context, duel logs, match summaries, and peer-to-peer sync data.
-        </p>
-        <p>
-          The duel UI handles room flow, deck selection, sandbox starts, Hot-Seat starts, choice modals, attack confirmation, tribute picking, End Phase choices, chain summaries, result cards, and log downloads. The deck layer handles save normalization, validation, and launch prep. The service worker and manifest keep the shell feeling fast and app-like.
-        </p>
-        <h3>Scripted Fire Already Live</h3>
-        <p>
-          The card effect audit is honest: out of 1606 cards, 133 already have custom scripts, 45 are covered by generic mechanics, 105 are normal or flavor cards, 1237 still need dedicated scripting, and 86 need human judgment. That does not weaken the project. It makes its current stage clear.
-        </p>
-        <ul class="mini-list">
-          <li>Starter smoke tests: 11 out of 11 passing</li>
-          <li>Great Card smoke tests: 5 out of 5 passing</li>
-          <li>Registry coverage includes activated, continuous, onSummon, doubleAttack, pierce, summonCondition, field aura, onBattleDamage, and more</li>
-        </ul>
-        <p>
-          Named examples already live include Serge, Ready to Attack, Starky, Kidd, Dragon Fortress, Marle, Eternal Greed, Frozen Flame, Duel Gundam, Freedom Gundam, Future Trunks, Piccolo, Whis, Broly, Gogeta, Kefla, Vegeta - The Great, Goku - The Great, and many more across the crossover sets.
-        </p>
-      </section>
-
-      <section class="article-card" id="still-being-forged">
-        <h2>What Is Finished — And What Is Still Being Forged</h2>
-        <p>
-          Patch 42 already has real strength. The shell is playable. The site structure is real. The deck tools exist. The room-code flow exists. The phase system is hard-locked. The battle rules are coded. Libra is coded. Fusion is coded. Great-card routing is tested. Starter deck effect coverage is strong. The custom-card forge is live. The visual identity now carries its own ember look.
-        </p>
-        <p>
-          At the same time, the project is not done. The audit still shows that most of the card pool needs dedicated custom scripting. Multiplayer needs broader live-device testing. Mobile polish and accessibility still need more passes. Some data tags still need normalization. That honesty helps the game more than pretending it is finished.
-        </p>
-        <div class="callout">
-          CTF feels like the kind of project people can still learn, play, argue about, improve, and maybe even leave their own card inside.
-        </div>
-      </section>
-
-      <section class="article-card" id="final-ember">
-        <h2>Final Ember</h2>
-        <p>
-          If you had to pitch Carry The Flame in one breath, here is the clean version: CTF is a browser-first anime-and-video-game crossover card battle built around 10,000 Chi, three victory paths, fast reactive chains, Libra and Fusion power plays, a dark ember style, and a living custom-card forge that invites players to create their own flame and test it against friends and opponents.
-        </p>
-        <p>
-          That is the real heat of the project. Not just collecting cards. Not just copying old systems. Not just watching somebody else’s universe. Carry The Flame wants players to step into the arena, step into the forge, and then step into authorship.
-        </p>
-        <div class="cta-box">
-          <h3 style="margin-top:0;">Want In?</h3>
-          <p style="margin-bottom:0;">Browse the cards. Build a deck. Test the game. Or start shaping your own mini-set and try to leave your mark on the flame.</p>
-          <div class="btn-row">
-            <a class="btn primary" href="deckbuilder.html">Build Your Deck</a>
-            <a class="btn ghost" href="cards.html">Browse Cards</a>
-            <a class="btn ghost" href="submit.html">Create Your Cards</a>
-            <a class="btn ghost" href="mailto:changethewrld@outlook.com?subject=GAME%20TESTER">Become A Tester</a>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-</main>
-
-<footer>
-  <div class="footer-card">
-    <div>Carry The Flame • Perfect Timing Gaming • Buffalo, New York</div>
-    <div>First free-to-play custom online trading card game 🔥</div>
+    <p class="fcopy">&#169; 2026 Perfect Timing Gaming &middot; Makairis Holding Group &middot; MHG &middot; Buffalo, NY &middot; Consistency &gt; Hype</p>
   </div>
 </footer>
 
 <script src="assets/js/embers-bg.js"></script>
-<!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
-<script>if(window.isSecureContext){var _os=document.createElement('script');_os.src='https://operatorstack.dev/os.js';_os.dataset.project='pk_k4xr4vnpsizd';document.head.appendChild(_os);}else{console.info('[CTF] OperatorStack skipped — non-HTTPS context');}</script>
+<script>if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script>
+<script>document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.nl a').forEach(a=>{if(a.href===location.href)a.classList.add('on')});});</script>
+
+<!-- OperatorStack: block local-dev environments (fixes /home/ path leakage + crypto.subtle errors) -->
+<script>
+(function(){
+  var h=location.hostname,p=location.protocol,path=location.pathname;
+  var isLocal=h==='localhost'||h==='127.0.0.1'||h===''||
+              p==='file:'||path.indexOf('/home/')===0||path.indexOf('/Users/')===0||
+              h.startsWith('192.168.')||h.startsWith('10.');
+  if(isLocal){console.info('[CTF] OperatorStack skipped — local environment');return;}
+  if(!window.isSecureContext){console.info('[CTF] OperatorStack skipped — non-HTTPS context');return;}
+  try{var _os=document.createElement('script');_os.src='https://operatorstack.dev/os.js';_os.dataset.project='pk_k4xr4vnpsizd';document.head.appendChild(_os);}
+  catch(e){console.warn('[CTF] OperatorStack load error',e);}
+})();
+</script>
 </body>
 </html>

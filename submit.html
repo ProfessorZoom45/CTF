@@ -165,7 +165,19 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 
 <script defer src="assets/js/embers-bg.js"></script>
 <!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
-<script>if(window.isSecureContext){var _os=document.createElement('script');_os.src='https://operatorstack.dev/os.js';_os.dataset.project='pk_k4xr4vnpsizd';document.head.appendChild(_os);}else{console.info('[CTF] OperatorStack skipped — non-HTTPS context');}</script>
+<!-- OperatorStack: block local-dev environments (fixes /home/ path leakage + crypto.subtle errors) -->
+<script>
+(function(){
+  var h=location.hostname,p=location.protocol,path=location.pathname;
+  var isLocal=h==='localhost'||h==='127.0.0.1'||h===''||
+              p==='file:'||path.indexOf('/home/')===0||path.indexOf('/Users/')===0||
+              h.startsWith('192.168.')||h.startsWith('10.');
+  if(isLocal){console.info('[CTF] OperatorStack skipped — local environment');return;}
+  if(!window.isSecureContext){console.info('[CTF] OperatorStack skipped — non-HTTPS context');return;}
+  try{var _os=document.createElement('script');_os.src='https://operatorstack.dev/os.js';_os.dataset.project='pk_k4xr4vnpsizd';document.head.appendChild(_os);}
+  catch(e){console.warn('[CTF] OperatorStack load error',e);}
+})();
+</script>
 </head>
 <body>
 

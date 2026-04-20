@@ -23,7 +23,7 @@ A fully original tactical card game by Perfect Timing Gaming / Makairis Holding 
 ## Card Database
 
 - **1,610 unique cards** across **41 sets** (40 playable + tokens)
-- **7 starter decks**: Anime Masters, Angel, BOOM, Burn, Reese's Trigun + 2 auto-generated
+- **5 official starter decks** loaded from source deck lists: Anime Masters, Angel, BOOM, Burn, Reese's Trigun
 - All card descriptions use CTF-native terminology (Catalyst, Palm Trick, Concealed Trick, Chi, Void, Pressure, Counter Pressure)
 
 ## Tech Stack
