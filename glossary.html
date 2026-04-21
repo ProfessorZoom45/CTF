@@ -41,6 +41,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 </style>
 
 <script defer src="assets/js/embers-bg.js"></script>
+<script src="assets/js/ctf-config.js"></script>
 <!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
 <!-- OperatorStack: block local-dev environments (fixes /home/ path leakage + crypto.subtle errors) -->
 <script>
@@ -67,7 +68,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
   <li><a href="glossary.html" class="active">Glossary</a></li>
   <li><a href="submit.html">Submit Cards</a></li></ul></div></nav>
 
-<div class="page-header"><h1>Glossary</h1><p>Every term in the Carry The Flame system, defined and searchable. CTF terminology is canonical — CTF system terms noted where applicable.</p></div>
+<div class="page-header"><h1>Glossary</h1><p>Every term in the Carry The Flame system, defined and searchable. Locked values below are now assembled from the same beta config used by the site and play screens.</p></div>
 
 <div class="container">
 <input type="text" class="gloss-search" id="search" placeholder="Search terms...">
@@ -94,43 +95,43 @@ const TERMS=[
 {term:"Capture",def:"When your ATK Pressure strictly exceeds an opponent's DEF Counter Pressure, their Catalyst enters YOUR Box (not the Void). No Logic damage dealt. Foundation of the Extraction win path.",locked:true},
 {term:"Catalyst",aka:"CTF: Catalyst",def:"The primary card type — fighters, blockers, and scoring pieces. Have Pressure (ATK) and Counter Pressure (DEF) stats. 8 Alignments. Stackable KINDS. Levels 1–12. Max 5 on field simultaneously."},
 {term:"Chain",def:"When one player activates a card or effect, the other can respond before resolution. CTF chains resolve Last In, First Out (LIFO). Palm Tricks always Link 1. Counter Tricks lock the chain."},
-{term:"Chi",aka:"CTF: Chi",def:"Your life total. Each player starts with 10,000 Chi. Reduced by Logic damage. When Chi reaches 0, that player loses via Chi KO instantly.",locked:true},
-{term:"Chi KO",def:"Win Condition 1. Reduce opponent Chi from 10,000 to 0. Instant win — game ends the moment Chi hits 0. Does not wait for turn end."},
+{term:"Chi",aka:"CTF: Chi",def:`Your life total. Each player starts with ${CTF_UI.startingChi} Chi. Reduced by Logic damage. When Chi reaches 0, that player loses via Chi KO instantly.`,locked:true},
+{term:"Chi KO",def:`Win Condition 1. Reduce opponent Chi from ${CTF_UI.startingChi} to 0. Instant win — game ends the moment Chi hits 0. Does not wait for turn end.`},
 {term:"Concealed Trick",aka:"CTF: Concealed Trick",def:"Reactive Trick card. Concealed Tricks may be set face-down during your Action Phase and cannot activate the same turn they are set. All Tricks may be set face-down, but Field Tricks may only be set face-down in the Field Trick location. Concealed Tricks are the main reactive Trick type.",locked:true},
 {term:"Counter Pressure",aka:"CTF: Counter Pressure",def:"The defensive stat on a Catalyst card. Used when the Catalyst is in Defense Position. If the attacker's Pressure doesn't exceed Counter Pressure, the attacker bounces off.",locked:true},
 {term:"Counter Trick",def:"A subtype of Concealed Trick. Highest chain priority — once a Counter Trick is on the chain, only another Counter Trick can respond above it. Regular Concealed Tricks cannot respond.",locked:true},
 {term:"Deck Out",def:"When your deck is empty and you reach your Draw Phase: skip the draw and continue playing. Deck out is NOT a loss in CTF.",locked:true},
-{term:"Destroy Trick",def:"End Phase action. Cost: sacrifice 1 eligible Catalyst → Void. Effect: destroy 1 Trick card on the field — yours or opponent's, face-up or face-down. Does NOT count as a Kill.",locked:true},
+{term:"Destroy Trick",def:CTF_UI.destroyTrickSummary,locked:true},
 {term:"Direct Attack",def:"Attacking the opponent's Chi directly. Only possible when ALL opponent Catalyst Zones are empty. Face-down Concealed Tricks in Trick Card Zones do NOT block direct attacks. Damage = your full Pressure stat.",locked:true},
 {term:"Draw Phase",def:"Phase 2. Draw 1 card from your deck. If deck is empty, skip the draw — NOT a loss. Continue playing.",locked:true},
-{term:"End Phase",def:"Phase 7. MANDATORY choice if you have an eligible Catalyst: End Turn (no cost), Extraction (sacrifice 1 → RFG from Box), Rescue (sacrifice 1 → your Catalyst from opponent's Box to your Deck), or Destroy Trick (sacrifice 1 → destroy 1 Trick). Then discard to 7 cards.",locked:true},
-{term:"End Turn",def:"End Phase action. No cost. Voluntarily end your turn without spending a Catalyst. Available whenever you have eligible Catalysts but don't want to Extract, Rescue, or Destroy."},
-{term:"Extraction",def:"End Phase action. Cost: 1 eligible Catalyst → Void. Effect: move 1 opponent Catalyst from YOUR Box to the RFG Zone permanently. +1 toward 7 Extractions win condition. Great Cards cannot be Extracted.",locked:true},
+{term:"End Phase",def:`Phase 7. Choose one locked action: Extraction, Rescue, Destroy Trick, or END TURN. Extraction, Rescue, and Destroy Trick require an eligible Catalyst as the cost. END TURN does not. Then discard to ${CTF_UI.handLimit} cards.`,locked:true},
+{term:"End Turn",def:CTF_UI.endTurnSummary,locked:true},
+{term:"Extraction",def:CTF_UI.extractionSummary,locked:true},
 {term:"7 Extractions",def:"Win Condition 3. Extract 7 opponent Catalysts from your Box via the End Phase Extraction action. The slowest but most strategically layered win path."},
 {term:"Field Trick",aka:"CTF: Field Trick",def:"Environment card that changes rules for both players while active. 1 per player active (2 total on field). Part of Main Deck. Placed in Field Trick Zone. Effects refresh at Ignition Phase. New one replaces old. Trick type: Field.",locked:true},
-{term:"Fusion Card",def:"Lives in the Fusion Deck only (0–15 cards). Requires named material Catalysts sent to Void + a Fusion-enabling card (Fusion Dance or Fusion Zone). Entire Fusion Summon = 1 Special Summon. Shotgun Rule applies."},
+{term:"Fusion Card",def:`Lives in the Fusion Deck only (${CTF_UI.fusionDeckRange} cards). Requires named material Catalysts sent to Void + a Fusion-enabling card (Fusion Dance or Fusion Zone). Entire Fusion Summon = 1 Special Summon. Shotgun Rule applies.`},
 {term:"Great Card",def:"Any card with 'Great' in its name — applies to Catalysts, Palm Tricks, Concealed Tricks, any type. Great Card Catalysts: max 1 copy per name, max 5 per deck. Cannot enter Box. Cannot be Extracted or Tributed for End Phase. CAN be Killed in ATK vs ATK battle.",locked:true},
 {term:"Hero",def:"One of the 3 narrative Alignment sides. Light-aligned. Boosted by 'Save The World' Field Trick."},
 {term:"Ignition Phase",def:"Phase 3. Ongoing effects and Standby triggers activate. Field Tricks refresh their effects here. Mostly automatic — minimal player decisions."},
 {term:"7 Kills",def:"Win Condition 2. Destroy 7 opponent Catalysts through battle ONLY. ATK vs ATK wins, Mutual Kills, and ATK beating Great Card DEF all count. Card effects and Destroy Trick = destroyed/discarded, NOT Kills.",locked:true},
 {term:"KINDS",def:"Type tags on Catalysts. Stackable — a single Catalyst can have multiple KINDS simultaneously, and all of them count. 21 total KINDS: Warrior, Beast-Warrior, Beast, Machine, Fairy, Zombie, Dragon, Human, Ninja, Spellcaster, Fiend, Demon, Aqua, Psychic, Divine/Beast, Gunman, Saiyan, Gundam, Effect, Normal, Fusion.",locked:true},
 {term:"Libra Scale",def:"The Level of a Normal Catalyst placed in a Libra Zone. Defines one endpoint of the Libra Summon range."},
-{term:"Libra Summon",def:"Place Normal Catalysts (no effects) in the two outermost Libra Zones. Summon any Catalysts whose Level falls strictly BETWEEN the two Scale values (endpoints excluded). Entire Libra Summon = 1 Special Summon. Shotgun Rule applies. Up to 5 Catalysts per Libra Summon.",locked:true},
+{term:"Libra Summon",def:"Place Normal Catalysts in the two outermost Libra Zones. Their Levels become your Scales. You may summon up to 5 Catalysts whose Levels fall strictly between those Scale values. The entire Libra Summon counts as exactly 1 Special Summon and causes exactly 1 Shotgun draw total.",locked:true},
 {term:"Libra Zone",def:"The two outermost positions on the field (part of Trick Card Zones). Only Normal Catalysts (Lore text, no effects) can go here. Catalysts in Libra Zones are treated as Trick cards for targeting. Cannot be sacrificed for End Phase.",locked:true},
 {term:"Logic Damage",aka:"CTF: Logic Damage",def:"Chi damage dealt through combat or card effects. ATK vs ATK: Pressure difference dealt to the losing player's Chi. Direct attack: full Pressure stat to opponent Chi. Called 'Logic' because clever play causes it.",locked:true},
-{term:"Main Deck",def:"Your primary deck of 40–60 cards. Contains Catalysts, Palm Tricks, Concealed Tricks, and Field Tricks, all shuffled together.",locked:true},
+{term:"Main Deck",def:`Your primary deck of ${CTF_UI.mainDeckRange} cards. Contains Catalysts, Palm Tricks, Concealed Tricks, and Field Tricks, all shuffled together.`,locked:true},
 {term:"Mandatory Attack",def:"REMOVED / INACTIVE. Attacking is always optional in CTF. You may skip the Battle Phase entirely even with ATK-position Catalysts.",locked:true},
 {term:"Mutual Kill",def:"When two ATK-position Catalysts have equal Pressure and battle, both are destroyed and sent to the Void. No Logic damage. +1 Kill for each player.",locked:true},
 {term:"Normal Catalyst",def:"A Catalyst with no effect text — has Lore text instead. Required for Libra Zones as Scales. Their Level becomes the Scale value."},
 {term:"Normal Summon",def:"Your 1 free Catalyst summon per turn. Level 1–4 = free. Level 5–6 = 1 Tribute. Level 7+ = 2 Tributes. Setting a Catalyst face-down also counts as your Normal Summon."},
 {term:"Palm Trick",aka:"CTF: Palm Trick",def:"Proactive spell card. Activated face-up on YOUR turn during the Action Phase only. Can NEVER be counter-type. Always Link 1 on any chain — cannot respond to opponent cards. Trick type: Palm.",locked:true},
 {term:"Pressure",aka:"CTF: Pressure",def:"The offensive stat on a Catalyst card. Used when the Catalyst is in Attack Position. Higher Pressure wins ATK vs ATK combat.",locked:true},
-{term:"Rescue",def:"End Phase action. Cost: 1 eligible Catalyst → Void. Effect: return 1 of YOUR OWN Catalysts from your OPPONENT'S Box back to your Deck (shuffled in). Not to hand. Not to field.",locked:true},
+{term:"Rescue",def:CTF_UI.rescueSummary,locked:true},
 {term:"Resolution Phase",def:"Phase 6. Battle results finalize. Logic damage applied to Chi. Destroyed cards go to Void. Captured cards go to the attacker's Box. Win conditions checked here."},
 {term:"RFG Zone",aka:"Removed From Game",def:"Where Extracted cards go permanently for the current duel. Returns to owner's deck at the start of the next duel."},
-{term:"Shotgun Rule",def:"Every Special Summon — 1st through 5th, no exceptions — causes the opponent to immediately draw 1 card. Hard cap: 5 Special Summons per turn. No card effect can override this cap. Libra Summon counts as 1 SS (opponent draws 1 total).",locked:true},
-{term:"Side Deck",def:"0–15 cards. Swapped into Main Deck between games in Best of 3 tournament play. Not used in casual single games."},
-{term:"Special Summon",def:"Any summon beyond your one Normal Summon per turn. Max 5 per turn (hard cap). Each triggers the Shotgun Rule. Libra Summon and Fusion Summon each count as 1 Special Summon.",locked:true},
+{term:"Shotgun Rule",def:CTF_UI.shotgunSummary,locked:true},
+{term:"Side Deck",def:`${CTF_UI.sideDeckRange} cards. Swapped into Main Deck between games in Best of 3 tournament play. Not used in casual single games.`},
+{term:"Special Summon",def:`Any summon beyond your one Normal Summon per turn. Max ${CTF_CONFIG.game.shotgun.maxSpecialSummonsPerTurn} per turn (hard cap). Each triggers the Shotgun Rule. Libra Summon and Fusion Summon each count as 1 Special Summon.`,locked:true},
 {term:"Tribute",def:"Sending a Catalyst you control to the Void as payment to Normal Summon a higher-Level Catalyst. Level 5–6 = 1 Tribute. Level 7+ = 2 Tributes."},
 {term:"Turn Start",def:"Phase 1. 'At the start of your turn' effects trigger automatically. No player decisions made here."},
 {term:"Villain",def:"One of the 3 narrative Alignment sides. Dark-aligned. Boosted by 'Cross The Globe' Field Trick."},

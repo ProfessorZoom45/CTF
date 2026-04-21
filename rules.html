@@ -45,6 +45,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 </style>
 
 <script defer src="assets/js/embers-bg.js"></script>
+<script src="assets/js/ctf-config.js"></script>
 <!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
 <!-- OperatorStack: block local-dev environments (fixes /home/ path leakage + crypto.subtle errors) -->
 <script>
@@ -75,26 +76,64 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 
 <div class="page-header">
 <h1>Official Rulebook</h1>
-<p>All 22 locked rules. Every rule here is canonical — if any other document conflicts, this page wins.</p>
+<p>Beginner-first explanations of the locked rules. Read the quick start first, then use the battle section as your clean cheat sheet. If any other document conflicts, this page wins.</p>
 </div>
 
 <div class="rules-layout">
 <aside class="sidebar">
-<a href="#setup">Game Setup</a><a href="#deck-rules">Deck Rules</a><a href="#field">The Field</a><a href="#turn">Turn Structure</a><a href="#summoning">Summoning</a><a href="#shotgun">Shotgun Rule</a><a href="#combat">Combat</a><a href="#win">Win Conditions</a><a href="#chi-ko">Chi KO</a><a href="#kills">7 Kills</a><a href="#extractions">7 Extractions</a><a href="#box">The Box</a><a href="#end-phase">End Phase</a><a href="#card-types">Card Types</a><a href="#kinds">KINDS</a><a href="#libra">Libra Summon</a><a href="#great">Great Cards</a><a href="#chains">Chains</a><a href="#modes">Multiplayer</a><a href="#locked">22 Locked Rules</a>
+<a href="#start-here">Start Here</a><a href="#battle-cheat">Battle Cheat Sheet</a><a href="#setup">Game Setup</a><a href="#deck-rules">Deck Rules</a><a href="#field">The Field</a><a href="#turn">Turn Structure</a><a href="#summoning">Summoning</a><a href="#shotgun">Shotgun Rule</a><a href="#combat">Combat</a><a href="#win">Win Conditions</a><a href="#chi-ko">Chi KO</a><a href="#kills">7 Kills</a><a href="#extractions">7 Extractions</a><a href="#box">The Box</a><a href="#end-phase">End Phase</a><a href="#card-types">Card Types</a><a href="#kinds">KINDS</a><a href="#libra">Libra Summon</a><a href="#great">Great Cards</a><a href="#chains">Chains</a><a href="#modes">Multiplayer</a><a href="#locked">22 Locked Rules</a>
 </aside>
 
 <main class="rules-content">
 
+<div class="rule-section" id="start-here">
+<h2>Start Here — Learn CTF Fast</h2>
+<p>If you are brand new, do not try to memorize everything at once. Learn the game in this order: <strong>board → summoning → battle → End Phase → win conditions</strong>.</p>
+<div class="callout"><strong>Quick loop:</strong> Draw 1 card, play cards in Action Phase, decide whether to attack in Battle Phase, then choose an End Phase action or END TURN.</div>
+<table class="rule-table">
+<thead><tr><th>Thing to learn first</th><th>What it means in plain language</th></tr></thead>
+<tbody>
+<tr><td>Chi</td><td>Your life total. You start at <span data-ctf="ui.startingChi">10,000</span>. If it hits 0, you lose immediately.</td></tr>
+<tr><td>P and CP</td><td><strong>P = Pressure</strong> when a Catalyst attacks. <strong>CP = Counter Pressure</strong> when a Catalyst defends.</td></tr>
+<tr><td>Void</td><td>The graveyard. Destroyed, discarded, and sacrificed cards go here.</td></tr>
+<tr><td>Box</td><td>Your capture pile. Enemy Catalysts you beat in CP usually go here instead of the Void.</td></tr>
+<tr><td>RFG</td><td>Removed From Game for this duel. Extracted cards go here.</td></tr>
+<tr><td>END TURN</td><td>Always legal. Costs nothing. It is the safe End Phase option when you do not want to spend a Catalyst.</td></tr>
+</tbody></table>
+<div class="warn-box"><strong>Beginner warning:</strong> Most confusion comes from mixing up <strong>Kill</strong>, <strong>Capture</strong>, <strong>Destroy</strong>, and <strong>Extract</strong>. A battle can destroy to the Void, capture to the Box, or do no removal at all depending on P vs P or P vs CP.</div>
+</div>
+
+<div class="rule-section" id="battle-cheat">
+<h2>Battle Cheat Sheet — Read This Before Your First Duel</h2>
+<p>When one Catalyst attacks another, use the attacker's <strong>P</strong>. Then look at the defender's position:</p>
+<table class="rule-table">
+<thead><tr><th>Defender position</th><th>What you compare</th><th>Plain-language result</th></tr></thead>
+<tbody>
+<tr><td>Pressure position</td><td>Attacker P vs defender P</td><td>Higher P wins. The loser goes to the Void. The difference becomes Chi damage.</td></tr>
+<tr><td>Counter Pressure position</td><td>Attacker P vs defender CP</td><td>If attacker wins, the defender usually goes to the Box. If attacker ties, nothing happens. If attacker loses, no Kill or Capture happens and the attacker controller takes Chi damage equal to the difference.</td></tr>
+</tbody></table>
+<h3>Four battle examples</h3>
+<table class="rule-table">
+<thead><tr><th>Example</th><th>Math</th><th>Outcome</th></tr></thead>
+<tbody>
+<tr><td>Your 2000 P attacks their 1500 P</td><td>2000 &gt; 1500</td><td>Their Catalyst goes to the Void. You score +1 Kill. They take 500 Chi damage.</td></tr>
+<tr><td>Your 2000 P attacks their 1700 CP</td><td>2000 &gt; 1700</td><td>Their Catalyst goes to your Box. That is a Capture, not a Kill. No Chi damage.</td></tr>
+<tr><td>Your 2000 P attacks their 2000 CP</td><td>2000 = 2000</td><td>Tie. Nothing is destroyed or captured. No Chi damage.</td></tr>
+<tr><td>Your 1800 P attacks their 2200 CP</td><td>1800 &lt; 2200</td><td>No Kill. No Capture. You take 400 Chi damage because the attacker lost to CP.</td></tr>
+</tbody></table>
+<div class="callout"><strong>Great Card exception:</strong> if you beat a Great Card that is in Counter Pressure position, it does <strong>not</strong> go to the Box. It goes to the Void and counts as a Kill.</div>
+</div>
+
 <div class="rule-section" id="setup">
 <h2>Game Setup</h2>
 <table class="rule-table">
-<tr><td style="color:var(--flame);font-weight:700;width:200px">Starting Chi</td><td>10,000 per player <span class="locked">🔒 LOCKED</span></td></tr>
+<tr><td style="color:var(--flame);font-weight:700;width:200px">Starting Chi</td><td><span data-ctf="ui.startingChi">10,000</span> per player <span class="locked">🔒 LOCKED</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Starting Hand</td><td>5 cards <span class="locked">🔒 LOCKED</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Draw Per Turn</td><td>1 card (Draw Phase). Deck empty = skip draw, NOT a loss <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">First Player</td><td>P1 draws normally on Turn 1 but CANNOT attack. Battle Phase skipped. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Normal Summons</td><td>1 per turn. Free for Lv 1–4. Lv 5–6 = 1 Tribute. Lv 7+ = 2 Tributes.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Special Summon Cap</td><td>5 per turn (hard cap). Each triggers Shotgun Rule. <span class="locked">🔒</span></td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Hand Limit</td><td>7 at End Phase — player chooses which to discard <span class="locked">🔒</span></td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Special Summon Cap</td><td><span data-ctf="CTF_CONFIG.game.shotgun.maxSpecialSummonsPerTurn">5</span> per turn (hard cap). Each triggers the Shotgun Rule. <span class="locked">🔒</span></td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Hand Limit</td><td><span data-ctf="ui.handLimit">7</span> at End Phase — player chooses which to discard <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Mandatory Attack</td><td>REMOVED / INACTIVE. Attacking is always optional. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Platform</td><td>Online-only digital card game</td></tr>
 </table>
@@ -105,11 +144,11 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <table class="rule-table">
 <thead><tr><th>Component</th><th>Size</th><th>Contents</th></tr></thead>
 <tbody>
-<tr><td>Main Deck</td><td>40–60 cards <span class="locked">🔒</span></td><td>Catalysts + Palm Tricks + Concealed Tricks + Field Tricks, shuffled together</td></tr>
-<tr><td>Fusion Deck</td><td>0–15 cards <span class="locked">🔒</span></td><td>Fusion Cards ONLY — never in the Main Deck</td></tr>
-<tr><td>Side Deck</td><td>0–15 cards</td><td>Used between duels in Best of 3</td></tr>
+<tr><td>Main Deck</td><td><span data-ctf="ui.mainDeckRange">40–60</span> cards <span class="locked">🔒</span></td><td>Catalysts + Palm Tricks + Concealed Tricks + Field Tricks, shuffled together</td></tr>
+<tr><td>Fusion Deck</td><td><span data-ctf="ui.fusionDeckRange">0–15</span> cards <span class="locked">🔒</span></td><td>Fusion Cards ONLY — never in the Main Deck</td></tr>
+<tr><td>Side Deck</td><td><span data-ctf="ui.sideDeckRange">0–15</span> cards</td><td>Used between duels in Best of 3</td></tr>
 <tr><td>Copies per card</td><td>1–3 per card <span class="locked">🔒</span></td><td>Restricted cards = max 1 copy</td></tr>
-<tr><td>Great Card Catalysts</td><td>Max 1 per name, 5 total</td><td>Any card with "Great" in its name. See Great Cards section.</td></tr>
+<tr><td>Great Card Catalysts</td><td>Max 1 per name, <span data-ctf="ui.greatCap">5</span> total</td><td>Any card with "Great" in its name. See Great Cards section.</td></tr>
 </tbody></table>
 </div>
 
@@ -127,8 +166,8 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <tr><td>Field Trick Zone</td><td>Field Tricks only</td><td>1 per player</td><td>Stacked above The Box. New Field Trick destroys the old one.</td></tr>
 <tr><td>The Box</td><td>Captured opp. Catalysts</td><td>Unlimited</td><td>Stacked below Field Trick. Great Cards NEVER enter. Visible to both. <span class="locked">🔒</span></td></tr>
 <tr><td>The Void</td><td>Destroyed / discarded / Tributed</td><td>No limit</td><td>Opposite side from Field/Box. Visible to both players.</td></tr>
-<tr><td>Deck Zone</td><td>Main Deck (face-down)</td><td>40–60</td><td>Back row corner. Draw from top. Deck out = skip draw, NOT a loss. <span class="locked">🔒</span></td></tr>
-<tr><td>Fusion Deck</td><td>Fusion Cards ONLY</td><td>0–15</td><td>Back row corner, opposite from Deck. Never drawn normally.</td></tr>
+<tr><td>Deck Zone</td><td>Main Deck (face-down)</td><td><span data-ctf="ui.mainDeckRange">40–60</span></td><td>Back row corner. Draw from top. Deck out = skip draw, NOT a loss. <span class="locked">🔒</span></td></tr>
+<tr><td>Fusion Deck</td><td>Fusion Cards ONLY</td><td><span data-ctf="ui.fusionDeckRange">0–15</span></td><td>Back row corner, opposite from Deck. Never drawn normally.</td></tr>
 <tr><td>RFG Zone</td><td>Extracted cards</td><td>1 per player</td><td>Center between both fields. Extracted cards go here permanently for the duel.</td></tr>
 </tbody></table>
 <h3>Board Layout (Per Player)</h3>
@@ -154,7 +193,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 
 <div class="rule-section" id="shotgun">
 <h2>The Shotgun Rule <span class="locked">🔒 LOCKED</span></h2>
-<p>Every Special Summon — without exception — causes the opponent to immediately draw 1 card. This applies from the 1st through 5th Special Summon. Hard cap: 5 SS per turn. No card effect can override this cap.</p>
+<p><span data-ctf="ui.shotgunSummary">Every Special Summon causes the opponent to draw 1 card. Libra Summon counts as 1 Special Summon. Hard cap: 5 per turn.</span></p>
 <table class="rule-table">
 <thead><tr><th>Special Summon #</th><th>Shotgun?</th><th>Opponent Draws</th><th>Total This Turn</th></tr></thead>
 <tbody>
@@ -168,20 +207,29 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 </div>
 
 <div class="rule-section" id="combat">
-<h2>Combat Resolution Matrix</h2>
+<h2>Combat — Clean Battle System Explanation</h2>
+<p>Every attack follows the same order:</p>
+<ol style="margin:0 0 1rem 1.2rem;color:var(--cream)">
+  <li>Choose your attacking Catalyst. It uses <strong>P</strong>.</li>
+  <li>Check the defender's position.</li>
+  <li>If the defender is in P, compare <strong>P vs P</strong>.</li>
+  <li>If the defender is in CP, compare <strong>P vs CP</strong>.</li>
+  <li>Apply the correct destination: <strong>Void</strong>, <strong>Box</strong>, or no movement.</li>
+  <li>Then apply any Chi damage.</li>
+</ol>
 <table class="rule-table">
-<thead><tr><th>Scenario</th><th>Result</th><th>Logic Dmg?</th><th>Win Progress</th></tr></thead>
+<thead><tr><th>Scenario</th><th>Result</th><th>Chi Damage?</th><th>Why it matters</th></tr></thead>
 <tbody>
-<tr><td>Your ATK > Opp ATK</td><td>Opp Catalyst → Void</td><td>YES (difference)</td><td>+1 Kill</td></tr>
-<tr><td>Your ATK < Opp ATK</td><td>Your Catalyst → Void</td><td>YES (recoil to you)</td><td>None for you</td></tr>
-<tr><td>ATK = ATK (Mutual Kill)</td><td>Both → Void</td><td>NO</td><td>+1 Kill EACH</td></tr>
-<tr><td>Your ATK > Opp DEF (normal)</td><td>Opp Catalyst → YOUR BOX (Capture)</td><td>NO</td><td>+1 Capture</td></tr>
-<tr><td>Your ATK > Opp DEF (Great Card)</td><td>Great Card → Void</td><td>NO</td><td>+1 Kill</td></tr>
-<tr><td>ATK = DEF (tie)</td><td>Attacker bounces. Defender stays.</td><td>NO</td><td>None</td></tr>
-<tr><td>ATK < DEF</td><td>No Kill. No Capture. Attacker remains on field.</td><td>YES — attacking controller takes Chi damage equal to the difference</td><td>None</td></tr>
-<tr><td>Direct Attack (Catalyst Zones empty)</td><td>Full ATK → opponent Chi</td><td>YES (full ATK)</td><td>Chi KO path</td></tr>
+<tr><td>Your P &gt; Opponent P</td><td>Opponent Catalyst → Void</td><td>YES, equal to the difference</td><td>This is a <strong>Kill</strong>.</td></tr>
+<tr><td>Your P &lt; Opponent P</td><td>Your Catalyst → Void</td><td>YES, equal to the difference</td><td>Your opponent gets the Kill.</td></tr>
+<tr><td>Your P = Opponent P</td><td>Both Catalysts → Void</td><td>NO</td><td>Mutual Kill. Each player gets +1 Kill.</td></tr>
+<tr><td>Your P &gt; Opponent CP</td><td>Opponent Catalyst → your Box</td><td>NO</td><td>This is a <strong>Capture</strong>, not a Kill.</td></tr>
+<tr><td>Your P &gt; Opponent Great Card CP</td><td>Great Card → Void</td><td>NO</td><td>Great Cards never enter the Box, so this becomes a Kill.</td></tr>
+<tr><td>Your P = Opponent CP</td><td>No destruction. No capture.</td><td>NO</td><td>Tie. Battle ends with no movement.</td></tr>
+<tr><td>Your P &lt; Opponent CP</td><td>No destruction. No capture.</td><td>YES, attacking controller takes the difference</td><td>Attacking into bigger CP punishes the attacker.</td></tr>
+<tr><td>Direct attack</td><td>No defending Catalyst</td><td>YES, full attacking P</td><td>Only legal if the opponent has no Catalysts in their Catalyst Zones.</td></tr>
 </tbody></table>
-<div class="warn-box"><strong>🔒 Direct attacks require ALL opponent CATALYST ZONES empty.</strong> Face-down Concealed Tricks in Trick Card Zones do NOT block direct attacks.</div>
+<div class="warn-box"><strong>Do not confuse these:</strong> <strong>Kill</strong> means a battle destroy that counts toward 7 Kills. <strong>Destroy</strong> by card effect is still removal, but it does <strong>not</strong> count as a Kill. <strong>Capture</strong> sends the defeated defender to the Box. <strong>Extract</strong> happens later in the End Phase from the Box.</div>
 </div>
 
 <div class="rule-section" id="win">
@@ -192,7 +240,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 
 <div class="rule-section" id="chi-ko">
 <h2>Win Condition 1: Chi KO</h2>
-<p>Reduce opponent Chi from <strong>10,000 to 0</strong>. Chi KO is instant — game ends the moment Chi hits 0. Logic damage from: ATK vs ATK battle (Pressure difference), direct attacks (full Pressure when all Catalyst Zones empty), and card effects as printed.</p>
+<p>Reduce opponent Chi from <strong><span data-ctf="ui.startingChi">10,000</span> to 0</strong>. Chi KO is instant — game ends the moment Chi hits 0. Logic damage from: ATK vs ATK battle (Pressure difference), direct attacks (full Pressure when all Catalyst Zones empty), and card effects as printed.</p>
 </div>
 
 <div class="rule-section" id="kills">
@@ -233,16 +281,15 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 
 <div class="rule-section" id="end-phase">
 <h2>End Phase — Mandatory Strategic Choice <span class="locked">🔒 LOCKED</span></h2>
-<p>An <strong>eligible Catalyst</strong> = any Catalyst in your Catalyst Zones. Any Catalyst in your Catalyst Zones can be sacrificed for End Phase actions. If you have at least one eligible Catalyst, you MUST choose one of four actions:</p>
+<p>An <strong>eligible Catalyst</strong> = a Catalyst in one of your Catalyst Zones that is not blocked by a tribute/sacrifice restriction. Great and non-Great Catalysts may be sacrificed. If you have at least one eligible Catalyst, you may choose any of these three paid actions:</p>
 <table class="rule-table">
 <thead><tr><th>Action</th><th>Cost</th><th>Effect</th></tr></thead>
 <tbody>
-<tr><td style="color:var(--flame);font-weight:700">END TURN</td><td>No cost</td><td>Voluntarily end your turn without spending a Catalyst.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">EXTRACTION</td><td>1 eligible Catalyst → Void</td><td>Move 1 opponent Catalyst from YOUR Box to RFG permanently. +1 toward 7.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">RESCUE</td><td>1 eligible Catalyst → Void</td><td>Return 1 of YOUR OWN Catalysts from opponent's Box to your Deck (shuffled).</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">DESTROY TRICK</td><td>1 eligible Catalyst → Void</td><td>Destroy 1 Trick on the field — yours or opponent's, face-up or face-down.</td></tr>
 </tbody></table>
-<p>After End Phase action: discard to 7 cards if over. Player chooses which to discard.</p>
+<p>After the End Phase action: discard to <span data-ctf="ui.handLimit">7</span> cards if over. Extraction, Rescue, and Destroy Trick require an eligible Catalyst as the cost. Great and non-Great Catalysts may be sacrificed. END TURN is always valid and costs nothing.</p>
 </div>
 
 <div class="rule-section" id="card-types">
@@ -268,7 +315,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 
 <div class="rule-section" id="libra">
 <h2>Libra Summon <span class="locked">🔒 LOCKED</span></h2>
-<p>Place one <strong>Normal Catalyst</strong> (no effects — Lore text only) in each outermost Libra Zone. Valid summon levels must be <strong>strictly between</strong> the two Scale values — endpoints excluded. Entire Libra Summon = 1 Special Summon (Shotgun fires once). Up to 5 Catalysts per Libra Summon.</p>
+<p><span data-ctf="ui.libraSummary">Place Normal Catalysts in the two outermost Libra Zones. Their Levels become your Scales. You may Libra Summon up to 5 Catalysts whose Levels are strictly between those Scales. The whole Libra Summon counts as exactly 1 Special Summon and causes exactly 1 Shotgun draw total.</span></p>
 <table class="rule-table">
 <thead><tr><th>Left Scale</th><th>Right Scale</th><th>Valid Levels</th><th>Excluded</th></tr></thead>
 <tbody>
@@ -277,7 +324,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <tr><td>3</td><td>7</td><td>4, 5, 6</td><td>1–3, 7+</td></tr>
 <tr><td>4</td><td>8</td><td>5, 6, 7</td><td>1–4, 8+</td></tr>
 </tbody></table>
-<p>Libra Zone Catalysts are treated as Trick cards for targeting. Cannot be sacrificed for End Phase. Scale destroyed mid-combo: already-summoned Catalysts remain.</p>
+<p>Libra Zone Catalysts are treated as Trick cards for targeting. They cannot be used as End Phase sacrifices. If a Scale is destroyed mid-combo, already-summoned Catalysts remain on the field.</p>
 </div>
 
 <div class="rule-section" id="great">
@@ -285,10 +332,10 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <p>Any card with <strong>"Great"</strong> in its name is a Great Card — Catalysts, Palm Tricks, Concealed Tricks, any card type. Great Card Catalysts have special restrictions:</p>
 <table class="rule-table">
 <tr><td style="color:var(--flame);font-weight:700;width:220px">Max 1 copy per name</td><td>Cannot run 2–3 copies of any Great Card.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Max 5 Great Catalysts/deck</td><td>Even if you own more, only 5 total Great Card Catalysts.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Max <span data-ctf="ui.greatCap">5</span> Great Catalysts/deck</td><td>Even if you own more, only <span data-ctf="ui.greatCap">5</span> total Great Card Catalysts.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">NEVER enter the Box</td><td>Cannot be Captured. ATK beats Great DEF → Void as +1 Kill.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Cannot be Extracted</td><td>Extraction attempt → Void as Kill.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Cannot be Tributed for End Phase</td><td>Not eligible for Extraction/Rescue/Destroy Trick cost.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Great Catalyst sacrifice</td><td>Great and non-Great eligible Catalysts may be sacrificed for paid End Phase actions.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">CAN be Killed in ATK vs ATK</td><td>No combat immunity — destroyed normally in battle.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Great Trick cards</td><td>Same copy limit. Otherwise governed by their card type's normal rules.</td></tr>
 </table>
@@ -312,10 +359,10 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <table class="rule-table">
 <thead><tr><th>Mode</th><th>Players</th><th>Chi</th><th>Key Rules</th></tr></thead>
 <tbody>
-<tr><td style="color:var(--flame);font-weight:700">Standard 1v1</td><td>2</td><td>10,000 each</td><td>Default. Best of 3: loser picks first. Side Deck swaps.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Team 2v2</td><td>4 (2 teams)</td><td>10,000 shared</td><td>Shared Chi. 1 Normal Summon/player. Shared Chi to 0 = team loses. <span class="locked">🔒</span></td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Boss Battle 3v1</td><td>4 (3 vs 1)</td><td>10,000 each side</td><td>Boss: 2 Normal Summons/turn, 2 draws/turn, 1 free Fusion Turn 1.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Free For All</td><td>4+</td><td>10,000 each</td><td>Elimination. Last above 0 Chi wins. Attacks simultaneous and secret.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Standard 1v1</td><td>2</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Default. Best of 3: loser picks first. Side Deck swaps.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Team 2v2</td><td>4 (2 teams)</td><td><span data-ctf="ui.startingChi">10,000</span> shared</td><td>Shared Chi. 1 Normal Summon/player. Shared Chi to 0 = team loses. <span class="locked">🔒</span></td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Boss Battle 3v1</td><td>4 (3 vs 1)</td><td><span data-ctf="ui.startingChi">10,000</span> each side</td><td>Boss: 2 Normal Summons/turn, 2 draws/turn, 1 free Fusion Turn 1.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Free For All</td><td>4+</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Elimination. Last above 0 Chi wins. Attacks simultaneous and secret.</td></tr>
 </tbody></table>
 </div>
 
@@ -325,11 +372,11 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <table class="rule-table">
 <thead><tr><th>#</th><th>Rule</th><th>Detail</th></tr></thead>
 <tbody>
-<tr><td>01</td><td>Starting Chi</td><td>10,000. Not 9,999.</td></tr>
+<tr><td>01</td><td>Starting Chi</td><td><span data-ctf="ui.startingChi">10,000</span>. Not 9,999.</td></tr>
 <tr><td>02</td><td>P1 Turn 1</td><td>Draws Turn 1, CANNOT attack. Battle Phase skipped.</td></tr>
 <tr><td>03</td><td>Deck Out</td><td>NOT a loss. Skip draw, continue.</td></tr>
 <tr><td>04</td><td>Max Catalysts</td><td>5 on field simultaneously.</td></tr>
-<tr><td>05</td><td>Shotgun Rule</td><td>Every SS = opponent draws 1. Hard cap 5 SS/turn.</td></tr>
+<tr><td>05</td><td>Shotgun Rule</td><td><span data-ctf="ui.shotgunSummary">Every Special Summon causes the opponent to draw 1 card. Libra Summon counts as 1 Special Summon. Hard cap: 5 per turn.</span></td></tr>
 <tr><td>06</td><td>Rescue Dest.</td><td>YOUR Catalyst from opponent's Box → YOUR Deck (shuffled).</td></tr>
 <tr><td>07</td><td>7 Kills</td><td>Battle ONLY. Effects/Destroy Trick = destroyed, not Kills.</td></tr>
 <tr><td>08</td><td>Starting Hand</td><td>5 cards before Turn 1.</td></tr>
@@ -340,10 +387,10 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
 <tr><td>13</td><td>Position Change</td><td>Cannot change same turn summoned.</td></tr>
 <tr><td>14</td><td>Mandatory Atk</td><td>REMOVED. Attacking always optional.</td></tr>
 <tr><td>15</td><td>Win Priority</td><td>Chi KO > 7 Kills > 7 Extractions.</td></tr>
-<tr><td>16</td><td>Hand Discard</td><td>Player chooses which to discard to 7.</td></tr>
+<tr><td>16</td><td>Hand Discard</td><td>Player chooses which to discard to <span data-ctf="ui.handLimit">7</span>.</td></tr>
 <tr><td>17</td><td>2v2 Shared Chi</td><td>0 = entire team loses immediately.</td></tr>
 <tr><td>18</td><td>Normal Summon</td><td>1/turn. Free Lv 1–4. Lv 5–6 = 1 Tribute. Lv 7+ = 2.</td></tr>
-<tr><td>19</td><td>End Phase</td><td>MANDATORY: End Turn / Extraction / Rescue / Destroy Trick.</td></tr>
+<tr><td>19</td><td>End Phase</td><td>Choose Extraction / Rescue / Destroy Trick if you want to pay with an eligible Catalyst, or choose END TURN with no cost.</td></tr>
 <tr><td>20</td><td>Libra</td><td>Normal Catalysts only. Outermost. Levels strictly BETWEEN.</td></tr>
 <tr><td>21</td><td>Extracted Cards</td><td>RFG for duel. Return to owner's deck next duel.</td></tr>
 <tr><td>22</td><td>Destroy Trick</td><td>Target EITHER player's Trick — face-up or face-down.</td></tr>

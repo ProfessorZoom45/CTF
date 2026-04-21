@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="assets/js/ctf-config.js"></script>
 <style>
 /* Google Fonts loaded via <link> above for better LCP — @import removed */
 
@@ -103,10 +104,22 @@ body {
   font-weight: 900;
   font-size: clamp(1rem, 3vw, 2rem);
   letter-spacing: 14px;
-  color: var(--amber);
-  text-shadow: 0 0 30px rgba(255,170,0,0.5);
+  text-transform: uppercase;
+  color: #ff2a00;
+  text-shadow: 0 0 28px rgba(255, 42, 0, 0.42);
   margin-top: 0.7rem;
   animation: riseUp 0.85s 0.45s ease both;
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-sub-title {
+    background: linear-gradient(90deg, #ff2a00 0%, #ff2a00 75%, #ff9a00 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(0 0 18px rgba(255, 60, 0, 0.35));
+  }
 }
 
 .hero-sub {
@@ -136,6 +149,12 @@ body {
   justify-content: center;
   animation: riseUp 0.7s 0.88s ease both;
 }
+
+.beta-badges{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;animation:riseUp 0.7s 1s ease both}
+.beta-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--cream);border:1px solid rgba(255,117,32,.22);background:rgba(255,77,0,.08);padding:.45rem .7rem}
+.beta-note{font-size:.9rem;color:var(--cream);max-width:760px;margin:1rem auto 0;line-height:1.6}
+.discord-cta{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:1rem}
+.discord-note{font-size:.8rem;color:var(--ash);text-align:center;margin-top:.5rem}
 
 /* scroll arrow */
 .scroll-hint {
@@ -637,20 +656,27 @@ footer .copy {
   <p class="hero-eyebrow">Perfect Timing Gaming &nbsp;·&nbsp; Buffalo, NY &nbsp;·&nbsp; Est. 2026</p>
 
   <h1 class="hero-title">Carry<br>The<br>Flame</h1>
-  <p class="hero-sub-title">Trading Card Game</p>
+  <p class="hero-sub-title">TRADING CARD GAME</p>
 
   <p class="hero-sub">
-    The <strong>first free-to-play custom online trading card game</strong><br>
-    where you create your own cards and use them against opponents and friends.
+    A <strong data-ctf="CTF_CONFIG.build.label">Browser-First Beta</strong> where every card is viewable,
+    the deckbuilder is live, and you can learn the game through tutorial, hot-seat, and local test play.
   </p>
 
   <div class="hero-divider"></div>
 
   <div class="cta-group">
-    <a class="btn-fire" href="deckbuilder.html">Build a Deck</a>
-    <a class="btn-ghost" href="cards.html">Browse Cards</a>
-    <a class="btn-ghost" href="About_Us.html">About Us</a>
+    <a class="btn-fire" href="play.html">Play The Beta</a>
+    <a class="btn-ghost" href="deckbuilder.html">Deck Builder</a>
+    <a class="btn-ghost" href="cards.html">Browse All Cards</a>
   </div>
+  <div class="beta-badges">
+    <span class="beta-badge">All Cards Viewable</span>
+    <span class="beta-badge">Tutorial + Hot-Seat</span>
+    <span class="beta-badge">PWA Install Ready</span>
+    <span class="beta-badge">Accounts Later</span>
+  </div>
+  <p class="beta-note">Locked beta constants now flow from one rules source, so the site copy, deckbuilder, play screen, and rules pages stay aligned instead of drifting.</p>
 
   <div class="scroll-hint">
     <span>Scroll</span>
@@ -694,7 +720,7 @@ footer .copy {
       <span class="path-roman">I</span>
       <span class="path-icon">💥</span>
       <div class="path-name">Chi KO</div>
-      <div class="path-sub">Reduce Chi from 10,000 to 0</div>
+      <div class="path-sub">Reduce Chi from <span data-ctf="ui.startingChi">10,000</span> to 0</div>
       <p class="path-desc">Hit hard, hit fast, drain your opponent's Chi to zero through battle damage and direct attacks. The moment they hit 0 — game over. Instant. No waiting.</p>
     </div>
     <div class="path-card">
@@ -733,18 +759,23 @@ footer .copy {
 <!-- ══════════════════════════════ GAME TESTER SIGNUP ══════════════════════════════ -->
 <section class="start-section">
   <div class="fire-rule"></div>
-  <p class="section-label reveal">Join The Forge</p>
-  <h2 class="section-title reveal">Become a Game Tester</h2>
+  <p class="section-label reveal">Join The Beta Forge</p>
+  <h2 class="section-title reveal">Join the Browser-First Beta</h2>
   <div class="tester-wrap">
     <div class="tester-card reveal">
       <h4>Help Shape Carry The Flame</h4>
       <p>Want early access to builds, test sessions, and future updates? Sign up below and send your info straight to the team. This helps CTF find serious players who want to test, give feedback, and help carry the flame forward.</p>
       <ul class="tester-bullets">
-        <li>Share your gamertag and contact info</li>
-        <li>Tell us your card-game experience</li>
-        <li>Show us your excitement level</li>
-        <li>Open your email app with everything ready to send</li>
+        <li>Play the free browser beta first</li>
+        <li>Join the Discord beta hub</li>
+        <li>Send feedback through the tester form</li>
+        <li>Help shape later account systems and friend matches</li>
       </ul>
+      <div class="discord-cta">
+        <a class="btn-ghost" href="play.html">Open the Beta</a>
+        <a class="btn-fire" href="https://discord.gg/EQJQxD679m" target="_blank" rel="noopener">Join Discord Beta Hub</a>
+      </div>
+      <p class="discord-note">Invite note: <span data-ctf="ui.discordLimitNote">Invite active until 100 joins are used.</span></p>
       <p class="tester-mail">Direct contact: <a href="mailto:changethewrld@outlook.com?subject=GAME%20TESTER">changethewrld@outlook.com</a></p>
     </div>
 
@@ -801,12 +832,12 @@ footer .copy {
   <ul class="perk-list reveal">
     <li>No packs to buy</li>
     <li>No pay-to-win</li>
-    <li>No account needed</li>
-    <li>Browser-based</li>
-    <li>1,610+ cards day one</li>
-    <li>Open card creation</li>
+    <li>No account needed in beta</li>
+    <li>Browser-based + PWA install</li>
+    <li>All cards viewable</li>
+    <li>Local tutorial + hot-seat play</li>
   </ul>
-  <a class="btn-fire reveal" href="deckbuilder.html">Start Playing — It's Free</a>
+  <a class="btn-fire reveal" href="play.html">Start Playing — It's Free</a>
 </section>
 
 <!-- ══════════════════════════════ FINAL CTA ══════════════════════════════ -->
@@ -828,7 +859,7 @@ footer .copy {
 <!-- FOOTER -->
 <footer>
   <div class="brand">CARRY THE FLAME</div>
-  <div class="copy">© 2026 Perfect Timing Gaming &nbsp;·&nbsp; Dr. Zoom &amp; Newz &nbsp;·&nbsp; Buffalo, NY &nbsp;·&nbsp; Consistency &gt; Hype &nbsp;·&nbsp; <a href="About_Us.html">About Us</a></div>
+  <div class="copy">© 2026 Perfect Timing Gaming &nbsp;·&nbsp; Dr. Zoom &amp; Newz &nbsp;·&nbsp; Buffalo, NY &nbsp;·&nbsp; Consistency &gt; Hype &nbsp;·&nbsp; <a href="About_Us.html">About Us</a> &nbsp;·&nbsp; <span data-ctf="CTF_CONFIG.build.version">browser-beta-pwa-1.0.0</span></div>
 </footer>
 
 <script>

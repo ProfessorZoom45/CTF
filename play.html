@@ -135,14 +135,21 @@ body.board-clarity .field-card.face-down::after{content:'SET';position:absolute;
 .fc-pos-fd{background:rgba(255,255,255,.08);color:var(--ash);border:1px solid rgba(255,255,255,.15)}
 
 /* My hand */
-.my-hand{display:flex;justify-content:center;gap:3px;padding:4px 10px;background:rgba(0,0,0,.4);flex-shrink:0;min-height:80px;align-items:flex-end;overflow-x:auto}
-.hand-card{width:64px;height:82px;background:var(--coal-mid);border:1px solid rgba(255,106,0,.12);border-radius:3px;padding:3px;cursor:pointer;transition:all .15s;flex-shrink:0;display:flex;flex-direction:column;position:relative}
+.my-hand{display:flex;justify-content:center;gap:3px;padding:4px 10px;background:rgba(0,0,0,.4);flex-shrink:0;min-height:80px;align-items:flex-end;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding-bottom:calc(6px + env(safe-area-inset-bottom));scrollbar-width:thin}
+.hand-card{width:64px;height:82px;background:var(--coal-mid);border:1px solid rgba(255,106,0,.12);border-radius:3px;padding:3px;cursor:pointer;transition:all .15s;flex-shrink:0;display:flex;flex-direction:column;position:relative;scroll-snap-align:center}
 .hand-card:hover{border-color:var(--flame);transform:translateY(-6px);z-index:10;box-shadow:0 4px 12px rgba(255,106,0,.2)}
 .hand-card.selected{border-color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,.3);transform:translateY(-10px)}
 .hc-bar{height:2px;border-radius:1px;margin-bottom:2px;flex-shrink:0}
 .hc-name{font-family:var(--font-label);font-weight:700;font-size:.52rem;color:var(--white);line-height:1.15;flex:1;overflow:hidden}
 .hc-type{font-family:var(--font-mono);font-size:.4rem;color:var(--ash)}
 .hc-stats{font-family:var(--font-mono);font-size:.52rem;color:var(--flame);margin-top:auto}
+.hidden-hand-card{background:linear-gradient(135deg,#3a1500,#1a0a00);border-color:rgba(255,106,0,.28);justify-content:center;align-items:center;text-align:center}
+.hidden-hand-card::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,106,0,.06),rgba(0,0,0,.22));pointer-events:none}
+.hidden-hand-main,.hidden-hand-sub{position:relative;z-index:1}
+.hidden-hand-main{font-family:var(--font-display);font-size:.95rem;letter-spacing:1px;color:var(--white)}
+.hidden-hand-sub{font-family:var(--font-mono);font-size:.46rem;color:var(--amber);margin-top:2px}
+body.watch-mode .my-hand{background:linear-gradient(180deg,rgba(255,106,0,.08),rgba(0,0,0,.58));border-top:1px solid rgba(255,106,0,.22)}
+body.watch-mode .status-banner{box-shadow:inset 0 0 0 1px rgba(255,179,71,.12)}
 
 /* ═══ SIDEBAR ═══ */
 .sidebar{display:flex;flex-direction:column;background:var(--coal-light);border-left:1px solid rgba(255,106,0,.1);overflow:hidden}
@@ -222,6 +229,16 @@ body.board-clarity .field-card.face-down::after{content:'SET';position:absolute;
 .net-pill.warn{color:#90caf9;border-color:rgba(33,150,243,.45);background:rgba(33,150,243,.08)}
 .net-pill.err{color:#ffb3aa;border-color:rgba(231,76,60,.45);background:rgba(231,76,60,.08)}
 .illegal-panel{display:none;padding:8px 10px;background:rgba(231,76,60,.18);border:1px solid rgba(231,76,60,.35);border-radius:4px;color:#ffb3aa;font-size:.75rem;font-weight:600;line-height:1.35;margin:4px 0}
+
+.tutorial-box{margin-top:.9rem;padding:.8rem;border:1px solid rgba(255,106,0,.18);background:rgba(255,106,0,.05)}
+.tutorial-box h4,.tutorial-panel h4{font-family:var(--font-display);font-size:.9rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.35rem}
+.tutorial-box p,.tutorial-panel p{font-size:.74rem;line-height:1.5;color:var(--cream)}
+.tutorial-list{margin:.45rem 0 0 1rem;font-size:.72rem;color:var(--cream)}
+.tutorial-list li{margin:.18rem 0}
+.tutorial-panel{display:none;padding:8px 10px;border:1px solid rgba(255,177,71,.2);background:rgba(255,177,71,.06);border-radius:4px;color:var(--cream);font-size:.74rem;line-height:1.45;margin:6px 0}
+.tutorial-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.55rem}
+.lobby-note{font-size:.74rem;color:var(--ash);line-height:1.5;text-align:center;margin-top:.65rem}
+
 .field-card.has-art,.hand-card.has-art{background-size:cover;background-position:center;border-color:rgba(255,255,255,.12)}
 .field-card.has-art::before,.hand-card.has-art::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.72));pointer-events:none}
 .field-card.has-art>*,.hand-card.has-art>*{position:relative;z-index:1}
@@ -238,6 +255,30 @@ body.board-clarity .field-card.face-down::after{content:'SET';position:absolute;
 .result-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:.6rem}
 .result-box strong{display:block;font-family:var(--font-label);letter-spacing:1px;text-transform:uppercase;color:var(--ash);font-size:.7rem}
 .result-box span{font-family:var(--font-mono);font-size:1rem;color:var(--white)}
+.result-sub{color:var(--cream);font-size:.82rem;line-height:1.45;margin:.35rem 0 .9rem}
+.result-badge-row{display:flex;gap:.45rem;flex-wrap:wrap;margin:.4rem 0 .85rem}
+.result-badge{display:inline-flex;align-items:center;gap:.25rem;padding:.18rem .45rem;border:1px solid rgba(255,106,0,.18);background:rgba(255,106,0,.08);color:var(--amber);font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase}
+.result-callout{padding:.7rem .8rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--cream);font-size:.8rem;line-height:1.45;margin:.7rem 0}
+.result-line{display:flex;justify-content:space-between;gap:.75rem;font-size:.78rem;color:var(--cream);padding:.22rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.result-line:last-child{border-bottom:none}
+.result-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.9rem}
+.result-actions .lb-btn{flex:1 1 180px}
+.result-share-note{margin-top:.45rem;font-size:.68rem;color:var(--ash)}
+
+.tutorial-progress{display:flex;gap:.35rem;flex-wrap:wrap;margin:.45rem 0 .2rem}
+.tutorial-step-dot{width:18px;height:18px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.58rem;border:1px solid rgba(255,255,255,.12);color:var(--ash);background:rgba(255,255,255,.03)}
+.tutorial-step-dot.done{background:rgba(76,175,80,.16);border-color:rgba(76,175,80,.34);color:#9be7a1}
+.tutorial-step-dot.active{background:rgba(255,106,0,.16);border-color:rgba(255,106,0,.38);color:var(--white)}
+.tutorial-links{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.55rem}
+.tutorial-links a{font-size:.68rem}
+.battle-coach{padding:8px 10px;border:1px solid rgba(33,150,243,.22);background:rgba(33,150,243,.06);border-radius:4px;color:var(--cream);font-size:.74rem;line-height:1.45;margin:6px 0}
+.battle-coach h4{font-family:var(--font-display);font-size:.9rem;color:#90caf9;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.35rem}
+.battle-coach .bc-main{font-family:var(--font-label);font-size:.8rem;letter-spacing:.6px;color:var(--white);margin-bottom:.2rem}
+.battle-coach .bc-sub{font-size:.72rem;color:var(--cream)}
+.battle-coach .bc-tips{margin:.4rem 0 0 1rem;font-size:.7rem;color:var(--cream)}
+.battle-coach .bc-tips li{margin:.16rem 0}
+.battle-legend{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.45rem}
+.battle-legend .legal-chip{font-size:.6rem}
 body.high-contrast{--white:#fff;--cream:#fff;--ash:#d0d0d0;--flame:#ff8a00;--amber:#ffd166}
 body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after{transition:none!important;animation:none!important}
 body.card-art-off .field-card.has-art,body.card-art-off .hand-card.has-art{background-image:none!important}
@@ -274,12 +315,32 @@ body.compact-zones .field-card{width:36px;height:44px}
 .chain-resolve{font-size:.5rem;letter-spacing:.5px;color:var(--gold);text-transform:uppercase;justify-self:end}
 .chain-arrow{font-size:.55rem;color:var(--ash);margin:2px 0 2px;text-align:center;letter-spacing:1px}
 
+@media(max-width:1024px){
+#game{grid-template-columns:minmax(0,1fr) 240px}
+.board{min-width:0}
+.sidebar{min-width:0}
+.field{padding:4px 4px 2px}
+.zone{width:54px;height:64px}.field-card{width:50px;height:60px}
+.side-zone{width:40px;height:48px}
+.opp-hand{padding:3px 8px;min-height:36px}
+.card-back{width:24px;height:32px}
+.my-hand{justify-content:flex-start;gap:6px;padding:8px 10px calc(10px + env(safe-area-inset-bottom));min-height:108px;background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.58));border-top:1px solid rgba(255,106,0,.18)}
+.hand-card{width:74px;height:98px;padding:5px}
+.hc-name{font-size:.62rem;line-height:1.15}
+.hc-type{font-size:.5rem}
+.hc-stats{font-size:.6rem}
+.score-bar{padding:4px 8px}
+.result-panel{width:min(680px,95vw)}
+}
+
 /* Mobile touch target improvements */
 @media(max-width:768px){
-#game{grid-template-columns:1fr;grid-template-rows:1fr auto}
-.sidebar{max-height:35vh;border-left:none;border-top:1px solid rgba(255,106,0,.1);overflow-y:auto}
-.zone{width:48px;height:56px}.field-card{width:44px;height:52px}
-.hand-card{width:52px;height:68px}.card-back{width:22px;height:30px}
+#game{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+.sidebar{max-height:38vh;border-left:none;border-top:1px solid rgba(255,106,0,.1);overflow-y:auto;padding-bottom:env(safe-area-inset-bottom)}
+.board{min-height:62vh}
+.my-hand{position:sticky;bottom:0;z-index:12;justify-content:flex-start;gap:6px;padding:8px 10px calc(12px + env(safe-area-inset-bottom));min-height:102px;border-top:1px solid rgba(255,106,0,.18)}
+.zone{width:46px;height:56px}.field-card{width:42px;height:50px}
+.hand-card{width:68px;height:92px}.card-back{width:20px;height:28px}
 .side-zone{width:36px;height:44px}
 /* Ensure all action buttons hit 44px min-height for touch */
 .act-btn{min-height:44px;font-size:.82rem}
@@ -292,6 +353,37 @@ body.compact-zones .field-card{width:36px;height:44px}
 .score-bar{flex-wrap:wrap;gap:4px}
 }
 
+@media(max-width:900px) and (orientation:landscape){
+#game{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+.board{min-height:56vh}
+.sidebar{max-height:44vh;border-left:none;border-top:1px solid rgba(255,106,0,.1);overflow-y:auto;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+.phase-rail,.actions,.helper-panel,.legal-actions-panel,.tutorial-panel,.battle-coach,.log-panel{padding-left:8px;padding-right:8px}
+.phase-item{font-size:.58rem;padding:2px 5px}
+.phase-item.active{font-size:.68rem}
+.actions h4,.phase-rail h4,.helper-title,.log-panel h4{margin-bottom:3px}
+.log-panel{min-height:140px}
+.my-hand{min-height:88px;padding:6px 8px calc(10px + env(safe-area-inset-bottom));gap:5px}
+.hand-card{width:60px;height:80px}
+.zone{width:42px;height:50px}.field-card{width:38px;height:46px}
+.side-zone{width:30px;height:38px}
+.field-slot{width:46px;height:32px}
+}
+
+@media(max-height:760px){
+.helper-panel,.legal-actions-panel,.tutorial-panel,.battle-coach{max-height:140px;overflow:auto}
+.log-panel{min-height:150px}
+.act-btn{margin-bottom:2px}
+}
+
+@media(max-height:520px){
+.score-bar{padding:3px 6px;font-size:.58rem}
+.chi-val{font-size:.98rem}
+.opp-hand{min-height:30px;padding:2px 6px}
+.card-back{width:18px;height:24px}
+.field-divider{margin:1px 0}
+.battle-readout{padding:6px 8px}
+}
+
 @media(max-width:480px){
 html,body{overflow:auto}
 #lobby{height:auto;min-height:100vh;padding:1rem}
@@ -299,17 +391,20 @@ html,body{overflow:auto}
 .board{overflow:auto}
 .score-bar{font-size:.6rem;padding:4px 6px}
 .chi-val{font-size:1.05rem}
-.zone{width:42px;height:52px}
-.field-card{width:38px;height:48px}
+.zone{width:40px;height:48px}
+.field-card{width:36px;height:44px}
 .field-card .fc-name{font-size:.48rem}
 .field-card .fc-stats{font-size:.42rem}
-.hand-card{width:44px;height:60px}
-.hand-card .hc-name{font-size:.48rem}
-.side-zone{width:32px;height:40px}
+.hand-card{width:60px;height:82px;padding:4px}
+.hand-card .hc-name{font-size:.58rem;line-height:1.1}
+.side-zone{width:30px;height:38px}
 .field-slot{width:48px;height:34px}
 .zone-row{gap:2px}
-.field{padding:4px 2px}
+.field{padding:3px 1px}
 .sidebar{max-height:none}
+.my-hand{min-height:94px;padding:7px 8px calc(12px + env(safe-area-inset-bottom))}
+.hc-type{font-size:.46rem}
+.hc-stats{font-size:.54rem}
 .log-panel{min-height:180px}
 .chain-entry{grid-template-columns:auto auto 1fr}
 .chain-resolve{grid-column:1 / -1;justify-self:start;margin-left:24px}
@@ -317,6 +412,7 @@ html,body{overflow:auto}
 
 </style>
 <script defer src="assets/js/embers-bg.js"></script>
+<script src="assets/js/ctf-config.js"></script>
 <!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
 <!-- OperatorStack: block local-dev environments (fixes /home/ path leakage + crypto.subtle errors) -->
 <script>
@@ -338,14 +434,17 @@ html,body{overflow:auto}
 <div id="lobby">
 <a href="index.html" style="font-family:var(--font-label);font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;display:inline-block">← Back to Home</a>
 <div class="lobby-title">Carry The Flame</div>
-<div class="lobby-sub">Online Card Battle — connect with a room code and play.</div>
+<div class="lobby-sub">Browser-First Beta — tutorial, hot-seat, solo test play, and friend-code rooms.</div>
 <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
+  <button class="lb-btn lb-btn-fire" onclick="startTutorial()">5-Match Tutorial</button>
   <button class="lb-btn lb-btn-ghost" onclick="startHotSeat()">Hot-Seat Local</button>
   <button class="lb-btn lb-btn-ghost" onclick="startSandbox()">Solo Sandbox</button>
+  <a class="lb-btn lb-btn-ghost" href="https://discord.gg/EQJQxD679m" target="_blank" rel="noopener">Discord Beta Hub</a>
   <span class="net-pill" id="net-state">Offline</span>
   <button class="lb-btn lb-btn-ghost" id="reconnect-btn" onclick="reconnectRoom()" style="display:none">Reconnect</button>
   <button class="lb-btn lb-btn-ghost" id="install-btn" onclick="installApp()" style="display:none">Install App</button>
 </div>
+<div class="lobby-note">Free browser beta now. Accounts, cloud inventory, and friend-match backend come later. Discord invite currently lasts until 100 joins are used.</div>
 
 <div class="lobby-box">
 <h3>Select Deck</h3>
@@ -375,7 +474,7 @@ html,body{overflow:auto}
 <!-- Opponent score bar -->
 <div class="score-bar opp">
 <span>P<span id="opp-num">2</span> · <span id="opp-deck-name">Starter Deck</span></span>
-<span>CHI: <span class="chi-val chi-opp" id="opp-chi">10000</span></span>
+<span>CHI: <span class="chi-val chi-opp" id="opp-chi" data-ctf="ui.startingChi">10,000</span></span>
 <span class="score-stat">Kills: <strong id="opp-kills">0</strong></span>
 <span class="score-stat">Capt: <strong id="opp-captures">0</strong></span>
 <span class="score-stat">Ext: <strong id="opp-extractions">0</strong></span>
@@ -441,7 +540,7 @@ html,body{overflow:auto}
 <!-- My score bar -->
 <div class="score-bar me">
 <span>P<span id="my-num">1</span> · <span id="my-deck-name">Starter Deck</span></span>
-<span>CHI: <span class="chi-val chi-me" id="my-chi">10000</span></span>
+<span>CHI: <span class="chi-val chi-me" id="my-chi" data-ctf="ui.startingChi">10,000</span></span>
 <span class="score-stat">Kills: <strong id="my-kills">0</strong></span>
 <span class="score-stat">Capt: <strong id="my-captures">0</strong></span>
 <span class="score-stat">Ext: <strong id="my-extractions">0</strong></span>
@@ -450,7 +549,7 @@ html,body{overflow:auto}
 
 <div class="battle-readout" id="battle-readout" aria-live="polite">
   <div><div class="label">Last Battle Result</div><div class="value" id="battle-result-main">No battle resolved yet.</div></div>
-  <div class="sub" id="battle-result-sub">Kills, captures, and rebound Chi damage will appear here.</div>
+  <div class="sub" id="battle-result-sub">Kills, captures, Great redirects, and rebound Chi damage will appear here.</div>
 </div>
 <div class="status-banner" id="status-banner" role="status" aria-live="polite">
   <div class="sb-main" id="status-main">Waiting to start duel…</div>
@@ -471,6 +570,7 @@ html,body{overflow:auto}
 <div class="actions" id="actions-panel">
 <h4>Actions</h4>
 <div id="action-btns"></div>
+<button class="act-btn act-btn-ghost" id="watch-toggle-btn" onclick="toggleWatchMode()">Watch Mode: Off</button>
 <button class="act-btn act-btn-ghost" onclick="toggleSettings()">Settings</button>
 <button class="act-btn act-btn-ghost" onclick="showResultCard()">Result Card</button>
 </div>
@@ -480,6 +580,36 @@ html,body{overflow:auto}
 <div class="helper-title">What Can I Do?</div>
 <div class="helper-copy" id="helper-copy" aria-live="polite">Choose a deck to begin.</div>
 </div>
+<div class="tutorial-panel" id="tutorial-panel">
+  <h4 id="tutorial-title">Tutorial</h4>
+  <p id="tutorial-copy">Start the 5-match tutorial from the lobby.</p>
+  <div class="tutorial-progress" id="tutorial-progress"></div>
+  <ul class="tutorial-list" id="tutorial-points"></ul>
+  <div class="tutorial-actions">
+    <button class="act-btn act-btn-fire" id="tutorial-next-btn" onclick="advanceTutorialStep()" style="display:none">Next Tutorial Match</button>
+    <button class="act-btn act-btn-ghost" id="tutorial-exit-btn" onclick="exitTutorial()" style="display:none">Exit Tutorial</button>
+  </div>
+  <div class="tutorial-links">
+    <a class="act-btn act-btn-ghost" href="rules.html#combat" target="_blank" rel="noopener">Battle Basics</a>
+    <a class="act-btn act-btn-ghost" href="rules.html#libra" target="_blank" rel="noopener">Libra Rules</a>
+  </div>
+</div>
+<div class="battle-coach" id="battle-coach">
+  <h4>Battle Coach</h4>
+  <div class="bc-main" id="battle-coach-main">Open a duel to see simple battle guidance.</div>
+  <div class="bc-sub" id="battle-coach-sub">This panel explains what a battle result means in plain language.</div>
+  <ul class="bc-tips" id="battle-coach-tips">
+    <li>P beats P = Kill + Chi damage.</li>
+    <li>P beats CP = Capture unless the defender is a Great Card.</li>
+    <li>P loses to CP = no Kill or Capture; attacker controller takes Chi damage.</li>
+  </ul>
+  <div class="battle-legend">
+    <span class="legal-chip">P = Pressure</span>
+    <span class="legal-chip">CP = Counter Pressure</span>
+    <span class="legal-chip">Box = Captured cards</span>
+    <span class="legal-chip">Void = Destroyed / discarded</span>
+  </div>
+</div>
 <div class="legal-actions-panel">
 <div class="helper-title">Legal Right Now</div>
 <div class="legal-actions-list" id="legal-actions"><span class="legal-chip blocked">No actions yet</span></div>
@@ -488,7 +618,7 @@ html,body{overflow:auto}
 <div class="end-phase-btns" id="end-phase-panel" style="display:none">
 <h4>End Phase — Choose One</h4>
 <div class="end-phase-note" id="end-phase-note">Pick one End Phase action. Disabled buttons tell you what is missing.</div>
-<button class="act-btn act-btn-ghost" onclick="doEndPhase('endTurn')">End Turn (free)</button>
+<button class="act-btn act-btn-ghost" onclick="doEndPhase('endTurn')" id="ep-endturn">END TURN</button>
 <button class="act-btn act-btn-fire" onclick="doEndPhase('extraction')" id="ep-extract">Extraction</button>
 <button class="act-btn act-btn-blue" onclick="doEndPhase('rescue')" id="ep-rescue">Rescue</button>
 <button class="act-btn act-btn-purple" onclick="doEndPhase('destroyTrick')" id="ep-destroy">Destroy Trick</button>
@@ -512,12 +642,45 @@ html,body{overflow:auto}
 </div>
 </div>
 
+<!-- RESULT CARD -->
+<div class="result-card" id="result-card" role="dialog" aria-modal="true" aria-labelledby="result-winner">
+  <div class="result-panel">
+    <div class="result-title" id="result-winner">In Progress</div>
+    <div class="result-sub" id="result-sub">Open this card any time for a clean duel snapshot.</div>
+    <div class="result-badge-row">
+      <span class="result-badge" id="result-reason">Live Snapshot</span>
+      <span class="result-badge">Turn <span id="result-turn">1</span></span>
+      <span class="result-badge" id="result-phase">Turn Start</span>
+      <span class="result-badge" id="result-mode">Browser Beta</span>
+    </div>
+    <div class="result-grid">
+      <div class="result-box"><strong>Player 1</strong><span id="result-p1">CHI 10,000 · K 0 · E 0</span></div>
+      <div class="result-box"><strong>Player 2</strong><span id="result-p2">CHI 10,000 · K 0 · E 0</span></div>
+      <div class="result-box"><strong>Combat</strong><span id="result-combat">Battles 0 · Chains 0</span></div>
+      <div class="result-box"><strong>Summons</strong><span id="result-summons">Special 0 · Libra 0 · Shotgun 0</span></div>
+    </div>
+    <div class="result-callout" id="result-callout">No battle resolved yet. Use this card after each tutorial match to reinforce what just happened.</div>
+    <div class="result-line"><strong>Last battle</strong><span id="result-battle">No battle resolved yet.</span></div>
+    <div class="result-line"><strong>Tutorial</strong><span id="result-tutorial">Free play</span></div>
+    <div class="result-line"><strong>Decks</strong><span id="result-decks">Starter Deck vs Starter Deck</span></div>
+    <div class="result-actions">
+      <button class="lb-btn lb-btn-fire" onclick="copyResultCardText()">Copy Result Summary</button>
+      <button class="lb-btn lb-btn-ghost" onclick="shareResultCardImage()">Share / Download Image</button>
+      <button class="lb-btn lb-btn-ghost" onclick="downloadMatchLog()">Export Match Log</button>
+      <button class="lb-btn lb-btn-ghost" onclick="hideResultCard()">Close</button>
+    </div>
+    <div class="result-share-note">Share tries the device share sheet first. If unavailable, it downloads a PNG image card.</div>
+  </div>
+</div>
+
 <!-- GAME OVER -->
 <div class="game-over" id="game-over">
 <div class="go-title" id="go-title"></div>
 <div class="go-reason" id="go-reason"></div>
 <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem">
 <button class="lb-btn lb-btn-fire" onclick="location.reload()">Return to Lobby</button>
+<button class="lb-btn lb-btn-ghost" onclick="showResultCard(true)">Result Card</button>
+<button class="lb-btn lb-btn-ghost" onclick="shareResultCardImage()">Share Result Image</button>
 <button class="lb-btn lb-btn-ghost" onclick="downloadMatchLog()">Export Match Log</button>
 <button class="lb-btn lb-btn-ghost" onclick="showPostMatchSummary()">Debug Summary</button>
 <button class="lb-btn lb-btn-ghost" onclick="downloadNetDebugLog()">Net Debug Log</button>
@@ -583,6 +746,10 @@ html,body{overflow:auto}
   <div class="settings-row">
     <label for="set-clarity" style="cursor:pointer">Board Clarity</label>
     <input type="checkbox" id="set-clarity" onchange="applySettings()" aria-label="Board clarity mode">
+  </div>
+  <div class="settings-row">
+    <label for="set-watch-mode" style="cursor:pointer">Watch Mode / Hide My Hand</label>
+    <input type="checkbox" id="set-watch-mode" onchange="applySettings()" aria-label="Hide my hand contents for streaming or spectators">
   </div>
   <div class="settings-row">
     <label for="set-log-max" style="cursor:pointer">Log Lines</label>

@@ -110,6 +110,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 </style>
 
 <script defer src="assets/js/embers-bg.js"></script>
+<script src="assets/js/ctf-config.js"></script>
 <!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
 <!-- OperatorStack: block local-dev environments (fixes /home/oai/share/repo/ path leakage + crypto.subtle errors from file: contexts) -->
 <script>
@@ -166,9 +167,9 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 <div class="deck-area">
 <div class="deck-toolbar">
 <input type="text" class="deck-name" id="deck-name" value="My CTF Deck" placeholder="Deck Name...">
-<select id="starter-select" class="starter-select"><option value="">Load Starter Deck…</option></select>
+<select id="starter-select" class="starter-select" onchange="loadStarterDeck()"><option value="">Load Starter Deck…</option></select>
 <button class="btn btn-ghost" onclick="loadStarterDeck()">Load Starter</button>
-<button class="btn btn-flame" onclick="exportDeck()">Export</button>
+<button class="btn btn-flame" onclick="exportDeck()">Export .txt</button>
 <button class="btn btn-green" onclick="showImport()">Import</button>
 <button class="btn btn-ghost" onclick="saveDeckLocal()">Save</button>
 <button class="btn btn-green" onclick="launchPlayWithDeck()">Play This Deck</button>
@@ -177,13 +178,17 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 </div>
 
 <div class="valid" id="valid"></div>
+<div class="valid" style="margin-top:.8rem">
+  <div class="vr"><span class="dot dot-ok"></span><strong>Browser-First Beta:</strong>&nbsp; all cards viewable · deckbuilder live · local save · tutorial/hot-seat play in the browser</div>
+  <div class="vr"><span class="dot dot-ok"></span><strong>Locked rules source:</strong>&nbsp; <span data-ctf="ui.mainDeckRange">40–60</span> main · <span data-ctf="ui.fusionDeckRange">0–15</span> fusion · <span data-ctf="ui.sideDeckRange">0–15</span> side · <span data-ctf="ui.greatCap">5</span> Great Card cap</div>
+</div>
 
 <!-- MAIN DECK -->
 <div class="zone">
 <div class="zone-header">
 <span class="zone-title">Main Deck</span>
 <span><button class="zone-sort" onclick="sortZone('main','name')">Name</button> · <button class="zone-sort" onclick="sortZone('main','type')">Type</button> · <button class="zone-sort" onclick="sortZone('main','level')">Level</button> · <button class="zone-sort" onclick="sortZone('main','pr')">Pressure</button></span>
-<span class="zone-count" id="main-count">0 / 40–60</span>
+<span class="zone-count" id="main-count">0 / <span data-ctf="ui.mainDeckRange">40–60</span></span>
 </div>
 <div class="dg" id="main-grid"></div>
 </div>
@@ -192,7 +197,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 <div class="zone">
 <div class="zone-header">
 <span class="zone-title">Fusion Deck</span>
-<span class="zone-count" id="fusion-count">0 / 15</span>
+<span class="zone-count" id="fusion-count">0 / <span data-ctf="ui.sideDeckMax">15</span></span>
 </div>
 <div class="dg" id="fusion-grid"></div>
 </div>
@@ -201,7 +206,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 <div class="zone">
 <div class="zone-header">
 <span class="zone-title">Side Deck</span>
-<span class="zone-count" id="side-count">0 / 15</span>
+<span class="zone-count" id="side-count">0 / <span data-ctf="ui.sideDeckMax">15</span></span>
 </div>
 <div class="dg" id="side-grid"></div>
 </div>
@@ -287,7 +292,7 @@ function renderPool(){
  list.innerHTML=poolFiltered.map(c=>{
   const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
   const total=countInAllDecks(c.id);
-  const max=c.great?1:3;
+  const max=c.great?GREAT_CFG.maxPerName:DECK_CFG.copiesPerCard;
   return`<div class="pc${c.great?' pc-great':''}" onclick="addCard('${c.id}')" oncontextmenu="event.preventDefault();addCard('${c.id}','side')" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
    ${imgTag(c,'pc-thumb')}
    <div class="pc-color ${pcClass(c.cardType)}"></div>
@@ -304,17 +309,17 @@ function countInAllDecks(id){return mainDeck.filter(x=>x===id).length+fusionDeck
 function addCard(id,zone){
  const c=cardMap[id];if(!c)return;
  const total=countInAllDecks(id);
- const max=c.great?1:3;
+ const max=c.great?GREAT_CFG.maxPerName:DECK_CFG.copiesPerCard;
  if(total>=max)return;
 
  if(zone==='side'){
-  if(sideDeck.length>=15)return;
+  if(sideDeck.length>=DECK_CFG.sideMax)return;
   sideDeck.push(id);
  } else if(c.cardType==='Fusion'){
-  if(fusionDeck.length>=15)return;
+  if(fusionDeck.length>=DECK_CFG.fusionMax)return;
   fusionDeck.push(id);
  } else {
-  if(mainDeck.length>=60)return;
+  if(mainDeck.length>=DECK_CFG.mainMax)return;
   mainDeck.push(id);
  }
  renderAll();
@@ -380,18 +385,18 @@ function validate(){
  const fusionPure=fusionDeck.every(id=>cardMap[id]&&cardMap[id].cardType==='Fusion');
  
  const rules=[
-  {ok:mc>=40&&mc<=60,text:`Main: ${mc}/40–60`},
-  {ok:fc<=15,text:`Fusion: ${fc}/15`},
-  {ok:sc<=15,text:`Side: ${sc}/15`},
-  {ok:greatCount<=5,text:`Great Catalysts: ${greatCount}/5`},
+  {ok:mc>=DECK_CFG.mainMin&&mc<=DECK_CFG.mainMax,text:`Main: ${mc}/${DECK_CFG.mainMin}–${DECK_CFG.mainMax}`},
+  {ok:fc<=DECK_CFG.fusionMax,text:`Fusion: ${fc}/${DECK_CFG.fusionMax}`},
+  {ok:sc>=DECK_CFG.sideMin&&sc<=DECK_CFG.sideMax,text:`Side: ${sc}/${DECK_CFG.sideMin}–${DECK_CFG.sideMax}`},
+  {ok:greatCount<=GREAT_CFG.maxPerDeck,text:`Great Catalysts: ${greatCount}/${GREAT_CFG.maxPerDeck}`},
   {ok:copyOk,text:copyOk?'Copies: OK':'Copies: OVER LIMIT'},
   {ok:fusionPure,text:fusionPure?'Fusion: Valid':'Fusion: Non-Fusion cards!'},
  ];
  v.innerHTML=rules.map(r=>`<div class="vr"><span class="dot ${r.ok?'dot-ok':'dot-err'}"></span>${r.text}</div>`).join('');
  
- document.getElementById('main-count').textContent=`${mc} / 40–60`;
- document.getElementById('fusion-count').textContent=`${fc} / 15`;
- document.getElementById('side-count').textContent=`${sc} / 15`;
+ document.getElementById('main-count').textContent=`${mc} / ${DECK_CFG.mainMin}–${DECK_CFG.mainMax}`;
+ document.getElementById('fusion-count').textContent=`${fc} / ${DECK_CFG.fusionMax}`;
+ document.getElementById('side-count').textContent=`${sc} / ${DECK_CFG.sideMax}`;
 }
 
 function renderAll(){
@@ -424,22 +429,36 @@ function showTT(event,el,id){
 function hideTT(){document.getElementById('tooltip').classList.remove('show')}
 
 // ── EXPORT ──
+function legacySetCode(setCode){
+ const raw=String(setCode||'?').trim();
+ return raw ? raw.charAt(0).toUpperCase()+raw.slice(1).toLowerCase() : '?';
+}
+function sanitizeDeckFilename(name){
+ return String(name||'My CTF Deck').replace(/[\/:*?"<>|]+/g,' ').replace(/\s+/g,' ').trim() || 'My CTF Deck';
+}
 function exportDeck(){
  const name=document.getElementById('deck-name').value||'My CTF Deck';
- function deckToText(arr,label){
-  if(!arr.length)return`\n## ${label} (0)\n`;
-  const counts={};arr.forEach(id=>{counts[id]=(counts[id]||0)+1});
-  let txt=`\n## ${label} (${arr.length})\n`;
-  for(const[id,ct]of Object.entries(counts)){const c=cardMap[id];txt+=`${ct}x ${c?c.name:id} [${c?c.set:'?'}]\n`}
-  return txt;
- }
- let txt=`# ${name}\n# Carry The Flame Deck · Perfect Timing Gaming / Makairis Holding Group\n`;
- txt+=deckToText(mainDeck,'Main Deck');
- txt+=deckToText(fusionDeck,'Fusion Deck');
- txt+=deckToText(sideDeck,'Side Deck');
- 
- const blob=new Blob([txt],{type:'text/plain'});
- const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name.replace(/\s+/g,'_')+'.ctfdeck';a.click();
+ const exportIds=[...mainDeck,...fusionDeck,...sideDeck].filter(Boolean);
+ if(!exportIds.length){alert('Add cards to the deck before exporting.');return}
+ const ordered=[];
+ const counts=new Map();
+ exportIds.forEach(id=>{
+  const norm=(window.CTFDeckUtils&&CTFDeckUtils.normalizeCardId)?CTFDeckUtils.normalizeCardId(id):id;
+  if(!counts.has(norm)) ordered.push(norm);
+  counts.set(norm,(counts.get(norm)||0)+1);
+ });
+ const lines=ordered.map(id=>{
+  const c=cardMap[id]||safeCard(id);
+  return `${counts.get(id)}|${legacySetCode(c.set)}|${c.name||id}`;
+ });
+ const txt=lines.join('\n')+'\n';
+ const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+ const a=document.createElement('a');
+ const href=URL.createObjectURL(blob);
+ a.href=href;
+ a.download=sanitizeDeckFilename(name)+'.txt';
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(href),1500);
 }
 
 // ── IMPORT ──
@@ -452,9 +471,12 @@ function importDeck(){
  mainDeck=[];fusionDeck=[];sideDeck=[];
  let currentZone='main';
  const nameMap=Object.fromEntries(ALL_CARDS.map(c=>[c.name.toLowerCase(),c.id]));
+ const normalizeCardName=(window.CTFDeckUtils&&CTFDeckUtils.normalizeCardName)?CTFDeckUtils.normalizeCardName:(v=>v);
+ const setNameMap=Object.fromEntries(ALL_CARDS.map(c=>[`${legacySetCode(c.set).toLowerCase()}|${c.name.toLowerCase()}`,c.id]));
  
  txt.split('\n').forEach(line=>{
   line=line.trim();
+  if(!line)return;
   if(line.startsWith('# ')&&!line.startsWith('## ')){
    const name=line.replace(/^#\s*/,'').replace(/Carry The Flame.*/i,'').trim();
    if(name)document.getElementById('deck-name').value=name;
@@ -464,10 +486,24 @@ function importDeck(){
   else if(line.toLowerCase().includes('fusion'))currentZone='fusion';
   else if(line.toLowerCase().includes('side'))currentZone='side';
   
-  const match=line.match(/^(\d+)x\s+(.+?)(?:\s+\[.*\])?$/);
-  if(match){
-   const qty=parseInt(match[1]);
-   const cardName=match[2].trim().toLowerCase();
+  const legacy=line.match(/^(\d+)\|([^|]+)\|(.+)$/);
+  if(legacy){
+   const qty=parseInt(legacy[1],10)||0;
+   const setCode=legacy[2].trim().toLowerCase();
+   const cardName=normalizeCardName(legacy[3].trim()).toLowerCase();
+   const id=setNameMap[`${setCode}|${cardName}`]||nameMap[cardName];
+   if(id){
+    const card=cardMap[id];
+    const arr=card&&card.cardType==='Fusion'?fusionDeck:mainDeck;
+    for(let i=0;i<qty;i++)arr.push(id);
+   }
+   return;
+  }
+  
+  const modern=line.match(/^(\d+)x\s+(.+?)(?:\s+\[.*\])?$/);
+  if(modern){
+   const qty=parseInt(modern[1],10)||0;
+   const cardName=normalizeCardName(modern[2].trim()).toLowerCase();
    const id=nameMap[cardName];
    if(id){
     const arr=currentZone==='fusion'?fusionDeck:currentZone==='side'?sideDeck:mainDeck;
@@ -505,6 +541,7 @@ function saveDeckLocal(){
 function loadDeckLocal(){
  const data=CTFDeckUtils.loadLocalDeck();
  if(!data.main.length&&!data.fusion.length&&!data.side.length){alert('No saved deck found.');return}
+ hydrateCTFConfig?.(document);
  document.getElementById('deck-name').value=data.name||'My CTF Deck';
  mainDeck=(data.main||[]).filter(id=>cardMap[id]);fusionDeck=(data.fusion||[]).filter(id=>cardMap[id]);sideDeck=(data.side||[]).filter(id=>cardMap[id]);
  renderAll();

@@ -1,0 +1,39 @@
+{
+  "name": "Carry The Flame \u2014 Browser-First Beta",
+  "short_name": "CTF Beta",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0d0d0d",
+  "description": "Carry The Flame browser-first beta: all cards viewable, deckbuilder live, tutorial and hot-seat local play, PWA install ready.",
+  "icons": [
+    {
+      "src": "icon-ctf.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "games",
+    "entertainment",
+    "utilities"
+  ],
+  "shortcuts": [
+    {
+      "name": "Play Beta",
+      "short_name": "Play",
+      "url": "./play.html"
+    },
+    {
+      "name": "Deck Builder",
+      "short_name": "Decks",
+      "url": "./deckbuilder.html"
+    },
+    {
+      "name": "Rules Hub",
+      "short_name": "Rules",
+      "url": "./rules.html"
+    }
+  ]
+}

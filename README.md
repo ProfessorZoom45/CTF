@@ -1,3 +1,13 @@
+# Carry The Flame — Browser-First Beta
+
+This repo now ships the free browser-first beta path first:
+
+- all cards viewable
+- live deckbuilder
+- 5-match tutorial + hot-seat + solo sandbox
+- beta signup + Discord funnel
+- PWA install shell now, account systems later
+
 # CTF — Carry The Flame
 
 A fully original tactical card game by Perfect Timing Gaming / Makairis Holding Group.
