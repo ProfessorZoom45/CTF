@@ -4,15 +4,20 @@
 // ═══════════════════════════════════════════════════
 
 // ── CONSTANTS ──
-const STARTING_CHI = 10000;
-const HAND_LIMIT = 7;
+const ENGINE_CFG = (typeof window !== 'undefined' && window.CTF_CONFIG && window.CTF_CONFIG.game) ? window.CTF_CONFIG.game : {};
+const STARTING_CHI = ENGINE_CFG.startingChi ?? 10000;
+const STARTING_HAND = ENGINE_CFG.startingHand ?? 5;
+const HAND_LIMIT = ENGINE_CFG.handLimit ?? 7;
 const MAX_CATALYSTS = 5;
 const MAX_TRICKS = 5; // 3 trick + 2 libra
-const MAX_SPECIAL_SUMMONS = 5;
+const MAX_SPECIAL_SUMMONS = ENGINE_CFG.shotgun?.maxSpecialSummonsPerTurn ?? 5;
+const SHOTGUN_START = ENGINE_CFG.shotgun?.appliesFromSummonNumber ?? 1;
+const SHOTGUN_DRAWS = ENGINE_CFG.shotgun?.opponentDrawsPerSpecialSummon ?? 1;
+const EMPTY_DECK_ENDS_GAME = ENGINE_CFG.draw?.emptyDeckEndsGame ?? false;
 const KILLS_TO_WIN = 7;
 const EXTRACTIONS_TO_WIN = 7;
 const PHASES = ['turnStart','draw','ignition','action','battle','resolution','end'];
-const PHASE_NAMES = ['Turn Start','Draw Phase','Ignition Phase','Action Phase','Battle Phase','Resolution Phase','End Phase'];
+const PHASE_NAMES = Array.isArray(ENGINE_CFG.phases) && ENGINE_CFG.phases.length === 7 ? ENGINE_CFG.phases : ['Turn Start','Draw Phase','Ignition Phase','Action Phase','Battle Phase','Resolution Phase','End Phase'];
 
 // Reference list for full starter-deck coverage and audit visibility.
 const STARTER_DECK_REFERENCE_IDS = [
@@ -107,9 +112,9 @@ const STARTER_DECK_REFERENCE_IDS = [
   "sh2-014-enigma",
   "sh2-020-spelldissolver",
   "slm-009-spiralheartmoonsceptor",
-  "ss1-000-legat0thegreat",
+  "tuv-031-legat0thegreat",
   "ss1-000-reesebuck",
-  "ss1-002-kamehamehacounterattack",
+  "db1-054-kamehamehacounterattack",
   "ss1-003-fliptheclip",
   "ss1-022-rightbackatyou",
   "t2f-022-gundamlab",
@@ -216,9 +221,9 @@ function createGameState(p1Deck, p2Deck) {
     _effectsUsed: {},   // per-turn effect usage tracker
     _manualSummonContext: null,
   };
-  // Draw initial hands (5 each)
+  // Draw initial hands from locked config
   for (let p = 0; p < 2; p++) {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < STARTING_HAND; i++) {
       drawCard(state, p);
     }
   }
@@ -235,12 +240,18 @@ function shuffle(arr) {
   return a;
 }
 
+const LEGACY_CARD_ID_ALIASES = {
+  'ss1-000-legat0thegreat': 'tuv-031-legat0thegreat',
+  'ss1-002-kamehamehacounterattack': 'db1-054-kamehamehacounterattack'
+};
+
 function getCard(id) {
   if (typeof CTF_CARDS === 'undefined') return null;
   if (id === '__shadow_token__') return { id: '__shadow_token__', name: 'Shadow Token', cardType: 'Catalyst', sub: 'Token', level: 1, pr: 800, cp: 800, alignment: 'Dark', kinds: ['Warrior'], kindsStr: 'Warrior', desc: 'Shadow Token (800/800). Cannot be used as Tribute.', great: false, set: 'token' };
   if (id === '__buck_token_1000__') return { id: '__buck_token_1000__', name: 'BuCk The Great Token', cardType: 'Catalyst', sub: 'Token', level: 3, pr: 1000, cp: 1000, alignment: 'Fire', kinds: ['Gunman'], kindsStr: 'Gunman', desc: 'BuCk The Great Token (1000/1000). Cannot be used as Tribute.', great: false, set: 'token' };
   if (id === '__buck_token_1500__') return { id: '__buck_token_1500__', name: 'BuCk The Great Token', cardType: 'Catalyst', sub: 'Token', level: 3, pr: 1500, cp: 1000, alignment: 'Fire', kinds: ['Gunman'], kindsStr: 'Gunman', desc: 'BuCk The Great Token (1500/1000). Cannot be used as Tribute.', great: false, set: 'token' };
-  return CTF_CARDS.find(c => c.id === id) || null;
+  const normId = LEGACY_CARD_ID_ALIASES[String(id || '').trim()] || id;
+  return CTF_CARDS.find(c => c.id === normId) || null;
 }
 
 function addLog(state, msg) {
@@ -309,6 +320,7 @@ function cardNameHas(card, token) {
 const SCRIPT_NAME_ALIASES = {
   '1-up the great mushroom':'1-up mushroom',
   "the great brainiac's control":"brainiac's control",
+  "brainiac's great control":"brainiac's control",
   'the great joker':'the joker',
   'the great krypton':'kryptonite',
   'the great storm':'storm',
@@ -1594,12 +1606,11 @@ regEffect('cc1-040-slash',            { type:'pierce',          tag:'slash_pierc
 
 // ─── SS1 (MISC/CROSSOVER) ───
 regEffect('ss1-001-noneedfor',        { type:'palmScript',      tag:'noNeed_reset',   action:'custom_noNeedFor' });
-regEffect('ss1-004-archangel',        { type:'continuous',      tag:'arch_immune',    condition:'paidCost', cost:800, action:'custom_archangelImmune' });
+regEffect('gds-025-archangel',        { type:'continuous',      tag:'arch_immune',    condition:'paidCost', cost:800, action:'custom_archangelImmune' });
 regEffect('ss1-005-blitzgundam',      { type:'continuous',      tag:'blitz_cpKill',   action:'custom_blitzCP' });
 regEffect('ss1-009-selfdestruct',     { type:'activated',       tag:'selfDestruct',   action:'custom_selfDestruct' });
 regEffect('ss1-009-shippotheshapeshifter', { type:'activated',  tag:'shippoShifter',  action:'custom_shippoShifter', cost:750 });
 regEffect('ss1-009-miniboomer',       { type:'palmScript',      tag:'miniBoomer',     action:'custom_miniBoomer' });
-regEffect('ss1-107-hakudoushi',       { type:'standbyCountdown',tag:'haku_countdown', count:3, action:'custom_hakudoushiGo' });
 
 
 
@@ -3005,7 +3016,7 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
     } else if (eff.action === 'custom_onigumo') {
       if (ctx && ctx.reason === 'battle') {
         const found = addCardToHandFromDeckByNameToken(state, ownerPlayer, ['demons devour me']);
-        if (found) addLog(state, `Effect Script: Onigumo added ${found.name} to hand.`);
+        if (found) addLog(state, `Effect Script: Onigumo - The Bandit added ${found.name} to hand.`);
       }
     } else if (eff.action === 'custom_gray') {
       // Gray the Ninelives: after destroyed, revive on next standby with 500 less Pressure
@@ -3140,7 +3151,7 @@ function runOnSummonScripts(state, playerIdx, zoneIdx, summonType) {
     }
   } else if (name === 'red xiii - trance') {
     const found = addCardToHandFromDeckByNameToken(state, playerIdx, ['limited moon']);
-    if (found) addLog(state, `Effect Script: Red XIII - Trance added ${found.name} to hand.`);
+    if (found) addLog(state, `Effect Script: RedXIII - Trance added ${found.name} to hand.`);
   }
   // ─── PATCH 26: ADDITIONAL ON-SUMMON / FLIP / CONTINUOUS HANDLERS ───
   else if (name === 'agent x') {
@@ -3398,22 +3409,22 @@ function runPalmScript(state, playerIdx, card, manual) {
     p.greatTalentPrizeTicks = Number(p.greatTalentPrizeTicks || 0);
     addLog(state, 'Effect Script: The Great Talent Prize is now active during your Ignition Phase.');
   } else if (card.id === 'hls-043-fullmoon') {
-    if (p.chi < 1500) addLog(state, 'Effect Script: The Great Full Moon needs 1500 Chi.');
+    if (p.chi < 1500) addLog(state, 'Effect Script: Full Moon needs 1500 Chi.');
     else {
       p.chi -= 1500;
       const voidIdx = p.void.findIndex(id => cardMatchesCanonicalName(getCard(id), 'alucard'));
       const zoneIdx = getFirstEmptyCatalystZone(state, playerIdx);
-      if (voidIdx < 0 || zoneIdx < 0) addLog(state, `Effect Script: The Great Full Moon could not find Alucard in the Void or an empty Catalyst Zone.`);
+      if (voidIdx < 0 || zoneIdx < 0) addLog(state, `Effect Script: Full Moon could not find Alucard in the Void or an empty Catalyst Zone.`);
       else {
         const [cardId] = p.void.splice(voidIdx, 1);
-        const res = specialSummonToZone(state, playerIdx, cardId, zoneIdx, 'The Great Full Moon');
+        const res = specialSummonToZone(state, playerIdx, cardId, zoneIdx, 'Full Moon');
         if (res.ok) {
           const slot = p.catalysts[zoneIdx];
           slot.atkMod = Number(slot.atkMod || 0) + 1000;
           slot.tempAtkMod = Number(slot.tempAtkMod || 0) + 1000;
           slot._greatFullMoon = true;
-          addLog(state, 'Effect Script: The Great Full Moon Special Summoned Alucard from the Void with +1000 Pressure.');
-        } else addLog(state, `Effect Script: The Great Full Moon failed to summon Alucard. (${res.msg})`);
+          addLog(state, 'Effect Script: Full Moon Special Summoned Alucard from the Void with +1000 Pressure.');
+        } else addLog(state, `Effect Script: Full Moon failed to summon Alucard. (${res.msg})`);
       }
     }
   } else if (card.id === 'kir-020-nmepriceincrease') {
@@ -3450,8 +3461,8 @@ function runPalmScript(state, playerIdx, card, manual) {
   p.ritualEnabledNaraku = true;
   addLog(state, 'Effect Script: Demons Devour Me marked Naraku ritual support for this turn.');
 } else if (name === "brainiac's control") {
-  const res = stealFirstOpponentCatalystUntilEndTurn(state, playerIdx, "Brainiac's Control");
-  if (!res.ok) addLog(state, `Effect Script: Brainiac's Control had no valid target. (${res.msg})`);
+  const res = stealFirstOpponentCatalystUntilEndTurn(state, playerIdx, "Brainiac's Great Control");
+  if (!res.ok) addLog(state, `Effect Script: Brainiac's Great Control had no valid target. (${res.msg})`);
 } else if (name === 'enigma') {
   const types = ['Palm Trick','Concealed Trick','Catalyst'];
   const guessed = types[Math.floor(Math.random() * types.length)];
@@ -4586,6 +4597,12 @@ function drawCard(state, playerIdx) {
     return null;
   }
   if (p.deck.length === 0) {
+    if (EMPTY_DECK_ENDS_GAME) {
+      state.gameOver = true;
+      state.winner = 1 - playerIdx;
+      addLog(state, `P${playerIdx+1} deck empty — cannot draw and loses the game.`);
+      return null;
+    }
     addLog(state, `P${playerIdx+1} deck empty — skip draw (NOT a loss).`);
     return null;
   }
@@ -5029,12 +5046,15 @@ function registerSpecialSummon(state, playerIdx, label) {
   const p = state.players[playerIdx];
   p.specialSummonCount += 1;
   const oppIdx = 1 - playerIdx;
-  const drawn = drawCard(state, oppIdx);
-  if (drawn) {
-    const c = getCard(drawn);
-    addLog(state, `Shotgun Rule: P${oppIdx+1} drew ${c ? c.name : 'a card'} because P${playerIdx+1} Special Summoned${label ? ' (' + label + ')' : ''}.`);
-  } else {
-    addLog(state, `Shotgun Rule: P${oppIdx+1} skipped draw because deck is empty.`);
+  if (p.specialSummonCount < SHOTGUN_START) return;
+  for (let i = 0; i < SHOTGUN_DRAWS; i++) {
+    const drawn = drawCard(state, oppIdx);
+    if (drawn) {
+      const c = getCard(drawn);
+      addLog(state, `Shotgun Rule: P${oppIdx+1} drew ${c ? c.name : 'a card'} because P${playerIdx+1} Special Summoned${label ? ' (' + label + ')' : ''}.`);
+    } else {
+      addLog(state, `Shotgun Rule: P${oppIdx+1} skipped draw because deck is empty.`);
+    }
   }
 }
 
@@ -5043,7 +5063,7 @@ function specialSummonToZone(state, playerIdx, cardId, zoneIdx, sourceLabel) {
   const card = getCard(cardId);
   const summonBlock = getSummonRestriction(state, playerIdx, card);
   if (summonBlock) return { ok:false, msg:summonBlock };
-  if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok: false, msg: 'Maximum of 5 Special Summons reached this turn.' };
+  if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok: false, msg: `Maximum of ${MAX_SPECIAL_SUMMONS} Special Summons reached this turn.` };
   if (p.catalysts[zoneIdx] !== null) return { ok: false, msg: 'Chosen Catalyst Zone is occupied.' };
   p.catalysts[zoneIdx] = { cardId, position: 'atk', faceDown: false, attackedThisTurn: false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false };
   p.summonedThisTurn.add(zoneIdx);
@@ -5083,7 +5103,7 @@ function libraSummon(state, playerIdx, handIdxs, zoneIdxs) {
   if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Libra Summon can only happen in your Action Phase.' };
   if (!Array.isArray(handIdxs) || !Array.isArray(zoneIdxs) || handIdxs.length === 0 || handIdxs.length !== zoneIdxs.length) return { ok: false, msg: 'Choose 1 to 5 Catalysts and matching zones.' };
   if (handIdxs.length > 5) return { ok: false, msg: 'Libra Summon can Special Summon up to 5 Catalysts.' };
-  if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok: false, msg: 'Maximum of 5 Special Summons reached this turn.' };
+  if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok: false, msg: `Maximum of ${MAX_SPECIAL_SUMMONS} Special Summons reached this turn.` };
   const uniqueHands = [...new Set(handIdxs)];
   const uniqueZones = [...new Set(zoneIdxs)];
   if (uniqueHands.length !== handIdxs.length || uniqueZones.length !== zoneIdxs.length) return { ok: false, msg: 'Duplicate cards or zones were selected.' };
@@ -5825,9 +5845,8 @@ function getEligibleCatalysts(state, playerIdx) {
     const slot = p.catalysts[i];
     if (slot !== null) {
       const c = getCard(slot.cardId);
-      // Great Cards and cards/runtime states that forbid tribute/sacrifice are not eligible.
+      // Runtime states or card text that forbid tribute/sacrifice are not eligible.
       if (slot && slot._cannotBeTributed) continue;
-      if (c && c.great) continue;
       if (c && /cannot be used as a? ?tribute/i.test(c.desc || '')) continue;
       eligible.push(i);
     }
@@ -5840,7 +5859,18 @@ function endPhaseAction(state, playerIdx, action, sacrificeZone, targetIdx) {
   const opp = state.players[1 - playerIdx];
 
   if (action === 'endTurn') {
-    addLog(state, `P${playerIdx+1} chose: End Turn.`);
+    if (ENGINE_CFG.endPhase?.allowFreeEndTurn) {
+      addLog(state, `P${playerIdx+1} chose: End Turn.`);
+      advancePhase(state);
+      return { ok: true };
+    }
+    return { ok: false, msg: 'END TURN is disabled by the current rules config.' };
+  }
+
+  if (action === 'skip') {
+    const eligibleNow = getEligibleCatalysts(state, playerIdx);
+    if (eligibleNow.length) return { ok: false, msg: 'You still have eligible Catalysts and must choose Extraction, Rescue, or Destroy Trick.' };
+    addLog(state, `P${playerIdx+1} has no eligible Catalyst for End Phase cost. End Phase skipped.`);
     advancePhase(state);
     return { ok: true };
   }
@@ -6589,7 +6619,7 @@ function custom_prismBounce(state,pi){const opp=state.players[1-pi];const oz=opp
 // SS1
 function custom_noNeedFor(state,pi){for(const pl of state.players){const hand=[...pl.hand];pl.hand=[];pl.void.push(...hand);}for(const pl of state.players){for(let z=0;z<5;z++){if(pl.catalysts[z]){pl.rfg.push(pl.catalysts[z].cardId);pl.catalysts[z]=null;}}if(pl.fieldTrick){pl.rfg.push(pl.fieldTrick.cardId);pl.fieldTrick=null;}for(let z=0;z<5;z++){if(pl.tricks[z]){pl.rfg.push(pl.tricks[z].cardId);pl.tricks[z]=null;}}}addLog(state,'Effect Script: No Need For... — both players discarded hands, all field cards removed from game.');}
 function custom_selfDestruct(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardHasKind(getCard(s.cardId)||{},'Machine'));if(z<0){addLog(state,'Effect Script: Self Destruct needs a Machine-type Catalyst.');return;}const c=getCard(p.catalysts[z].cardId);p.rfg.push(p.catalysts[z].cardId);p.catalysts[z]=null;const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz>=0){opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;p.kills++;addLog(state,`Effect Script: Self Destruct removed ${c?.name||'a Machine'} from game and destroyed 1 opponent Catalyst. +1 Kill.`);checkWinConditions(state);}else addLog(state,`Effect Script: Self Destruct removed ${c?.name||'a Machine'} but found no opponent Catalyst.`);}
-function custom_archangelImmune(state,pi){const p=state.players[pi];if(p.chi<800){return;}p.chi-=800;const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'arch angel'));if(z>=0){p.catalysts[z]._archangelImmune=true;addLog(state,'Effect Script: Arch Angel paid 800 Chi — immune to effects this turn.');}}
+function custom_archangelImmune(state,pi){const p=state.players[pi];if(p.chi<800){return;}p.chi-=800;const z=p.catalysts.findIndex(s=>s&&(cardNameHas(getCard(s.cardId)||{},'arch angel')||cardNameHas(getCard(s.cardId)||{},'archangel')));if(z>=0){p.catalysts[z]._archangelImmune=true;addLog(state,'Effect Script: Archangel paid 800 Chi — immune to effects this turn.');}}
 function custom_blitzCP(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'blitz gundam'));if(z>=0)state.players[pi].catalysts[z]._blitzCPDestroy=true;}
 function custom_shippoShifter(state,pi){const p=state.players[pi];if(p.chi<750){addLog(state,'Effect Script: Shippo the Shapeshifter needs 750 Chi.');return;}const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Shippo — no opponent Catalyst to copy.');return;}p.chi-=750;const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'shippo'));if(z<0)return;const tCard=getCard(opp.catalysts[oz].cardId);p.catalysts[z].atkMod=Number(tCard?.pr||0)-Number(getCard(p.catalysts[z].cardId)?.pr||0);p.catalysts[z].cpMod=Number(tCard?.cp||0)-Number(getCard(p.catalysts[z].cardId)?.cp||0);addLog(state,`Effect Script: Shippo paid 750 Chi and copied ${tCard?.name||'target'}'s stats.`);}
 function custom_miniBoomer(state,pi){const opp=state.players[1-pi];const damage=opp.hand.length*300;opp.chi=Math.max(0,opp.chi-damage);addLog(state,`Effect Script: Mini Boomer inflicted ${damage} Chi damage (300 x ${opp.hand.length} cards in opponent's hand).`);checkWinConditions(state);}
@@ -7609,7 +7639,7 @@ regEffect('mgm-015-elecman',      { type:'onSummon',    tag:'elecmanDestroy',  a
 
 // ─── S-M (Marvel/DC) additions ──────────────────────────────────────
 regEffect('s-m-010-superman',     { type:'continuous',  tag:'supermanProtect', action:'custom_supermanImmune' });
-regEffect('s-m-002-archangel',    { type:'continuous',  tag:'archangelBoost',  action:'custom_archangelBoost' });
+regEffect('s-m-002-angel',    { type:'continuous',  tag:'archangelBoost',  action:'custom_archangelBoost' });
 regEffect('s-m-003-beast',        { type:'continuous',  tag:'beastWarriorImmune', action:'zeroDmgFromWarriors' });
 regEffect('s-m-008-lucasbishop',  { type:'onSelfDestroyed', tag:'bishopReturn', action:'custom_bishopReturn' });
 regEffect('s-m-012-cyclops',      { type:'standbyUpkeep', tag:'cyclopsBurn',   action:'burnOpponent', amount:500, log:'inflicted 500 damage (Cyclops battle phase burn)' });
@@ -8416,7 +8446,7 @@ function p55_cyborgIndestructible(state, playerIdx, zoneIdx) {
   const slot = state.players[playerIdx].catalysts[zoneIdx];
   if (!slot) return;
   const p = state.players[playerIdx];
-  // Check if equipped with "110 PERCENT"
+  // Check if equipped with "110%"
   const has110 = p.tricks.some(t => t && !t.faceDown && /110 percent/i.test(getCard(t.cardId)?.name||''));
   slot._indestructibleByBattle = has110;
 }
@@ -8662,7 +8692,7 @@ function p55_yusukeFiredUpSS(state, playerIdx) {
 
 // ─── Dispatch hook extensions for runRegisteredOnSummon ──────────────
 const _origRunRegisteredOnSummon = runRegisteredOnSummon;
-function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
+runRegisteredOnSummon = function(state, playerIdx, zoneIdx) {
   _origRunRegisteredOnSummon(state, playerIdx, zoneIdx);
   const slot = state.players[playerIdx].catalysts[zoneIdx];
   if (!slot) return;
@@ -8695,11 +8725,11 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
       addLog(state, `Effect Script: ${getCard(slot.cardId)?.name} ${eff.log||'drew a card'}.`);
     }
   }
-}
+};
 
 // ─── Dispatch hook extensions for runOnSelfDestroyed ─────────────────
 const _origRunOnSelfDestroyed = runOnSelfDestroyed;
-function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
+runOnSelfDestroyed = function(state, ownerPlayer, cardId, ctx) {
   _origRunOnSelfDestroyed(state, ownerPlayer, cardId, ctx);
   for (const eff of getCardEffects(cardId)) {
     if (eff.type !== 'onSelfDestroyed') continue;
