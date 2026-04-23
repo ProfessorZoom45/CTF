@@ -56,6 +56,10 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:2r
   catch(e){console.warn('[CTF] OperatorStack load error',e);}
 })();
 </script>
+<!-- CTF floating left-edge nav (auto-injected) -->
+<link rel="stylesheet" href="assets/css/floating-nav.css">
+<script defer src="assets/js/floating-nav.js"></script>
+
 </head>
 <body>
 <nav><div class="nav-inner"><a href="index.html" class="nav-brand">Carry The <span>Flame</span></a>
@@ -102,7 +106,7 @@ const TERMS=[
 {term:"Counter Trick",def:"A subtype of Concealed Trick. Highest chain priority — once a Counter Trick is on the chain, only another Counter Trick can respond above it. Regular Concealed Tricks cannot respond.",locked:true},
 {term:"Deck Out",def:"When your deck is empty and you reach your Draw Phase: skip the draw and continue playing. Deck out is NOT a loss in CTF.",locked:true},
 {term:"Destroy Trick",def:CTF_UI.destroyTrickSummary,locked:true},
-{term:"Direct Attack",def:"Attacking the opponent's Chi directly. Only possible when ALL opponent Catalyst Zones are empty. Face-down Concealed Tricks in Trick Card Zones do NOT block direct attacks. Damage = your full Pressure stat.",locked:true},
+{term:"Direct Attack",def:"Attacking the opponent's Chi directly. Only possible when ALL opponent Catalyst Zones are empty. Tricks in Trick Card Zones — including Libra Zone cards treated as Tricks — do NOT block direct attacks. Damage = your full Pressure stat.",locked:true},
 {term:"Draw Phase",def:"Phase 2. Draw 1 card from your deck. If deck is empty, skip the draw — NOT a loss. Continue playing.",locked:true},
 {term:"End Phase",def:`Phase 7. Choose one locked action: Extraction, Rescue, Destroy Trick, or END TURN. Extraction, Rescue, and Destroy Trick require an eligible Catalyst as the cost. END TURN does not. Then discard to ${CTF_UI.handLimit} cards.`,locked:true},
 {term:"End Turn",def:CTF_UI.endTurnSummary,locked:true},
@@ -110,7 +114,7 @@ const TERMS=[
 {term:"7 Extractions",def:"Win Condition 3. Extract 7 opponent Catalysts from your Box via the End Phase Extraction action. The slowest but most strategically layered win path."},
 {term:"Field Trick",aka:"CTF: Field Trick",def:"Environment card that changes rules for both players while active. 1 per player active (2 total on field). Part of Main Deck. Placed in Field Trick Zone. Effects refresh at Ignition Phase. New one replaces old. Trick type: Field.",locked:true},
 {term:"Fusion Card",def:`Lives in the Fusion Deck only (${CTF_UI.fusionDeckRange} cards). Requires named material Catalysts sent to Void + a Fusion-enabling card (Fusion Dance or Fusion Zone). Entire Fusion Summon = 1 Special Summon. Shotgun Rule applies.`},
-{term:"Great Card",def:"Any card with 'Great' in its name — applies to Catalysts, Palm Tricks, Concealed Tricks, any type. Great Card Catalysts: max 1 copy per name, max 5 per deck. Cannot enter Box. Cannot be Extracted or Tributed for End Phase. CAN be Killed in ATK vs ATK battle.",locked:true},
+{term:"Great Card",def:"Any card with 'Great' in its name — applies to Catalysts, Palm Tricks, Concealed Tricks, any type. Great Card Catalysts: max 1 copy per name, max 5 per deck. Cannot enter Box. Cannot be Extracted. Great and non-Great eligible Catalysts may be sacrificed for paid End Phase actions. CAN be Killed in ATK vs ATK battle.",locked:true},
 {term:"Hero",def:"One of the 3 narrative Alignment sides. Light-aligned. Boosted by 'Save The World' Field Trick."},
 {term:"Ignition Phase",def:"Phase 3. Ongoing effects and Standby triggers activate. Field Tricks refresh their effects here. Mostly automatic — minimal player decisions."},
 {term:"7 Kills",def:"Win Condition 2. Destroy 7 opponent Catalysts through battle ONLY. ATK vs ATK wins, Mutual Kills, and ATK beating Great Card DEF all count. Card effects and Destroy Trick = destroyed/discarded, NOT Kills.",locked:true},

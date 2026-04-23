@@ -136,6 +136,9 @@ body.board-clarity .field-card.face-down::after{content:'SET';position:absolute;
 
 /* My hand */
 .my-hand{display:flex;justify-content:center;gap:3px;padding:4px 10px;background:rgba(0,0,0,.4);flex-shrink:0;min-height:80px;align-items:flex-end;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding-bottom:calc(6px + env(safe-area-inset-bottom));scrollbar-width:thin}
+.my-hand::-webkit-scrollbar{height:8px}
+.my-hand::-webkit-scrollbar-thumb{background:rgba(255,106,0,.26);border-radius:999px}
+.my-hand::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
 .hand-card{width:64px;height:82px;background:var(--coal-mid);border:1px solid rgba(255,106,0,.12);border-radius:3px;padding:3px;cursor:pointer;transition:all .15s;flex-shrink:0;display:flex;flex-direction:column;position:relative;scroll-snap-align:center}
 .hand-card:hover{border-color:var(--flame);transform:translateY(-6px);z-index:10;box-shadow:0 4px 12px rgba(255,106,0,.2)}
 .hand-card.selected{border-color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,.3);transform:translateY(-10px)}
@@ -264,6 +267,8 @@ body.watch-mode .status-banner{box-shadow:inset 0 0 0 1px rgba(255,179,71,.12)}
 .result-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.9rem}
 .result-actions .lb-btn{flex:1 1 180px}
 .result-share-note{margin-top:.45rem;font-size:.68rem;color:var(--ash)}
+.choice-static{padding:10px 0;color:var(--cream);font-size:.8rem;line-height:1.5;white-space:pre-wrap}
+.choice-static strong{display:block;margin-bottom:6px;color:var(--gold);font-family:var(--font-label);letter-spacing:1px;text-transform:uppercase}
 
 .tutorial-progress{display:flex;gap:.35rem;flex-wrap:wrap;margin:.45rem 0 .2rem}
 .tutorial-step-dot{width:18px;height:18px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.58rem;border:1px solid rgba(255,255,255,.12);color:var(--ash);background:rgba(255,255,255,.03)}
@@ -375,6 +380,29 @@ body.compact-zones .field-card{width:36px;height:44px}
 .act-btn{margin-bottom:2px}
 }
 
+@media(max-height:680px) and (orientation:landscape){
+#game{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+.board{min-height:52vh}
+.sidebar{max-height:50vh;border-left:none;border-top:1px solid rgba(255,106,0,.1);overflow-y:auto;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+.phase-rail,.actions,.helper-panel,.legal-actions-panel,.tutorial-panel,.battle-coach,.log-panel{padding:6px}
+.phase-item{font-size:.54rem;padding:2px 4px}
+.phase-item.active{font-size:.64rem}
+.log-panel{min-height:112px}
+.log-filters{gap:3px}
+.log-search{font-size:.58rem;padding:4px 5px;margin-bottom:4px}
+.my-hand{min-height:78px;padding:5px 6px calc(8px + env(safe-area-inset-bottom));gap:4px}
+.hand-card{width:54px;height:72px;padding:3px}
+.hc-name{font-size:.48rem;line-height:1.05}
+.hc-type{font-size:.42rem}
+.hc-stats{font-size:.48rem}
+.act-btn,.lb-btn{min-height:40px;font-size:.74rem}
+.zone{width:38px;height:46px}.field-card{width:34px;height:42px}
+.field-card .fc-name{font-size:.42rem}.field-card .fc-stats{font-size:.38rem}
+.side-zone{width:28px;height:34px}
+.field-slot{width:40px;height:28px}
+.choice-card{max-height:94vh}
+}
+
 @media(max-height:520px){
 .score-bar{padding:3px 6px;font-size:.58rem}
 .chi-val{font-size:.98rem}
@@ -427,6 +455,10 @@ html,body{overflow:auto}
   catch(e){console.warn('[CTF] OperatorStack load error',e);}
 })();
 </script>
+<!-- CTF floating left-edge nav (auto-injected) -->
+<link rel="stylesheet" href="assets/css/floating-nav.css">
+<script defer src="assets/js/floating-nav.js"></script>
+
 </head>
 <body>
 
@@ -677,8 +709,20 @@ html,body{overflow:auto}
 <div class="game-over" id="game-over">
 <div class="go-title" id="go-title"></div>
 <div class="go-reason" id="go-reason"></div>
+<!-- Tutorial match summary panel (shown only in tutorial mode) -->
+<div id="go-tutorial-panel" style="display:none;margin:.8rem auto;max-width:520px;padding:.7rem 1rem;border:1px solid rgba(255,177,71,.28);background:rgba(255,177,71,.07);border-radius:6px;text-align:left">
+  <div id="go-tutorial-step" style="font-family:var(--font-display);font-size:.82rem;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:.35rem"></div>
+  <div id="go-tutorial-lesson" style="font-size:.75rem;color:var(--cream);line-height:1.5;margin-bottom:.4rem"></div>
+  <div class="tutorial-progress" id="go-tutorial-progress" style="margin:.35rem 0 0"></div>
+</div>
 <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem">
-<button class="lb-btn lb-btn-fire" onclick="location.reload()">Return to Lobby</button>
+<!-- Tutorial-specific primary actions (hidden in non-tutorial mode) -->
+<button class="lb-btn lb-btn-fire" id="go-next-tutorial-btn" style="display:none" onclick="advanceTutorialStep()">Next Tutorial Match</button>
+<button class="lb-btn lb-btn-ghost" id="go-replay-tutorial-btn" style="display:none" onclick="replayTutorialMatch()">Replay This Match</button>
+<!-- Net rematch (hidden unless online match) -->
+<button class="lb-btn lb-btn-fire" id="rematch-btn" style="display:none" onclick="requestRematch()">Rematch</button>
+<!-- Standard actions always available -->
+<button class="lb-btn lb-btn-fire" id="go-lobby-btn" onclick="location.reload()">Return to Lobby</button>
 <button class="lb-btn lb-btn-ghost" onclick="showResultCard(true)">Result Card</button>
 <button class="lb-btn lb-btn-ghost" onclick="shareResultCardImage()">Share Result Image</button>
 <button class="lb-btn lb-btn-ghost" onclick="downloadMatchLog()">Export Match Log</button>
@@ -782,6 +826,7 @@ html,body{overflow:auto}
 <script src="assets/js/data.js"></script>
 <script src="assets/js/deck-utils.js"></script>
 <script src="assets/js/engine.js"></script>
+<script src="assets/js/card-playability-manifest.js"></script>
 <script src="play_inline.js"></script>
 
 </body>
