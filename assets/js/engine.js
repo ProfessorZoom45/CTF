@@ -824,6 +824,7 @@ function inferCommonStringEffects(cardOrId) {
     }
   }
 
+
   // Generic on-summon possession
   if (card.cardType === 'Catalyst' && /when (?:this (?:card|catalyst) )?(?:is )?(?:normal summoned|special summoned|summoned)/i.test(desc) && /take control of/.test(lower)) {
     const onSummon = { type:'onSummon', tag:'genericOnSummonSteal', action:'generic_takeControl', _inferred:true, duration:/destroyed|permanent/.test(lower) ? 'permanent' : 'end', faceUpOnly:/face[- ]up/.test(lower) };
@@ -833,6 +834,37 @@ function inferCommonStringEffects(cardOrId) {
     if (align) onSummon.targetAlignment = align[1];
     effects.push(onSummon);
   }
+
+  // Common no-code Palm / Trick patterns used across many sets
+  const gainChi = desc.match(/^Gain\s+(\d+)\s+Chi/i);
+  if (gainChi) effects.push({ type:'genericAction', action:'gainChi', amount:Number(gainChi[1]), _inferred:true, tag:'gainChi' });
+
+  const burnChi = desc.match(/^Inflict\s+(\d+)\s+damage\s+to\s+your\s+opponent/i);
+  if (burnChi) effects.push({ type:'genericAction', action:'burnChi', amount:Number(burnChi[1]), _inferred:true, tag:'burnChi' });
+
+  const drawDiscard = desc.match(/^Draw\s+(\d+)\s+card(?:s)?\s*,?\s*then\s+discard\s+(\d+)\s+card(?:s)?/i);
+  if (drawDiscard) effects.push({ type:'genericAction', action:'drawThenDiscard', draw:Number(drawDiscard[1]), discard:Number(drawDiscard[2]), _inferred:true, tag:'drawDiscard' });
+
+  const searchField = desc.match(/^Search your deck for\s+(\d+)\s+Field Trick(?:s)?\s+and add (?:it|them) to your hand/i);
+  if (searchField) effects.push({ type:'genericAction', action:'searchFieldTrick', count:Number(searchField[1]), _inferred:true, tag:'searchFieldTrick' });
+
+  const searchCounter = desc.match(/^Search your deck for\s+(\d+)\s+Concealed Trick(?:s)?\s+with Counter icon and add (?:it|them) to your hand/i);
+  if (searchCounter) effects.push({ type:'genericAction', action:'searchCounterConcealed', count:Number(searchCounter[1]), _inferred:true, tag:'searchCounterConcealed' });
+
+  const searchNamedCat = desc.match(/^Search your deck for\s+(\d+)\s+"([^"]+)"\s+Catalyst(?:s)?\s+and add (?:it|them) to your hand/i);
+  if (searchNamedCat) effects.push({ type:'genericAction', action:'searchNamedCatalyst', count:Number(searchNamedCat[1]), nameToken:searchNamedCat[2], _inferred:true, tag:'searchNamedCatalyst' });
+
+  const summonVoidNamed = desc.match(/^Special Summon\s+(\d+)\s+Level\s+(\d+)\s+or lower\s+"([^"]+)"\s+Catalyst(?:s)?\s+from the Void/i);
+  if (summonVoidNamed) effects.push({ type:'genericAction', action:'specialSummonNamedFromVoid', count:Number(summonVoidNamed[1]), maxLevel:Number(summonVoidNamed[2]), nameToken:summonVoidNamed[3], _inferred:true, tag:'ssNamedFromVoid' });
+
+  const summonHandIfEmpty = desc.match(/^If you control no Catalysts:\s*Special Summon\s+(\d+)\s+"([^"]+)"\s+Catalyst(?:s)?\s+from your hand/i);
+  if (summonHandIfEmpty) effects.push({ type:'genericAction', action:'specialSummonNamedFromHandIfEmpty', count:Number(summonHandIfEmpty[1]), nameToken:summonHandIfEmpty[2], _inferred:true, tag:'ssNamedFromHandIfEmpty' });
+
+  const allStatShift = desc.match(/^All Catalysts (gain|lose)\s+(\d+)\s+Pressure\/Counter Pressure\s+until end of turn/i);
+  if (allStatShift) effects.push({ type:'genericAction', action:'allCatalystsStatShift', amount:Number(allStatShift[2]) * (allStatShift[1].toLowerCase() === 'lose' ? -1 : 1), _inferred:true, tag:'allCatalystsStatShift' });
+
+  const destroyField = desc.match(/^Destroy\s+(\d+)\s+Field Trick(?:s)?\s+on the field/i);
+  if (destroyField) effects.push({ type:'genericAction', action:'destroyFieldTrick', count:Number(destroyField[1]), _inferred:true, tag:'destroyFieldTrick' });
 
   INFERRED_EFFECT_CACHE[card.id] = effects;
   return effects;
@@ -1908,13 +1940,16 @@ regEffect('ss1-017-darkside',         { type:'palmScript',    tag:'darkSide',   
 regEffect('syd-002-altercost',        { type:'fieldAuraPR',   tag:'altCost',         prBoostAll:-2000, targetNameIncludesAny:['alter','alteruser'], scope:'both' });
 
 // T2F additional
-regEffect('t2f-014-fullmoon',         { type:'fieldAuraPR',   tag:'t2fFullMoon',     prBoostAll:300, targetNameIncludes:'wolf' });
+regEffect('t2f-014-fullmoon', [
+  { type:'fieldAuraPR', tag:'t2fFullMoonPR', prBoostAll:200, targetKindsAny:['Beast','Saiyan','Wolf'] },
+  { type:'fieldAuraCP', tag:'t2fFullMoonCP', cpBoostAll:200, targetKindsAny:['Beast','Saiyan','Wolf'] }
+]);
 regEffect('t2f-016-dojo',             { type:'fieldAuraPR',   tag:'dojo',            prBoostAll:400, targetNameIncludes:'fighter' });
 regEffect('t2f-018-supercomputer',    { type:'fieldAuraPR',   tag:'superComp',       prBoostAll:300, targetNameIncludes:'hacker' });
 regEffect('t2f-019-xaviersschoolforthegifted', { type:'fieldAuraPR', tag:'xavierSchool', prBoostAll:300, targetKind:'Mutant' });
 
 // TT1 additions
-regEffect('tt1-022-tram',             { type:'fieldAuraPR',   tag:'tram',            prBoostAll:300, targetKind:'Machine', scope:'self' });
+regEffect('tt1-022-tram',             { type:'continuous',    tag:'tram',            prBoostAll:500, condition:'kindOnField', conditionKind:'Machine' });
 regEffect('tt1-024-slade',            { type:'continuous',    tag:'slade_lowerLvl',  action:'custom_sladeLowerLvl' });
 
 // TUV additions
@@ -3250,6 +3285,117 @@ function runOnSummonScripts(state, playerIdx, zoneIdx, summonType) {
   runRegisteredOnSummon(state, playerIdx, zoneIdx);
 }
 
+
+function runInferredGenericAction(state, playerIdx, card, manual, sourceLabel) {
+  const p = state.players[playerIdx];
+  const inferred = inferCommonStringEffects(card).filter(e => e.type === 'genericAction');
+  if (!inferred.length) return null;
+  let handled = 0;
+  for (const eff of inferred) {
+    if (eff.action === 'gainChi') {
+      p.chi += Number(eff.amount || 0);
+      addLog(state, `Effect Script: ${sourceLabel || card.name} gained ${Number(eff.amount || 0)} Chi.`);
+      handled += 1;
+    } else if (eff.action === 'burnChi') {
+      const opp = state.players[1 - playerIdx];
+      opp.chi = Math.max(0, opp.chi - Number(eff.amount || 0));
+      addLog(state, `Effect Script: ${sourceLabel || card.name} dealt ${Number(eff.amount || 0)} Chi damage.`);
+      handled += 1;
+    } else if (eff.action === 'drawThenDiscard') {
+      for (let i = 0; i < Number(eff.draw || 0); i++) drawCard(state, playerIdx);
+      let discarded = 0;
+      for (let i = 0; i < Number(eff.discard || 0); i++) {
+        if (!p.hand.length) break;
+        const cardId = p.hand.pop();
+        p.void.push(cardId);
+        discarded += 1;
+      }
+      addLog(state, `Effect Script: ${sourceLabel || card.name} drew ${Number(eff.draw || 0)} and discarded ${discarded}.`);
+      handled += 1;
+    } else if (eff.action === 'searchFieldTrick') {
+      let found = 0;
+      for (let i = 0; i < Number(eff.count || 1); i++) {
+        const added = addCardToHandFromDeckByPredicate(state, playerIdx, c => c.cardType === 'Field Trick');
+        if (added) found += 1;
+      }
+      addLog(state, found ? `Effect Script: ${sourceLabel || card.name} added ${found} Field Trick card(s) to hand.` : `Effect Script: ${sourceLabel || card.name} found no Field Trick in the Deck.`);
+      handled += 1;
+    } else if (eff.action === 'searchCounterConcealed') {
+      let found = 0;
+      for (let i = 0; i < Number(eff.count || 1); i++) {
+        const added = addCardToHandFromDeckByPredicate(state, playerIdx, c => ['Concealed Trick','Counter Trick'].includes(c.cardType) && /counter/i.test(String(c.desc || '')));
+        if (added) found += 1;
+      }
+      addLog(state, found ? `Effect Script: ${sourceLabel || card.name} added ${found} Counter Concealed Trick card(s) to hand.` : `Effect Script: ${sourceLabel || card.name} found no Counter Concealed Trick in the Deck.`);
+      handled += 1;
+    } else if (eff.action === 'searchNamedCatalyst') {
+      let found = 0;
+      for (let i = 0; i < Number(eff.count || 1); i++) {
+        const added = addCardToHandFromDeckByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && cardNameHas(c, eff.nameToken));
+        if (added) found += 1;
+      }
+      addLog(state, found ? `Effect Script: ${sourceLabel || card.name} added ${found} ${eff.nameToken} Catalyst card(s) to hand.` : `Effect Script: ${sourceLabel || card.name} found no ${eff.nameToken} Catalyst in the Deck.`);
+      handled += 1;
+    } else if (eff.action === 'specialSummonNamedFromVoid') {
+      let summoned = 0;
+      for (let i = 0; i < Number(eff.count || 1); i++) {
+        const res = specialSummonFromVoidByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && Number(c.level || 0) <= Number(eff.maxLevel || 99) && cardNameHas(c, eff.nameToken), sourceLabel || card.name);
+        if (res.ok) summoned += 1;
+      }
+      addLog(state, summoned ? `Effect Script: ${sourceLabel || card.name} Special Summoned ${summoned} ${eff.nameToken} Catalyst card(s) from the Void.` : `Effect Script: ${sourceLabel || card.name} found no valid ${eff.nameToken} target in the Void.`);
+      handled += 1;
+    } else if (eff.action === 'specialSummonNamedFromHandIfEmpty') {
+      if (p.catalysts.some(Boolean)) {
+        addLog(state, `Effect Script: ${sourceLabel || card.name} needs you to control no Catalysts.`);
+      } else {
+        let summoned = 0;
+        for (let i = 0; i < Number(eff.count || 1); i++) {
+          const handIdx = p.hand.findIndex(id => {
+            const c = getCard(id);
+            return c && c.cardType === 'Catalyst' && cardNameHas(c, eff.nameToken);
+          });
+          if (handIdx < 0) break;
+          const zoneIdx = getFirstEmptyCatalystZone(state, playerIdx);
+          if (zoneIdx < 0) break;
+          const [cardId] = p.hand.splice(handIdx, 1);
+          const res = specialSummonToZone(state, playerIdx, cardId, zoneIdx, sourceLabel || card.name);
+          if (res.ok) summoned += 1;
+        }
+        addLog(state, summoned ? `Effect Script: ${sourceLabel || card.name} Special Summoned ${summoned} ${eff.nameToken} Catalyst card(s) from hand.` : `Effect Script: ${sourceLabel || card.name} found no valid ${eff.nameToken} Catalyst in hand.`);
+      }
+      handled += 1;
+    } else if (eff.action === 'allCatalystsStatShift') {
+      const amt = Number(eff.amount || 0);
+      let count = 0;
+      for (let px = 0; px < 2; px++) {
+        for (let z = 0; z < 5; z++) {
+          const slot = state.players[px].catalysts[z];
+          if (!slot) continue;
+          slot.atkMod = Number(slot.atkMod || 0) + amt;
+          slot.tempAtkMod = Number(slot.tempAtkMod || 0) + amt;
+          slot.cpMod = Number(slot.cpMod || 0) + amt;
+          count += 1;
+        }
+      }
+      addLog(state, `Effect Script: ${sourceLabel || card.name} changed all Catalyst Pressure / Counter Pressure by ${amt} until end of turn. (${count} affected)`);
+      handled += 1;
+    } else if (eff.action === 'destroyFieldTrick') {
+      let destroyed = 0;
+      for (let i = 0; i < Number(eff.count || 1); i++) {
+        const target = (state.players[1 - playerIdx].fieldTrick && !state.players[1 - playerIdx].fieldTrick.faceDown) ? { player: 1 - playerIdx } : (state.players[playerIdx].fieldTrick && !state.players[playerIdx].fieldTrick.faceDown ? { player: playerIdx } : null);
+        if (!target) break;
+        const pl = state.players[target.player];
+        pl.void.push(pl.fieldTrick.cardId);
+        pl.fieldTrick = null;
+        destroyed += 1;
+      }
+      addLog(state, destroyed ? `Effect Script: ${sourceLabel || card.name} destroyed ${destroyed} Field Trick card(s).` : `Effect Script: ${sourceLabel || card.name} found no Field Trick to destroy.`);
+      handled += 1;
+    }
+  }
+  return handled ? { ok:true, handled } : null;
+}
+
 function runPalmScript(state, playerIdx, card, manual) {
   const p = state.players[playerIdx];
   const name = canonicalScriptName(card && card.name || '');
@@ -3816,6 +3962,8 @@ function runPalmScript(state, playerIdx, card, manual) {
       }
     }
   }
+  const inferredGeneric = runInferredGenericAction(state, playerIdx, card, manual, card.name);
+  if (inferredGeneric) return inferredGeneric;
   return { ok:true };
 }
 
@@ -4776,11 +4924,12 @@ function executePhaseAuto(state) {
       return; // Don't auto-advance
 
     case 'battle':
-      // P1 Turn 1: skip battle
+      // P1 Turn 1: skip battle — but wait for a Continue click instead of auto-advancing.
+      // Set a flag the UI reads to render a notice explaining why there's no Battle Phase.
       if (state.isP1FirstTurn && p === 0) {
         addLog(state, `Phase 5: Battle Phase — SKIPPED (P1 cannot attack Turn 1).`);
-        advancePhase(state);
-        return;
+        state._p1BattleSkipPending = true;
+        return; // wait for user-triggered advancePhase via the notice's Continue button
       }
       addLog(state, `Phase 5: Battle Phase — declare attacks (optional).`);
       // Hiei-type effects: battle phase start triggers
@@ -4800,6 +4949,8 @@ function executePhaseAuto(state) {
 }
 
 function finalizeTurnSwitch(state) {
+  // Clear per-turn skip flag so it doesn't leak between turns.
+  state._p1BattleSkipPending = false;
   const p = state.activePlayer;
   const pState = state.players[p];
 
@@ -5227,7 +5378,7 @@ const FUSION_SPECS = {
   'sh2-009-captainamerica': { freeFusion:true, materials:[], inferred:true, anomaly:true },
   'sl1-017-belliontheshadowruler': { materials:[{label:'Shadow Soldier Igris', exact:'Shadow Soldier Igris'},{label:'Shadow Beast Beru', exact:'Shadow Beast Beru'},{label:'Shadow Knight Iron', exact:'Shadow Knight Iron'},{label:'Shadow Mage Kaisel', exact:'Shadow Mage Kaisel'}], inferred:true },
   'sl1-018-rulerofshadowsjinwoo': { materials:[{label:'Sung Jinwoo', exact:'Sung Jinwoo'},{label:'Shadow Soldier Igris', exact:'Shadow Soldier Igris'},{label:'Shadow Beast Beru', exact:'Shadow Beast Beru'}], inferred:true },
-  'ss1-014-colossus': { freeFusion:true, materials:[], inferred:true, anomaly:true },
+  'sh2-030-colossus': { freeFusion:true, materials:[], inferred:true, anomaly:true },
   'ss1-000-cometx': { materials:[{label:'The Comet', exact:'The Comet'},{label:'X', exact:'X'}] },
   'tuv-028-ryokomasaki': { materials:[{label:'Tenchi Masaki', exact:'Tenchi Masaki'},{label:'Ryoko', exact:'Ryoko'}] },
   'tuv-029-ayekamasaki': { materials:[{label:'Tenchi Masaki', exact:'Tenchi Masaki'},{label:'Ayeka', exact:'Ayeka'}] },
