@@ -139,6 +139,23 @@ function applySettings(){
   document.body.classList.toggle('watch-mode',      !!s.watchMode);
   document.documentElement.style.fontSize = (s.scale / 100 * 16) + 'px';
   updateWatchModeButton?.(s.watchMode);
+  // Gate the Settings > Watch Mode row for seated players (always) and tutorials (always).
+  try {
+    const cb = document.getElementById('set-watch-mode');
+    if (cb) {
+      const seated = !isSpectatorViewer();
+      const disableRow = seated || !!window.tutorialActive;
+      cb.disabled = disableRow;
+      if (disableRow) cb.checked = false;
+      const row = cb.closest('.settings-row') || document.querySelector('label.settings-row-label[for="set-watch-mode"]') || cb.parentElement;
+      if (row) {
+        row.style.opacity = disableRow ? '0.45' : '';
+        row.title = disableRow ? (window.tutorialActive ? 'Disabled during Tutorial' : 'Only available to spectators (not seated players)') : '';
+      }
+      const note = document.getElementById('settings-row-watch-note');
+      if (note) note.style.display = disableRow ? '' : 'none';
+    }
+  } catch (e) { /* non-fatal */ }
   renderAll?.();
 }
 function getSettingsSnapshot(){
@@ -148,10 +165,30 @@ function getSettingsSnapshot(){
     return {};
   }
 }
-function isWatchModeEnabled(){ return !!getSettingsSnapshot().watchMode; }
+function isSpectatorViewer(){
+  // Seated players never get watch-mode behavior regardless of their checkbox.
+  // A viewer is a 'spectator' only if they are NOT the active P1/P2 in the current game
+  // (i.e. they joined as an observer with no seat).
+  try {
+    if (typeof myPlayer !== 'number' || myPlayer < 0) return true;
+    if (typeof GS === 'undefined' || !GS || !Array.isArray(GS.players) || GS.players.length < 2) return true;
+    // If the user is seated (myPlayer is 0 or 1 in a live game) they are NOT a spectator.
+    return false;
+  } catch (e) { return false; }
+}
+function isWatchModeEnabled(){
+  // Seated players can never engage watch mode (per design): it hides your own hand
+  // and was only meant for spectators/streamers watching others. If seated, return false
+  // regardless of the persisted checkbox.
+  if (!isSpectatorViewer()) return false;
+  return !!getSettingsSnapshot().watchMode;
+}
 function updateWatchModeButton(forceState){
   const btn = $('watch-toggle-btn');
   if (!btn) return;
+  // Hide watch-mode toggle for seated players entirely.
+  if (!isSpectatorViewer()) { btn.style.display = 'none'; return; }
+  btn.style.display = '';
   const on = typeof forceState === 'boolean' ? forceState : isWatchModeEnabled();
   btn.textContent = on ? 'Watch Mode: On' : 'Watch Mode: Off';
   btn.classList.toggle('act-btn-fire', on);
@@ -234,6 +271,39 @@ const TUTORIAL_STARTER_DECK = {
 };
 function getTutorialDeck(){ return selectedDeckPayload() || (lobbyDecks[0] && CTFDeckUtils.normalizeDeck(lobbyDecks[0].deck)) || TUTORIAL_STARTER_DECK; }
 function getTutorialStepData(){ return TUTORIAL_STEPS[Math.min(Math.max(tutorialStep,0), TUTORIAL_STEPS.length - 1)]; }
+
+// ─── Tutorial-mode per-phase Continue banner ──────────────────────────────
+function renderTutorialPhaseBanner(){
+  const banner = document.getElementById('tutorial-phase-banner');
+  if (!banner) return;
+  if (!window.tutorialActive || typeof GS === 'undefined' || !GS) {
+    banner.style.display = 'none';
+    return;
+  }
+  const names = (typeof PHASE_NAMES !== 'undefined' && Array.isArray(PHASE_NAMES))
+    ? PHASE_NAMES
+    : ['Turn Start','Draw','Ignition','Action','Battle','Resolution','End'];
+  const copy = {
+    turnStart:  'Turn begins. Any start-of-turn effects resolve here. Press Continue to draw.',
+    draw:       'Draw Phase. You drew a card from your deck. Press Continue to move to Ignition.',
+    ignition:   'Ignition Phase. Revives, upkeep and per-turn effects activate. Press Continue to open Action Phase.',
+    action:     'Action Phase. This is your main play window: Normal Summon, activate Palm Tricks, set Tricks, Libra or Fusion Summons. When finished, press → To Battle Phase.',
+    battle:     'Battle Phase. Declare attacks with P-position Catalysts or go direct if opponent has no Catalysts. Press → To End Phase when done.',
+    resolution: 'Resolution Phase. Win-conditions are checked here. Press Continue to move to End Phase.',
+    end:        'End Phase. Pick ONE End-Phase action: Extraction, Rescue, Destroy Trick, OR End Turn. Then press Continue to pass the turn.'
+  };
+  const phaseKey = GS.phaseName || 'turnStart';
+  const displayName = names[GS.phase] || phaseKey;
+  const isMyTurn = GS.activePlayer === myPlayer;
+  banner.style.display = '';
+  banner.innerHTML = (
+    '<div class="tpb-head"><span class="tpb-step">Phase ' + ((GS.phase||0)+1) + ' / 7</span>'
+    + '<span class="tpb-name">' + displayName + '</span></div>'
+    + '<div class="tpb-copy">' + (copy[phaseKey] || 'Press Continue when ready.') + '</div>'
+    + (isMyTurn ? '' : '<div class="tpb-wait">Opponent\'s turn — watching.</div>')
+  );
+}
+
 function renderTutorialPanel(){
   const panel = $('tutorial-panel');
   if (!panel) return;
@@ -254,8 +324,17 @@ function startTutorial(reset=false){
   if (reset) localStorage.setItem(TUTORIAL_KEY, '0');
   loadTutorialProgress();
   tutorialActive = true;
+  window.tutorialActive = true;
   isHotSeatMode = true;
   isSandboxMode = false;
+  // Force watch mode OFF for tutorial — guarantees the hand renders normally even if
+  // the user had watch mode saved from a previous session.
+  try {
+    const cb = document.getElementById('set-watch-mode');
+    if (cb) { cb.checked = false; cb.disabled = true; }
+    document.body.classList.remove('watch-mode');
+    if (typeof applySettings === 'function') applySettings();
+  } catch (e) { /* non-fatal */ }
   const deck = getTutorialDeck();
   initGame(deck, deck);
   const data = getTutorialStepData();
@@ -303,8 +382,16 @@ function advanceTutorialStep(){
   if (!tutorialActive) return;
   if (tutorialStep >= TUTORIAL_STEPS.length - 1) {
     tutorialActive = false;
+    window.tutorialActive = false;
+    try {
+      const cb = document.getElementById('set-watch-mode');
+      if (cb) cb.disabled = false;
+      if (typeof applySettings === 'function') applySettings();
+    } catch (e) { /* non-fatal */ }
     localStorage.removeItem(TUTORIAL_KEY);
     renderTutorialPanel();
+  renderTutorialPhaseBanner();
+  renderP1SkipBattleBanner();
     $('game-over')?.classList.remove('show');
     showToast('Tutorial complete! Explore the Deck Builder or join the Discord next.');
     return;
@@ -319,7 +406,15 @@ function advanceTutorialStep(){
 }
 function exitTutorial(){
   tutorialActive = false;
+  window.tutorialActive = false;
+  try {
+    const cb = document.getElementById('set-watch-mode');
+    if (cb) cb.disabled = false;
+    if (typeof applySettings === 'function') applySettings();
+  } catch (e) { /* non-fatal */ }
   renderTutorialPanel();
+  renderTutorialPhaseBanner();
+  renderP1SkipBattleBanner();
   showToast('Tutorial exited. You can still use hot-seat or sandbox mode.');
 }
 loadTutorialProgress();
@@ -1906,6 +2001,8 @@ function renderAll() {
   $('helper-copy').textContent = isWatchModeEnabled() ? `${baseHelperCopy} Watch Mode is on, so your hand contents stay hidden on screen.` : baseHelperCopy;
   renderLegalActions();
   renderTutorialPanel();
+  renderTutorialPhaseBanner();
+  renderP1SkipBattleBanner();
   renderBattleCoach();
 
   // My hand
@@ -2064,6 +2161,60 @@ function renderFieldCard(card, slot, isOpp, mini = false, playerIdx = null, zone
   </div>`;
 }
 
+
+// ─── End Phase modal (3 sacrificial choices in a row + End Turn below) ───
+function openEndPhaseModal(){
+  const modal = document.getElementById('end-phase-modal');
+  if (!modal) return;
+  // Compute disabled states the same way the inline panel does
+  try {
+    const eligible = (typeof getEligibleCatalysts === 'function') ? getEligibleCatalysts(GS, myPlayer) : [];
+    const meBox  = (GS.players[myPlayer].box || []).length;
+    const oppBox = (GS.players[1-myPlayer].box || []).length;
+    const extractLocked = (eligible.length === 0) || (meBox === 0);
+    const rescueLocked  = (eligible.length === 0) || (oppBox === 0);
+    const destroyLocked = (eligible.length === 0);
+    const mx = document.getElementById('epm-extract');  if (mx) mx.disabled = extractLocked;
+    const mr = document.getElementById('epm-rescue');   if (mr) mr.disabled = rescueLocked;
+    const md = document.getElementById('epm-destroy');  if (md) md.disabled = destroyLocked;
+  } catch (e) { /* non-fatal */ }
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+}
+function closeEndPhaseModal(){
+  const modal = document.getElementById('end-phase-modal');
+  if (!modal) return;
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+}
+function doEndPhaseFromModal(action){
+  closeEndPhaseModal();
+  // Delegate to the existing handler
+  if (typeof doEndPhase === 'function') doEndPhase(action);
+}
+
+
+// ─── P1 Turn 1: explain why Battle Phase is skipped, require Continue ───
+function renderP1SkipBattleBanner(){
+  const banner = document.getElementById('p1-skip-battle-banner');
+  if (!banner) return;
+  const show = !!(GS && GS._p1BattleSkipPending && GS.activePlayer === myPlayer);
+  if (!show) { banner.style.display = 'none'; return; }
+  banner.style.display = '';
+  banner.innerHTML = (
+    '<div class="psbb-head">Battle Phase — Skipped</div>'
+    + '<div class="psbb-copy">Rule: P1 may not attack on their very first turn, so Battle Phase is skipped automatically this turn. Press Continue to advance to Resolution Phase.</div>'
+    + '<button class="act-btn act-btn-fire" onclick="dismissP1SkipBattle()">Continue →</button>'
+  );
+}
+function dismissP1SkipBattle(){
+  if (!GS) return;
+  GS._p1BattleSkipPending = false;
+  if (typeof advancePhase === 'function') advancePhase(GS);
+  if (typeof sendAction === 'function') sendAction({ type: 'advancePhase' });
+  renderAll();
+}
+
 function renderActions(isMyTurn) {
   const panel = $('action-btns');
   const epPanel = $('end-phase-panel');
@@ -2148,6 +2299,8 @@ function renderActions(isMyTurn) {
   } else if (phase === 'end') {
     $('actions-panel').style.display = 'none';
     epPanel.style.display = '';
+    // Auto-open the End Phase modal so choices are front-and-center.
+    try { openEndPhaseModal(); } catch(e){}
     const eligible = getEligibleCatalysts(GS, myPlayer);
     const extractLocked = eligible.length === 0 || GS.players[myPlayer].box.length === 0;
     const rescueLocked = eligible.length === 0 || GS.players[1-myPlayer].box.length === 0;
