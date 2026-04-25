@@ -1,7 +1,7 @@
 (function(global){
   const CTF_CONFIG = {
     build: {
-      version: 'browser-beta-pwa-1.0.0',
+      version: '',
       label: 'Browser-First Beta',
       releasedAt: '2026-04-21'
     },
