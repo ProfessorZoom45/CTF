@@ -576,6 +576,185 @@ body{padding-top:62px}
   catch(e){console.warn('[CTF] OperatorStack load error',e);}
 })();
 </script>
+<style id="ctf-unified-nav-styles">
+/* ═══ UNIFIED NAV (overrides any prior nav rules on every page) ═══ */
+nav.ctf-unified,
+body > nav.ctf-unified {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(13, 13, 13, 0.92);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 106, 0, 0.2);
+  font-family: 'Barlow Condensed', sans-serif;
+}
+nav.ctf-unified * { box-sizing: border-box; }
+nav.ctf-unified .nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1.25rem;
+  position: relative;
+}
+nav.ctf-unified .nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.55rem;
+  letter-spacing: 2px;
+  color: #ff6a00;
+  text-transform: uppercase;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+nav.ctf-unified .nav-brand .nb-text { color: #ff6a00; white-space: nowrap; }
+nav.ctf-unified .nav-brand .nb-text span { color: #f5f0e8; }
+nav.ctf-unified .nav-torch {
+  width: 22px;
+  height: 40px;
+  flex: 0 0 auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 4px rgba(255, 106, 0, 0.35)) drop-shadow(0 0 10px rgba(255, 70, 0, 0.15));
+}
+nav.ctf-unified .nav-links {
+  display: flex;
+  gap: 1.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+nav.ctf-unified .nav-links li { list-style: none; }
+nav.ctf-unified .nav-links a {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #e8e0d0;
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-block;
+  padding: 0.25rem 0;
+}
+nav.ctf-unified .nav-links a:hover,
+nav.ctf-unified .nav-links a.active {
+  color: #ff6a00;
+}
+
+/* hamburger button — clean 3-line icon */
+nav.ctf-unified .menu-toggle {
+  display: none;
+  background: none;
+  border: 1px solid rgba(255, 106, 0, 0.35);
+  border-radius: 6px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1001;
+  transition: border-color 0.2s, background 0.2s;
+}
+nav.ctf-unified .menu-toggle:hover { border-color: #ff6a00; background: rgba(255, 106, 0, 0.08); }
+nav.ctf-unified .menu-toggle:focus-visible { outline: 2px solid #ff6a00; outline-offset: 2px; }
+nav.ctf-unified .burger {
+  width: 22px;
+  height: 16px;
+  position: relative;
+  display: inline-block;
+}
+nav.ctf-unified .burger span {
+  display: block;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2.5px;
+  background: #ff6a00;
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+}
+nav.ctf-unified .burger span:nth-child(1) { top: 0; }
+nav.ctf-unified .burger span:nth-child(2) { top: 7px; }
+nav.ctf-unified .burger span:nth-child(3) { top: 14px; }
+nav.ctf-unified .menu-toggle[aria-expanded="true"] .burger span:nth-child(1) {
+  top: 7px;
+  transform: rotate(45deg);
+}
+nav.ctf-unified .menu-toggle[aria-expanded="true"] .burger span:nth-child(2) {
+  opacity: 0;
+}
+nav.ctf-unified .menu-toggle[aria-expanded="true"] .burger span:nth-child(3) {
+  top: 7px;
+  transform: rotate(-45deg);
+}
+
+/* mobile breakpoint */
+@media (max-width: 860px) {
+  nav.ctf-unified .nav-inner { padding: 0.6rem 1rem; }
+  nav.ctf-unified .nav-brand { font-size: 1.35rem; letter-spacing: 1.5px; }
+  nav.ctf-unified .nav-torch { width: 18px; height: 32px; }
+  nav.ctf-unified .menu-toggle { display: inline-flex; }
+  nav.ctf-unified .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(8, 8, 8, 0.98);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 106, 0, 0.25);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.55);
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+  nav.ctf-unified .nav-links.open { display: flex; }
+  nav.ctf-unified .nav-links li {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 106, 0, 0.08);
+  }
+  nav.ctf-unified .nav-links li:last-child { border-bottom: none; }
+  nav.ctf-unified .nav-links a {
+    display: block;
+    width: 100%;
+    padding: 0.95rem 1.5rem;
+    font-size: 1rem;
+  }
+  nav.ctf-unified .nav-links a.active {
+    background: rgba(255, 106, 0, 0.1);
+    border-left: 3px solid #ff6a00;
+    padding-left: calc(1.5rem - 3px);
+  }
+}
+@media (max-width: 380px) {
+  nav.ctf-unified .nav-brand .nb-text { font-size: 0.92em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  nav.ctf-unified .nav-torch animate,
+  nav.ctf-unified .nav-torch animate { display: none; }
+  nav.ctf-unified .burger span { transition: none; }
+}
+
+/* lock body scroll when mobile menu open */
+body.ctf-nav-open { overflow: hidden; }
+
+/* push page content below the fixed nav (only if page does not already pad for it) */
+body.ctf-nav-pad { padding-top: 0; }
+</style>
+
 </head>
 <body>
 
@@ -603,21 +782,62 @@ body{padding-top:62px}
 
 
 <!-- injected top nav -->
-<nav><div class="nav-inner">
-<a href="index.html" class="nav-brand"><svg class="nav-torch" viewBox="0 0 24 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ntH" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2a2a2a"/><stop offset="45%" stop-color="#9a9a9a"/><stop offset="60%" stop-color="#b5b5b5"/><stop offset="100%" stop-color="#1f1f1f"/></linearGradient><radialGradient id="ntF" cx="50%" cy="78%" r="60%"><stop offset="0%" stop-color="#fff5b8"/><stop offset="22%" stop-color="#ffdc5c"/><stop offset="52%" stop-color="#ff932a"/><stop offset="82%" stop-color="#d62200"/><stop offset="100%" stop-color="#5a0800"/></radialGradient></defs><rect x="9" y="22" width="6" height="18" rx="1.2" fill="url(#ntH)"/><rect x="8.4" y="26" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8.4" y="31" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8.4" y="36" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8" y="40.5" width="8" height="1.4" rx="0.4" fill="#3a3a3a"/><path d="M 5 20 Q 5 23 12 23 Q 19 23 19 20 L 17 18 L 7 18 Z" fill="#b0b0b0"/><rect x="6" y="17" width="12" height="1.5" rx="0.3" fill="#c8c8c8"/><path fill="url(#ntF)"><animate attributeName="d" dur="1.5s" repeatCount="indefinite" values="M 12 2 Q 8 8 7 14 Q 6.2 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.8 18 17 14 Q 16 8 12 2 Z;M 12 1 Q 7 8 6.5 15 Q 6 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 18 18 17.5 15 Q 17 8 12 1 Z;M 12 3 Q 8.5 8 7.5 13.5 Q 6.5 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.5 18 16.5 13.5 Q 15.5 8 12 3 Z;M 12 2 Q 8 8 7 14 Q 6.2 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.8 18 17 14 Q 16 8 12 2 Z"/></path><ellipse cx="12" cy="15" rx="2.1" ry="4.2" fill="#ffe88a" opacity="0.8"><animate attributeName="opacity" values="0.65;1;0.72;0.88" dur="1.1s" repeatCount="indefinite"/></ellipse><circle cx="11" cy="8" r="0.45" fill="#ff9a33"><animate attributeName="cy" values="9;-2" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.75;1" dur="2.2s" repeatCount="indefinite"/><animate attributeName="r" values="0.45;0.12" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="13" cy="6" r="0.5" fill="#ffc266"><animate attributeName="cy" values="8;-1" dur="2.6s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.75;1" dur="2.6s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="r" values="0.5;0.15" dur="2.6s" begin="0.4s" repeatCount="indefinite"/></circle><circle cx="12" cy="5" r="0.4" fill="#ffd34a"><animate attributeName="cy" values="7;0" dur="2.4s" begin="1.0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.75;1" dur="2.4s" begin="1.0s" repeatCount="indefinite"/><animate attributeName="r" values="0.4;0.1" dur="2.4s" begin="1.0s" repeatCount="indefinite"/></circle></svg><span class="nb-text">Carry The <span>Flame</span></span></a>
-<button class="menu-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')"><svg class="mt-torch" viewBox="0 0 24 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="mtH" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2a2a2a"/><stop offset="45%" stop-color="#9a9a9a"/><stop offset="60%" stop-color="#b5b5b5"/><stop offset="100%" stop-color="#1f1f1f"/></linearGradient><radialGradient id="mtF" cx="50%" cy="78%" r="60%"><stop offset="0%" stop-color="#fff5b8"/><stop offset="22%" stop-color="#ffdc5c"/><stop offset="52%" stop-color="#ff932a"/><stop offset="82%" stop-color="#d62200"/><stop offset="100%" stop-color="#5a0800"/></radialGradient></defs><rect x="9" y="22" width="6" height="18" rx="1.2" fill="url(#mtH)"/><rect x="8.4" y="26" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8.4" y="31" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8.4" y="36" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8" y="40.5" width="8" height="1.4" rx="0.4" fill="#3a3a3a"/><path d="M 5 20 Q 5 23 12 23 Q 19 23 19 20 L 17 18 L 7 18 Z" fill="#b0b0b0"/><rect x="6" y="17" width="12" height="1.5" rx="0.3" fill="#c8c8c8"/><path fill="url(#mtF)"><animate attributeName="d" dur="1.5s" repeatCount="indefinite" values="M 12 2 Q 8 8 7 14 Q 6.2 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.8 18 17 14 Q 16 8 12 2 Z;M 12 1 Q 7 8 6.5 15 Q 6 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 18 18 17.5 15 Q 17 8 12 1 Z;M 12 3 Q 8.5 8 7.5 13.5 Q 6.5 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.5 18 16.5 13.5 Q 15.5 8 12 3 Z;M 12 2 Q 8 8 7 14 Q 6.2 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.8 18 17 14 Q 16 8 12 2 Z"/></path><ellipse cx="12" cy="15" rx="2.1" ry="4.2" fill="#ffe88a" opacity="0.8"><animate attributeName="opacity" values="0.65;1;0.72;0.88" dur="1.1s" repeatCount="indefinite"/></ellipse><circle cx="11" cy="8" r="0.45" fill="#ff9a33"><animate attributeName="cy" values="9;-2" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.75;1" dur="2.2s" repeatCount="indefinite"/><animate attributeName="r" values="0.45;0.12" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="13" cy="6" r="0.5" fill="#ffc266"><animate attributeName="cy" values="8;-1" dur="2.6s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.75;1" dur="2.6s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="r" values="0.5;0.15" dur="2.6s" begin="0.4s" repeatCount="indefinite"/></circle><circle cx="12" cy="5" r="0.4" fill="#ffd34a"><animate attributeName="cy" values="7;0" dur="2.4s" begin="1.0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.75;1" dur="2.4s" begin="1.0s" repeatCount="indefinite"/><animate attributeName="r" values="0.4;0.1" dur="2.4s" begin="1.0s" repeatCount="indefinite"/></circle></svg></button>
-<ul class="nav-links">
-  <li><a href="rules.html">Rules</a></li>
-  <li><a href="cards.html">Cards</a></li>
-  <li><a href="deckbuilder.html">Deck Builder</a></li>
-  <li><a href="play.html" class="active">Play</a></li>
-  <li><a href="glossary.html">Glossary</a></li>
-  <li><a href="submit.html">Submit Cards</a></li>
-</ul>
-</div></nav>
-
-
-
+<!-- CTF unified nav -->
+<nav class="ctf-unified" role="navigation" aria-label="Primary">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand" aria-label="Carry The Flame — Home">
+      <svg class="nav-torch" viewBox="0 0 24 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ctfNTH" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2a2a2a"/><stop offset="45%" stop-color="#9a9a9a"/><stop offset="60%" stop-color="#b5b5b5"/><stop offset="100%" stop-color="#1f1f1f"/></linearGradient><radialGradient id="ctfNTF" cx="50%" cy="78%" r="60%"><stop offset="0%" stop-color="#fff5b8"/><stop offset="22%" stop-color="#ffdc5c"/><stop offset="52%" stop-color="#ff932a"/><stop offset="82%" stop-color="#d62200"/><stop offset="100%" stop-color="#5a0800"/></radialGradient></defs><rect x="9" y="22" width="6" height="18" rx="1.2" fill="url(#ctfNTH)"/><rect x="8.4" y="26" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8.4" y="31" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8.4" y="36" width="7.2" height="0.9" fill="#141414" opacity="0.75"/><rect x="8" y="40.5" width="8" height="1.4" rx="0.4" fill="#3a3a3a"/><path d="M 5 20 Q 5 23 12 23 Q 19 23 19 20 L 17 18 L 7 18 Z" fill="#b0b0b0"/><rect x="6" y="17" width="12" height="1.5" rx="0.3" fill="#c8c8c8"/><path fill="url(#ctfNTF)"><animate attributeName="d" dur="1.5s" repeatCount="indefinite" values="M 12 2 Q 8 8 7 14 Q 6.2 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.8 18 17 14 Q 16 8 12 2 Z;M 12 1 Q 7 8 6.5 15 Q 6 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 18 18 17.5 15 Q 17 8 12 1 Z;M 12 3 Q 8.5 8 7.5 13.5 Q 6.5 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.5 18 16.5 13.5 Q 15.5 8 12 3 Z;M 12 2 Q 8 8 7 14 Q 6.2 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.8 18 17 14 Q 16 8 12 2 Z"/></path><ellipse cx="12" cy="15" rx="2.1" ry="4.2" fill="#ffe88a" opacity="0.8"><animate attributeName="opacity" values="0.65;1;0.72;0.88" dur="1.1s" repeatCount="indefinite"/></ellipse></svg>
+      <span class="nb-text">Carry The <span>Flame</span></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="ctf-nav-list">
+      <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <ul class="nav-links" id="ctf-nav-list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rules.html">Rules</a></li>
+      <li><a href="cards.html">Cards</a></li>
+      <li><a href="deckbuilder.html">Deck Builder</a></li>
+      <li><a href="play.html" class="active" aria-current="page">Play</a></li>
+      <li><a href="glossary.html">Glossary</a></li>
+      <li><a href="About_Us.html">About</a></li>
+      <li><a href="submit.html">Submit Cards</a></li>
+    </ul>
+  </div>
+</nav>
+<script>
+(function(){
+  var nav = document.querySelector('nav.ctf-unified');
+  if(!nav) return;
+  var btn = nav.querySelector('.menu-toggle');
+  var list = nav.querySelector('.nav-links');
+  if(!btn || !list) return;
+  function close(){
+    list.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    document.body.classList.remove('ctf-nav-open');
+  }
+  function toggle(){
+    var open = list.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('ctf-nav-open', open);
+  }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+  list.addEventListener('click', function(e){
+    if(e.target.tagName === 'A') close();
+  });
+  document.addEventListener('click', function(e){
+    if(!list.classList.contains('open')) return;
+    if(nav.contains(e.target)) return;
+    close();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') close();
+  });
+  window.addEventListener('resize', function(){
+    if(window.innerWidth > 860) close();
+  });
+})();
+</script>
 <!-- ═══ LOBBY ═══ -->
 <div id="lobby">
 <a href="index.html" style="font-family:var(--font-label);font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;display:inline-block">← Back to Home</a>
