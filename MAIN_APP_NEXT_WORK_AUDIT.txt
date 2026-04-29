@@ -1,0 +1,114 @@
+CARRY THE FLAME MAIN APP — NEXT WORK AUDIT
+==========================================
+
+Main repo
+---------
+ProfessorZoom45/CTF
+
+Testing repo
+------------
+ProfessorZoom45/carry-the-flame-app
+
+Decision
+--------
+Use ProfessorZoom45/CTF as the main app.
+Use carry-the-flame-app as the testing ground only.
+
+What I found in the main CTF repo
+---------------------------------
+The main CTF repo is already a working website/app, not an empty repo.
+It already includes these key pages:
+
+- index.html
+- cards.html
+- deckbuilder.html
+- rules.html
+- play.html
+- glossary.html
+- About_Us.html
+- checklist.html
+- submit.html
+
+It also already has PWA files:
+
+- manifest.json
+- service-worker.js
+
+It also has a central config file:
+
+- assets/js/ctf-config.js
+
+Why this matters
+----------------
+We should NOT replace the old website with the new testing repo.
+The correct move is to improve the CTF repo in place.
+The testing repo should only be used to try ideas before moving them into CTF.
+
+Important existing PWA details
+------------------------------
+manifest.json already names the app:
+Carry The Flame — Browser-First Beta
+
+service-worker.js already caches important files such as:
+- index.html
+- cards.html
+- deckbuilder.html
+- rules.html
+- glossary.html
+- play.html
+- submit.html
+- About_Us.html
+- manifest.json
+- icon-ctf.svg
+- images/placeholder.gif
+
+Important existing rules/config details
+---------------------------------------
+assets/js/ctf-config.js already defines:
+
+- startingChi: 10000
+- startingHand: 5
+- handLimit: 7
+- main deck: 40 to 60
+- fusion deck max: 15
+- side deck: 0 to 15
+- phases: 7 phases
+- deck-out is not a loss
+- Libra rules
+- End Phase actions
+- Great Card limits
+
+Main app upgrade path
+---------------------
+1. Keep the old CTF website design.
+2. Do not replace index.html unless specifically requested.
+3. Keep existing page names so old links do not break.
+4. Improve one system at a time.
+5. Use carry-the-flame-app only as a test area.
+6. Move tested improvements into CTF.
+
+Safe next updates for CTF
+-------------------------
+1. Add verified images/<SET>/ folders to CTF.
+2. Add IMAGE_NORMALIZATION_RULES.txt to CTF.
+3. Add a card image path helper script.
+4. Update cards.html to show normalized images with fallback.
+5. Update service-worker.js cache list only after image/data paths are stable.
+6. Confirm every HTML page has Operator Stack.
+7. Confirm rules.html matches Beginner Guide v7 and current CTF rule corrections.
+8. Fix any mismatch in ctf-config.js after comparing it to the latest rules.
+
+Do not do yet
+-------------
+Do not delete old HTML files.
+Do not move pages into a new /pages folder.
+Do not replace the main website with the testing repo.
+Do not upload all images until naming and paths are stable.
+Do not create fake set folders.
+
+Plain rule
+----------
+The CTF repo is the house.
+The testing repo is the workshop.
+Build in the workshop first.
+Move only finished parts into the house.
