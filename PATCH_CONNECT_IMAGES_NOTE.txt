@@ -1,0 +1,35 @@
+IMAGE CONNECTION PATCH
+
+What was added:
+- assets/js/card-image-resolver.js
+
+What it does:
+1. Uses existing manual image map FIRST
+2. If no match, auto-builds path:
+   images/<SET>/<normalized_name>.gif
+
+Normalization rules:
+- lowercase
+- spaces → _
+- remove special characters
+- apostrophes → _
+- collapse multiple underscores
+
+Examples:
+Reese The Great's Gundam
+→ images/ANM/reese_the_great_s_gundam.gif
+
+Himura - Hitokiri Battousai
+→ images/RKN/himura_hitokiri_battousai.gif
+
+Fallback system:
+.gif → try .png → fallback to placeholder.gif
+
+Next step required:
+cards.html must switch from old cardImg() to:
+CTF_IMAGE_RESOLVER.resolve(card)
+
+and apply fallback:
+CTF_IMAGE_RESOLVER.applyFallback(img)
+
+This keeps compatibility with existing map AND enables new image system.
