@@ -1,0 +1,19 @@
+CTF Image Patch — 2026-05-01
+
+Files edited:
+- data/cards.json
+- app.js
+- CTF_IMAGE_PATCH_CHANGELOG_2026-05-01.txt
+
+What changed:
+- Rebuilt card image references against the repo /images folder.
+- Added multi-path fallback logic in app.js.
+- Added placeholder fallback for missing images.
+
+Result:
+- All cards now attempt multiple image paths before failing.
+- Prevents broken images in UI.
+
+Notes:
+- No cards were deleted.
+- No card data was altered.
