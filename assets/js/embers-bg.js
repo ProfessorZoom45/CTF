@@ -3,6 +3,20 @@
   const bgCanvasId = 'ctf-embers-canvas';
   const fgCanvasId = 'ctf-embers-foreground';
 
+  function injectUniversalImageFix() {
+    const pages = ['cards.html', 'deckbuilder.html', 'play.html'];
+    const path = String(window.location.pathname || '').toLowerCase();
+    const shouldLoad = pages.some(page => path.endsWith('/' + page) || path.endsWith(page));
+    if (!shouldLoad) return;
+    if (document.querySelector('script[src="assets/js/ctf-universal-image-fix.js"]')) return;
+    const script = document.createElement('script');
+    script.src = 'assets/js/ctf-universal-image-fix.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+
+  injectUniversalImageFix();
+
   function injectStyle() {
     if (document.getElementById(styleId)) return;
     const style = document.createElement('style');
@@ -86,7 +100,7 @@
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
-      spawnMinY = h * 0.85; // embers SPAWN in the bottom 15%…
+      spawnMinY = h * 0.85;
     }
     resize();
     class ForegroundEmber {
@@ -105,7 +119,6 @@
         this.x += this.vx + Math.sin(this.life * 0.018 + this.x * 0.01) * 0.35;
         this.y += this.vy;
         this.life--;
-        // Locked to bottom 15% — resets as soon as it drifts above the zone
         if (this.life <= 0 || this.y < spawnMinY - 10 || this.x < -20 || this.x > w + 20) this.reset();
       }
       draw() {
