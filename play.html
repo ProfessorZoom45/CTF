@@ -1204,6 +1204,11 @@ body.ctf-nav-pad { padding-top: 0; }
 <script src="assets/js/deck-utils.js"></script>
 <script src="assets/js/engine.js"></script>
 <script src="assets/js/card-playability-manifest.js"></script>
+<!-- v3.2: VS-CPU brain + inline tutorial coach. Load AFTER engine.js (which
+     defines the action functions the brain calls) and BEFORE play_inline.js
+     (which references CTF_AI / CTF_COACH on startup). -->
+<script src="assets/js/ai_opponent.js"></script>
+<script src="assets/js/tutorial_coach.js"></script>
 <script src="play_inline.js"></script>
 
 </body>

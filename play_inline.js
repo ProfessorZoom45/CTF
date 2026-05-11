@@ -34,6 +34,10 @@ let tutorialActive = false;
 let tutorialStep = 0;
 let isSandboxMode = false;
 let isHotSeatMode = false;
+// Patch v3.2: VS-AI mode flags. Coach drives the first 3 turns of lessons.
+let isVsAIMode = false;
+let isVsAITutorialMode = false;
+let aiTurnInFlight = false;
 let lastResultCardSig = '';
 let lastRoomCode = localStorage.getItem('ctf:lastRoomCode') || '';
 if ('serviceWorker' in navigator) { window.addEventListener('load', ()=> navigator.serviceWorker.register('service-worker.js').catch(()=>{})); }
@@ -85,7 +89,16 @@ function buildLobbyDecks(){
     source: 'starter',
     name: d.name,
     desc: d.desc,
-    deck: { name: d.name, main: d.cards.slice(), fusion: [], side: [] }
+    // Patch v3.2: carry fixedOpeningHand through the lobby so tutorial /
+    // VS-AI matches can deal a reproducible hand.
+    fixedOpeningHand: Array.isArray(d.fixedOpeningHand) ? d.fixedOpeningHand.slice() : [],
+    deck: {
+      name: d.name,
+      main: d.cards.slice(),
+      fusion: [],
+      side: [],
+      fixedOpeningHand: Array.isArray(d.fixedOpeningHand) ? d.fixedOpeningHand.slice() : []
+    }
   }));
   const custom = CTFDeckUtils.getPreparedPlayDeck();
   if (custom && (custom.main.length || custom.fusion.length || custom.side.length)) {
@@ -94,6 +107,7 @@ function buildLobbyDecks(){
       source: 'custom',
       name: custom.name || 'Saved Custom Deck',
       desc: 'Saved custom deck from Deck Builder',
+      fixedOpeningHand: [],
       deck: custom
     });
   }
@@ -269,7 +283,28 @@ const TUTORIAL_STARTER_DECK = {
   fusion: [],
   side: []
 };
-function getTutorialDeck(){ return selectedDeckPayload() || (lobbyDecks[0] && CTFDeckUtils.normalizeDeck(lobbyDecks[0].deck)) || TUTORIAL_STARTER_DECK; }
+function getTutorialDeck(){
+  // Patch v3.2: starter decks keep their own fixed opening hand and play
+  // in fixed deck order so the lessons are reproducible turn-to-turn.
+  const selected = lobbyDecks[selectedDeckIdx];
+  if (selected && selected.source === 'starter') {
+    const deck = CTFDeckUtils.normalizeDeck(selected.deck);
+    return Object.assign({}, deck, {
+      fixedOpeningHand: selected.deck.fixedOpeningHand || selected.fixedOpeningHand || [],
+      fixedOrder: true,
+      noShuffle: true,
+      tutorial: true
+    });
+  }
+  // Fallback: built-in scripted tutorial deck.
+  const fallback = CTFDeckUtils.normalizeDeck(TUTORIAL_STARTER_DECK);
+  return Object.assign({}, fallback, {
+    fixedOpeningHand: TUTORIAL_STARTER_DECK.fixedOpeningHand || [],
+    fixedOrder: true,
+    noShuffle: true,
+    tutorial: true
+  });
+}
 function getTutorialStepData(){ return TUTORIAL_STEPS[Math.min(Math.max(tutorialStep,0), TUTORIAL_STEPS.length - 1)]; }
 
 // ─── Tutorial-mode per-phase Continue banner ──────────────────────────────
@@ -285,11 +320,11 @@ function renderTutorialPhaseBanner(){
     : ['Turn Start','Draw','Ignition','Action','Battle','Resolution','End'];
   const copy = {
     turnStart:  'Turn begins. Any start-of-turn effects resolve here. Press Continue to draw.',
-    draw:       'Draw Phase. You drew a card from your deck. Press Continue to move to Ignition.',
+    draw:       'Draw Phase. Click "Draw Card" to draw 1 from your deck, or "Skip Draw Phase" if your deck is empty. Empty deck is NOT a loss.',
     ignition:   'Ignition Phase. Revives, upkeep and per-turn effects activate. Press Continue to open Action Phase.',
     action:     'Action Phase. This is your main play window: Normal Summon, activate Palm Tricks, set Tricks, Libra or Fusion Summons. When finished, press → To Battle Phase.',
     battle:     'Battle Phase. Declare attacks with P-position Catalysts or go direct if opponent has no Catalysts. Press → To End Phase when done.',
-    resolution: 'Resolution Phase. Win-conditions are checked here. Press Continue to move to End Phase.',
+    resolution: 'Resolution Phase. Set face-down Tricks if you wish, change ONE non-attacking Catalyst\'s position, or pass. Win conditions check here. Press Continue to move to End Phase.',
     end:        'End Phase. Pick ONE End-Phase action: Extraction, Rescue, Destroy Trick, OR End Turn. Then press Continue to pass the turn.'
   };
   const phaseKey = GS.phaseName || 'turnStart';
@@ -419,8 +454,99 @@ function exitTutorial(){
 }
 loadTutorialProgress();
 
-function startHotSeat(){ tutorialActive=false; const deck = selectedDeckPayload() || (lobbyDecks[0] && CTFDeckUtils.normalizeDeck(lobbyDecks[0].deck)); if(!deck) return showToast('No deck available.'); isHotSeatMode=true; isSandboxMode=false; initGame(deck, deck); showToast('Hot-seat local duel started.'); }
-function startSandbox(){ tutorialActive=false; const deck = selectedDeckPayload() || (lobbyDecks[0] && CTFDeckUtils.normalizeDeck(lobbyDecks[0].deck)); if(!deck) return showToast('No deck available.'); isSandboxMode=true; isHotSeatMode=true; initGame(deck, deck); showToast('Sandbox duel started.'); }
+function startHotSeat(){ tutorialActive=false; const deck = selectedDeckPayload() || (lobbyDecks[0] && CTFDeckUtils.normalizeDeck(lobbyDecks[0].deck)); if(!deck) return showToast('No deck available.'); isHotSeatMode=true; isSandboxMode=false; isVsAIMode=false; isVsAITutorialMode=false; initGame(deck, deck); showToast('Hot-seat local duel started.'); }
+function startSandbox(){ tutorialActive=false; const deck = selectedDeckPayload() || (lobbyDecks[0] && CTFDeckUtils.normalizeDeck(lobbyDecks[0].deck)); if(!deck) return showToast('No deck available.'); isSandboxMode=true; isHotSeatMode=true; isVsAIMode=false; isVsAITutorialMode=false; initGame(deck, deck); showToast('Sandbox duel started.'); }
+
+// ─── Patch v3.2: VS-AI launch helpers ─────────────────────────────────────
+function pickRandomStarterDeckForAI(){
+  // AI gets a RANDOM starter deck (different each run), preserving its
+  // fixed opening hand so the deck plays the way it was authored.
+  const starters = lobbyDecks.filter(d => d && d.source === 'starter');
+  if(!starters.length) return null;
+  const pick = starters[Math.floor(Math.random() * starters.length)];
+  const deck = CTFDeckUtils.normalizeDeck(pick.deck);
+  return Object.assign({}, deck, {
+    name: pick.deck.name,
+    fixedOpeningHand: pick.deck.fixedOpeningHand || pick.fixedOpeningHand || [],
+    fixedOrder: false,
+    noShuffle: false
+  });
+}
+
+function selectedHumanDeck(){
+  // Player's chosen deck. Falls back to first starter if nothing selected.
+  const sel = selectedDeckPayload();
+  if(sel) return sel;
+  if(lobbyDecks[0] && lobbyDecks[0].deck) return CTFDeckUtils.normalizeDeck(lobbyDecks[0].deck);
+  return null;
+}
+
+function startVsAITutorial(){
+  const me = selectedHumanDeck();
+  const ai = pickRandomStarterDeckForAI();
+  if(!me || !ai){ showToast('Need at least one deck to play.'); return; }
+  tutorialActive = false;
+  window.tutorialActive = false;
+  isHotSeatMode = false;
+  isSandboxMode = false;
+  isVsAIMode = true;
+  isVsAITutorialMode = true;
+  // Force watch-mode OFF so the player sees their hand normally.
+  try {
+    const cb = document.getElementById('set-watch-mode');
+    if (cb) { cb.checked = false; cb.disabled = true; }
+    document.body.classList.remove('watch-mode');
+    if (typeof applySettings === 'function') applySettings();
+  } catch (e) {}
+  // Coach: 3 turns of inline cards, then bow out.
+  if(window.CTF_COACH){ window.CTF_COACH.enable({ coachUntilTurn: 3 }); }
+  if(window.CTF_AI){ window.CTF_AI.configure({ difficulty: 'normal', thinkMs: 350, aiPlayerIdx: 1 }); }
+  myPlayer = 0;
+  initGame(me, ai);
+  showToast('VS-CPU Tutorial started — coach is on for the first 3 turns. AI deck: ' + (ai.name || 'starter'));
+}
+
+function startVsAIFreePlay(){
+  const me = selectedHumanDeck();
+  const ai = pickRandomStarterDeckForAI();
+  if(!me || !ai){ showToast('Need at least one deck to play.'); return; }
+  tutorialActive = false;
+  window.tutorialActive = false;
+  isHotSeatMode = false;
+  isSandboxMode = false;
+  isVsAIMode = true;
+  isVsAITutorialMode = false;
+  if(window.CTF_COACH){ window.CTF_COACH.disable(); }
+  if(window.CTF_AI){ window.CTF_AI.configure({ difficulty: 'normal', thinkMs: 280, aiPlayerIdx: 1 }); }
+  myPlayer = 0;
+  initGame(me, ai);
+  showToast('VS-CPU started. AI deck: ' + (ai.name || 'starter'));
+}
+
+// Drive the AI when it's its turn. Re-entrant guard via aiTurnInFlight.
+function vsAITick(){
+  if(!isVsAIMode || !GS || GS.gameOver) return;
+  if(GS.activePlayer === myPlayer) return;            // human's turn
+  if(aiTurnInFlight) return;                          // already running
+  if(typeof window.CTF_AI === 'undefined') return;    // brain not loaded
+  aiTurnInFlight = true;
+  window.CTF_AI.takeTurn(GS, GS.activePlayer, function onStep(){
+    try { renderAll(); } catch(e){}
+  }).then(function(){
+    aiTurnInFlight = false;
+    try { renderAll(); } catch(e){}
+  }).catch(function(err){
+    aiTurnInFlight = false;
+    if(window.console) console.warn('[AI] turn error:', err);
+    try { renderAll(); } catch(e){}
+  });
+}
+
+if (typeof window !== 'undefined') {
+  window.startVsAITutorial = startVsAITutorial;
+  window.startVsAIFreePlay = startVsAIFreePlay;
+  window.vsAITick = vsAITick;
+}
 function reconnectRoom(){ const code = localStorage.getItem('ctf:lastRoomCode') || ''; if (!code) return showToast('No saved room code.'); $('join-input').value = code; joinRoom(); }
 function getResultCardSignature(){
   if (!GS) return '';
@@ -807,6 +933,33 @@ function renderDeckSelect() {
       : `Blocked · ${report.errors[0]}`;
     return `<div class="deck-opt${classes}" onclick="selectDeck(${i})"><div><div class="deck-opt-name">${d.name}</div><div class="deck-opt-desc">${d.desc}</div><div class="deck-opt-meta">${status}</div></div></div>`;
   }).join('');
+  // Patch v3.2: ensure VS-AI lobby buttons exist (injected once near the
+  // deck select panel). Idempotent — re-running renderDeckSelect is safe.
+  try { ensureVsAILobbyButtons(); } catch(e){}
+}
+
+// Patch v3.2: injects two buttons next to the deck-select panel so users
+// can start VS-CPU matches without editing play.html. Buttons render once
+// and re-bind handlers each call (idempotent).
+function ensureVsAILobbyButtons(){
+  const sel = document.getElementById('deck-select');
+  if(!sel || !sel.parentNode) return;
+  let bar = document.getElementById('vs-ai-lobby-bar');
+  if(!bar){
+    bar = document.createElement('div');
+    bar.id = 'vs-ai-lobby-bar';
+    bar.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px;align-items:center;justify-content:center';
+    bar.innerHTML = ''
+      + '<div style="width:100%;text-align:center;font-size:.7rem;color:var(--ash,#aaa);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">VS-CPU Modes</div>'
+      + '<button id="btn-vs-ai-tutorial" class="act-btn act-btn-fire" style="padding:8px 14px;font-size:.8rem;font-weight:700">🔥 VS-CPU Tutorial</button>'
+      + '<button id="btn-vs-ai-free" class="act-btn act-btn-blue" style="padding:8px 14px;font-size:.8rem;font-weight:700">⚔ VS-CPU Free Play</button>'
+      + '<div style="width:100%;text-align:center;font-size:.65rem;color:var(--ash,#aaa);margin-top:2px">AI gets a random starter deck. Tutorial = inline coach card for 3 turns. Free Play = silent CPU.</div>';
+    sel.parentNode.insertBefore(bar, sel.nextSibling);
+  }
+  const t = document.getElementById('btn-vs-ai-tutorial');
+  const f = document.getElementById('btn-vs-ai-free');
+  if(t) t.onclick = function(){ if(typeof startVsAITutorial === 'function') startVsAITutorial(); };
+  if(f) f.onclick = function(){ if(typeof startVsAIFreePlay === 'function') startVsAIFreePlay(); };
 }
 function selectDeck(i) { selectedDeckIdx = i; loadSettings();
 updateWatchModeButton();
@@ -950,6 +1103,8 @@ function applyActionLocal(action) {
     case 'changePosition': result = changePosition(GS, action.player, action.zone); break;
     case 'attack': result = declareAttack(GS, action.attacker, action.attackerZone, action.defender, action.defenderZone); break;
     case 'advancePhase': advancePhase(GS); result = { ok:true, msg:'' }; break;
+    case 'drawPhaseClick': result = (typeof handleDrawPhaseClick === 'function') ? handleDrawPhaseClick(GS) : { ok:false, msg:'Not loaded.' }; break;
+    case 'resolutionFlipPosition': result = (typeof changeCatalystPositionInResolution === 'function') ? changeCatalystPositionInResolution(GS, action.player ?? GS.activePlayer, action.zoneIdx) : { ok:false, msg:'Not loaded.' }; break;
     case 'endPhaseAction': result = endPhaseAction(GS, action.player, action.action, action.sacrificeZone, action.targetIdx); break;
     case 'discardForHandLimit': result = discardForHandLimit(GS, action.player, action.handIdx); break;
     case 'activatePalmTrick': result = activatePalmTrick(GS, action.player, action.handIdx, action.manual); break;
@@ -1942,9 +2097,18 @@ function showFieldTip(event, playerIdx) {
 function renderAll() {
   if (!GS) return;
   if (isHotSeatMode || isSandboxMode) myPlayer = GS.activePlayer;
+  // Patch v3.2: VS-AI mode locks myPlayer to seat 0 (human is always P1).
+  if (isVsAIMode) myPlayer = 0;
   const me = GS.players[myPlayer];
   const opp = GS.players[1 - myPlayer];
   const isMyTurn = GS.activePlayer === myPlayer;
+
+  // Patch v3.2: Coach renders an inline lesson card for the first 3 turns
+  // of VS-AI Tutorial Mode (when active).
+  try { if (window.CTF_COACH && window.CTF_COACH.isActive()) window.CTF_COACH.onPhaseChange(); } catch (e) {}
+  // Patch v3.2: When in VS-AI mode and it's the AI's turn, kick off the
+  // AI driver. vsAITick is re-entrant-guarded inside.
+  try { if (isVsAIMode && typeof vsAITick === 'function') setTimeout(vsAITick, 0); } catch (e) {}
 
   // Chi & scores
   $('my-chi').textContent = me.chi.toLocaleString();
@@ -2247,8 +2411,22 @@ function renderActions(isMyTurn) {
 
   const phase = GS.phaseName;
 
-  if (phase === 'turnStart' || phase === 'draw') {
+  if (phase === 'turnStart') {
     html += `<button class="act-btn act-btn-fire" onclick="doAdvance()">Continue →</button>`;
+  } else if (phase === 'draw') {
+    // Patch v3.2: Draw Phase is a manual stop. Button label depends on
+    // whether the active player still has a deck. Resolved state advances
+    // automatically to Ignition once the player has drawn (or chosen to
+    // skip on an empty deck).
+    const me = GS.players[myPlayer];
+    const drawLabel = (typeof getDrawPhaseButtonLabel === 'function')
+      ? getDrawPhaseButtonLabel(GS)
+      : (me && me.deck && me.deck.length ? 'Draw Card' : 'Skip Draw Phase');
+    if (me && me._drawPhaseResolved) {
+      html += `<button class="act-btn act-btn-fire" onclick="doAdvance()">Continue → To Ignition</button>`;
+    } else {
+      html += `<button class="act-btn act-btn-fire" onclick="doDrawPhaseClick()">${drawLabel}</button>`;
+    }
   } else if (phase === 'ignition') {
     html += `<button class="act-btn act-btn-fire" onclick="doAdvance()">Continue →</button>`;
     const me = GS.players[myPlayer];
@@ -2295,7 +2473,30 @@ function renderActions(isMyTurn) {
       html += `<button class="act-btn act-btn-red" onclick="cancelAttack()">Cancel Attack</button>`;
     }
   } else if (phase === 'resolution') {
-    html += `<button class="act-btn act-btn-fire" onclick="doAdvance()">Continue →</button>`;
+    // Patch v3.2: Resolution Phase is a manual stop. Player may flip the
+    // position of ONE Catalyst that did NOT attack this turn (subject to the
+    // existing 1-position-change-per-turn limit). Then Continue.
+    const me = GS.players[myPlayer];
+    const eligibleZones = [];
+    if (me && Array.isArray(me.catalysts)) {
+      me.catalysts.forEach((slot, z) => {
+        if (!slot) return;
+        if (slot.attackedThisTurn) return;
+        if (me.posChanged && me.posChanged.has(z)) return;
+        eligibleZones.push({ z, slot });
+      });
+    }
+    if (eligibleZones.length) {
+      html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Optional: change ONE non-attacking Catalyst's position.</div>`;
+      eligibleZones.forEach(({ z, slot }) => {
+        const cardName = (typeof getCard === 'function' && getCard(slot.cardId)?.name) || `Zone ${z+1}`;
+        const flipTo = (slot.position === 'atk') ? 'Defense' : 'Attack';
+        html += `<button class="act-btn act-btn-blue" onclick="doResolutionFlipPosition(${z})">Flip ${cardName} → ${flipTo}</button>`;
+      });
+    } else {
+      html += `<div style="font-size:.65rem;color:var(--ash);margin-bottom:4px">No Catalysts eligible for position change.</div>`;
+    }
+    html += `<button class="act-btn act-btn-fire" onclick="doAdvance()">Continue → To End Phase</button>`;
   } else if (phase === 'end') {
     $('actions-panel').style.display = 'none';
     epPanel.style.display = '';
@@ -2556,6 +2757,40 @@ async function doAdvance() {
   advancePhase(GS);
   sendAction({ type: 'advancePhase' });
   renderAll();
+}
+
+// ─── Patch v3.2: Draw Phase manual click handler ──────────────────────────
+function doDrawPhaseClick() {
+  if (!GS || GS.activePlayer !== myPlayer) return;
+  if (GS.phaseName !== 'draw') return;
+  if (typeof handleDrawPhaseClick !== 'function') {
+    showToast('Draw Phase handler not loaded.');
+    return;
+  }
+  const r = handleDrawPhaseClick(GS);
+  if (!r.ok) { showToast(r.msg || 'Cannot draw right now.'); return; }
+  sendAction({ type: 'drawPhaseClick' });
+  renderAll();
+}
+
+// ─── Patch v3.2: Resolution Phase position-flip handler ───────────────────
+function doResolutionFlipPosition(zoneIdx) {
+  if (!GS || GS.activePlayer !== myPlayer) return;
+  if (GS.phaseName !== 'resolution') return;
+  if (typeof changeCatalystPositionInResolution !== 'function') {
+    showToast('Resolution position-change handler not loaded.');
+    return;
+  }
+  const r = changeCatalystPositionInResolution(GS, myPlayer, zoneIdx);
+  if (!r.ok) { showToast(r.msg || 'Cannot change position.'); return; }
+  sendAction({ type: 'resolutionFlipPosition', zoneIdx });
+  renderAll();
+}
+
+// ─── Patch v3.2: Expose for inline onclick handlers ───────────────────────
+if (typeof window !== 'undefined') {
+  window.doDrawPhaseClick = doDrawPhaseClick;
+  window.doResolutionFlipPosition = doResolutionFlipPosition;
 }
 
 function enterAttackMode() {
