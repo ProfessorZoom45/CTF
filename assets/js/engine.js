@@ -19,6 +19,12 @@ const EXTRACTIONS_TO_WIN = 7;
 const PHASES = ['turnStart','draw','ignition','action','battle','resolution','end'];
 const PHASE_NAMES = Array.isArray(ENGINE_CFG.phases) && ENGINE_CFG.phases.length === 7 ? ENGINE_CFG.phases : ['Turn Start','Draw Phase','Ignition Phase','Action Phase','Battle Phase','Resolution Phase','End Phase'];
 
+// ── MANUAL STOP / AUTO FLOW PHASE SETS (Patch v3.2) ──
+// Phases that stop and wait for explicit player input before advancing.
+const MANUAL_STOP_PHASES = new Set(['draw','action','battle','resolution','end']);
+// Phases that flow through automatically (UI may still pause briefly on tutorial banner).
+const AUTO_FLOW_PHASES = new Set(['turnStart','ignition']);
+
 // Reference list for full starter-deck coverage and audit visibility.
 const STARTER_DECK_REFERENCE_IDS = [
   "anm-000-reesethegreatsgundam",
@@ -172,14 +178,36 @@ function buildStarterDecks() {
 
 // ── GAME STATE ──
 function createPlayer(deckInput) {
-  const deckObj = Array.isArray(deckInput) ? { main: deckInput, fusion: [] } : (deckInput || { main: [], fusion: [] });
+  const deckObj = Array.isArray(deckInput)
+    ? { main: deckInput, fusion: [] }
+    : (deckInput || { main: [], fusion: [] });
+  const shouldShuffle = !deckObj.noShuffle && !deckObj.fixedOrder;
+  const fixedOpeningHand = Array.isArray(deckObj.fixedOpeningHand)
+    ? deckObj.fixedOpeningHand.slice(0, STARTING_HAND)
+    : [];
+  const mainDeck = [...(deckObj.main || [])];
+  const hand = [];
+  // Pull each fixed-opening-hand card out of the deck, in order, before any shuffle.
+  for (const cardId of fixedOpeningHand) {
+    const idx = mainDeck.indexOf(cardId);
+    if (idx >= 0) {
+      const card = getCard(cardId);
+      if (card) {
+        hand.push(mainDeck.splice(idx, 1)[0]);
+      } else {
+        console.warn(`[CTF] Fixed opening hand card not found in CTF_CARDS: ${cardId}`);
+      }
+    } else {
+      console.warn(`[CTF] Fixed opening hand card not found in deck list: ${cardId}`);
+    }
+  }
   return {
     chi: STARTING_CHI,
-    hand: [],
+    hand,
     catalysts: [null, null, null, null, null],   // 5 zones, each: {cardId, position:'atk'|'def', faceDown:bool}
     tricks: [null, null, null, null, null],       // 5 zones (idx 0,4 = libra, 1-3 = trick)
     fieldTrick: null,
-    deck: shuffle([...(deckObj.main || [])]),
+    deck: shouldShuffle ? shuffle(mainDeck) : mainDeck,
     fusionDeck: [...(deckObj.fusion || [])],
     void: [],
     box: [],       // opponent catalysts captured by this player
@@ -193,6 +221,7 @@ function createPlayer(deckInput) {
     posChanged: new Set(),
     hasAttackedThisTurn: false,
     fusionEnabled: false,
+    _drawPhaseResolved: false,
   };
 }
 
@@ -221,10 +250,12 @@ function createGameState(p1Deck, p2Deck) {
     _effectsUsed: {},   // per-turn effect usage tracker
     _manualSummonContext: null,
   };
-  // Draw initial hands from locked config
+  // Draw initial hands from locked config — only fill slots NOT already
+  // populated by a fixed opening hand from the deck definition.
   for (let p = 0; p < 2; p++) {
-    for (let i = 0; i < STARTING_HAND; i++) {
-      drawCard(state, p);
+    while (state.players[p].hand.length < STARTING_HAND) {
+      const drawn = drawCard(state, p);
+      if (!drawn) break; // deck exhausted; do not infinite-loop
     }
   }
   return state;
@@ -4888,6 +4919,64 @@ function advancePhase(state) {
   executePhaseAuto(state);
 }
 
+// ── DRAW PHASE MANUAL HANDLERS (Patch v3.2) ─────────────────────────────
+// The Draw Phase is now a manual stop phase. The UI shows one button whose
+// label depends on whether the deck has any cards left.
+function getDrawPhaseButtonLabel(state) {
+  if (!state || !state.players) return 'Draw Card';
+  const player = state.players[state.activePlayer];
+  if (!player) return 'Draw Card';
+  return player.deck.length > 0 ? 'Draw Card' : 'Skip Draw Phase';
+}
+
+function handleDrawPhaseClick(state) {
+  if (!state || !state.players) return { ok: false, msg: 'No game state.' };
+  const playerIdx = state.activePlayer;
+  const player = state.players[playerIdx];
+  if (state.phaseName !== 'draw') {
+    return { ok: false, msg: 'You can only use this during Draw Phase.' };
+  }
+  if (player._drawPhaseResolved) {
+    return { ok: false, msg: 'Draw Phase already resolved this turn.' };
+  }
+  if (player.deck.length > 0) {
+    const drawn = drawCard(state, playerIdx);
+    player._drawPhaseResolved = true;
+    if (drawn) {
+      const card = getCard(drawn);
+      addLog(state, `P${playerIdx + 1} drew ${card ? card.name : 'a card'}.`);
+    } else {
+      addLog(state, `P${playerIdx + 1} could not draw (effect blocked draw).`);
+    }
+    return { ok: true, msg: 'Card drawn.' };
+  }
+  player._drawPhaseResolved = true;
+  addLog(state, `P${playerIdx + 1} skipped Draw Phase because their deck is empty.`);
+  return { ok: true, msg: 'Draw Phase skipped. Empty Deck is not a loss.' };
+}
+
+// ── RESOLUTION PHASE POSITION CHANGE (Patch v3.2) ───────────────────────
+// During Resolution, the active player may change ONE Catalyst's battle
+// position — but only for Catalysts that did NOT attack this turn. Tracked
+// via the existing per-player posChanged Set so the existing 1-per-turn
+// limit still applies.
+function changeCatalystPositionInResolution(state, playerIdx, zoneIdx) {
+  if (!state || !state.players) return { ok: false, msg: 'No game state.' };
+  if (state.phaseName !== 'resolution') return { ok: false, msg: 'Position change is only allowed during your Resolution Phase.' };
+  if (state.activePlayer !== playerIdx) return { ok: false, msg: "It is not your turn." };
+  const player = state.players[playerIdx];
+  if (!player) return { ok: false, msg: 'No player.' };
+  const slot = player.catalysts[zoneIdx];
+  if (!slot) return { ok: false, msg: 'No Catalyst in that zone.' };
+  if (slot.attackedThisTurn) return { ok: false, msg: 'That Catalyst attacked this turn and cannot change position.' };
+  if (player.posChanged && player.posChanged.has(zoneIdx)) return { ok: false, msg: 'That Catalyst has already changed position this turn.' };
+  slot.position = (slot.position === 'atk') ? 'def' : 'atk';
+  if (player.posChanged) player.posChanged.add(zoneIdx);
+  const cardName = getCard(slot.cardId)?.name || 'A Catalyst';
+  addLog(state, `P${playerIdx + 1} changed ${cardName} to ${slot.position === 'atk' ? 'Attack' : 'Defense'} position during Resolution.`);
+  return { ok: true, msg: 'Position changed.' };
+}
+
 function executePhaseAuto(state) {
   const p = state.activePlayer;
   const pState = state.players[p];
@@ -4902,12 +4991,10 @@ function executePhaseAuto(state) {
 
     case 'draw':
       addLog(state, `Phase 2: Draw Phase`);
-      const drawn = drawCard(state, p);
-      if (drawn) {
-        const card = getCard(drawn);
-        addLog(state, `P${p+1} drew ${card ? card.name : 'a card'}.`);
-      }
-      break;
+      // Manual stop phase (Patch v3.2): the player must click Draw Card or
+      // Skip Draw Phase. The button label is decided by getDrawPhaseButtonLabel.
+      pState._drawPhaseResolved = false;
+      return; // wait for player input
 
     case 'ignition':
       addLog(state, `Phase 3: Ignition Phase`);
@@ -4939,7 +5026,10 @@ function executePhaseAuto(state) {
     case 'resolution':
       addLog(state, `Phase 6: Resolution Phase`);
       checkWinConditions(state);
-      break;
+      // Manual stop phase (Patch v3.2): do not auto-advance. Player may
+      // pass, set eligible Tricks, or change 1 Catalyst position (only for
+      // Catalysts that did not attack this turn). Then click Continue.
+      return; // wait for player input
 
     case 'end':
       addLog(state, `Phase 7: End Phase`);
@@ -9016,3 +9106,23 @@ window.runP55ContinuousEffects = runP55ContinuousEffects;
 // ═══════════════════════════════════════════════════════════════════
 // END PATCH 55
 // ═══════════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════
+// PATCH v3.2 — TUTORIAL / MANUAL DRAW / RESOLUTION POSITION CHANGE
+// Expose new helpers + phase-flow constants on window so play_inline.js
+// and AI/coach modules can access them. The functions are defined above
+// near advancePhase; this block just makes them reliably reachable.
+// ═══════════════════════════════════════════════════════════════════
+if (typeof window !== 'undefined') {
+  window.MANUAL_STOP_PHASES = MANUAL_STOP_PHASES;
+  window.AUTO_FLOW_PHASES   = AUTO_FLOW_PHASES;
+  window.PHASES             = PHASES;
+  window.PHASE_NAMES        = PHASE_NAMES;
+  window.getDrawPhaseButtonLabel        = getDrawPhaseButtonLabel;
+  window.handleDrawPhaseClick           = handleDrawPhaseClick;
+  window.changeCatalystPositionInResolution = changeCatalystPositionInResolution;
+  window.advancePhase       = advancePhase;
+  window.createGameState    = createGameState;
+  window.drawCard           = drawCard;
+  window.getCard            = getCard;
+}
