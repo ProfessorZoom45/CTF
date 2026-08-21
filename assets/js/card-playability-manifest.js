@@ -662,7 +662,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "ReEsE The Great's Gundam",
       "type": "Catalyst",
-      "desc": "When this card is Summoned, add one \"Road To Greatness\" to your hand. [Reese]",
+      "desc": "When this card is Spawned, add one \"Road To Greatness\" to your hand. [Reese]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-002-roadtogreatness": {
@@ -676,7 +676,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Keep It Moving",
       "type": "Palm Trick",
-      "desc": "Special Summon 3 \"BuCk The Great\" Tokens in Face-Up Attack position (Gunman-Type/Fire/3 Star/Pressure 1000/Counter Pressure 1000). Tokens cannot be used as a Tribute. [Reese]",
+      "desc": "Special Spawn 3 \"BuCk The Great\" Tokens in Face-Up Attack position (Gunman-Type/Fire/3 Star/Pressure 1000/Counter Pressure 1000). Tokens cannot be used as a Tribute. [Reese]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-004-terraspast": {
@@ -690,7 +690,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Lightning Strike",
       "type": "Palm Trick",
-      "desc": "Special Summon 3 \"BuCk The Great\" Tokens in Face-Up Attack position (Gunman-Type/Fire/3 Star/Pressure 1500/Counter Pressure 1000). Tokens cannot be used as a Tribute. [Kakashi]",
+      "desc": "Special Spawn 3 \"BuCk The Great\" Tokens in Face-Up Attack position (Gunman-Type/Fire/3 Star/Pressure 1500/Counter Pressure 1000). Tokens cannot be used as a Tribute. [Kakashi]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-000-terrasladespartner": {
@@ -760,21 +760,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Serpent",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned by removing 2 EARTH and 2 WIND Catalysts from your Void from game. During your Battle Phase, flip 5 coins: if 4 or more are heads, inflict 3000 damage to your opponent's Chi directly. [Serpent]",
+      "desc": "This Catalyst can only be Special Spawned by removing 2 EARTH and 2 WIND Catalysts from your Void from game. During your Battle Phase, flip 5 coins: if 4 or more are heads, inflict 3000 damage to your opponent's Chi directly. [Serpent]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-002-ultimateprice": {
       "status": "auto",
       "name": "Ultimate Price",
       "type": "Palm Trick",
-      "desc": "Pay 2500 Chi to Special Summon 1 Catalyst from your deck with 2000 Counter Pressure or less. The summoned Catalyst cannot attack or activate its effects until 3 turns after it was summoned. [Serpent]",
+      "desc": "Pay 2500 Chi to Special Spawn 1 Catalyst from your deck with 2000 Counter Pressure or less. The spawned Catalyst cannot attack or activate its effects until 3 turns after it was spawned. [Serpent]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-003-nolanthegreat": {
       "status": "auto",
       "name": "Nolan-The-Great",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be summoned by offering Catalysts whose total Levels equal 8 or more. When summoned, this Catalyst cannot attack that turn. This Catalyst attacks your opponent's Chi directly. [Serpent]",
+      "desc": "This Catalyst can only be spawned by offering Catalysts whose total Levels equal 8 or more. When spawned, this Catalyst cannot attack that turn. This Catalyst attacks your opponent's Chi directly. [Serpent]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-021-reapermasterswordsman": {
@@ -795,7 +795,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "The Chosen One",
       "type": "Concealed Trick",
-      "desc": "Pay 1500 Chi to activate this card. This card can only be activated if you have no Catalysts in your hand or on your field. Search your deck and Special Summon 1 Catalyst that requires no special condition to summon. When this card is destroyed, remove that Catalyst from game.",
+      "desc": "Pay 1500 Chi to activate this card. This card can only be activated if you have no Catalysts in your hand or on your field. Search your deck and Special Spawn 1 Catalyst that requires no special condition to spawn. When this card is destroyed, remove that Catalyst from game.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-024-blazeinginferno": {
@@ -837,7 +837,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Phoenix Soul",
       "type": "Palm Trick",
-      "desc": "Choose 1 of the following effects: (1) Pay 1000 Chi to Special Summon 1 FIRE-Type Catalyst from your Void. (2) Pay 2000 Chi to double the Pressure of all FIRE-Type Catalysts you control until the End Phase, then destroy them. [Henry1245]",
+      "desc": "Choose 1 of the following effects: (1) Pay 1000 Chi to Special Spawn 1 FIRE-Type Catalyst from your Void. (2) Pay 2000 Chi to double the Pressure of all FIRE-Type Catalysts you control until the End Phase, then destroy them. [Henry1245]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-000-newzthewatcher": {
@@ -858,7 +858,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Destin The Great Warlord",
       "type": "Fusion",
-      "desc": "Newz The Great Watcher + 1 Warrior-Type Catalyst Level 5 or higher. When this card is Fusion Summoned, you may Special Summon 1 Warrior-Type Catalyst with 1000 Pressure or less from your hand; it cannot attack the turn it is summoned. [Destin]",
+      "desc": "Newz The Great Watcher + 1 Warrior-Type Catalyst Level 5 or higher. When this card is Fusion Spawned, you may Special Spawn 1 Warrior-Type Catalyst with 1000 Pressure or less from your hand; it cannot attack the turn it is spawned. [Destin]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "anm-000-acethegoat": {
@@ -893,7 +893,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Fusion Zone",
       "type": "Field Trick",
-      "desc": "Once per turn: Any player may activate this effect; however, each team can only activate this effect one time per turn. During your turn, remove from game 1 card you control on the field that matches a Fusion Catalyst's required material and remove from game 1 matching required material from your hand; Fusion Summon that Fusion Catalyst. [Dr Zoom]",
+      "desc": "Once per turn: Any player may activate this effect; however, each team can only activate this effect one time per turn. During your turn, remove from game 1 card you control on the field that matches a Fusion Catalyst's required material and remove from game 1 matching required material from your hand; Fusion Spawn that Fusion Catalyst. [Dr Zoom]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "aot-000-erenthegreat": {
@@ -1089,21 +1089,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "generic",
       "name": "Emergency Reinforce",
       "type": "Palm Trick",
-      "desc": "If you control no Catalysts: Special Summon 1 \"Attack on Titan\" Catalyst from your hand. [AOT]",
+      "desc": "If you control no Catalysts: Special Spawn 1 \"Attack on Titan\" Catalyst from your hand. [AOT]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "aot-029-rallyfromthevoid": {
       "status": "generic",
       "name": "Rally From the Void",
       "type": "Palm Trick",
-      "desc": "Special Summon 1 Level 4 or lower \"Attack on Titan\" Catalyst from the Void. [AOT]",
+      "desc": "Special Spawn 1 Level 4 or lower \"Attack on Titan\" Catalyst from the Void. [AOT]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "aot-030-walltrapdoor": {
       "status": "manual",
       "name": "Wall Trapdoor",
       "type": "Concealed Trick",
-      "desc": "When your opponent attacks: Special Summon 1 Level 4 or lower \"Attack on Titan\" Catalyst from your hand. [AOT]",
+      "desc": "When your opponent attacks: Special Spawn 1 Level 4 or lower \"Attack on Titan\" Catalyst from your hand. [AOT]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "aot-031-thunderspear": {
@@ -1117,7 +1117,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Flare Signal",
       "type": "Concealed Trick",
-      "desc": "When your opponent summons: That Catalyst loses 300 Pressure this turn. [AOT]",
+      "desc": "When your opponent spawns: That Catalyst loses 300 Pressure this turn. [AOT]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "aot-033-supplydrop": {
@@ -1236,7 +1236,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Nijiro Nanase",
       "type": "Catalyst",
-      "desc": "When Normal Summoned, Special Summon 1 Level 3 or lower Warrior-Type Catalyst from your hand. [BL1]",
+      "desc": "When Normal Spawned, Special Spawn 1 Level 3 or lower Warrior-Type Catalyst from your hand. [BL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "bl1-005-watarukuon": {
@@ -1257,7 +1257,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Aoshi Tokimitsu",
       "type": "Catalyst",
-      "desc": "When Summoned, destroy 1 Catalyst on your opponent's field with Counter Pressure lower than this card's Pressure. [BL1]",
+      "desc": "When Spawned, destroy 1 Catalyst on your opponent's field with Counter Pressure lower than this card's Pressure. [BL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "bl1-008-shoeibarou": {
@@ -1278,14 +1278,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Anri Teieri",
       "type": "Palm Trick",
-      "desc": "Once per turn, during your Standby Phase, add 1 \"Blue Lock\" card from your deck to your hand. When sent to the Void, you may Special Summon 1 Level 4 or lower Warrior-Type Catalyst from your hand. [BL1]",
+      "desc": "Once per turn, during your Standby Phase, add 1 \"Blue Lock\" card from your deck to your hand. When sent to the Void, you may Special Spawn 1 Level 4 or lower Warrior-Type Catalyst from your hand. [BL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "bl1-011-jinpachiego": {
       "status": "auto",
       "name": "Jinpachi Ego",
       "type": "Palm Trick",
-      "desc": "While face-up, your opponent cannot Special Summon Catalysts. Once per turn, pay 500 Chi to destroy 1 Catalyst on your opponent's field. [BL1]",
+      "desc": "While face-up, your opponent cannot Special Spawn Catalysts. Once per turn, pay 500 Chi to destroy 1 Catalyst on your opponent's field. [BL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "bl1-012-kaisergagamaru": {
@@ -1334,7 +1334,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Eita Otoya",
       "type": "Catalyst",
-      "desc": "Remove 3 Goal Counters to Special Summon 1 Level 4 Warrior-Type Catalyst from your deck. [BL1]",
+      "desc": "Remove 3 Goal Counters to Special Spawn 1 Level 4 Warrior-Type Catalyst from your deck. [BL1]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bl1-019-bluelockteamzunited": {
@@ -1383,7 +1383,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Ego's Selection",
       "type": "Palm Trick",
-      "desc": "Special Summon 1 Level 4 or lower Warrior-Type Catalyst from your hand or Void. The Summoned Catalyst cannot be destroyed by your opponent's card effects this turn. [BL1]",
+      "desc": "Special Spawn 1 Level 4 or lower Warrior-Type Catalyst from your hand or Void. The Spawned Catalyst cannot be destroyed by your opponent's card effects this turn. [BL1]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bl1-027-goalofthecentury": {
@@ -1397,7 +1397,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Blue Lock Protocol",
       "type": "Palm Trick",
-      "desc": "Once per turn during your Standby Phase, place 1 Ego Counter on this card (max 5). Remove 3 to Special Summon 1 \"Blue Lock\" Catalyst from your deck. Remove 5 to draw 2 cards. [BL1]",
+      "desc": "Once per turn during your Standby Phase, place 1 Ego Counter on this card (max 5). Remove 3 to Special Spawn 1 \"Blue Lock\" Catalyst from your deck. Remove 5 to draw 2 cards. [BL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "bl1-029-strikersinstinct": {
@@ -1411,7 +1411,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Offside Trap",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent Normal Summons or Flip Summons a Catalyst. Return that Catalyst to your opponent's hand. Your opponent cannot Summon a Catalyst with the same name for the rest of this turn. [BL1]",
+      "desc": "Activate when your opponent Normal Spawns or Flip Spawns a Catalyst. Return that Catalyst to your opponent's hand. Your opponent cannot Spawn a Catalyst with the same name for the rest of this turn. [BL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "bl1-031-egoselimination": {
@@ -1439,7 +1439,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Rank Restriction",
       "type": "Concealed Trick",
-      "desc": "While face-up, your opponent cannot Special Summon Catalysts with Pressure higher than 2000. If your opponent Special Summons such a Catalyst, destroy this card and the summoned Catalyst. [BL1]",
+      "desc": "While face-up, your opponent cannot Special Spawn Catalysts with Pressure higher than 2000. If your opponent Special Spawns such a Catalyst, destroy this card and the spawned Catalyst. [BL1]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bl1-035-bluelockjudgment": {
@@ -1460,7 +1460,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Last Minute Block",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent declares a direct attack. Special Summon 1 Level 3 or lower Warrior-Type Catalyst from your hand or Void in Defense position to block. [BL1]",
+      "desc": "Activate when your opponent declares a direct attack. Special Spawn 1 Level 3 or lower Warrior-Type Catalyst from your hand or Void in Defense position to block. [BL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "bl1-038-egosexperiment": {
@@ -1488,7 +1488,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Teammate Support",
       "type": "Concealed Trick",
-      "desc": "Activate when one of your Warrior-Type Catalysts is destroyed in battle. Special Summon 1 Warrior-Type Catalyst from your hand with Pressure lower than the destroyed Catalyst's Pressure. That Catalyst gains 300 Pressure. [BL1]",
+      "desc": "Activate when one of your Warrior-Type Catalysts is destroyed in battle. Special Spawn 1 Warrior-Type Catalyst from your hand with Pressure lower than the destroyed Catalyst's Pressure. That Catalyst gains 300 Pressure. [BL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "bl1-042-cleansheet": {
@@ -1516,7 +1516,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Isagi's Spatial Awareness",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent Normal Summons a Catalyst. Look at the top 3 cards of your opponent's deck and rearrange them in any order. [BL1]",
+      "desc": "Activate when your opponent Normal Spawns a Catalyst. Look at the top 3 cards of your opponent's deck and rearrange them in any order. [BL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "blc-000-ichigothegreat": {
@@ -1712,21 +1712,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "generic",
       "name": "Shinigami Arrival",
       "type": "Palm Trick",
-      "desc": "If you control no Catalysts: Special Summon 1 \"Bleach\" Catalyst from your hand. [BLC]",
+      "desc": "If you control no Catalysts: Special Spawn 1 \"Bleach\" Catalyst from your hand. [BLC]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "blc-029-soulrecall": {
       "status": "generic",
       "name": "Soul Recall",
       "type": "Palm Trick",
-      "desc": "Special Summon 1 Level 4 or lower \"Bleach\" Catalyst from the Void. [BLC]",
+      "desc": "Special Spawn 1 Level 4 or lower \"Bleach\" Catalyst from the Void. [BLC]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "blc-030-hollowambush": {
       "status": "auto",
       "name": "Hollow Ambush",
       "type": "Concealed Trick",
-      "desc": "When your opponent attacks: Special Summon 1 Level 4 or lower \"Bleach\" Catalyst from your hand. [BLC]",
+      "desc": "When your opponent attacks: Special Spawn 1 Level 4 or lower \"Bleach\" Catalyst from your hand. [BLC]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "blc-031-zanpakutobond": {
@@ -1782,7 +1782,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Captain's Order",
       "type": "Concealed Trick",
-      "desc": "When your opponent summons: That Catalyst loses 300 Pressure this turn. [BLC]",
+      "desc": "When your opponent spawns: That Catalyst loses 300 Pressure this turn. [BLC]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "blc-039-healinglight": {
@@ -1859,14 +1859,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Naruto Uzumaki - Seventh Hokage",
       "type": "Catalyst",
-      "desc": "Once per turn, Special Summon 1 Shadow Clone Token (Wind/Warrior/1 Star/Pressure=this card's Pressure/Counter Pressure 500). [BRO]",
+      "desc": "Once per turn, Special Spawn 1 Shadow Clone Token (Wind/Warrior/1 Star/Pressure=this card's Pressure/Counter Pressure 500). [BRO]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "bro-005-sasukeuchiharogue": {
       "status": "auto",
       "name": "Sasuke Uchiha - Rogue",
       "type": "Catalyst",
-      "desc": "When Summoned, destroy up to 2 Palm or Concealed Trick on the field. [BRO]",
+      "desc": "When Spawned, destroy up to 2 Palm or Concealed Trick on the field. [BRO]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "bro-006-code": {
@@ -1908,7 +1908,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Momoshiki Otsutsuki",
       "type": "Catalyst",
-      "desc": "When Summoned, look at your opponent's hand and remove 1 card from play for the rest of the Duel. [BRO]",
+      "desc": "When Spawned, look at your opponent's hand and remove 1 card from play for the rest of the Duel. [BRO]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bro-012-metallee": {
@@ -1922,7 +1922,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Shikadai Nara",
       "type": "Catalyst",
-      "desc": "When Summoned, choose 1 opponent's Catalyst. [BRO]",
+      "desc": "When Spawned, choose 1 opponent's Catalyst. [BRO]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "bro-014-chochoakimichi": {
@@ -1971,14 +1971,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Isshiki Otsutsuki - The Great",
       "type": "Catalyst",
-      "desc": "When Summoned, reduce all opponent's Catalysts to 1 Pressure and 1 Counter Pressure permanently and inflict 600 damage. [BRO]",
+      "desc": "When Spawned, reduce all opponent's Catalysts to 1 Pressure and 1 Counter Pressure permanently and inflict 600 damage. [BRO]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "bro-022-karmaseal": {
       "status": "manual",
       "name": "Karma Seal",
       "type": "Palm Trick",
-      "desc": "Equip only to a Ninja or Kara-Type Catalyst. Gains 500 Pressure. Once per turn, place 1 Karma Counter on this card. When 3 counters are on this card, remove them to Special Summon 1 Otsutsuki-Type Catalyst from your hand or Void. [BRO]",
+      "desc": "Equip only to a Ninja or Kara-Type Catalyst. Gains 500 Pressure. Once per turn, place 1 Karma Counter on this card. When 3 counters are on this card, remove them to Special Spawn 1 Otsutsuki-Type Catalyst from your hand or Void. [BRO]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "bro-023-villageoftheleaf": {
@@ -1992,7 +1992,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Ninjutsu Combination",
       "type": "Palm Trick",
-      "desc": "Special Summon 2 Level 3 or lower Ninja-Type Catalysts from your deck. They cannot attack the turn they are Summoned. [BRO]",
+      "desc": "Special Spawn 2 Level 3 or lower Ninja-Type Catalysts from your deck. They cannot attack the turn they are Spawned. [BRO]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bro-025-rasenganbarrage": {
@@ -2020,7 +2020,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Kara Ambush",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent Normal Summons a Catalyst. Destroy that Catalyst and inflict 500 damage. [BRO]",
+      "desc": "Activate when your opponent Normal Spawns a Catalyst. Destroy that Catalyst and inflict 500 damage. [BRO]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "bro-029-otsutsukisjudgment": {
@@ -2034,14 +2034,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Hidden Leaf Protocol",
       "type": "Concealed Trick",
-      "desc": "While face-up, all Ninja-Type Catalysts gain 200 Pressure. When a Ninja-Type Catalyst is destroyed, place 1 Leaf Counter on this card. Remove 3 to Special Summon 1 Level 4 Ninja-Type Catalyst from your Void. [BRO]",
+      "desc": "While face-up, all Ninja-Type Catalysts gain 200 Pressure. When a Ninja-Type Catalyst is destroyed, place 1 Leaf Counter on this card. Remove 3 to Special Spawn 1 Level 4 Ninja-Type Catalyst from your Void. [BRO]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bro-031-jougansight": {
       "status": "manual",
       "name": "Jougan Sight",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent Special Summons a Catalyst. Look at your opponent's hand and reveal 1 card. If it is a Palm Tricks, send it to the Void. [BRO]",
+      "desc": "Activate when your opponent Special Spawns a Catalyst. Look at your opponent's hand and reveal 1 card. If it is a Palm Tricks, send it to the Void. [BRO]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "bro-032-borutosvow": {
@@ -2055,7 +2055,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Shadow Clone Barricade",
       "type": "Concealed Trick",
-      "desc": "When your opponent's Catalyst attacks directly, Special Summon up to 2 Shadow Clone Tokens (Wind/Warrior/1 Star/Pressure 500/Counter Pressure 500) to block. [BRO]",
+      "desc": "When your opponent's Catalyst attacks directly, Special Spawn up to 2 Shadow Clone Tokens (Wind/Warrior/1 Star/Pressure 500/Counter Pressure 500) to block. [BRO]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bro-034-leafvillagedefense": {
@@ -2076,14 +2076,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Kara Resurrection",
       "type": "Concealed Trick",
-      "desc": "When a Kara or Otsutsuki-Type Catalyst is destroyed, Special Summon it back with half its original Pressure. It regains its full Pressure at the start of your next turn. [BRO]",
+      "desc": "When a Kara or Otsutsuki-Type Catalyst is destroyed, Special Spawn it back with half its original Pressure. It regains its full Pressure at the start of your next turn. [BRO]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bro-037-otsutsukisdescent": {
       "status": "manual",
       "name": "Otsutsuki's Descent",
       "type": "Concealed Trick",
-      "desc": "When your opponent controls 3 or more Catalysts, Special Summon 1 Otsutsuki-Type Catalyst from your hand regardless of Summoning conditions. That Catalyst cannot be destroyed by card effects this turn. [BRO]",
+      "desc": "When your opponent controls 3 or more Catalysts, Special Spawn 1 Otsutsuki-Type Catalyst from your hand regardless of Spawning conditions. That Catalyst cannot be destroyed by card effects this turn. [BRO]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "bro-038-kawakissacrifice": {
@@ -2188,7 +2188,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "The Bebop",
       "type": "Catalyst",
-      "desc": "You may treat this card as if it has \"Ein\", \"Spike\", \"Jet\", \"Faye\", or \"Edward\" in the name. This card cannot be used in a Fusion Summon that does not involve \"The Bebop\". This card may only be considered one other Catalyst at a time.",
+      "desc": "You may treat this card as if it has \"Ein\", \"Spike\", \"Jet\", \"Faye\", or \"Edward\" in the name. This card cannot be used in a Fusion Spawn that does not involve \"The Bebop\". This card may only be considered one other Catalyst at a time.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cbb-014-contractforabounty": {
@@ -2202,7 +2202,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Well Laid Plans",
       "type": "Concealed Trick",
-      "desc": "You can only activate this card when your opponent attacks with a Catalyst that is Level 6 or higher. Negate the attack and Special Summon a Level 4 or lower Catalyst from your hand to the field in face-up Attack or Defense position.",
+      "desc": "You can only activate this card when your opponent attacks with a Catalyst that is Level 6 or higher. Negate the attack and Special Spawn a Level 4 or lower Catalyst from your hand to the field in face-up Attack or Defense position.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "cbb-016-gunfight": {
@@ -2216,14 +2216,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Syndicate Elders",
       "type": "Palm Trick",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Gathering of the Syndicate\". To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of this card. When this card battles with a Light Catalyst, this card is not destroyed as a result of battle, but damage calculation is still applied normally.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Gathering of the Syndicate\". To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of this card. When this card battles with a Light Catalyst, this card is not destroyed as a result of battle, but damage calculation is still applied normally.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cbb-018-gatheringofthesyndicate": {
       "status": "auto",
       "name": "Gathering of the Syndicate",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Syndicate Elders\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Syndicate Elders\".",
+      "desc": "Special Spawn \"Syndicate Elders\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Syndicate Elders\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cbb-019-chessmasterhex": {
@@ -2328,7 +2328,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Starky",
       "type": "Catalyst",
-      "desc": "When this card is summoned to your side of the field search your deck and put one card with Starky in its name in your hand the deck is then shuffled",
+      "desc": "When this card is spawned to your side of the field search your deck and put one card with Starky in its name in your hand the deck is then shuffled",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cc1-005-kidd": {
@@ -2349,7 +2349,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Marle",
       "type": "Palm Trick",
-      "desc": "If this is the only Catalyst face up on your side pay 1000 Chi to special summon 1 level 4 Catalyst from your Void",
+      "desc": "If this is the only Catalyst face up on your side pay 1000 Chi to special spawn 1 level 4 Catalyst from your Void",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cc1-008-eternalgreed": {
@@ -2412,7 +2412,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Born Again",
       "type": "Palm Trick",
-      "desc": "Special summon one Catalyst with Serge,Kidd or Korcha in its name to your side of the field in attack or defense position from your Void. The summoned Catalyst cannot attack this turn.",
+      "desc": "Special spawn one Catalyst with Serge,Kidd or Korcha in its name to your side of the field in attack or defense position from your Void. The spawned Catalyst cannot attack this turn.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cc1-017-cassowary": {
@@ -2440,7 +2440,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Dark Serge",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing one card with serge in its name and one card with lynx in its name in your Void from game.When this card destroys a Catalyst as a result of battle increase this cards attack by 200",
+      "desc": "This card can only be special spawned by removing one card with serge in its name and one card with lynx in its name in your Void from game.When this card destroys a Catalyst as a result of battle increase this cards attack by 200",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-021-darksergesrevenge": {
@@ -2461,7 +2461,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Earth Dragon",
       "type": "Catalyst",
-      "desc": "When this card is Tribute Summoned successfully, destroy 1 Catalyst on the field.",
+      "desc": "When this card is Tribute Spawned successfully, destroy 1 Catalyst on the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-024-fargo": {
@@ -2489,7 +2489,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Fire Dragon2-Enraged",
       "type": "Catalyst",
-      "desc": "This card can only be summoned by tributing Fire Dragon or by removing 2 Fire Catalysts in your Void from game.When this card is Targeted by a Palm or Concealed Trick pay 2000 Chi to negate the card",
+      "desc": "This card can only be spawned by tributing Fire Dragon or by removing 2 Fire Catalysts in your Void from game.When this card is Targeted by a Palm or Concealed Trick pay 2000 Chi to negate the card",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cc1-028-flea": {
@@ -2545,7 +2545,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "LavaBoy",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing 1 fire Catalyst in your Void from play, when this card is destroyed by an opponents effect Destroy all Concealed Trick and Palm Tricks on the field.",
+      "desc": "This card can only be special spawned by removing 1 fire Catalyst in your Void from play, when this card is destroyed by an opponents effect Destroy all Concealed Trick and Palm Tricks on the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cc1-036-luxator": {
@@ -2559,7 +2559,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "MegaStarky",
       "type": "Catalyst",
-      "desc": "This card can only be summoned by tributing Starky on your side of the field.",
+      "desc": "This card can only be spawned by tributing Starky on your side of the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cc1-038-ozzie": {
@@ -2587,7 +2587,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Wazuki",
       "type": "Catalyst",
-      "desc": "This card can only be summoned by offering Serge face up on your side of the field. When this card attacks a defense position Catalyst inflict the difference to your opponents Chi.",
+      "desc": "This card can only be spawned by offering Serge face up on your side of the field. When this card attacks a defense position Catalyst inflict the difference to your opponents Chi.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cc1-042-zoah": {
@@ -2608,14 +2608,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Wingapede",
       "type": "Catalyst",
-      "desc": "When this card is sent to the Void as a result of battle special summon 1 Dehydrate to your side of the field from your hand or deck. The deck is then shuffled.",
+      "desc": "When this card is sent to the Void as a result of battle special spawn 1 Dehydrate to your side of the field from your hand or deck. The deck is then shuffled.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-045-dehydrate": {
       "status": "manual",
       "name": "Dehydrate",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by the effect of Wingapede,when this card attacks your opponents Chi directly draw 1 card then discard one card.",
+      "desc": "This card can only be special spawned by the effect of Wingapede,when this card attacks your opponents Chi directly draw 1 card then discard one card.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-046-vitaunus": {
@@ -2636,7 +2636,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Vitraduo",
       "type": "Palm Trick",
-      "desc": "The equipped Catalyst cannot be tributed toward a summon, and the owner of the Catalyst takes 500 damage to their Chi each time they summon a Catalyst as long as this card remains face up on the field.",
+      "desc": "The equipped Catalyst cannot be tributed toward a spawn, and the owner of the Catalyst takes 500 damage to their Chi each time they spawn a Catalyst as long as this card remains face up on the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-049-viper": {
@@ -2664,14 +2664,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Total Chaos",
       "type": "Catalyst",
-      "desc": "When this card is flip summoned send one Catalyst on the field to its owners hand.",
+      "desc": "When this card is flip spawned send one Catalyst on the field to its owners hand.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "cc1-053-timedevourer": {
       "status": "auto",
       "name": "Time Devourer",
       "type": "Catalyst",
-      "desc": "When this card is flip summoned destroy all Concealed Trick and Palm Trick card on the field, and flip all Catalysts on the field into face down defense mode",
+      "desc": "When this card is flip spawned destroy all Concealed Trick and Palm Trick card on the field, and flip all Catalysts on the field into face down defense mode",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "cc1-054-sunofagun": {
@@ -2713,7 +2713,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Portalgheist",
       "type": "Catalyst",
-      "desc": "As long as this card remains face up on the field during your standby phase you may special summon 1 level 3 or lower Catalyst from your hand to your side of the field in defense mode",
+      "desc": "As long as this card remains face up on the field during your standby phase you may special spawn 1 level 3 or lower Catalyst from your hand to your side of the field in defense mode",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-060-polly": {
@@ -2776,7 +2776,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Fossicker",
       "type": "Catalyst",
-      "desc": "When this card is sent to the Void as a result of battle special summon 1 earth type Catalyst with 1500 Pressure or less from your deck to your side of the field.The deck is then shuffled.",
+      "desc": "When this card is sent to the Void as a result of battle special spawn 1 earth type Catalyst with 1500 Pressure or less from your deck to your side of the field.The deck is then shuffled.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-069-deadhead": {
@@ -2825,7 +2825,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Beeba",
       "type": "Catalyst",
-      "desc": "When this card is sent to the Void increase your Chi by 500 and special summon any Catalysts with the same name from your deck in face up attack modeThe deck is then shuffled",
+      "desc": "When this card is sent to the Void increase your Chi by 500 and special spawn any Catalysts with the same name from your deck in face up attack modeThe deck is then shuffled",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-076-beachbum": {
@@ -2881,7 +2881,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Dwarf",
       "type": "Catalyst",
-      "desc": "When this card is destroyed as a result of battle special summoned another card with dwarf in its name from your hand to your side of the field in defense mode",
+      "desc": "When this card is destroyed as a result of battle special spawned another card with dwarf in its name from your hand to your side of the field in defense mode",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cc1-084-wraith": {
@@ -2902,7 +2902,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Solt",
       "type": "Catalyst",
-      "desc": "When this card is summoned add 1 card with peppor,solt,or ketchop in its name to your hand",
+      "desc": "When this card is spawned add 1 card with peppor,solt,or ketchop in its name to your hand",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "cc1-087-polispolice": {
@@ -2972,21 +2972,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Frozenflame-blue",
       "type": "Counter Trick",
-      "desc": "When your opponent summons a Catalyst (including special summon and flip summon) destroy all Catalysts on the field with 1500 Pressure or more",
+      "desc": "When your opponent spawns a Catalyst (including special spawn and flip spawn) destroy all Catalysts on the field with 1500 Pressure or more",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ct1-000-aproachingdoom": {
       "status": "auto",
       "name": "Aproaching Doom",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Lavos\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Lavos\".",
+      "desc": "Special Spawn \"Lavos\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Lavos\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ct1-012-lavos": {
       "status": "auto",
       "name": "Lavos",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned from your hand by the effect of \"Aproaching Doom\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. During your turn you can roll 1 six-sided die. If the result is 1, 2, or 3, destroy 1 Catalyst on your opponent's side of the field. If the result is 4 or 5, destroy 1 Palm/Concealed Trick on the field. If the result is 6, destroy all Catalysts on your opponent's side of the field or destroy 4 Palm/Concealed Trick cards on your side of the field to keep your Catalysts.",
+      "desc": "This Catalyst can only be Special Spawned from your hand by the effect of \"Aproaching Doom\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. During your turn you can roll 1 six-sided die. If the result is 1, 2, or 3, destroy 1 Catalyst on your opponent's side of the field. If the result is 4 or 5, destroy 1 Palm/Concealed Trick on the field. If the result is 6, destroy all Catalysts on your opponent's side of the field or destroy 4 Palm/Concealed Trick cards on your side of the field to keep your Catalysts.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ct1-001-aylaprehystoricwarrior": {
@@ -3084,21 +3084,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Magus",
       "type": "Catalyst",
-      "desc": "When this card is Summoned, if there are no other Catalysts on your side of the field, you may select 1 Catalyst or Palm Trick from your deck with \"Magus\" in its name, or 1 card named \"Magus's Castle\", and add it to your hand. Then shuffle your deck.",
+      "desc": "When this card is Spawned, if there are no other Catalysts on your side of the field, you may select 1 Catalyst or Palm Trick from your deck with \"Magus\" in its name, or 1 card named \"Magus's Castle\", and add it to your hand. Then shuffle your deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ct1-017-magusscastle": {
       "status": "auto",
       "name": "Magus's Castle",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Magus Scythe Master\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Magus Scythe Master\".",
+      "desc": "Special Spawn \"Magus Scythe Master\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Magus Scythe Master\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ct1-016-magusscythemaster": {
       "status": "auto",
       "name": "Magus Scythe Master",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned from your hand by the effect of \"Magus's Castle\" or by removing 2 cards with \"Magus\" in their name from your Void from game. If this card is attacked by a Catalyst with more than 2800 Pressure, inflict 1400 damage to your opponent's Chi. During your Standby Phase, discard 2 cards to remove 1 Catalyst on the field from game. This effect can only be used once per turn.",
+      "desc": "This Catalyst can only be Special Spawned from your hand by the effect of \"Magus's Castle\" or by removing 2 cards with \"Magus\" in their name from your Void from game. If this card is attacked by a Catalyst with more than 2800 Pressure, inflict 1400 damage to your opponent's Chi. During your Standby Phase, discard 2 cards to remove 1 Catalyst on the field from game. This effect can only be used once per turn.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ct1-018-marlearrowspecialist": {
@@ -3133,14 +3133,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Robo",
       "type": "Catalyst",
-      "desc": "When this card is summoned decrease one Catalysts attack on your opponents side of the field by 300",
+      "desc": "When this card is spawned decrease one Catalysts attack on your opponents side of the field by 300",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ct1-023-rusttyrano": {
       "status": "manual",
       "name": "Rust Tyrano",
       "type": "Palm Trick",
-      "desc": "Pay 500 Chi to special summon 1 black tyranno card from your grave yard to your side of the field with 1500 attack/defense",
+      "desc": "Pay 500 Chi to special spawn 1 black tyranno card from your grave yard to your side of the field with 1500 attack/defense",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "ct1-024-strangecontraption": {
@@ -3175,7 +3175,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Oozaru - the Giant Ape",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Light of the Full Moon\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level, including 1 Saiyan sub-type Catalyst. You must also discard 1 \"Tail of the Saiyan\" from your hand. This Catalyst is not affected (destroyed or otherwise) by the effects of Palm Tricks, Concealed Tricks, or Effect Catalysts, excluding \"Full Moon\". When \"Full Moon\" is destroyed, this Catalyst is also destroyed.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Light of the Full Moon\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level, including 1 Saiyan sub-type Catalyst. You must also discard 1 \"Tail of the Saiyan\" from your hand. This Catalyst is not affected (destroyed or otherwise) by the effects of Palm Tricks, Concealed Tricks, or Effect Catalysts, excluding \"Full Moon\". When \"Full Moon\" is destroyed, this Catalyst is also destroyed.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "db1-005-flyingnumbus": {
@@ -3210,7 +3210,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Master Roshi - Jackie Chun",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal Summoned or Set. This card can only be special summoned from your hand by offering 1 \"Master Roshi - the Turtle Hermit\" on your side of the field as a tribute. This Catalyst's Pressure increases by 300 for every Catalyst on your opponent's side of the field.",
+      "desc": "This card cannot be Normal Spawned or Set. This card can only be special spawned from your hand by offering 1 \"Master Roshi - the Turtle Hermit\" on your side of the field as a tribute. This Catalyst's Pressure increases by 300 for every Catalyst on your opponent's side of the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-016-emperorpilaf": {
@@ -3224,7 +3224,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Light of the Full Moon",
       "type": "Palm Trick",
-      "desc": "This card can only be activated while \"Full Moon\" is face-up on the field. Special Summon \"Oozaru - the Giant Ape\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Oozaru - the Giant Ape\", including 1 Saiyan sub-type Catalyst. You must also discard 1 \"Tail of the Saiyan\" from your hand.",
+      "desc": "This card can only be activated while \"Full Moon\" is face-up on the field. Special Spawn \"Oozaru - the Giant Ape\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Oozaru - the Giant Ape\", including 1 Saiyan sub-type Catalyst. You must also discard 1 \"Tail of the Saiyan\" from your hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "db1-018-mai": {
@@ -3266,7 +3266,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Emperor Pilaf's Great Robot",
       "type": "Fusion",
-      "desc": "\"Mai\" + \"Shu\" + \"Emperor Pilaf\" When this card is summoned, destroy all level 4 or lower Saiyan-sub type Catalysts, and as long as this card remains face-up on the field Saiyan sub-type Catalysts level 4 or lower cannot be summoned (including flip and special summon). In addition, your opponent cannot activate or play any \"Dragon Ball\" cards as long as this card remains face up on the field.",
+      "desc": "\"Mai\" + \"Shu\" + \"Emperor Pilaf\" When this card is spawned, destroy all level 4 or lower Saiyan-sub type Catalysts, and as long as this card remains face-up on the field Saiyan sub-type Catalysts level 4 or lower cannot be spawned (including flip and special spawn). In addition, your opponent cannot activate or play any \"Dragon Ball\" cards as long as this card remains face up on the field.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "db1-024-chibichichi": {
@@ -3287,7 +3287,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Goku's Promise",
       "type": "Concealed Trick",
-      "desc": "This card can only be activated when a Catalyst with \"Chi-Chi\" in it's name is face-up on your side of the field. Switch the Catalyst to face-up defense position and search your deck for 1 level 4 or lower Catalyst with \"Goku\" in it's name and special summon it to the field in face up Pressure position.",
+      "desc": "This card can only be activated when a Catalyst with \"Chi-Chi\" in it's name is face-up on your side of the field. Switch the Catalyst to face-up defense position and search your deck for 1 level 4 or lower Catalyst with \"Goku\" in it's name and special spawn it to the field in face up Pressure position.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "db1-027-mastershenthecranehermit": {
@@ -3315,42 +3315,42 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "King Piccolo - Re-energized",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned from your hand by the effect of \"Destruction of the Eternal Dragon\". To do this, discard 1 \"King Piccolo\" and other Catalysts from your hand whose total Levels exactly equal this card's Level. You must also remove all \"Dragon Ball\" series cards from your hand, deck, and Void from game. This Catalyst may attack all Catalysts on your opponent's side of the field during the Battle Phase. If this effect is used, this Catalyst cannot attack your opponent's Chi directly for 2 of your turns.",
+      "desc": "This Catalyst can only be Special Spawned from your hand by the effect of \"Destruction of the Eternal Dragon\". To do this, discard 1 \"King Piccolo\" and other Catalysts from your hand whose total Levels exactly equal this card's Level. You must also remove all \"Dragon Ball\" series cards from your hand, deck, and Void from game. This Catalyst may attack all Catalysts on your opponent's side of the field during the Battle Phase. If this effect is used, this Catalyst cannot attack your opponent's Chi directly for 2 of your turns.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-031-destructionoftheeternaldragon": {
       "status": "manual",
       "name": "Destruction of the Eternal Dragon",
       "type": "Palm Trick",
-      "desc": "Special Summon \"King Piccolo - Re-energized\" from your hand. To do this, discard 1 \"King Piccolo\" and other Catalysts from your hand whose total Levels exactly equal the Level of \"King Piccolo - Re-energized\". You must also remove all \"Dragon Ball\" series cards from your hand, deck, and Void from game.",
+      "desc": "Special Spawn \"King Piccolo - Re-energized\" from your hand. To do this, discard 1 \"King Piccolo\" and other Catalysts from your hand whose total Levels exactly equal the Level of \"King Piccolo - Re-energized\". You must also remove all \"Dragon Ball\" series cards from your hand, deck, and Void from game.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-032-piano": {
       "status": "manual",
       "name": "Piano",
       "type": "Palm Trick",
-      "desc": "This card may be summoned without a tribute when a Catalyst with \"King Piccolo\" in its name is face-up on your side of the field. Increase the Pressure and Counter Pressure of \"King Piccolo\" by 500.",
+      "desc": "This card may be spawned without a tribute when a Catalyst with \"King Piccolo\" in its name is face-up on your side of the field. Increase the Pressure and Counter Pressure of \"King Piccolo\" by 500.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-034-cymbal": {
       "status": "manual",
       "name": "Cymbal",
       "type": "Catalyst",
-      "desc": "This card may be summoned without a tribute when a Catalyst with \"King Piccolo\" in its name is face-up on your side of the field. This Catalyst must attack your opponent if possible. If this card inflicts battle damage to your opponent's Chi, this card is switched to face-up defense position until your next turn.",
+      "desc": "This card may be spawned without a tribute when a Catalyst with \"King Piccolo\" in its name is face-up on your side of the field. This Catalyst must attack your opponent if possible. If this card inflicts battle damage to your opponent's Chi, this card is switched to face-up defense position until your next turn.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-035-drum": {
       "status": "manual",
       "name": "Drum",
       "type": "Catalyst",
-      "desc": "This card may be summoned without a tribute when a Catalyst with \"King Piccolo\" in its name is face-up on your side of the field. This Catalyst cannot attack your opponent's Chi directly. Decrease this Catalyst's Pressure by 100 for every Catalyst it destroys in battle.",
+      "desc": "This card may be spawned without a tribute when a Catalyst with \"King Piccolo\" in its name is face-up on your side of the field. This Catalyst cannot attack your opponent's Chi directly. Decrease this Catalyst's Pressure by 100 for every Catalyst it destroys in battle.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-036-tambourine": {
       "status": "manual",
       "name": "Tambourine",
       "type": "Catalyst",
-      "desc": "This card may be summoned without a tribute when a Catalyst with \"King Piccolo\" in its name is face-up on your side of the field. Decrease this Catalyst's Pressure by 400 when fighting a non-DARK, non-Fiend, or non-Zombie type Catalyst, decrease it's Pressure by 1000 if fighting a LIGHT Catalyst.",
+      "desc": "This card may be spawned without a tribute when a Catalyst with \"King Piccolo\" in its name is face-up on your side of the field. Decrease this Catalyst's Pressure by 400 when fighting a non-DARK, non-Fiend, or non-Zombie type Catalyst, decrease it's Pressure by 1000 if fighting a LIGHT Catalyst.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-037-youngpiccolo": {
@@ -3364,7 +3364,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Fortune Teller Baba",
       "type": "Palm Trick",
-      "desc": "When this card is normal summoned, special summoned, or flipped face-up. Search your deck for a card with \"Baba's Fighter\" in its name and add it to your hand. Anytime there is a \"Baba's Fighter\" Catalyst on your side of the field, this Catalyst cannot be attacked.",
+      "desc": "When this card is normal spawned, special spawned, or flipped face-up. Search your deck for a card with \"Baba's Fighter\" in its name and add it to your hand. Anytime there is a \"Baba's Fighter\" Catalyst on your side of the field, this Catalyst cannot be attacked.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-039-babasfighter1draculaman": {
@@ -3378,7 +3378,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Baba's Fighter 2 - Invisible Man",
       "type": "Catalyst",
-      "desc": "When this card is normal summoned, special summoned, or flipped face-up, place 3 counters on this card. Remove 1 counter at each of your stand-by phases, until all counters are removed this card cannot be attacked and can attack from defense position.",
+      "desc": "When this card is normal spawned, special spawned, or flipped face-up, place 3 counters on this card. Remove 1 counter at each of your stand-by phases, until all counters are removed this card cannot be attacked and can attack from defense position.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-041-babasfighter3mummyman": {
@@ -3413,14 +3413,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Devil's Cauldron",
       "type": "Field Trick",
-      "desc": "Both players return all Catalyst cards on their respective side's of the field to their hand, except for one they choose. As long as this card remains in play, each player may only summon or control 1 Catalyst at a time.",
+      "desc": "Both players return all Catalyst cards on their respective side's of the field to their hand, except for one they choose. As long as this card remains in play, each player may only spawn or control 1 Catalyst at a time.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "db1-046-oolongtheshapeshifter": {
       "status": "auto",
       "name": "Oolong - the Shape Shifter",
       "type": "Catalyst",
-      "desc": "Send this card from the field to the Void as a result of battle you may special summon one level 4 or lower Catalyst from your hand to the field.",
+      "desc": "Send this card from the field to the Void as a result of battle you may special spawn one level 4 or lower Catalyst from your hand to the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "db1-047-yamchathebandit": {
@@ -3434,7 +3434,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Puar",
       "type": "Catalyst",
-      "desc": "Once per turn, during your main phase, if you control this Catalyst on the field you may equip it to a Catalyst with \"Yamcha\" in it's name OR change it back to a Catalyst in face-up attack position. When this card is equipped to a \"Yamcha\" increase the euqipped Catalyst's Pressure and Counter Pressure by 200. If this card is face-up on your side of the field as a Catalyst card, you may send it to the Void to search your deck for 1 level 3 or lower Catalyst and special summon it to the field. (1 Catalyst can only be euqipped with 1 union Catalyst at a time.)",
+      "desc": "Once per turn, during your main phase, if you control this Catalyst on the field you may equip it to a Catalyst with \"Yamcha\" in it's name OR change it back to a Catalyst in face-up attack position. When this card is equipped to a \"Yamcha\" increase the euqipped Catalyst's Pressure and Counter Pressure by 200. If this card is face-up on your side of the field as a Catalyst card, you may send it to the Void to search your deck for 1 level 3 or lower Catalyst and special spawn it to the field. (1 Catalyst can only be euqipped with 1 union Catalyst at a time.)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "db1-049-wolffangfist": {
@@ -3462,7 +3462,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Saiyan Space Pod",
       "type": "Concealed Trick",
-      "desc": "When this card is destroyed, search your deck for a Saiyan sub-type Catalyst level 4 or lower and special summon it to field.",
+      "desc": "When this card is destroyed, search your deck for a Saiyan sub-type Catalyst level 4 or lower and special spawn it to field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "db1-053-teengoku": {
@@ -3546,7 +3546,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Future Trunks",
       "type": "Catalyst",
-      "desc": "When this card is destroyed in battle, you may Special Summon it during the next Standby Phase with 500 Pressure. [DBS]",
+      "desc": "When this card is destroyed in battle, you may Special Spawn it during the next Standby Phase with 500 Pressure. [DBS]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbs-003-gohanultimateform": {
@@ -3560,21 +3560,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Piccolo",
       "type": "Catalyst",
-      "desc": "When this card is destroyed, you may Special Summon 1 Level 6 or lower Warrior-Type Catalyst from your hand or Void. [DBS]",
+      "desc": "When this card is destroyed, you may Special Spawn 1 Level 6 or lower Warrior-Type Catalyst from your hand or Void. [DBS]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbs-005-beerusgodofdestruction": {
       "status": "auto",
       "name": "Beerus - God of Destruction",
       "type": "Catalyst",
-      "desc": "When this card is Summoned, destroy all other cards on the field. [DBS]",
+      "desc": "When this card is Spawned, destroy all other cards on the field. [DBS]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbs-006-whis": {
       "status": "auto",
       "name": "Whis",
       "type": "Catalyst",
-      "desc": "While this card is face-up, your opponent cannot Special Summon Catalysts with Pressure 3000 or higher. [DBS]",
+      "desc": "While this card is face-up, your opponent cannot Special Spawn Catalysts with Pressure 3000 or higher. [DBS]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbs-007-friezagoldenform": {
@@ -3623,7 +3623,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Android 17",
       "type": "Catalyst",
-      "desc": "When this card is destroyed, Special Summon 1 Android-Type Catalyst from your deck. [DBS]",
+      "desc": "When this card is destroyed, Special Spawn 1 Android-Type Catalyst from your deck. [DBS]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbs-014-android18": {
@@ -3637,7 +3637,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Cabba",
       "type": "Catalyst",
-      "desc": "When this card's Pressure would be reduced to 0 by an opponent's effect, instead Special Summon 1 Saiyan Token (Wind/Warrior/1 Star/Pressure 800/Counter Pressure 600) and this card is unaffected. [DBS]",
+      "desc": "When this card's Pressure would be reduced to 0 by an opponent's effect, instead Special Spawn 1 Saiyan Token (Wind/Warrior/1 Star/Pressure 800/Counter Pressure 600) and this card is unaffected. [DBS]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbs-016-cauliflasupersaiyan2": {
@@ -3658,7 +3658,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Toppo - God of Destruction Candidate",
       "type": "Catalyst",
-      "desc": "When Summoned, destroy 1 Palm or Concealed Trick your opponent controls. [DBS]",
+      "desc": "When Spawned, destroy 1 Palm or Concealed Trick your opponent controls. [DBS]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbs-019-dyspo": {
@@ -3714,7 +3714,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Tournament of Power Arena",
       "type": "Field Trick",
-      "desc": "While face-up, all Warrior-Type Catalysts you control gain 400 Pressure. Once per turn, when a Warrior-Type Catalyst destroys an opponent's Catalyst, remove that destroyed Catalyst from game. Your opponent cannot Special Summon Catalysts with Pressure lower than 1500. [DBS]",
+      "desc": "While face-up, all Warrior-Type Catalysts you control gain 400 Pressure. Once per turn, when a Warrior-Type Catalyst destroys an opponent's Catalyst, remove that destroyed Catalyst from game. Your opponent cannot Special Spawn Catalysts with Pressure lower than 1500. [DBS]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "dbs-028-spiritbomb": {
@@ -3735,7 +3735,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Divine Ki",
       "type": "Palm Trick",
-      "desc": "Once per turn during your Standby Phase, place 1 Ki Counter on this card (max 5). Remove 3 to have 1 Saiyan-Type Catalyst gain 800 Pressure until the End Phase. Remove 5 to Special Summon 1 God-Type or Angel-Type Catalyst from your hand or Void ignoring Summoning conditions. [DBS]",
+      "desc": "Once per turn during your Standby Phase, place 1 Ki Counter on this card (max 5). Remove 3 to have 1 Saiyan-Type Catalyst gain 800 Pressure until the End Phase. Remove 5 to Special Spawn 1 God-Type or Angel-Type Catalyst from your hand or Void ignoring Spawning conditions. [DBS]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "dbs-031-ultrainstincttrigger": {
@@ -3749,7 +3749,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "God of Destruction's Wrath",
       "type": "Concealed Trick",
-      "desc": "When your opponent Summons a Catalyst with Pressure 2800 or higher, destroy it and inflict 1000 damage. Cannot be negated when \"Beerus - God of Destruction\" is face-up on your side of the field. [DBS]",
+      "desc": "When your opponent Spawns a Catalyst with Pressure 2800 or higher, destroy it and inflict 1000 damage. Cannot be negated when \"Beerus - God of Destruction\" is face-up on your side of the field. [DBS]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "dbs-033-ultrainstinctdodge": {
@@ -3770,7 +3770,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Zenkai Boost",
       "type": "Concealed Trick",
-      "desc": "When a Saiyan-Type Catalyst you control is destroyed in battle, Special Summon it back to your field. The returned Catalyst gains 700 Pressure and Counter Pressure permanently. This effect may only be used once per Catalyst per Duel. [DBS]",
+      "desc": "When a Saiyan-Type Catalyst you control is destroyed in battle, Special Spawn it back to your field. The returned Catalyst gains 700 Pressure and Counter Pressure permanently. This effect may only be used once per Catalyst per Duel. [DBS]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "dbs-036-timereversal": {
@@ -3784,7 +3784,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Tournament Ring-Out",
       "type": "Concealed Trick",
-      "desc": "When a Catalyst is destroyed in battle, remove it from play permanently instead of sending it to the Void. Your opponent cannot Special Summon a Catalyst with the same name for the rest of the Duel. [DBS]",
+      "desc": "When a Catalyst is destroyed in battle, remove it from play permanently instead of sending it to the Void. Your opponent cannot Special Spawn a Catalyst with the same name for the rest of the Duel. [DBS]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "dbs-038-pridetrooperdefense": {
@@ -3910,7 +3910,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Serpo Alien",
       "type": "Catalyst",
-      "desc": "When this card is Normal Summoned: Your opponent discards 1 card. [DND]",
+      "desc": "When this card is Normal Spawned: Your opponent discards 1 card. [DND]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dnd-009-acrobaticsilky": {
@@ -4043,21 +4043,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "generic",
       "name": "Emergency Exorcism",
       "type": "Palm Trick",
-      "desc": "If you control no Catalysts: Special Summon 1 \"Dandadan\" Catalyst from your hand. [DND]",
+      "desc": "If you control no Catalysts: Special Spawn 1 \"Dandadan\" Catalyst from your hand. [DND]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "dnd-029-spiritreturn": {
       "status": "generic",
       "name": "Spirit Return",
       "type": "Palm Trick",
-      "desc": "Special Summon 1 Level 4 or lower \"Dandadan\" Catalyst from the Void. [DND]",
+      "desc": "Special Spawn 1 Level 4 or lower \"Dandadan\" Catalyst from the Void. [DND]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "dnd-030-surprisemanifestation": {
       "status": "manual",
       "name": "Surprise Manifestation",
       "type": "Concealed Trick",
-      "desc": "When your opponent attacks: Special Summon 1 Level 4 or lower \"Dandadan\" Catalyst from your hand. [DND]",
+      "desc": "When your opponent attacks: Special Spawn 1 Level 4 or lower \"Dandadan\" Catalyst from your hand. [DND]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "dnd-031-cursedsnapshot": {
@@ -4099,7 +4099,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Occult Ambush",
       "type": "Concealed Trick",
-      "desc": "When your opponent summons: That Catalyst loses 300 Pressure this turn. [DND]",
+      "desc": "When your opponent spawns: That Catalyst loses 300 Pressure this turn. [DND]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dnd-037-psychicredirect": {
@@ -4211,7 +4211,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Semiu",
       "type": "Palm Trick",
-      "desc": "When this card is Normal Summoned: Gain 500 Chi. [GCK]",
+      "desc": "When this card is Normal Spawned: Gain 500 Chi. [GCK]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "gck-007-enginescrew": {
@@ -4358,21 +4358,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "generic",
       "name": "Emergency Crew Call",
       "type": "Palm Trick",
-      "desc": "If you control no Catalysts: Special Summon 1 \"Gachiakuta\" Catalyst from your hand. [GCK]",
+      "desc": "If you control no Catalysts: Special Spawn 1 \"Gachiakuta\" Catalyst from your hand. [GCK]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "gck-029-trashpull": {
       "status": "generic",
       "name": "Trash Pull",
       "type": "Palm Trick",
-      "desc": "Special Summon 1 Level 4 or lower \"Gachiakuta\" Catalyst from the Void. [GCK]",
+      "desc": "Special Spawn 1 Level 4 or lower \"Gachiakuta\" Catalyst from the Void. [GCK]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "gck-030-heaptrapdoor": {
       "status": "manual",
       "name": "Heap Trapdoor",
       "type": "Concealed Trick",
-      "desc": "When your opponent attacks: Special Summon 1 Level 4 or lower \"Gachiakuta\" Catalyst from your hand. [GCK]",
+      "desc": "When your opponent attacks: Special Spawn 1 Level 4 or lower \"Gachiakuta\" Catalyst from your hand. [GCK]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "gck-031-jinkituneup": {
@@ -4414,7 +4414,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Crew Ambush",
       "type": "Concealed Trick",
-      "desc": "When your opponent summons: That Catalyst loses 300 Pressure this turn. [GCK]",
+      "desc": "When your opponent spawns: That Catalyst loses 300 Pressure this turn. [GCK]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "gck-037-guardthegiver": {
@@ -4491,7 +4491,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Strike Gundam",
       "type": "Catalyst",
-      "desc": "During the turn that this card is normal summoned, flip summoned, or special summoned, it cannot be attacked.",
+      "desc": "During the turn that this card is normal spawned, flip spawned, or special spawned, it cannot be attacked.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "gds-006-ailestrikerpack": {
@@ -4526,14 +4526,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Aegis Gundam",
       "type": "Catalyst",
-      "desc": "When this card is Normal Summoned, or Flip Summoned, select one face up Catalyst. The selected Catalyst cannot attack or change its battle position as long as this card remains face-up on the field.",
+      "desc": "When this card is Normal Spawned, or Flip Spawned, select one face up Catalyst. The selected Catalyst cannot attack or change its battle position as long as this card remains face-up on the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "gds-008-duelgundam": {
       "status": "auto",
       "name": "Duel Gundam",
       "type": "Catalyst",
-      "desc": "If this Catalyst is sent to the Void as a result of battle, you may special summon \"Assault Shroud Duel Gundam\" from your hand or Void.",
+      "desc": "If this Catalyst is sent to the Void as a result of battle, you may special spawn \"Assault Shroud Duel Gundam\" from your hand or Void.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "gds-009-assaultshroudduelgundam": {
@@ -4589,7 +4589,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Sky Grasper",
       "type": "Catalyst",
-      "desc": "When this card is successfully normal summoned or flip summoned. Add 1 card with \"Striker Pack\" in its name from your deck to your hand, then shuffle the deck.",
+      "desc": "When this card is successfully normal spawned or flip spawned. Add 1 card with \"Striker Pack\" in its name from your deck to your hand, then shuffle the deck.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "gds-017-mobilesuitzuoot": {
@@ -4624,7 +4624,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Gundam Astray Blue Frame",
       "type": "Catalyst",
-      "desc": "A highly powerful, mass production mobile suit. Though it consumes energy quickly it can lay waste to it's enemies. When this Catalyst is destroyed, you can special summon 1 \"Gundam Astray Red Frame\" from your Void to your side of the field.",
+      "desc": "A highly powerful, mass production mobile suit. Though it consumes energy quickly it can lay waste to it's enemies. When this Catalyst is destroyed, you can special spawn 1 \"Gundam Astray Red Frame\" from your Void to your side of the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "gds-022-mobilesuitbucue": {
@@ -4666,7 +4666,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "May",
       "type": "Catalyst",
-      "desc": "Flip: You can summon one \"Johnny\" from your hand, deck or Void to the field in face-up attack position. This card cannot be attacked if there is a Johnny is on the field.",
+      "desc": "Flip: You can spawn one \"Johnny\" from your hand, deck or Void to the field in face-up attack position. This card cannot be attacked if there is a Johnny is on the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ggx-004-milliarage": {
@@ -4680,14 +4680,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Eddie",
       "type": "Catalyst",
-      "desc": "This card can only be summoned by \"Zato-1\". During your end phase if this card has not destroyed a Catalyst in battle this turn decrease it's Counter Pressure by 100 points. When this cards Counter Pressure becomes 0 it is destroyed and removed from game.",
+      "desc": "This card can only be spawned by \"Zato-1\". During your end phase if this card has not destroyed a Catalyst in battle this turn decrease it's Counter Pressure by 100 points. When this cards Counter Pressure becomes 0 it is destroyed and removed from game.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ggx-005-zato1": {
       "status": "auto",
       "name": "Zato-1",
       "type": "Catalyst",
-      "desc": "If this card is sent to the Void due to battle, special summon a \"Eddie\" to the field from your hand, deck or Void in face-up attack position.",
+      "desc": "If this card is sent to the Void due to battle, special spawn a \"Eddie\" to the field from your hand, deck or Void in face-up attack position.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ggx-007-potemkin": {
@@ -4736,14 +4736,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Axl Low",
       "type": "Catalyst",
-      "desc": "If two or more \"Axl Low\" are on your side of the field, offer all \"Axl Low\" as a tribute and special summon \"Raven\" to the field from your hand, deck or Void.",
+      "desc": "If two or more \"Axl Low\" are on your side of the field, offer all \"Axl Low\" as a tribute and special spawn \"Raven\" to the field from your hand, deck or Void.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ggx-014-raven": {
       "status": "auto",
       "name": "Raven",
       "type": "Catalyst",
-      "desc": "This card can be summoned by \"axl low's\" effect. This card can only be destroyed by battle. When destroyed this card is removed from game.",
+      "desc": "This card can be spawned by \"axl low's\" effect. This card can only be destroyed by battle. When destroyed this card is removed from game.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ggx-015-venom": {
@@ -4764,7 +4764,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Dizzy",
       "type": "Catalyst",
-      "desc": "This cards effect can be used once per turn. Flip a coin, if the result is heads gain 500 Chi if it's tails your opponent takes 500 Chi damage. If this card is destroyed you can summon one Testament from your hand, deck or Void to the field in face-up attack position. Flip a coin, if the result is heads gain 1000 Chi. If the result is tails you must destroy one card on the field or this card is destroyed.",
+      "desc": "This cards effect can be used once per turn. Flip a coin, if the result is heads gain 500 Chi if it's tails your opponent takes 500 Chi damage. If this card is destroyed you can spawn one Testament from your hand, deck or Void to the field in face-up attack position. Flip a coin, if the result is heads gain 1000 Chi. If the result is tails you must destroy one card on the field or this card is destroyed.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "ggx-018-slayer": {
@@ -4813,14 +4813,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Robo Ky",
       "type": "Catalyst",
-      "desc": "Any of your opponents Catalyst cards destroyed in battle while this card is on the field is special summoned on your side of the field in face-up attack position. On the second stand-by after a Catalyst is summoned to your side of the field, destroy that Catalyst.",
+      "desc": "Any of your opponents Catalyst cards destroyed in battle while this card is on the field is special spawned on your side of the field in face-up attack position. On the second stand-by after a Catalyst is spawned to your side of the field, destroy that Catalyst.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ggx-023-theman": {
       "status": "manual",
       "name": "The Man",
       "type": "Palm Trick",
-      "desc": "During each of your standby phases add one counter to this card. Remove 2 counters to special summon one \"Testament\" from your hand, deck or Void to the field in face-up attack position. Remove 3 for \"Dizzy\". Remove 4 for \"I-No\". Remove 5 for \"Justice\".",
+      "desc": "During each of your standby phases add one counter to this card. Remove 2 counters to special spawn one \"Testament\" from your hand, deck or Void to the field in face-up attack position. Remove 3 for \"Dizzy\". Remove 4 for \"I-No\". Remove 5 for \"Justice\".",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ggx-024-johnnysglitterisgold": {
@@ -4834,7 +4834,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Time Warp",
       "type": "Palm Trick",
-      "desc": "Pick one Catalyst card on the field, special summon one Catalyst card from your hand, deck or Void with the same name to the field in face-up in Defense position.",
+      "desc": "Pick one Catalyst card on the field, special spawn one Catalyst card from your hand, deck or Void with the same name to the field in face-up in Defense position.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ggx-026-possesion": {
@@ -4967,7 +4967,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Volf",
       "type": "Catalyst",
-      "desc": "If this card is destroyed in battle special summon one \"Chipp Zanuff\" from your deck, hand or Void to the field in face-up attack position.",
+      "desc": "If this card is destroyed in battle special spawn one \"Chipp Zanuff\" from your deck, hand or Void to the field in face-up attack position.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ggx-043-sacrifice": {
@@ -5030,7 +5030,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Tenza Yamada",
       "type": "Catalyst",
-      "desc": "When this card is Normal Summoned: You may set 1 Concealed Tricks from your hand. [HLP]",
+      "desc": "When this card is Normal Spawned: You may set 1 Concealed Tricks from your hand. [HLP]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "hlp-005-nurugai": {
@@ -5191,21 +5191,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "generic",
       "name": "Last-Moment Rescue",
       "type": "Palm Trick",
-      "desc": "If you control no Catalysts: Special Summon 1 \"Hell's Paradise\" Catalyst from your hand. [HLP]",
+      "desc": "If you control no Catalysts: Special Spawn 1 \"Hell's Paradise\" Catalyst from your hand. [HLP]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "hlp-029-taorevival": {
       "status": "generic",
       "name": "Tao Revival",
       "type": "Palm Trick",
-      "desc": "Special Summon 1 Level 4 or lower \"Hell's Paradise\" Catalyst from the Void. [HLP]",
+      "desc": "Special Spawn 1 Level 4 or lower \"Hell's Paradise\" Catalyst from the Void. [HLP]",
       "reason": "Card matches a generic runtime effect pattern."
     },
     "hlp-030-prisonerbreakout": {
       "status": "manual",
       "name": "Prisoner Breakout",
       "type": "Concealed Trick",
-      "desc": "When your opponent declares an attack: Special Summon 1 Level 4 or lower \"Hell's Paradise\" Catalyst from your hand. [HLP]",
+      "desc": "When your opponent declares an attack: Special Spawn 1 Level 4 or lower \"Hell's Paradise\" Catalyst from your hand. [HLP]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hlp-031-poisonmist": {
@@ -5254,7 +5254,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Island Ambush",
       "type": "Concealed Trick",
-      "desc": "When your opponent summons a Catalyst: It loses 300 Pressure until end of turn. [HLP]",
+      "desc": "When your opponent spawns a Catalyst: It loses 300 Pressure until end of turn. [HLP]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "hlp-038-taobarrier": {
@@ -5345,7 +5345,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Halloween Town",
       "type": "Palm Trick",
-      "desc": "Discard 3 cards in your hand to the grave and special summon 2 Zombie-type Catalysts from you or your opponent's Void.",
+      "desc": "Discard 3 cards in your hand to the grave and special spawn 2 Zombie-type Catalysts from you or your opponent's Void.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "kh1-006-donaldduck": {
@@ -5541,14 +5541,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Adult Link",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be summoned by tributing Child Link #1 equipped with the Master Sword. When this card attacks with an Pressure higher than the Counter Pressure of your opponent's defense-position Catalyst, deal the difference as Battle Damage to your opponent's Chi. When this card does damage to your opponent's Chi, it's Pressure raises by 150. When this card is destroyed, special summon \"Child Link #1\" or \"Child Link #3\" in face up Defense position from your hand.",
+      "desc": "This Catalyst can only be spawned by tributing Child Link #1 equipped with the Master Sword. When this card attacks with an Pressure higher than the Counter Pressure of your opponent's defense-position Catalyst, deal the difference as Battle Damage to your opponent's Chi. When this card does damage to your opponent's Chi, it's Pressure raises by 150. When this card is destroyed, special spawn \"Child Link #1\" or \"Child Link #3\" in face up Defense position from your hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "loz-005-princesszelda": {
       "status": "auto",
       "name": "Princess Zelda",
       "type": "Catalyst",
-      "desc": "This Catalyst, in addition to the ability to be tribute summoned, can be special summoned if Adult Link is on the field with no tribute. This Catalyst gains 400 Pressure for every card with \"Link\" in it's name except \"Shadow Link\" on the field and in the Void.",
+      "desc": "This Catalyst, in addition to the ability to be tribute spawned, can be special spawned if Adult Link is on the field with no tribute. This Catalyst gains 400 Pressure for every card with \"Link\" in it's name except \"Shadow Link\" on the field and in the Void.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "loz-005-ganondorf": {
@@ -5562,7 +5562,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Ganon",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be tribute summoned by sacrificing Ganondorf. This Catalyst's attack cannot be stopped except by the effect of \"Hyrulian Shield\"",
+      "desc": "This Catalyst can only be tribute spawned by sacrificing Ganondorf. This Catalyst's attack cannot be stopped except by the effect of \"Hyrulian Shield\"",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "loz-008-mastersword": {
@@ -5660,14 +5660,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Shadow Link",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Link's Past\". To do this, discard \"Adult Link\" and other Catalysts from your hand whose total Levels exactly equal this card's Level.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Link's Past\". To do this, discard \"Adult Link\" and other Catalysts from your hand whose total Levels exactly equal this card's Level.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "loz-022-linkspast": {
       "status": "auto",
       "name": "Link's Past",
       "type": "Palm Trick",
-      "desc": "Special Summon 1 \"Shadow Link\" from your hand. To do this, discard \"Adult Link\" and other Catalysts from your hand whose total Levels exactly equal the Level of \"Shadow Link\".",
+      "desc": "Special Spawn 1 \"Shadow Link\" from your hand. To do this, discard \"Adult Link\" and other Catalysts from your hand whose total Levels exactly equal the Level of \"Shadow Link\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "loz-023-goronssword": {
@@ -5695,7 +5695,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Saria's Song",
       "type": "Palm Trick",
-      "desc": "Use this only if there's an \"Adult Link\" equipped with \"Book of Songs\" on your side of the field. Special Summon \"Saria\" or \"King Goron\" from your deck or hand.",
+      "desc": "Use this only if there's an \"Adult Link\" equipped with \"Book of Songs\" on your side of the field. Special Spawn \"Saria\" or \"King Goron\" from your deck or hand.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "loz-027-kinggoron": {
@@ -5716,21 +5716,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Zelda's Lullaby",
       "type": "Palm Trick",
-      "desc": "This can be played only if there is an \"Adult Link\" equipped with \"Book of Songs\" on your side of the field. Summon \"Princess Zelda\" from your hand or deck.",
+      "desc": "This can be played only if there is an \"Adult Link\" equipped with \"Book of Songs\" on your side of the field. Spawn \"Princess Zelda\" from your hand or deck.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "loz-030-navi": {
       "status": "manual",
       "name": "Navi",
       "type": "Catalyst",
-      "desc": "FLIP: Summon one \"Child Link #1\" or \"Child Link #3\" from your deck. While this card remains on your side of the field, increase the Pressure of any Catalyst card with \"Link\" in it's name by 500.",
+      "desc": "FLIP: Spawn one \"Child Link #1\" or \"Child Link #3\" from your deck. While this card remains on your side of the field, increase the Pressure of any Catalyst card with \"Link\" in it's name by 500.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "loz-031-revivalfairy": {
       "status": "manual",
       "name": "Revival Fairy",
       "type": "Catalyst",
-      "desc": "FLIP: Special Summon one Catalyst card with \"Link\" in it's name from your Void by sacrificing this card.",
+      "desc": "FLIP: Special Spawn one Catalyst card with \"Link\" in it's name from your Void by sacrificing this card.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "mb1-001-itsamemario": {
@@ -5765,14 +5765,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Mario",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal Summoned or Set. This card can only be Special Summoned by offering 1 \"Mini-Mario\" on your side of the field as a Tribute when \"Magic Mushroom\" is face up on the field. When this card is destroyed, except by this card's effect, you may Special Summon 1 \"Mini-Mario\" from your Void to the field.",
+      "desc": "This card cannot be Normal Spawned or Set. This card can only be Special Spawned by offering 1 \"Mini-Mario\" on your side of the field as a Tribute when \"Magic Mushroom\" is face up on the field. When this card is destroyed, except by this card's effect, you may Special Spawn 1 \"Mini-Mario\" from your Void to the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mb1-006-luigi": {
       "status": "auto",
       "name": "Luigi",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal Summoned or Set. This card can only be Special Summoned by offering 1 \"Mini-Luigi\" on your side of the field as a Tribute when \"Magic Mushroom\" is face up on the field. When this card is destroyed, except by this card's effect, you may Special Summon 1 \"Mini-Luigi\" from your Void to the field.",
+      "desc": "This card cannot be Normal Spawned or Set. This card can only be Special Spawned by offering 1 \"Mini-Luigi\" on your side of the field as a Tribute when \"Magic Mushroom\" is face up on the field. When this card is destroyed, except by this card's effect, you may Special Spawn 1 \"Mini-Luigi\" from your Void to the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mb1-007-magicmushroom": {
@@ -5800,14 +5800,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Fire Mario",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal Summoned or Set. This card can only be Special Summoned from your Deck or your Hand to your side of the field by offering \"Mario\" equipped with \"Fire Flower\" as a Tribute. When this card attacks with a higher Pressure than the Counter Pressure of your opponent's Counter Pressure position Catalyst, inflict the difference as Battle Damage to you opponent's Chi. When this card is destroyed, except by this card's effect, you may Special Summon 1 \"Mario\" from your Void to the field.",
+      "desc": "This card cannot be Normal Spawned or Set. This card can only be Special Spawned from your Deck or your Hand to your side of the field by offering \"Mario\" equipped with \"Fire Flower\" as a Tribute. When this card attacks with a higher Pressure than the Counter Pressure of your opponent's Counter Pressure position Catalyst, inflict the difference as Battle Damage to you opponent's Chi. When this card is destroyed, except by this card's effect, you may Special Spawn 1 \"Mario\" from your Void to the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mb1-012-fireluigi": {
       "status": "auto",
       "name": "Fire Luigi",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal Summoned or Set. This card can only be Special Summoned from your Deck or your Hand to your side of the field by offering \"Luigi\" equipped with \"Fire Flower\" as a Tribute. When this card attacks with a higher Pressure than the Counter Pressure of your opponent's Counter Pressure position Catalyst, inflict the difference as Battle Damage to you opponent's Chi. When this card is destroyed, except by this card's effect, you may Special Summon 1 \"Luigi\" from your Void to the field.",
+      "desc": "This card cannot be Normal Spawned or Set. This card can only be Special Spawned from your Deck or your Hand to your side of the field by offering \"Luigi\" equipped with \"Fire Flower\" as a Tribute. When this card attacks with a higher Pressure than the Counter Pressure of your opponent's Counter Pressure position Catalyst, inflict the difference as Battle Damage to you opponent's Chi. When this card is destroyed, except by this card's effect, you may Special Spawn 1 \"Luigi\" from your Void to the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mb1-013-toadsdecision": {
@@ -5828,14 +5828,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Kamek's Reducing Magic",
       "type": "Palm Trick",
-      "desc": "Send 1 Palm Tricks from your hand to the Void to activate this card. If any Catalysts with \"Mario\" or \"Luigi\" in their name exist on the field and are not \"Mini-Mario\" or \"Mini-Luigi\" destroy them and send them to the Void, your opponent may summon 1 \"Mini-Mario\" or \"Mini-Luigi\" respectively from their Void if they exist there. Neither you nor your opponent may play any Catalysts with \"Mario\" or \"Luigi\" in their name other than \"Mini-Mario\" or \"Mini-Luigi\" as long as this cards remains on the field.",
+      "desc": "Send 1 Palm Tricks from your hand to the Void to activate this card. If any Catalysts with \"Mario\" or \"Luigi\" in their name exist on the field and are not \"Mini-Mario\" or \"Mini-Luigi\" destroy them and send them to the Void, your opponent may spawn 1 \"Mini-Mario\" or \"Mini-Luigi\" respectively from their Void if they exist there. Neither you nor your opponent may play any Catalysts with \"Mario\" or \"Luigi\" in their name other than \"Mini-Mario\" or \"Mini-Luigi\" as long as this cards remains on the field.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "mb1-016-koopatroopa": {
       "status": "auto",
       "name": "Koopa Troopa",
       "type": "Catalyst",
-      "desc": "When this card is detroyed and sent to the Void, take 1 \"Koopa Troppa\" from your Deck or Hand and Special Summon in to the field in face-up Attack or Defense position. The deck is then shuffled.",
+      "desc": "When this card is detroyed and sent to the Void, take 1 \"Koopa Troppa\" from your Deck or Hand and Special Spawn in to the field in face-up Attack or Defense position. The deck is then shuffled.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mb1-017-koopatroopassecret": {
@@ -5856,7 +5856,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "1-Up The Great Mushroom",
       "type": "Palm Trick",
-      "desc": "Pay 800 Chi to select 1 Catalyst in your Void and Special Summon it to the field in face-up Attack or Defense position. (Restricted To 1)",
+      "desc": "Pay 800 Chi to select 1 Catalyst in your Void and Special Spawn it to the field in face-up Attack or Defense position. (Restricted To 1)",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "mb1-020-bowser": {
@@ -5870,14 +5870,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Lakitu's CLoud",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Lakitu\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Lakitu\".",
+      "desc": "Special Spawn \"Lakitu\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Lakitu\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mb1-022-lakitu": {
       "status": "auto",
       "name": "Lakitu",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Lakitu's Cloud\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. This card may attack your opponent's Chi directly. When this card deals damage to your opponent's Chi, place 1 \"Spiny Egg Token\" (Face-up Defense Position/Reptile-Type/EARTH/1 Star/Pressure 0/Counter Pressure 2000) on your side of the field. If a \"Spiny Egg Token\" exists on your side of the field, your opponent cannot attack this card.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Lakitu's Cloud\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. This card may attack your opponent's Chi directly. When this card deals damage to your opponent's Chi, place 1 \"Spiny Egg Token\" (Face-up Defense Position/Reptile-Type/EARTH/1 Star/Pressure 0/Counter Pressure 2000) on your side of the field. If a \"Spiny Egg Token\" exists on your side of the field, your opponent cannot attack this card.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mb1-023-pipediving": {
@@ -5905,7 +5905,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Warp Whistle's Song",
       "type": "Concealed Trick",
-      "desc": "When your opponent summons a Catalyst (excluding Special Summon), your opponent must shuffle the card back into his deck.",
+      "desc": "When your opponent spawns a Catalyst (excluding Special Spawn), your opponent must shuffle the card back into his deck.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "mb1-027-princesspeach": {
@@ -5940,7 +5940,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Bullet Bill the Bullet Launcher",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal Summoned or Set. This card can only be Special Summoned by offering 1 \"Bullet Bill\" on your side of the field as a tribute. Send 1 card from your side of the field to the Void to inflict 800 points of Direct Damage to your opponent's Chi.",
+      "desc": "This card cannot be Normal Spawned or Set. This card can only be Special Spawned by offering 1 \"Bullet Bill\" on your side of the field as a tribute. Send 1 card from your side of the field to the Void to inflict 800 points of Direct Damage to your opponent's Chi.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mgm-001-megaman": {
@@ -5954,7 +5954,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Proto Man",
       "type": "Palm Trick",
-      "desc": "This Catalyst can only be summoned if there are no other Catalysts on your side of the field.",
+      "desc": "This Catalyst can only be spawned if there are no other Catalysts on your side of the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "mgm-003-gutsman": {
@@ -5975,14 +5975,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Pharoh Man",
       "type": "Catalyst",
-      "desc": "When this card is normal summoned, special summoned or flip summoned, you may draw one card from your deck.",
+      "desc": "When this card is normal spawned, special spawned or flip spawned, you may draw one card from your deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mgm-006-virusbeast": {
       "status": "manual",
       "name": "Virus Beast",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing 4 dark Catalysts in your Void from game. As long as this card remains face up on the field, decrease the Pressure of all Catalysts on your opponent's side of the field by 500 points.",
+      "desc": "This card can only be special spawned by removing 4 dark Catalysts in your Void from game. As long as this card remains face up on the field, decrease the Pressure of all Catalysts on your opponent's side of the field by 500 points.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "mgm-007-torchmanv2": {
@@ -6003,7 +6003,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Heat Man",
       "type": "Catalyst",
-      "desc": "This card can only be normal summoned by offering a \"Torch Man\" on your side of the field as a tribute. When this card attacks with an Pressure that is higher than the Counter Pressure of your opponent's Defense position Catalyst, inflict the difference as Battle Damage to your opponent's Chi. When this card attacks, it is changed to Defense position at the end of the Damage Step.",
+      "desc": "This card can only be normal spawned by offering a \"Torch Man\" on your side of the field as a tribute. When this card attacks with an Pressure that is higher than the Counter Pressure of your opponent's Defense position Catalyst, inflict the difference as Battle Damage to your opponent's Chi. When this card attacks, it is changed to Defense position at the end of the Damage Step.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mgm-010-freezeman": {
@@ -6024,7 +6024,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Glide",
       "type": "Catalyst",
-      "desc": "This card can not be special summoned.",
+      "desc": "This card can not be special spawned.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "mgm-013-iceman": {
@@ -6045,7 +6045,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "ElecMan",
       "type": "Catalyst",
-      "desc": "When this Catalyst is successfully summoned, you can pick one Catalyst on the field and destroy it (if this Catalyst is the only Catalyst on the field when you summon this card, you must destroy this Catalyst).",
+      "desc": "When this Catalyst is successfully spawned, you can pick one Catalyst on the field and destroy it (if this Catalyst is the only Catalyst on the field when you spawn this card, you must destroy this Catalyst).",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "mgm-016-magicman": {
@@ -6150,7 +6150,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Mega Man -  ElecTeam Style",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be summoned by offering a \"Mega Man - Heat Guts Style\" as a tribute. When this card is summoned, and once per turn during your main phase 1 as long as this card is on the field, you can discard 1 card from your hand to destroy one card on your opponent's side of the field.",
+      "desc": "This Catalyst can only be spawned by offering a \"Mega Man - Heat Guts Style\" as a tribute. When this card is spawned, and once per turn during your main phase 1 as long as this card is on the field, you can discard 1 card from your hand to destroy one card on your opponent's side of the field.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "mgm-031-magnetman": {
@@ -6164,7 +6164,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Bass",
       "type": "Palm Trick",
-      "desc": "When this Catalyst is first summoned, you can choose one of your opponent's Catalysts and take on the Pressure and Counter Pressure of that Catalyst + 500.",
+      "desc": "When this Catalyst is first spawned, you can choose one of your opponent's Catalysts and take on the Pressure and Counter Pressure of that Catalyst + 500.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "mgm-033-herosword": {
@@ -6220,7 +6220,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Kisame",
       "type": "Catalyst",
-      "desc": "When this Catalyst is summoned, select one Catalyst on the field, that Catalyst cannot attack as long as this card remains face-up on the field. When this effect is activated, you must skip your next draw phase.",
+      "desc": "When this Catalyst is spawned, select one Catalyst on the field, that Catalyst cannot attack as long as this card remains face-up on the field. When this effect is activated, you must skip your next draw phase.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-004-itachi": {
@@ -6234,7 +6234,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Naruto",
       "type": "Catalyst",
-      "desc": "Select and activate one of the following effects: 1) Pay 1000 Chi to increase this card's Pressure by 1200. 2) Pay 1500 Chi to take control of one of your opponents Catalysts until the end phase of the turn. 3) Pay 600 Chi to place 1 Kage Bushin token (Face-Up Attack position/Warrior-type/EARTH/2 star/Pressure 500/Counter Pressure 500). Kage Bushin tokens can be summoned on opponent's side of field but are in control of the owner of Naruto. Opponent can use Kage Bushin tokens on their side of the field for tributes (including tribute summoning), the owner of Naruto may not tribute Kage Bushin tokens.",
+      "desc": "Select and activate one of the following effects: 1) Pay 1000 Chi to increase this card's Pressure by 1200. 2) Pay 1500 Chi to take control of one of your opponents Catalysts until the end phase of the turn. 3) Pay 600 Chi to place 1 Kage Bushin token (Face-Up Attack position/Warrior-type/EARTH/2 star/Pressure 500/Counter Pressure 500). Kage Bushin tokens can be spawned on opponent's side of field but are in control of the owner of Naruto. Opponent can use Kage Bushin tokens on their side of the field for tributes (including tribute spawning), the owner of Naruto may not tribute Kage Bushin tokens.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-006-sasuke": {
@@ -6255,7 +6255,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Kankuro",
       "type": "Catalyst",
-      "desc": "When this Catalyst is summoned (Normal summoned, Special summoned, or flip summoned), place 1 Puppet Token on the field (Face-Up Attack position/Machine-type/EARTH/3 Star/Pressure 1200/Counter Pressure 1000). Kankuro cannot attack and cannot be attacked while a Puppet token is on the field. If Kakuro is not in face-up attack position, all of your Puppet tokens are destroyed.",
+      "desc": "When this Catalyst is spawned (Normal spawned, Special spawned, or flip spawned), place 1 Puppet Token on the field (Face-Up Attack position/Machine-type/EARTH/3 Star/Pressure 1200/Counter Pressure 1000). Kankuro cannot attack and cannot be attacked while a Puppet token is on the field. If Kakuro is not in face-up attack position, all of your Puppet tokens are destroyed.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-009-temari": {
@@ -6269,7 +6269,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Gara",
       "type": "Catalyst",
-      "desc": "When this card is summoned (Normal, Special or Flip summoned), it is immediately switched to face-up defense position. Ths card may attack wile in defense position. Pay 1000 Chi toincrease this Catalyst's Pressure by 700 until the end of the turn this effect is activated.",
+      "desc": "When this card is spawned (Normal, Special or Flip spawned), it is immediately switched to face-up defense position. Ths card may attack wile in defense position. Pay 1000 Chi toincrease this Catalyst's Pressure by 700 until the end of the turn this effect is activated.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-011-rocklee": {
@@ -6297,14 +6297,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Shino",
       "type": "Catalyst",
-      "desc": "When this Catalyst is flip summoned, place 2 counters on it. You may remove 2 counters from this card to destroy one card on your opponent's side of the field.",
+      "desc": "When this Catalyst is flip spawned, place 2 counters on it. You may remove 2 counters from this card to destroy one card on your opponent's side of the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-015-hinata": {
       "status": "auto",
       "name": "Hinata",
       "type": "Catalyst",
-      "desc": "When there is a face up \"Neji\" on your side of the field, this card cannot be attacked. When this card is normal summoned, you may special summon 1 \"Neji\" from your hand or Void",
+      "desc": "When there is a face up \"Neji\" on your side of the field, this card cannot be attacked. When this card is normal spawned, you may special spawn 1 \"Neji\" from your hand or Void",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-016-kibatheninja": {
@@ -6381,56 +6381,56 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Tsunade",
       "type": "Catalyst",
-      "desc": "Pay 1000 Chi to special summon this card to the field from the Void in face-up attack position at the end phase of the turn it was destroyed. When this effect is used, this card's Pressure and Counter Pressure becomes 2000 and 2800 respectively. This effect can only be used once per summon (excluding special summon).",
+      "desc": "Pay 1000 Chi to special spawn this card to the field from the Void in face-up attack position at the end phase of the turn it was destroyed. When this effect is used, this card's Pressure and Counter Pressure becomes 2000 and 2800 respectively. This effect can only be used once per spawn (excluding special spawn).",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-027-orochimaru": {
       "status": "auto",
       "name": "Orochimaru",
       "type": "Catalyst",
-      "desc": "This effect can only be used twice during the current duel. Offer one of you face-up Catalysts to special summon one Catalyst from your hand with an Pressure of 2000 or less.",
+      "desc": "This effect can only be used twice during the current duel. Offer one of you face-up Catalysts to special spawn one Catalyst from your hand with an Pressure of 2000 or less.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-028-shukaku": {
       "status": "auto",
       "name": "Shukaku",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned from your hand by offering a \"Gara\" equipped with \"Camouflage Sleep\" and one other Catalyst on your side of the field.",
+      "desc": "This card can only be special spawned from your hand by offering a \"Gara\" equipped with \"Camouflage Sleep\" and one other Catalyst on your side of the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-029-manda": {
       "status": "auto",
       "name": "Manda",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by the effect of \"Summoning no Jutsu\". This Catalyst is destroyed at the third end phase after it is summoned.",
+      "desc": "This card can only be special spawned by the effect of \"Spawning no Jutsu\". This Catalyst is destroyed at the third end phase after it is spawned.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-030-gamabunto": {
       "status": "auto",
       "name": "Gamabunto",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by the effect of \"Summoning no Jutsu\". This Catalyst is destroyed at the third end phase after it is summoned.",
+      "desc": "This card can only be special spawned by the effect of \"Spawning no Jutsu\". This Catalyst is destroyed at the third end phase after it is spawned.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-031-katsuyu": {
       "status": "manual",
       "name": "Katsuyu",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by the effect of \"Summoning no Jutsu\". This Catalyst is destroyed at the third end phase after it is summoned.",
+      "desc": "This card can only be special spawned by the effect of \"Spawning no Jutsu\". This Catalyst is destroyed at the third end phase after it is spawned.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "nar-032-shodaime": {
       "status": "auto",
       "name": "Shodaime",
       "type": "Catalyst",
-      "desc": "Pay 500 Chi to special summon a Plant-type Catalyst from you hand. Pay 1000 Chi to special summon a Plant-type Catalyst from your deck.",
+      "desc": "Pay 500 Chi to special spawn a Plant-type Catalyst from you hand. Pay 1000 Chi to special spawn a Plant-type Catalyst from your deck.",
       "reason": "No-effect / Normal Catalyst has explicit runtime support in beta."
     },
     "nar-033-nidaime": {
       "status": "auto",
       "name": "Nidaime",
       "type": "Catalyst",
-      "desc": "When this Catalyst is special summoned, and if it remains in play, your opponent cannot attack for 2 turns. On your opponent's 2nd turn after this card is summoned, it is destroyed. While \"Nidaime\" is on the field, you may treat it as if it is \"Deep Sea\".",
+      "desc": "When this Catalyst is special spawned, and if it remains in play, your opponent cannot attack for 2 turns. On your opponent's 2nd turn after this card is spawned, it is destroyed. While \"Nidaime\" is on the field, you may treat it as if it is \"Deep Sea\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "nar-034-sandaime": {
@@ -6444,7 +6444,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Yondaime",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing 1 LIGHT Warrior-type and 1 DARK Warrior-type Catalyst from the Void. Discard your entire hand (minimum of 4 cards) and pay 2000 Chi to remove all cards on the field from game.",
+      "desc": "This card can only be special spawned by removing 1 LIGHT Warrior-type and 1 DARK Warrior-type Catalyst from the Void. Discard your entire hand (minimum of 4 cards) and pay 2000 Chi to remove all cards on the field from game.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "nar-036-kakashistraining": {
@@ -6477,9 +6477,9 @@ window.CTF_CARD_PLAYABILITY = {
     },
     "nar-040-summoningnojutsu": {
       "status": "manual",
-      "name": "Summoning no Jutsu",
+      "name": "Spawning no Jutsu",
       "type": "Palm Trick",
-      "desc": "Pay 2500 Chi to special summon \"Manda\", \"Gamabunto\", or \"Katsuyu\" from your deck or Void.",
+      "desc": "Pay 2500 Chi to special spawn \"Manda\", \"Gamabunto\", or \"Katsuyu\" from your deck or Void.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "nar-041-camouflagesleep": {
@@ -6542,7 +6542,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Invasion of the Sound",
       "type": "Concealed Trick",
-      "desc": "Pay 700 Chi to special summon one lvl 3 or lower Catalyst from your deck (you must pay 700 per Catalyst). Pay 300 Chi during each of your standby phases, if you do not, the Catalyst is destroyed.",
+      "desc": "Pay 700 Chi to special spawn one lvl 3 or lower Catalyst from your deck (you must pay 700 per Catalyst). Pay 300 Chi during each of your standby phases, if you do not, the Catalyst is destroyed.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "nar-050-nyobimonkeykingenma": {
@@ -6577,7 +6577,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Nami",
       "type": "Palm Trick",
-      "desc": "When Normal Summoned, look at the top 3 cards of your deck and rearrange them in any order. Once per turn, draw 1 card and discard 1. [OP1]",
+      "desc": "When Normal Spawned, look at the top 3 cards of your deck and rearrange them in any order. Once per turn, draw 1 card and discard 1. [OP1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "op1-003-usopp": {
@@ -6605,7 +6605,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Nico Robin",
       "type": "Palm Trick",
-      "desc": "When Normal Summoned, add 1 Palm Tricks from your Void to your hand. Once per turn, when an opponent's Catalyst declares an attack, change the target to this card and halve the Battle Damage. [OP1]",
+      "desc": "When Normal Spawned, add 1 Palm Tricks from your Void to your hand. Once per turn, when an opponent's Catalyst declares an attack, change the target to this card and halve the Battle Damage. [OP1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "op1-007-franky": {
@@ -6619,7 +6619,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Brook",
       "type": "Catalyst",
-      "desc": "When destroyed and sent to the Void, Special Summon it back to the field during the next Standby Phase. [OP1]",
+      "desc": "When destroyed and sent to the Void, Special Spawn it back to the field during the next Standby Phase. [OP1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "op1-009-jinbe": {
@@ -6661,14 +6661,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Trafalgar Law",
       "type": "Catalyst",
-      "desc": "Once per turn, destroy 1 Catalyst on the field and Special Summon another from your Void. [OP1]",
+      "desc": "Once per turn, destroy 1 Catalyst on the field and Special Spawn another from your Void. [OP1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "op1-015-eustasskid": {
       "status": "auto",
       "name": "Eustass Kid",
       "type": "Catalyst",
-      "desc": "When Summoned, destroy all Palm Tricks and Concealed Tricks your opponent controls with Counter Pressure lower than 1500. [OP1]",
+      "desc": "When Spawned, destroy all Palm Tricks and Concealed Tricks your opponent controls with Counter Pressure lower than 1500. [OP1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "op1-016-boahancock": {
@@ -6745,14 +6745,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Pirate Crew Formation",
       "type": "Palm Trick",
-      "desc": "Special Summon up to 2 Level 3 or lower Pirate-Type Catalysts from your deck. Catalysts Summoned this way cannot attack the turn they are Summoned. [OP1]",
+      "desc": "Special Spawn up to 2 Level 3 or lower Pirate-Type Catalysts from your deck. Catalysts Spawned this way cannot attack the turn they are Spawned. [OP1]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "op1-028-marineambush": {
       "status": "auto",
       "name": "Marine Ambush",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent attacks directly. Negate the attack and Special Summon 1 Level 4 or lower Pirate-Type Catalyst from your hand in Defense position. [OP1]",
+      "desc": "Activate when your opponent attacks directly. Negate the attack and Special Spawn 1 Level 4 or lower Pirate-Type Catalyst from your hand in Defense position. [OP1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "op1-029-hakishield": {
@@ -6766,7 +6766,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Wanted - Dead or Alive",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent Summons a Catalyst. That Catalyst cannot attack or change battle position for 2 turns. [OP1]",
+      "desc": "Activate when your opponent Spawns a Catalyst. That Catalyst cannot attack or change battle position for 2 turns. [OP1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "op1-031-conquerorshaki": {
@@ -6829,7 +6829,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Luffy's Pledge",
       "type": "Concealed Trick",
-      "desc": "Activate when your Chi drop to 1000 or below. Special Summon 1 \"Monkey D. Luffy\" from your hand, deck, or Void and give it 1000 Pressure bonus until the end of this turn. [OP1]",
+      "desc": "Activate when your Chi drop to 1000 or below. Special Spawn 1 \"Monkey D. Luffy\" from your hand, deck, or Void and give it 1000 Pressure bonus until the end of this turn. [OP1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "rkn-001-himurakenshin": {
@@ -6864,7 +6864,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Himura - Hitokiri Battousai",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be summoned by offering one \"Himura Kenshin\" as a tribute.  If this Catalyst is equipped with a Sakabato it can either attack twice or remove up to 2 cards on you opponents side of the field from play till the end of this turn",
+      "desc": "This Catalyst can only be spawned by offering one \"Himura Kenshin\" as a tribute.  If this Catalyst is equipped with a Sakabato it can either attack twice or remove up to 2 cards on you opponents side of the field from play till the end of this turn",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "rkn-006-myojinyahiko": {
@@ -6892,7 +6892,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Megumi",
       "type": "Palm Trick",
-      "desc": "During your main phase you may activate one of these two effects. 1)Offer one opium token to increase your Chi by 1000 2)Offer one opium token to decrease your opponents Chi by 500. Also when this card is destroyed as a result of battle special summon 1 level 3 or lower Catalyst from your hand.",
+      "desc": "During your main phase you may activate one of these two effects. 1)Offer one opium token to increase your Chi by 1000 2)Offer one opium token to decrease your opponents Chi by 500. Also when this card is destroyed as a result of battle special spawn 1 level 3 or lower Catalyst from your hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "rkn-010-multiplestrikes": {
@@ -6969,14 +6969,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Aoshi",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Oniwabanshu's Sacrifice\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. You must also remove 1 of the following cards from your Void from play: \"Beshimi\", \"Hyottoko\", \"Han'nya\", or \"Shikijou\". If \"Beshimi\" is removed, once per turn you can remove 1 Palm or Concealed Trick on the field from game. If \"Hyottoko\" is removed, once per turn during Main Phase 1 you can destroy 1 card on the field, but skip your Battle Phase this turn. If \"Han'nya\" is removed, during each of your Standby Phases add 1 Palm Trick counter to this card (limit 3). Remove 3 Palm Trick counters from this card to attack your opponent's Chi directly with this card. If \"Shikijou\" is removed, decrease this card's Pressure by 2000; it can attack directly twice.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Oniwabanshu's Sacrifice\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. You must also remove 1 of the following cards from your Void from play: \"Beshimi\", \"Hyottoko\", \"Han'nya\", or \"Shikijou\". If \"Beshimi\" is removed, once per turn you can remove 1 Palm or Concealed Trick on the field from game. If \"Hyottoko\" is removed, once per turn during Main Phase 1 you can destroy 1 card on the field, but skip your Battle Phase this turn. If \"Han'nya\" is removed, during each of your Standby Phases add 1 Palm Trick counter to this card (limit 3). Remove 3 Palm Trick counters from this card to attack your opponent's Chi directly with this card. If \"Shikijou\" is removed, decrease this card's Pressure by 2000; it can attack directly twice.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "rkn-021-oniwabanshussacrifice": {
       "status": "manual",
       "name": "Oniwabanshu's Sacrifice",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Aoshi\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Aoshi\". You must also remove 1 of the following cards from your Void from play: \"Beshimi\", \"Hyottoko\", \"Han'nya\", or \"Shikijou\".",
+      "desc": "Special Spawn \"Aoshi\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Aoshi\". You must also remove 1 of the following cards from your Void from play: \"Beshimi\", \"Hyottoko\", \"Han'nya\", or \"Shikijou\".",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "rkn-022-hyottoko": {
@@ -7018,7 +7018,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Kaoru's Cooking",
       "type": "Concealed Trick",
-      "desc": "negate the special summoning of a Catalyst and remove it from game.",
+      "desc": "negate the special spawning of a Catalyst and remove it from game.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "rkn-029-shinai": {
@@ -7081,21 +7081,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Saidzuchi Roujin",
       "type": "Palm Trick",
-      "desc": "Offer this face up Catalyst and a face up \"Fuji\" to special summon one \"Weapon\"",
+      "desc": "Offer this face up Catalyst and a face up \"Fuji\" to special spawn one \"Weapon\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "rkn-038-fuji": {
       "status": "manual",
       "name": "Fuji",
       "type": "Catalyst",
-      "desc": "Offer this face up Catalyst and a face up \"Saidzuchi Roujin\" to special summon one \"Weapon\"",
+      "desc": "Offer this face up Catalyst and a face up \"Saidzuchi Roujin\" to special spawn one \"Weapon\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "rkn-039-weapon": {
       "status": "auto",
       "name": "Weapon",
       "type": "Fusion",
-      "desc": "This card can only be fusion summoned by sacrificing a \"Fuji\" and a \"Saidzuchi Roujin\" from your field. Flip up to 3 coins, for each head flipped, you can destroy one card on the field. If you flip all tails then you must discard your hand and remove the top 3 cards of your deck from game.",
+      "desc": "This card can only be fusion spawned by sacrificing a \"Fuji\" and a \"Saidzuchi Roujin\" from your field. Flip up to 3 coins, for each head flipped, you can destroy one card on the field. If you flip all tails then you must discard your hand and remove the top 3 cards of your deck from game.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "rkn-040-kariwahennya": {
@@ -7116,7 +7116,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Clark Kent",
       "type": "Catalyst",
-      "desc": "When this card is successfully summoned and is in play for 2 of your End phases, Special summon 1 \"Super-Man\" from your hand or deck to the field.",
+      "desc": "When this card is successfully spawned and is in play for 2 of your End phases, Special spawn 1 \"Super-Man\" from your hand or deck to the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "s-m-010-superman": {
@@ -7207,7 +7207,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Gambit",
       "type": "Catalyst",
-      "desc": "When this card is normal summoned or special summoned to the field flip a coin if you flip heads draw 2 cards,if tails discard your hand to the grave.",
+      "desc": "When this card is normal spawned or special spawned to the field flip a coin if you flip heads draw 2 cards,if tails discard your hand to the grave.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "s-m-015-iceman": {
@@ -7235,7 +7235,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Juggernaut",
       "type": "Catalyst",
-      "desc": "This card can ONLY be special summoned when your Chi are under 4000 and you have no Catalysts on the feild. During each of your stand-by phases pay 500 Chi.(The payment is not optional)",
+      "desc": "This card can ONLY be special spawned when your Chi are under 4000 and you have no Catalysts on the feild. During each of your stand-by phases pay 500 Chi.(The payment is not optional)",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "s-m-019-magneto": {
@@ -7361,7 +7361,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Apocalypse",
       "type": "Catalyst",
-      "desc": "This card cannot be special summoned. When this card inflicts damage to your opponent's Chi, your opponent must discard his/her hand to the Void at the end of the turn.",
+      "desc": "This card cannot be special spawned. When this card inflicts damage to your opponent's Chi, your opponent must discard his/her hand to the Void at the end of the turn.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "s-m-037-lexluthor": {
@@ -7396,14 +7396,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "The Hulk",
       "type": "Catalyst",
-      "desc": "This card cannot be special summoned. It may only be normal summoned by offering one David Banner on the field as a tribute.",
+      "desc": "This card cannot be special spawned. It may only be normal spawned by offering one David Banner on the field as a tribute.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "s-m-042-davidbanner": {
       "status": "manual",
       "name": "David Banner",
       "type": "Palm Trick",
-      "desc": "If you Tribute Summon a EARTH Catalyst, you can treat this one Catalyst as two tribute Catalyst for the tribute summon.",
+      "desc": "If you Tribute Spawn a EARTH Catalyst, you can treat this one Catalyst as two tribute Catalyst for the tribute spawn.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "s-m-043-kryptonite": {
@@ -7417,7 +7417,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "The Bat Cave",
       "type": "Field Trick",
-      "desc": "As long as this card remains face up on the field, all effects of Palm Trick, Concealed Trick, and/or Effect Catalyst Cards that involve Special summoning Catalysts from the Void are negated. The controller of this card must play 400 Chi to keep this card in play during each of there stand-by phases.",
+      "desc": "As long as this card remains face up on the field, all effects of Palm Trick, Concealed Trick, and/or Effect Catalyst Cards that involve Special spawning Catalysts from the Void are negated. The controller of this card must play 400 Chi to keep this card in play during each of there stand-by phases.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "sh2-002-thepunisher": {
@@ -7480,7 +7480,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Wolverine",
       "type": "Catalyst",
-      "desc": "This cards takes no battle damage from battle. In addition increase this cards Pressure by 300 for each of your opponent's Catalysts summoned while \"Wolverine\" is on the field",
+      "desc": "This cards takes no battle damage from battle. In addition increase this cards Pressure by 300 for each of your opponent's Catalysts spawned while \"Wolverine\" is on the field",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sh2-011-storm": {
@@ -7529,7 +7529,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Wasp",
       "type": "Catalyst",
-      "desc": "This card counts as 2 tributes when summoning a wind Catalyst.",
+      "desc": "This card counts as 2 tributes when spawning a wind Catalyst.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "sh2-018-antieffectray": {
@@ -7592,7 +7592,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Final Revival",
       "type": "Palm Trick",
-      "desc": "Special summon a Catalyst from your grave to the field. This card cannot be offered as a tribute under any condition. At the end of the turn RFG the Catalyst.",
+      "desc": "Special spawn a Catalyst from your grave to the field. This card cannot be offered as a tribute under any condition. At the end of the turn RFG the Catalyst.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "sh2-027-dropyourweapons": {
@@ -7620,14 +7620,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Sung Jinwoo",
       "type": "Catalyst",
-      "desc": "Once per turn, pay 500 Chi to Special Summon 1 Shadow Token (Dark/Warrior/1 Star/Pressure 500/Counter Pressure 500). [SL1]",
+      "desc": "Once per turn, pay 500 Chi to Special Spawn 1 Shadow Token (Dark/Warrior/1 Star/Pressure 500/Counter Pressure 500). [SL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sl1-001-shadowsoldierigris": {
       "status": "auto",
       "name": "Shadow Soldier Igris",
       "type": "Catalyst",
-      "desc": "When Summoned, Special Summon 1 Shadow Token. [SL1]",
+      "desc": "When Spawned, Special Spawn 1 Shadow Token. [SL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sl1-002-shadowbeastberu": {
@@ -7648,7 +7648,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Shadow Mage Kaisel",
       "type": "Catalyst",
-      "desc": "When Summoned, destroy all face-down cards your opponent controls. [SL1]",
+      "desc": "When Spawned, destroy all face-down cards your opponent controls. [SL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sl1-005-chahaein": {
@@ -7690,7 +7690,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Monarch Antares",
       "type": "Catalyst",
-      "desc": "When this card destroys a Catalyst in battle, Special Summon it to your side as a Shadow Token. [SL1]",
+      "desc": "When this card destroys a Catalyst in battle, Special Spawn it to your side as a Shadow Token. [SL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sl1-011-monarchlegia": {
@@ -7704,7 +7704,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Monarch Baran",
       "type": "Catalyst",
-      "desc": "Pay 1000 Chi to destroy all Special Summoned Catalysts on the field. [SL1]",
+      "desc": "Pay 1000 Chi to destroy all Special Spawned Catalysts on the field. [SL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sl1-013-minbyunggyu": {
@@ -7725,7 +7725,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Shadow General Greed",
       "type": "Catalyst",
-      "desc": "Once per turn, Tribute 1 Shadow Token to Special Summon 1 Level 5 or lower Shadow-Type Catalyst from your Void. [SL1]",
+      "desc": "Once per turn, Tribute 1 Shadow Token to Special Spawn 1 Level 5 or lower Shadow-Type Catalyst from your Void. [SL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "sl1-016-shadowtanktank": {
@@ -7753,14 +7753,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Sung Jinwoo - The Great",
       "type": "Catalyst",
-      "desc": "When this card is Normal Summoned, Special Summon up to 3 Shadow Tokens (Dark/Warrior/1 Star/Pressure 800/Counter Pressure 800) and destroy 1 Catalyst on your opponent's field. [SL1]",
+      "desc": "When this card is Normal Spawned, Special Spawn up to 3 Shadow Tokens (Dark/Warrior/1 Star/Pressure 800/Counter Pressure 800) and destroy 1 Catalyst on your opponent's field. [SL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sl1-020-monarchantaresthegreat": {
       "status": "auto",
       "name": "Monarch Antares - The Great",
       "type": "Catalyst",
-      "desc": "When this card is Summoned, destroy all Catalysts on your opponent's field and inflict 200 damage for each. [SL1]",
+      "desc": "When this card is Spawned, destroy all Catalysts on your opponent's field and inflict 200 damage for each. [SL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sl1-022-shadowarmyformation": {
@@ -7774,7 +7774,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Arise",
       "type": "Palm Trick",
-      "desc": "Target 1 Catalyst in your opponent's Void. Special Summon it to your side as a Shadow Token with its original Pressure and Counter Pressure. Treated as a Shadow-Type Catalyst. [SL1]",
+      "desc": "Target 1 Catalyst in your opponent's Void. Special Spawn it to your side as a Shadow Token with its original Pressure and Counter Pressure. Treated as a Shadow-Type Catalyst. [SL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "sl1-024-systemwindow": {
@@ -7788,14 +7788,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Shadow Exchange",
       "type": "Palm Trick",
-      "desc": "Tribute 1 Shadow Token to Special Summon 1 Shadow-Type Catalyst from your hand or Void whose Level is equal to or lower than the Tributed Token's Level +2. [SL1]",
+      "desc": "Tribute 1 Shadow Token to Special Spawn 1 Shadow-Type Catalyst from your hand or Void whose Level is equal to or lower than the Tributed Token's Level +2. [SL1]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "sl1-026-shadowdomain": {
       "status": "auto",
       "name": "Shadow Domain",
       "type": "Palm Trick",
-      "desc": "Special Summon up to 2 Shadow Tokens (Dark/Warrior/1 Star/Pressure 500/Counter Pressure 500). Tokens cannot be used as Tribute for a Normal Summon. [SL1]",
+      "desc": "Special Spawn up to 2 Shadow Tokens (Dark/Warrior/1 Star/Pressure 500/Counter Pressure 500). Tokens cannot be used as Tribute for a Normal Spawn. [SL1]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "sl1-027-shadowtrapreversal": {
@@ -7809,14 +7809,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Shadow Extraction",
       "type": "Concealed Trick",
-      "desc": "When an opponent's Catalyst is destroyed in battle, instead of sending it to the Void, Special Summon it to your side as a Shadow Token. [SL1]",
+      "desc": "When an opponent's Catalyst is destroyed in battle, instead of sending it to the Void, Special Spawn it to your side as a Shadow Token. [SL1]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "sl1-029-hunterslaststand": {
       "status": "manual",
       "name": "Hunter's Last Stand",
       "type": "Concealed Trick",
-      "desc": "Activate when your Chi drop to 2000 or below. Special Summon up to 3 Shadow Tokens (Dark/Warrior/1 Star/Pressure 800/Counter Pressure 800). [SL1]",
+      "desc": "Activate when your Chi drop to 2000 or below. Special Spawn up to 3 Shadow Tokens (Dark/Warrior/1 Star/Pressure 800/Counter Pressure 800). [SL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "sl1-030-monarchsdomain": {
@@ -7830,14 +7830,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Double Dungeon",
       "type": "Concealed Trick",
-      "desc": "When your opponent attacks a Shadow-Type Catalyst you control, negate the attack and Special Summon 1 Shadow Token. [SL1]",
+      "desc": "When your opponent attacks a Shadow-Type Catalyst you control, negate the attack and Special Spawn 1 Shadow Token. [SL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "sl1-032-gateofdarkness": {
       "status": "manual",
       "name": "Gate of Darkness",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent Special Summons a Catalyst. Destroy the Summoned Catalyst and inflict 500 damage. [SL1]",
+      "desc": "Activate when your opponent Special Spawns a Catalyst. Destroy the Spawned Catalyst and inflict 500 damage. [SL1]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "sl1-033-shadowcounter": {
@@ -7886,7 +7886,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Arise Command",
       "type": "Concealed Trick",
-      "desc": "When one of your Catalysts is destroyed in battle, Special Summon it as a Shadow Token with its original Pressure and Counter Pressure. Treated as a Shadow-Type Catalyst. [SL1]",
+      "desc": "When one of your Catalysts is destroyed in battle, Special Spawn it as a Shadow Token with its original Pressure and Counter Pressure. Treated as a Shadow-Type Catalyst. [SL1]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "sl1-040-systemoverride": {
@@ -7900,7 +7900,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Shadow Eclipse",
       "type": "Concealed Trick",
-      "desc": "While face-up, all Catalysts lose 200 Pressure and Counter Pressure for each Shadow Token on your side of the field. When destroyed, you may Special Summon 1 Shadow Token. [SL1]",
+      "desc": "While face-up, all Catalysts lose 200 Pressure and Counter Pressure for each Shadow Token on your side of the field. When destroyed, you may Special Spawn 1 Shadow Token. [SL1]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "slm-001-tsukinousagi": {
@@ -7914,14 +7914,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Sailor Moon",
       "type": "Palm Trick",
-      "desc": "This card can only be summoned if there is a  \"Tsukino Usagi\" card on the field or in the Void. This card is unaffected by all Palm Tricks.",
+      "desc": "This card can only be spawned if there is a  \"Tsukino Usagi\" card on the field or in the Void. This card is unaffected by all Palm Tricks.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "slm-003-sailormoonr": {
       "status": "manual",
       "name": "Sailor Moon - R",
       "type": "Palm Trick",
-      "desc": "This card can only be special summoned by removing one \"Sailor Moon\" on the field or in your Void from game. When equipped with the \"Cutie Moon Rod\" flip 3 coins, if all 3 are heads you can take control of one opponent's Catalysts.",
+      "desc": "This card can only be special spawned by removing one \"Sailor Moon\" on the field or in your Void from game. When equipped with the \"Cutie Moon Rod\" flip 3 coins, if all 3 are heads you can take control of one opponent's Catalysts.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-004-sailormoons": {
@@ -7942,7 +7942,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Eternal Sailor Moon",
       "type": "Palm Trick",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Eternal Moon Tier\". You must also remove 1 card with \"Sailor Moon\" in its name from your field or Void from game. Pay 4000 Chi to destroy all cards on the field that do not include \"Sailor\" in their name.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Eternal Moon Tier\". You must also remove 1 card with \"Sailor Moon\" in its name from your field or Void from game. Pay 4000 Chi to destroy all cards on the field that do not include \"Sailor\" in their name.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-007-moontiara": {
@@ -7970,21 +7970,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Eternal Moon Tier",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Eternal Sailor Moon\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Eternal Sailor Moon\". You must also remove 1 card with \"Sailor Moon\" in its name from your field or Void from game.",
+      "desc": "Special Spawn \"Eternal Sailor Moon\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Eternal Sailor Moon\". You must also remove 1 card with \"Sailor Moon\" in its name from your field or Void from game.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "slm-011-silvercrystal": {
       "status": "manual",
       "name": "The Great Silver Crystal",
       "type": "Palm Trick",
-      "desc": "This card can be used to special summon any card with \"Sailor\" in its name from your hand or deck regardless of special summon requirements. (limited to 1!)",
+      "desc": "This card can be used to special spawn any card with \"Sailor\" in its name from your hand or deck regardless of special spawn requirements. (limited to 1!)",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "slm-012-mizunoami": {
       "status": "auto",
       "name": "Mizuno Ami",
       "type": "Catalyst",
-      "desc": "Offer this card as a tribute to special summon one \"Sailor Mercury\" from your deck.",
+      "desc": "Offer this card as a tribute to special spawn one \"Sailor Mercury\" from your deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "slm-013-sailormercury": {
@@ -8026,7 +8026,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Super Sailor Mars",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be summoned by removing \"Hino Rei\" and \"Sailor Mars\" from game. When this Catalyst is successfully summoned, destroy all cards on the field. This card can not attack your opponent's Chi directly.",
+      "desc": "This Catalyst can only be spawned by removing \"Hino Rei\" and \"Sailor Mars\" from game. When this Catalyst is successfully spawned, destroy all cards on the field. This card can not attack your opponent's Chi directly.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "slm-019-burningmadala": {
@@ -8047,21 +8047,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Sailor Venus",
       "type": "Catalyst",
-      "desc": "If \"Love Me Chain\" is on the field, Pay 1500 Chi to special summon one Catalyst in either player's Void to your side of the field. You msut pay 500 Chi for the summoned Catalyst to attack.",
+      "desc": "If \"Love Me Chain\" is on the field, Pay 1500 Chi to special spawn one Catalyst in either player's Void to your side of the field. You msut pay 500 Chi for the spawned Catalyst to attack.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-022-supersailorvenus": {
       "status": "manual",
       "name": "SuperSailor Venus",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing \"Aino Minako\" and \"Sailor Venus\" in your Void from game. If \"Love Me Chain\" is on the field, Pay 1000 Chi to special summon one Catalyst in either player's Void to your side of the field.",
+      "desc": "This card can only be special spawned by removing \"Aino Minako\" and \"Sailor Venus\" in your Void from game. If \"Love Me Chain\" is on the field, Pay 1000 Chi to special spawn one Catalyst in either player's Void to your side of the field.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-022-supersailorvenus-v2": {
       "status": "manual",
       "name": "Super Sailor Venus",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing \"Aino Minako\" and \"Sailor Venus\" in your Void from game. If \"Love Me Chain\" is on the field, Pay 1000 Chi to special summon one Catalyst in either player's Void to your side of the field.",
+      "desc": "This card can only be special spawned by removing \"Aino Minako\" and \"Sailor Venus\" in your Void from game. If \"Love Me Chain\" is on the field, Pay 1000 Chi to special spawn one Catalyst in either player's Void to your side of the field.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-023-lovemechain": {
@@ -8082,14 +8082,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Sailor Jupiter",
       "type": "Catalyst",
-      "desc": "When this card is summoned, If \"Lightning Rod\" is on the field, destroy 2 Palm/Concealed Trick cards on the field.",
+      "desc": "When this card is spawned, If \"Lightning Rod\" is on the field, destroy 2 Palm/Concealed Trick cards on the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "slm-026-supersailorjupiter": {
       "status": "manual",
       "name": "Super Sailor Jupiter",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing \"Kino Makoto\" and \"Sailor Jupiter\" in your Void from game. When this card is summoned, If \"Lightning Rod\" is on the field, destroy 2 Catalyst cards on the field.",
+      "desc": "This card can only be special spawned by removing \"Kino Makoto\" and \"Sailor Jupiter\" in your Void from game. When this card is spawned, If \"Lightning Rod\" is on the field, destroy 2 Catalyst cards on the field.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-027-lightningrod": {
@@ -8117,7 +8117,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Mistress 9",
       "type": "Palm Trick",
-      "desc": "This Catalyst can only be summoned by removing \"Tomoe Hotaru\" from game. When \"Heart Crystal\" is on the field, Pay 500 Chi to reduce the Pressure of one Catalyst on your opponent's side of the field by half.",
+      "desc": "This Catalyst can only be spawned by removing \"Tomoe Hotaru\" from game. When \"Heart Crystal\" is on the field, Pay 500 Chi to reduce the Pressure of one Catalyst on your opponent's side of the field by half.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-031-deathrebornrevolution": {
@@ -8166,14 +8166,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Sailor Neptune",
       "type": "Catalyst",
-      "desc": "When this Catalyst is equipped with \"Nudity\", pay 500 Chi to special summon a \"Sailor Uranus\" from your deck or Void.",
+      "desc": "When this Catalyst is equipped with \"Nudity\", pay 500 Chi to special spawn a \"Sailor Uranus\" from your deck or Void.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-039-sailorpluto": {
       "status": "manual",
       "name": "Sailor Pluto",
       "type": "Catalyst",
-      "desc": "When \"Timestream\" is on the field and this card is normal summoned, pay 1000 Chi to make your opponent skip their next draw phase. This Catalyst returns to your hand at the end of your turn.",
+      "desc": "When \"Timestream\" is on the field and this card is normal spawned, pay 1000 Chi to make your opponent skip their next draw phase. This Catalyst returns to your hand at the end of your turn.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "slm-040-tuxedomask": {
@@ -8271,7 +8271,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Dr. Robotnik - Eggbot",
       "type": "Catalyst",
-      "desc": "When this card is Normal Summoned succesfully, place 2 \"Minibot Tokens\" on the field [Dark/Machine/Pressure 500/Counter Pressure 1000]. If this card destroys a card with \"Sonic\" in it's name except for \"Sonic's Partner - Tails\", or \"Sonic's Partner - Knuckles\" raise this card's Pressure by 200.",
+      "desc": "When this card is Normal Spawned succesfully, place 2 \"Minibot Tokens\" on the field [Dark/Machine/Pressure 500/Counter Pressure 1000]. If this card destroys a card with \"Sonic\" in it's name except for \"Sonic's Partner - Tails\", or \"Sonic's Partner - Knuckles\" raise this card's Pressure by 200.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "snc-008-dreggman": {
@@ -8306,14 +8306,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Chaos Emerald's Gathering",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Super Sonic\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Super Sonic\".",
+      "desc": "Special Spawn \"Super Sonic\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Super Sonic\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "snc-013-supersonic": {
       "status": "auto",
       "name": "Super Sonic",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Chaos Emerald's Gathering\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. This card may attack twice during the Battle Phase. During your Standby Phase you must pay 600 Chi. (Non-Optional)",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Chaos Emerald's Gathering\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. This card may attack twice during the Battle Phase. During your Standby Phase you must pay 600 Chi. (Non-Optional)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "snc-014-revroll": {
@@ -8348,28 +8348,28 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Sonic's Partner - Knuckles",
       "type": "Catalyst",
-      "desc": "This card can only be summoned if there is a card on your side of the field with \"Sonic\" in it's name besides \"Sonic's Partner - Tails\"",
+      "desc": "This card can only be spawned if there is a card on your side of the field with \"Sonic\" in it's name besides \"Sonic's Partner - Tails\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "snc-019-bonusstage": {
       "status": "manual",
       "name": "Bonus Stage",
       "type": "Palm Trick",
-      "desc": "Pay 500 Chi to activate this card. Guess a Catalyst level under 4. Pick up (not draw) cards until you get a Catalyst. If it's level is under level 4, then discard all picked up cards and Special Summon the Catalyst. If it is over 4 then discard all picked up cards. If you guess the number correctly, put one \"Chaos Emerald\" from your deck or Void to your hand.",
+      "desc": "Pay 500 Chi to activate this card. Guess a Catalyst level under 4. Pick up (not draw) cards until you get a Catalyst. If it's level is under level 4, then discard all picked up cards and Special Spawn the Catalyst. If it is over 4 then discard all picked up cards. If you guess the number correctly, put one \"Chaos Emerald\" from your deck or Void to your hand.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "snc-020-bonusstage2": {
       "status": "manual",
       "name": "Bonus Stage #2",
       "type": "Palm Trick",
-      "desc": "Guess the bottom Catalyst on your opponent's Void. If you guess right, then summon it on your side of the field and put one \"Chaos Emerald\" from your deck or Void in your hand. If you get it wrong, decrease your Chi by half.",
+      "desc": "Guess the bottom Catalyst on your opponent's Void. If you guess right, then spawn it on your side of the field and put one \"Chaos Emerald\" from your deck or Void in your hand. If you get it wrong, decrease your Chi by half.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "snc-021-bonusstage3": {
       "status": "manual",
       "name": "Bonus Stage #3",
       "type": "Palm Trick",
-      "desc": "Your opponent must guess the bottom card in YOUR Void. If he/she gets it rightand it is a Catalyst he/she may summon it on his/her side of the field. If he/she gets it wrong, he/she loses 1000 Chi and you may put one \"Chaos Emerald\" from your deck or Void in your hand.",
+      "desc": "Your opponent must guess the bottom card in YOUR Void. If he/she gets it rightand it is a Catalyst he/she may spawn it on his/her side of the field. If he/she gets it wrong, he/she loses 1000 Chi and you may put one \"Chaos Emerald\" from your deck or Void in your hand.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "snc-022-emeraldhill": {
@@ -8418,14 +8418,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Accusation",
       "type": "Concealed Trick",
-      "desc": "When you summon a \"Shadow, the Evil\", you may special summon a \"Sonic, the Hedgehog\" from your hand",
+      "desc": "When you spawn a \"Shadow, the Evil\", you may special spawn a \"Sonic, the Hedgehog\" from your hand",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ss1-001-noneedfor": {
       "status": "auto",
       "name": "No Need For...",
       "type": "Concealed Trick",
-      "desc": "Both players discard their hands. All cards on the field are removed from game. Both players then draw 5 cards and show them to each other. Any Catalysts drawn are summoned in facedown defense position, all other cards are discarded.",
+      "desc": "Both players discard their hands. All cards on the field are removed from game. Both players then draw 5 cards and show them to each other. Any Catalysts drawn are spawned in facedown defense position, all other cards are discarded.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "db1-054-kamehamehacounterattack": {
@@ -8558,7 +8558,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Angel Of Light",
       "type": "Catalyst",
-      "desc": "This card can only be summoned if there is no other Catalysts on your side of the field,As long as this card remains face up on the field no dark Catalysts can be summoned in face up attack mode.",
+      "desc": "This card can only be spawned if there is no other Catalysts on your side of the field,As long as this card remains face up on the field no dark Catalysts can be spawned in face up attack mode.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ss1-001-berserkflame": {
@@ -8579,7 +8579,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Flash Back",
       "type": "Concealed Trick",
-      "desc": "During each of your standby phases pay 1000 Chi to special summon one Lvl 4 or lower Catalyst destroyed in the previous battle phase to your side of the field. That Catalyst may not be used as a tribute for a tribute summon. This card's effect may only be used once per turn.",
+      "desc": "During each of your standby phases pay 1000 Chi to special spawn one Lvl 4 or lower Catalyst destroyed in the previous battle phase to your side of the field. That Catalyst may not be used as a tribute for a tribute spawn. This card's effect may only be used once per turn.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "ss1-004-goldenreflection": {
@@ -8593,7 +8593,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Knockout Victory",
       "type": "Concealed Trick",
-      "desc": "When you have 3 or more Catalysts face up in attack mode, special summon one level 4 Catalyst from your hand in attack mode. Destroy 1 level 6 or higher Catalyst on your opponents side of the field. You May Not Attack With Any Lvl 5 or High Catalysts this turn.",
+      "desc": "When you have 3 or more Catalysts face up in attack mode, special spawn one level 4 Catalyst from your hand in attack mode. Destroy 1 level 6 or higher Catalyst on your opponents side of the field. You May Not Attack With Any Lvl 5 or High Catalysts this turn.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ss1-006-luminousstar": {
@@ -8663,14 +8663,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Comet-X",
       "type": "Fusion",
-      "desc": "\"Comet\" + \"X\" This card can only be special summoned by removing one \"Comet\" and \"X\" on the feild from the game. This cards Pressure gets increase by 300 for every Fire Catalyst on your side of the feild.",
+      "desc": "\"Comet\" + \"X\" This card can only be special spawned by removing one \"Comet\" and \"X\" on the feild from the game. This cards Pressure gets increase by 300 for every Fire Catalyst on your side of the feild.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ss1-000-shadowlord": {
       "status": "auto",
       "name": "Shadow Lord",
       "type": "Catalyst",
-      "desc": "This card can only be Tribute summoned by tributeing 1 Vampire from the feild and removing 2 Dark Catalysts from your Void. The control of this card cannot be changed. When this card attacks with an Pressure higher than the Counter Pressure of your opponent's defense position Catalyst, inflict the difference as effect damage to your opponent's Chi. This card cannot be removed from the field as a result of the effects of Palm or Concealed Tricks.",
+      "desc": "This card can only be Tribute spawned by tributeing 1 Vampire from the feild and removing 2 Dark Catalysts from your Void. The control of this card cannot be changed. When this card attacks with an Pressure higher than the Counter Pressure of your opponent's defense position Catalyst, inflict the difference as effect damage to your opponent's Chi. This card cannot be removed from the field as a result of the effects of Palm or Concealed Tricks.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ss1-000-reesebuck": {
@@ -8691,7 +8691,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Sai-Striker Night-Warrior",
       "type": "Catalyst",
-      "desc": "This card can only be summoned by tributing 3 Catalysts with 1500 attack or more on your side of the field, when this card is summoned destroy 1 Palm or Concealed Trick on the field. When this card destroys a Catalyst on the field increase its attack by 300",
+      "desc": "This card can only be spawned by tributing 3 Catalysts with 1500 attack or more on your side of the field, when this card is spawned destroy 1 Palm or Concealed Trick on the field. When this card destroys a Catalyst on the field increase its attack by 300",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ss1-001-soulessence": {
@@ -8712,7 +8712,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Hell",
       "type": "Field Trick",
-      "desc": "Increase the attack of every Demon card by 300. Also Decrease the attack of every Fairy Card by 400. Everytime a Demon Catalyst is summoned put one counter on this card. When u have 3 counters on this card You may pay 1000 Chi to inflict 1000 Chi damage for every Demon card on the field.",
+      "desc": "Increase the attack of every Demon card by 300. Also Decrease the attack of every Fairy Card by 400. Everytime a Demon Catalyst is spawned put one counter on this card. When u have 3 counters on this card You may pay 1000 Chi to inflict 1000 Chi damage for every Demon card on the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "t2f-003-earth": {
@@ -8747,7 +8747,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Void",
       "type": "Field Trick",
-      "desc": "Increase the attack of every zombie card by 200 attack points. If a LVL 4 or lower Zombie card is sent from you hand to the Void special summon it on your side of the field at the end of your turn.",
+      "desc": "Increase the attack of every zombie card by 200 attack points. If a LVL 4 or lower Zombie card is sent from you hand to the Void special spawn it on your side of the field at the end of your turn.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "t2f-008-colosseum": {
@@ -8768,7 +8768,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Heaven",
       "type": "Field Trick",
-      "desc": "Increase the attack of every Fairy on the field by 300. If a fairy is destroyed as a result of battle your may special summon another fairy Catalyst of the same lvl from your hand to the field",
+      "desc": "Increase the attack of every Fairy on the field by 300. If a fairy is destroyed as a result of battle your may special spawn another fairy Catalyst of the same lvl from your hand to the field",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "t2f-011-forest": {
@@ -8803,7 +8803,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Mechanism Factory",
       "type": "Field Trick",
-      "desc": "Increase the attack of every Machine card by 300. Once per turn you may create 1 Robot Token and summon it face up attack or defence with 500/500.",
+      "desc": "Increase the attack of every Machine card by 300. Once per turn you may create 1 Robot Token and spawn it face up attack or defence with 500/500.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "t2f-016-dojo": {
@@ -8824,7 +8824,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Super Computer",
       "type": "Field Trick",
-      "desc": "Increase the attack of every Hacker on the field by 300. Whenever a Hacker is summoned on to the field you may draw 1 card from your deck.",
+      "desc": "Increase the attack of every Hacker on the field by 300. Whenever a Hacker is spawned on to the field you may draw 1 card from your deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "t2f-019-xaviersschoolforthegifted": {
@@ -8838,7 +8838,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Cart00n Book",
       "type": "Field Trick",
-      "desc": "Increase the attack of every Cart00n characther by 200. You may pay 500 Chi for one Cart00n Catalyst to attack your opponant directly. But they may not attack the turn they were summoned.",
+      "desc": "Increase the attack of every Cart00n characther by 200. You may pay 500 Chi for one Cart00n Catalyst to attack your opponant directly. But they may not attack the turn they were spawned.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "t2f-021-wayofthesamurai": {
@@ -8852,7 +8852,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Gundam Lab",
       "type": "Field Trick",
-      "desc": "Increase the attack of every Gundam card by 500. Once per turn You may special summon a Lvl 4 Or Lower Gundam card from your hand to the field.",
+      "desc": "Increase the attack of every Gundam card by 500. Once per turn You may special spawn a Lvl 4 Or Lower Gundam card from your hand to the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "t2f-023-mobilesuitlab": {
@@ -8866,7 +8866,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Beckoning Shadows",
       "type": "Field Trick",
-      "desc": "Increase the attack of every Fiend card on the field by 300. When a Fiend Catalyst dies as a result of battle on your side of the field, You may special summon a Fiend Catalyst of the same LVL from your hand to the Field.",
+      "desc": "Increase the attack of every Fiend card on the field by 300. When a Fiend Catalyst dies as a result of battle on your side of the field, You may special spawn a Fiend Catalyst of the same LVL from your hand to the Field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "t2f-025-wilderness": {
@@ -8964,7 +8964,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Larry the Titan",
       "type": "Palm Trick",
-      "desc": "When this card is Normal Or Special Summoned add one \"Dimesion Rip\" from your deck to your hand. Once per turn, during your Main Phase, you can roll a six-sided die twice. Select one result and destroy 1 face-up Catalyst on the field whose level is equal to the result. If the result is 6 you may destroy all face up 6 or higher.",
+      "desc": "When this card is Normal Or Special Spawned add one \"Dimesion Rip\" from your deck to your hand. Once per turn, during your Main Phase, you can roll a six-sided die twice. Select one result and destroy 1 face-up Catalyst on the field whose level is equal to the result. If the result is 6 you may destroy all face up 6 or higher.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "tt1-013-aqualad": {
@@ -9013,14 +9013,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Nightwing",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be special summoned by while \"Dimension Rip\" is face up on the feild. You must also offer 1 \"Robin\" from your feild or hand. If \"Batman\" is face up on the feild increase this card's Pressure by 300. Pay 500 Chi to negate the actiation of a Concealed Trick. If this card is destroyed by a Palm Tricks it is special summoned from the Void to your side of the feild during your next stand-by phase.",
+      "desc": "This Catalyst can only be special spawned by while \"Dimension Rip\" is face up on the feild. You must also offer 1 \"Robin\" from your feild or hand. If \"Batman\" is face up on the feild increase this card's Pressure by 300. Pay 500 Chi to negate the actiation of a Concealed Trick. If this card is destroyed by a Palm Tricks it is special spawned from the Void to your side of the feild during your next stand-by phase.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tt1-020-dimensionrip": {
       "status": "manual",
       "name": "Dimension Rip",
       "type": "Field Trick",
-      "desc": "As long as this card is on the feild Increase all face up \"Future\" or \"Past\" type Catalysts by 200. If you don't have any Catalysts on your side of the feild you may special summon 1 lvl 5 or lower \"Future\" type Catalyst from your hand.",
+      "desc": "As long as this card is on the feild Increase all face up \"Future\" or \"Past\" type Catalysts by 200. If you don't have any Catalysts on your side of the feild you may special spawn 1 lvl 5 or lower \"Future\" type Catalyst from your hand.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "tt1-021-wildebeest": {
@@ -9055,14 +9055,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Dr. Light",
       "type": "Palm Trick",
-      "desc": "This card can only be Special Summoned by removing 2 LIGHT Catalysts in your Void from game. As long as this card remains face-up on the field, decrease the Pressure of all Dark Catalysts on your opponent's side of the field by 300 points during his/her Battle Phase.",
+      "desc": "This card can only be Special Spawned by removing 2 LIGHT Catalysts in your Void from game. As long as this card remains face-up on the field, decrease the Pressure of all Dark Catalysts on your opponent's side of the field by 300 points during his/her Battle Phase.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "tt1-026-redx": {
       "status": "auto",
       "name": "Red-X",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be special summoned by while \"Dimension Rip\" is face up on the feild. You must also offer 1 \"Robin\" from your feild or hand. If \"Robin\" is face up on the feild increase this card's Pressure by 400. Pay 1000 Chi to negate the actiation of a Concealed Trick. If this card is destroyed by a Palm Tricks it is special summoned from the Void to your side of the feild during your next stand-by phase. If \"Slate\" is face up on the feild when this card is summoned, you may add one \"X-Blast\" to your hand from your Void or deck.",
+      "desc": "This Catalyst can only be special spawned by while \"Dimension Rip\" is face up on the feild. You must also offer 1 \"Robin\" from your feild or hand. If \"Robin\" is face up on the feild increase this card's Pressure by 400. Pay 1000 Chi to negate the actiation of a Concealed Trick. If this card is destroyed by a Palm Tricks it is special spawned from the Void to your side of the feild during your next stand-by phase. If \"Slate\" is face up on the feild when this card is spawned, you may add one \"X-Blast\" to your hand from your Void or deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tt1-027-xblast": {
@@ -9090,7 +9090,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Tenchi Masaki",
       "type": "Catalyst",
-      "desc": "Flip: Special summon one \"Ryoko\" from your deck to the field",
+      "desc": "Flip: Special spawn one \"Ryoko\" from your deck to the field",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tuv-002-ryoko": {
@@ -9104,14 +9104,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Nudity",
       "type": "Palm Trick",
-      "desc": "Decrease the equipped cards Pressure by 500 points, in addition, all of your opponent's Catalysts summoned while this card is face up on the field cannot attack in the same turn they are summoned.",
+      "desc": "Decrease the equipped cards Pressure by 500 points, in addition, all of your opponent's Catalysts spawned while this card is face up on the field cannot attack in the same turn they are spawned.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "tuv-004-ayeka": {
       "status": "auto",
       "name": "Ayeka",
       "type": "Palm Trick",
-      "desc": "When this card is equipped with \"Nudity\", offer this card as a tribute to special summon one \"Tenchi Masaki\" from your hand or deck",
+      "desc": "When this card is equipped with \"Nudity\", offer this card as a tribute to special spawn one \"Tenchi Masaki\" from your hand or deck",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tuv-005-droppingthetowel": {
@@ -9125,7 +9125,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Mihoshi",
       "type": "Catalyst",
-      "desc": "When this card is equipped with \"Nudity\", pay 1000 Chi to special summon one \"Kiyone\" from your hand or deck.",
+      "desc": "When this card is equipped with \"Nudity\", pay 1000 Chi to special spawn one \"Kiyone\" from your hand or deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tuv-007-sasami": {
@@ -9139,7 +9139,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Tsunami",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be special summoned by offering one face-up \"Sasami\". When this Catalyst destroys an opponents Catalyst in battle, increase this Catalysts Pressure by half the Counter Pressure of the destroyed Catalyst.",
+      "desc": "This Catalyst can only be special spawned by offering one face-up \"Sasami\". When this Catalyst destroys an opponents Catalyst in battle, increase this Catalysts Pressure by half the Counter Pressure of the destroyed Catalyst.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tuv-009-washu": {
@@ -9181,21 +9181,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Kiyone",
       "type": "Catalyst",
-      "desc": "When this card is equipped with \"Nudity\", pay 1000 Chi to special summon one \"Mihoshi\" from your hand or deck.",
+      "desc": "When this card is equipped with \"Nudity\", pay 1000 Chi to special spawn one \"Mihoshi\" from your hand or deck.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "tuv-016-kiyonesspaceship": {
       "status": "manual",
       "name": "Kiyone's Spaceship",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Refueling Station\". To do this, discard 1 \"Kiyone\", 1 \"Mihoshi\", and any additional Catalysts from your hand whose total Levels exactly equal this card's Level. When this card destroys a Catalyst in battle, inflict damage equal to that Catalyst's Pressure to both players' Chi.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Refueling Station\". To do this, discard 1 \"Kiyone\", 1 \"Mihoshi\", and any additional Catalysts from your hand whose total Levels exactly equal this card's Level. When this card destroys a Catalyst in battle, inflict damage equal to that Catalyst's Pressure to both players' Chi.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "tuv-017-refuelingstation": {
       "status": "manual",
       "name": "Refueling Station",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Kiyone's Spaceship\" from your hand. To do this, discard 1 \"Kiyone\", 1 \"Mihoshi\", and any additional Catalysts from your hand whose total Levels exactly equal the Level of \"Kiyone's Spaceship\".",
+      "desc": "Special Spawn \"Kiyone's Spaceship\" from your hand. To do this, discard 1 \"Kiyone\", 1 \"Mihoshi\", and any additional Catalysts from your hand whose total Levels exactly equal the Level of \"Kiyone's Spaceship\".",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "tuv-018-evasion": {
@@ -9223,7 +9223,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Jurain Police",
       "type": "Concealed Trick",
-      "desc": "When an opponent's Catalyst is summoned pay 500 Chi to remove it from play until the end of your next turn.",
+      "desc": "When an opponent's Catalyst is spawned pay 500 Chi to remove it from play until the end of your next turn.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "tuv-023-ryoohkitransformed": {
@@ -9244,7 +9244,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Bounty Hunter",
       "type": "Catalyst",
-      "desc": "When this card is normal summoned, take control of an opponents Catalyst until the end of this turn.",
+      "desc": "When this card is normal spawned, take control of an opponents Catalyst until the end of this turn.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "tuv-026-talentcompetitionprize": {
@@ -9272,7 +9272,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Ayeka Masaki",
       "type": "Fusion",
-      "desc": "\"Tenchi Masaki\" + \"Ayeka\" If this Catalyst is destroyed in battle you can special summon the Catalysts used to fuse this Catalyst from your Void to the field.",
+      "desc": "\"Tenchi Masaki\" + \"Ayeka\" If this Catalyst is destroyed in battle you can special spawn the Catalysts used to fuse this Catalyst from your Void to the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tuv-030-jurainsisters": {
@@ -9286,21 +9286,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "No Need For Ryoko",
       "type": "Concealed Trick",
-      "desc": "When a Catalyst is summoned with \"Ryoko\" in its name, destroy the Catalyst and special summon one level 5 or lower Catalyst from your deck or RFG.",
+      "desc": "When a Catalyst is spawned with \"Ryoko\" in its name, destroy the Catalyst and special spawn one level 5 or lower Catalyst from your deck or RFG.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "wr1-001-kiba": {
       "status": "auto",
       "name": "Kiba",
       "type": "Catalyst",
-      "desc": "If this card is the only Catalyst with \"Wolf\" its name on the feild you may special summon one \"Kiba - The Lone Wolf\" from your hand to the field by offering this card as a tribute.",
+      "desc": "If this card is the only Catalyst with \"Wolf\" its name on the feild you may special spawn one \"Kiba - The Lone Wolf\" from your hand to the field by offering this card as a tribute.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "wr1-002-kibathelonewolf": {
       "status": "auto",
       "name": "Kiba - The Lone Wolf",
       "type": "Catalyst",
-      "desc": "If this card is destroyed in battle special summon this card during your next stand-by phase. (This effect may only be used once)",
+      "desc": "If this card is destroyed in battle special spawn this card during your next stand-by phase. (This effect may only be used once)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "wr1-003-tsume": {
@@ -9314,7 +9314,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Tsume - Wolf Mode",
       "type": "Catalyst",
-      "desc": "If this card is destroyed in battle special summon this card during your next stand-by phase. (This effect may only be used once)",
+      "desc": "If this card is destroyed in battle special spawn this card during your next stand-by phase. (This effect may only be used once)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "wr1-005-hige": {
@@ -9328,7 +9328,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Hige - Wolf Mode",
       "type": "Catalyst",
-      "desc": "If this card is destroyed in battle special summon this card during your next stand-by phase. (This effect may only be used once)",
+      "desc": "If this card is destroyed in battle special spawn this card during your next stand-by phase. (This effect may only be used once)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "wr1-007-toboe": {
@@ -9342,7 +9342,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Toboe - Wolf Mode",
       "type": "Catalyst",
-      "desc": "If this card is destroyed in battle special summon this card during your next stand-by phase. (This effect may only be used once)",
+      "desc": "If this card is destroyed in battle special spawn this card during your next stand-by phase. (This effect may only be used once)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "wr1-009-thewilderness": {
@@ -9356,14 +9356,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Cheza",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned from your hand by the effect of \"Flower Of The Moon\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. As long as this card is face-up, no cards with the word \"Wolf\" in their name may be destroyed by battle. Damage is calculated normally.",
+      "desc": "This Catalyst can only be Special Spawned from your hand by the effect of \"Flower Of The Moon\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. As long as this card is face-up, no cards with the word \"Wolf\" in their name may be destroyed by battle. Damage is calculated normally.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "wr1-011-flowerofthemoon": {
       "status": "auto",
       "name": "Flower Of The Moon",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Cheza\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Cheza\".",
+      "desc": "Special Spawn \"Cheza\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Cheza\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "wr1-012-researchingcheza": {
@@ -9377,7 +9377,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Quent Yaiden",
       "type": "Catalyst",
-      "desc": "When this card is normal summoned Special Summon one \"Blue - Wolf Mode\" from your hand.",
+      "desc": "When this card is normal spawned Special Spawn one \"Blue - Wolf Mode\" from your hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "wr1-014-blue": {
@@ -9426,7 +9426,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Darcia - The Noble",
       "type": "Palm Trick",
-      "desc": "This card may only be normal summoned by offering \"Darcia - The Third\" as a tribute. No matter the sitution or current Phase this card must attack all face down Catalysts. If the Catalyst is not destroyed this card Is destroyed. As long as this card remains face up lower the Pressure of all card with \"Wolf\" in there name down 600.",
+      "desc": "This card may only be normal spawned by offering \"Darcia - The Third\" as a tribute. No matter the sitution or current Phase this card must attack all face down Catalysts. If the Catalyst is not destroyed this card Is destroyed. As long as this card remains face up lower the Pressure of all card with \"Wolf\" in there name down 600.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "wr1-021-bait": {
@@ -9468,7 +9468,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Goku - Super Saiyan",
       "type": "Catalyst",
-      "desc": "This card can only be summoned if there are no other Catalysts on your side of the field. When this card destroys an opponent's Catalyst, your opponent must discard one card at random from his/her hand.",
+      "desc": "This card can only be spawned if there are no other Catalysts on your side of the field. When this card destroys an opponent's Catalyst, your opponent must discard one card at random from his/her hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-003-supersaiyan2": {
@@ -9482,7 +9482,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Goku - Super Saiyan 3",
       "type": "Catalyst",
-      "desc": "This card can only be normal summoned by offering a \"Goku - Super Saiyan\" equipped with \"Super Saiyan 2\". When this card is normal summoned, you can choose 1 card on your opponents field and destroy it. When this Catalyst destroys 1 of your opponents Catalysts in battle, you may draw 1 card from your deck.",
+      "desc": "This card can only be normal spawned by offering a \"Goku - Super Saiyan\" equipped with \"Super Saiyan 2\". When this card is normal spawned, you can choose 1 card on your opponents field and destroy it. When this Catalyst destroys 1 of your opponents Catalysts in battle, you may draw 1 card from your deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-005-vegetasupersaiyan": {
@@ -9496,28 +9496,28 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Vegeta - Super Saiyan 4",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Saiyan Oath\". To do this, discard 1 \"Vegeta - Super Saiyan\" and any additional Catalysts from your hand whose total Levels exactly equal this card's Level. You must also discard 1 \"Super Saiyan 2\" from your hand. When this Catalyst is Summoned, your opponent must discard 2 cards at random from their hand. When this Catalyst destroys an opponent's Catalyst, you may draw 2 cards from your deck.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Saiyan Oath\". To do this, discard 1 \"Vegeta - Super Saiyan\" and any additional Catalysts from your hand whose total Levels exactly equal this card's Level. You must also discard 1 \"Super Saiyan 2\" from your hand. When this Catalyst is Spawned, your opponent must discard 2 cards at random from their hand. When this Catalyst destroys an opponent's Catalyst, you may draw 2 cards from your deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-007-gokusupersaiyan4": {
       "status": "auto",
       "name": "Goku - Super Saiyan 4",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Saiyan Oath\". To do this, discard 1 \"Goku - Super Saiyan 3\" and any additional Catalysts from your hand whose total Levels exactly equal this card's Level. When this Catalyst is Summoned, you can destroy 1 Palm or Concealed Trick on your opponent's side of the field. When this Catalyst destroys an opponent's Catalyst, you may draw 2 cards from your deck and discard 1 card from your hand at random.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Saiyan Oath\". To do this, discard 1 \"Goku - Super Saiyan 3\" and any additional Catalysts from your hand whose total Levels exactly equal this card's Level. When this Catalyst is Spawned, you can destroy 1 Palm or Concealed Trick on your opponent's side of the field. When this Catalyst destroys an opponent's Catalyst, you may draw 2 cards from your deck and discard 1 card from your hand at random.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-008-saiyanoath": {
       "status": "manual",
       "name": "Saiyan Oath",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Goku - Super Saiyan 4\" or \"Vegeta - Super Saiyan 4\" from your hand. To do this, discard the required named Saiyan card and any additional Catalysts from your hand whose total Levels exactly equal the Level of the card you are Special Summoning. If you Special Summon \"Vegeta - Super Saiyan 4\", you must also discard 1 \"Super Saiyan 2\" from your hand.",
+      "desc": "Special Spawn \"Goku - Super Saiyan 4\" or \"Vegeta - Super Saiyan 4\" from your hand. To do this, discard the required named Saiyan card and any additional Catalysts from your hand whose total Levels exactly equal the Level of the card you are Special Spawning. If you Special Spawn \"Vegeta - Super Saiyan 4\", you must also discard 1 \"Super Saiyan 2\" from your hand.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "dbz-009-saiyanfury": {
       "status": "auto",
       "name": "Saiyan Fury",
       "type": "Concealed Trick",
-      "desc": "When your opponent destroys a Catalyst with \"Saiyan\" in its name as a result of battle, pay 1000 Chi and skip your next draw phase in order to destroy all cards on the field. Each player may special summon 1 LVL 4 or lower Catalyst from their hand in face-down defense postion.",
+      "desc": "When your opponent destroys a Catalyst with \"Saiyan\" in its name as a result of battle, pay 1000 Chi and skip your next draw phase in order to destroy all cards on the field. Each player may special spawn 1 LVL 4 or lower Catalyst from their hand in face-down defense postion.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-010-bigbang": {
@@ -9538,14 +9538,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Young Gohan - Super Saiyan",
       "type": "Catalyst",
-      "desc": "This card can only be summoned if there are no other Catalysts on your side of the field. When this card destroys an opponent's Catalyst as a result of battle, your opponent must discard one card at random from his/her hand. If this card if equipped with \"Super Saiyan 2\" you may special summon one \"Young Gohan - Super Saiyan 2\" from your hand.",
+      "desc": "This card can only be spawned if there are no other Catalysts on your side of the field. When this card destroys an opponent's Catalyst as a result of battle, your opponent must discard one card at random from his/her hand. If this card if equipped with \"Super Saiyan 2\" you may special spawn one \"Young Gohan - Super Saiyan 2\" from your hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-013-younggohansupersaiyan2": {
       "status": "auto",
       "name": "Young Gohan - Super Saiyan 2",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal summoned or set. This card can only be special summoned by offering one \"Young Gohan\" while equipped with \"Super Saiyan 2\". At the beginning of your battle phase flip a coin. If the result is heads, this card may attack twice. If the result is tails, this card gains 300 Pressure points until the end of the turn.",
+      "desc": "This card cannot be Normal spawned or set. This card can only be special spawned by offering one \"Young Gohan\" while equipped with \"Super Saiyan 2\". At the beginning of your battle phase flip a coin. If the result is heads, this card may attack twice. If the result is tails, this card gains 300 Pressure points until the end of the turn.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-014-youngtrunks": {
@@ -9573,7 +9573,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Gotenks",
       "type": "Fusion",
-      "desc": "This Catalyst can only be fusion summoned by using \"Goten\" and \"Young Trunks\". When this card attacks with an Pressure higher than the Counter Pressure of your opponent's Defense position Catalyst, inflict the difference as Battle Damage to your opponent's Chi.",
+      "desc": "This Catalyst can only be fusion spawned by using \"Goten\" and \"Young Trunks\". When this card attacks with an Pressure higher than the Counter Pressure of your opponent's Defense position Catalyst, inflict the difference as Battle Damage to your opponent's Chi.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-018-vegeta": {
@@ -9587,14 +9587,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Vegito",
       "type": "Fusion",
-      "desc": "This Catalyst can only be fusion summoned by using a Catalyst with \"Goku\" and \"Vegeta\" in its name. When this card destroys an opponent's Catalyst in battle, you can draw 1 card from your deck.",
+      "desc": "This Catalyst can only be fusion spawned by using a Catalyst with \"Goku\" and \"Vegeta\" in its name. When this card destroys an opponent's Catalyst in battle, you can draw 1 card from your deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-019-summoningbuu": {
       "status": "manual",
-      "name": "Summoning Buu",
+      "name": "Spawning Buu",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Majin-Buu\" or \"Kid Buu\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of the card you are Special Summoning.",
+      "desc": "Special Spawn \"Majin-Buu\" or \"Kid Buu\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of the card you are Special Spawning.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "dbz-021-majinbuu": {
@@ -9622,7 +9622,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Cell",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Dr. Gero's Research\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. Each time this Catalyst destroys a Catalyst in battle, increase this card's Pressure by 1/4 of the destroyed Catalyst's Pressure.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Dr. Gero's Research\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. Each time this Catalyst destroys a Catalyst in battle, increase this card's Pressure by 1/4 of the destroyed Catalyst's Pressure.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "dbz-025-fusiondance": {
@@ -9643,7 +9643,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Kid Buu",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand by the effect of \"Summoning Buu\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. This card cannot be destroyed by Palm Tricks or Concealed Tricks.",
+      "desc": "This card can only be Special Spawned from your hand by the effect of \"Spawning Buu\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. This card cannot be destroyed by Palm Tricks or Concealed Tricks.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-028-forcefield": {
@@ -9671,21 +9671,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Teen Gohan",
       "type": "Catalyst",
-      "desc": "When this Catalyst destroys the following number of Catalysts in battle, the following effects are activated in order: One: As long as this card remains face-up on the field, negate the activation and effects of all Palm Tricks and Concealed Tricks that specifically designate this card as a target and destroy them. Two: You can Special Summon 1 \"Gohan - Mystic Saiyan\" from your hand or Deck by offering this card as a Tribute during your Main Phase. The deck is then shuffled.",
+      "desc": "When this Catalyst destroys the following number of Catalysts in battle, the following effects are activated in order: One: As long as this card remains face-up on the field, negate the activation and effects of all Palm Tricks and Concealed Tricks that specifically designate this card as a target and destroy them. Two: You can Special Spawn 1 \"Gohan - Mystic Saiyan\" from your hand or Deck by offering this card as a Tribute during your Main Phase. The deck is then shuffled.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-032-gohansupersaiyan": {
       "status": "manual",
       "name": "Gohan - Super Saiyan",
       "type": "Catalyst",
-      "desc": "This card can only be summoned if there are no other Catalysts on your side of the field. When this card destroys an opponent's Catalyst in battle, your opponent must discard one card at random from his/her hand.",
+      "desc": "This card can only be spawned if there are no other Catalysts on your side of the field. When this card destroys an opponent's Catalyst in battle, your opponent must discard one card at random from his/her hand.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "dbz-033-gohanmysticsaiyan": {
       "status": "auto",
       "name": "Gohan - Mystic Saiyan",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned from your hand or your deck by offering 1 \"Teen Gohan\" that has fulfilled the condition as a Tribute. You can flip this into face-down Defense position once per turn during your Main Phase. As long as this Catalyst remains face-up on the field, negate the activation and effects of all Palm Tricks and Concealed Tricks that specifically designate this card as a target and destroy them. When this card is flip-summoned, Special Summon one \"Videl\" or \"Gohan - the Great SaiyaMan\" from you hand.",
+      "desc": "This card can only be Special Spawned from your hand or your deck by offering 1 \"Teen Gohan\" that has fulfilled the condition as a Tribute. You can flip this into face-down Defense position once per turn during your Main Phase. As long as this Catalyst remains face-up on the field, negate the activation and effects of all Palm Tricks and Concealed Tricks that specifically designate this card as a target and destroy them. When this card is flip-spawned, Special Spawn one \"Videl\" or \"Gohan - the Great SaiyaMan\" from you hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-034-gohansbooks": {
@@ -9720,7 +9720,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Yajirobe",
       "type": "Catalyst",
-      "desc": "You can flip this card into face-down Defense position once per turn during your Main Phase. When this card is Flip-Summoned, you can draw 1 card from your Deck.",
+      "desc": "You can flip this card into face-down Defense position once per turn during your Main Phase. When this card is Flip-Spawned, you can draw 1 card from your Deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "dbz-039-videl": {
@@ -9741,7 +9741,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Dr. Gero's Research",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Cell\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Cell\".",
+      "desc": "Special Spawn \"Cell\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Cell\".",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ff7-000-cloudstrife": {
@@ -9825,7 +9825,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Aeris - trance",
       "type": "Palm Trick",
-      "desc": "This card may only be tribute sumoned from a \"Aeris Gainsborough\" that has inflicted damage to your opponent's at Chi. When this Catalyst is summoned sucessfully , you may special summon any level 3 or lower Catalyst from your Void to your side of the field.",
+      "desc": "This card may only be tribute sumoned from a \"Aeris Gainsborough\" that has inflicted damage to your opponent's at Chi. When this Catalyst is spawned sucessfully , you may special spawn any level 3 or lower Catalyst from your Void to your side of the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ff7-012-barretttrance": {
@@ -9860,7 +9860,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "RedXIII - Trance",
       "type": "Catalyst",
-      "desc": "This card may only be tribute sumoned from a \"Red XIII\" that has inflicted damage to your opponent's Chi. When this card is summoned, you may search your deck for 1 \"Limited Moon\" and attach it to this card.",
+      "desc": "This card may only be tribute sumoned from a \"Red XIII\" that has inflicted damage to your opponent's Chi. When this card is spawned, you may search your deck for 1 \"Limited Moon\" and attach it to this card.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ff7-016-tifatrance": {
@@ -9874,14 +9874,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Vincent - Trance",
       "type": "Catalyst",
-      "desc": "This card may only be tribute sumoned from a \"Vincent Valentine\" that has inflicted damage to your opponent's Chi. When this card is destroyed as a result of battle, special summon it from the Void during your next main phase 2.",
+      "desc": "This card may only be tribute sumoned from a \"Vincent Valentine\" that has inflicted damage to your opponent's Chi. When this card is destroyed as a result of battle, special spawn it from the Void during your next main phase 2.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ff7-018-yuffietrance": {
       "status": "auto",
       "name": "Yuffie - Trance",
       "type": "Catalyst",
-      "desc": "This card may only be tribute sumoned from a \"Yuffie Kisaragi\" that has inflicted damage to your opponent's Chi. When this Catalyst is summoned sucessfully, you may send 2 \"Conformer\" from your deck or hand to thr grave to inflict 1500 damage to your opponents Chi.",
+      "desc": "This card may only be tribute sumoned from a \"Yuffie Kisaragi\" that has inflicted damage to your opponent's Chi. When this Catalyst is spawned sucessfully, you may send 2 \"Conformer\" from your deck or hand to thr grave to inflict 1500 damage to your opponents Chi.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ff7-020-ultimaweapon": {
@@ -9958,7 +9958,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Super Trance",
       "type": "Concealed Trick",
-      "desc": "This card may only be activated when a trance Catalyst is on the field. You may tribute a trance Catalyst to special summon the original Catalyst from the Void. Increase the Pressure of that Catalyst by 1000 until the end of the turn that this card is activated.",
+      "desc": "This card may only be activated when a trance Catalyst is on the field. You may tribute a trance Catalyst to special spawn the original Catalyst from the Void. Increase the Pressure of that Catalyst by 1000 until the end of the turn that this card is activated.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ff7-034-trancemagicnegator": {
@@ -9972,14 +9972,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Cloud - The Great Untouchable",
       "type": "Catalyst",
-      "desc": "This Catalyst may only be special summoned by the effects of \"Cloud Reformer\". When this Catalyst is special summoned, you may take one Palm Tricks from your Void and add it to your hand. This Catalyst is uneffected by Concealed Tricks. (Restricted to one)",
+      "desc": "This Catalyst may only be special spawned by the effects of \"Cloud Reformer\". When this Catalyst is special spawned, you may take one Palm Tricks from your Void and add it to your hand. This Catalyst is uneffected by Concealed Tricks. (Restricted to one)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "ff7-036-cloudreformer": {
       "status": "manual",
       "name": "Cloud Reformer",
       "type": "Concealed Trick",
-      "desc": "This card can only be used when there is \"Cloud - Trance\" and  \"Cloud Strife\" equipped with \"Ultima Weapon\" on your side of the field. Tribute all of those cards, and remove 1 \"Cloud Strife\" in your Void from play, to special summon \"Cloud - The Great Untouchable\" form your hand.",
+      "desc": "This card can only be used when there is \"Cloud - Trance\" and  \"Cloud Strife\" equipped with \"Ultima Weapon\" on your side of the field. Tribute all of those cards, and remove 1 \"Cloud Strife\" in your Void from play, to special spawn \"Cloud - The Great Untouchable\" form your hand.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "ff7-037-cloudsstrife": {
@@ -9993,14 +9993,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Alucard- Unsealed",
       "type": "Catalyst",
-      "desc": "This card cannot be normal summoned or set. This card can only be special summoned from your hand, deck, or Void by offering 1 \"Alucard\" equipped with \"Final Sealbreaker.\" Also, this Catalyst gains all of the effects of the sealbreakers that were previously equipped to Alucard.",
+      "desc": "This card cannot be normal spawned or set. This card can only be special spawned from your hand, deck, or Void by offering 1 \"Alucard\" equipped with \"Final Sealbreaker.\" Also, this Catalyst gains all of the effects of the sealbreakers that were previously equipped to Alucard.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "hls-001-incognito": {
       "status": "auto",
       "name": "Incognito",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal Summoned or Set. This card can only be Special Summoned by the effect of \"Alucard\" or by the effect of \"Dark Vampire Ritual\". If \"Dark Vampire Ritual\" is used, discard Catalysts from your hand whose total Levels exactly equal this card's Level. A vampire who has also let himself be controlled by humans. (Limited to 1)",
+      "desc": "This card cannot be Normal Spawned or Set. This card can only be Special Spawned by the effect of \"Alucard\" or by the effect of \"Dark Vampire Ritual\". If \"Dark Vampire Ritual\" is used, discard Catalysts from your hand whose total Levels exactly equal this card's Level. A vampire who has also let himself be controlled by humans. (Limited to 1)",
       "reason": "No-effect / Normal Catalyst has explicit runtime support in beta."
     },
     "hls-002-incognitoscall": {
@@ -10014,7 +10014,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "First Sealbreaker",
       "type": "Palm Trick",
-      "desc": "Increase the attack of the equipped Catalyst by 100. If this card is equipped to \"Alucard\", add this effect to \"Alucard\" - \"If this Catalyst is destroyed by the effect of a trap, spell, or an effect Catalyst, it may be special summoned to your side of the field during your stand-by phase.\"",
+      "desc": "Increase the attack of the equipped Catalyst by 100. If this card is equipped to \"Alucard\", add this effect to \"Alucard\" - \"If this Catalyst is destroyed by the effect of a trap, spell, or an effect Catalyst, it may be special spawned to your side of the field during your stand-by phase.\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hls-004-secondsealbraker": {
@@ -10028,7 +10028,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Third Sealbreaker",
       "type": "Palm Trick",
-      "desc": "Increase the attack of the equipped Catalyst by 300. This card cannot be equipped to \"Alucard\" unless he is currently equipped with the \"First Sealbreaker\" and \"Second Sealbreaker\" and \"Integral Hellsing\" is face-up on your side of the field. If this card is equipped to \"Alucard\", he gains the following effect- \"A Catalyst destroyed in battle by this card is special summoned to your side of the field in attack position as a Zombie-type Catalyst.\"",
+      "desc": "Increase the attack of the equipped Catalyst by 300. This card cannot be equipped to \"Alucard\" unless he is currently equipped with the \"First Sealbreaker\" and \"Second Sealbreaker\" and \"Integral Hellsing\" is face-up on your side of the field. If this card is equipped to \"Alucard\", he gains the following effect- \"A Catalyst destroyed in battle by this card is special spawned to your side of the field in attack position as a Zombie-type Catalyst.\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hls-006-finalsealbreaker": {
@@ -10042,7 +10042,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Alucard",
       "type": "Catalyst",
-      "desc": "When equipped with \"Final Sealbreaker\", you may offer this card to summon \"Alucard- Unsealed\" from your hand, deck, or Void. Also, ownership of this card cannot be changed. This Catalyst cannot attack \"Integral Hellsing\". (limited to 1)",
+      "desc": "When equipped with \"Final Sealbreaker\", you may offer this card to spawn \"Alucard- Unsealed\" from your hand, deck, or Void. Also, ownership of this card cannot be changed. This Catalyst cannot attack \"Integral Hellsing\". (limited to 1)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "hls-008-celesvictoria": {
@@ -10056,7 +10056,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Celes the vampire",
       "type": "Fusion",
-      "desc": "This card can only be fusion summoned by fusing 3 \"Celes Victoria\". This card gains 750 Pressure when fighting a Zombie-type Catalyst. Also, when this card attacks with an Pressure higher than the Counter Pressure of a defense position Catalyst, inflict direct damage equal to the difference to your opponent's Chi. This card cannot attack \"Alucard\" or \"Integral Hellsing\".",
+      "desc": "This card can only be fusion spawned by fusing 3 \"Celes Victoria\". This card gains 750 Pressure when fighting a Zombie-type Catalyst. Also, when this card attacks with an Pressure higher than the Counter Pressure of a defense position Catalyst, inflict direct damage equal to the difference to your opponent's Chi. This card cannot attack \"Alucard\" or \"Integral Hellsing\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "hls-010-furgusson": {
@@ -10147,14 +10147,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Alexander the priest",
       "type": "Catalyst",
-      "desc": "When destroyed by a vampire sub-type, this card is special summoned to your side of the field at your next standby phase with 100 more Pressure and Counter Pressure than the last time it was on the field.",
+      "desc": "When destroyed by a vampire sub-type, this card is special spawned to your side of the field at your next standby phase with 100 more Pressure and Counter Pressure than the last time it was on the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hls-023-holycross": {
       "status": "manual",
       "name": "Holy Cross",
       "type": "Palm Trick",
-      "desc": "As long as this card remains face-up on the field, DARK attribute Catalysts, except Alucard, cannot be summoned to the field. Increase the Pressure of the Catalyst equipped with this card by 500.",
+      "desc": "As long as this card remains face-up on the field, DARK attribute Catalysts, except Alucard, cannot be spawned to the field. Increase the Pressure of the Catalyst equipped with this card by 500.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hls-024-helena": {
@@ -10175,14 +10175,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Castle Dracula",
       "type": "Field Trick",
-      "desc": "As long as this card remains face-up on the field, 1 vampire sub-type Catalyst is special summoned to the field from the Void, during each of the owner's standby phases.",
+      "desc": "As long as this card remains face-up on the field, 1 vampire sub-type Catalyst is special spawned to the field from the Void, during each of the owner's standby phases.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hls-027-alucardsglasses": {
       "status": "manual",
       "name": "Alucard's Glasses",
       "type": "Palm Trick",
-      "desc": "Increase the Pressure of a vampire sub-type Catalyst by 300. If \"Alucard\" is on your side of the field and is destroyed in battle, you may sacrifice the Catalyst equipped with this card to special summon \"Alucard\" to the field from the Void and equip it with this card. This card may then be treated as \"First Sealbreaker\" (without the effect).",
+      "desc": "Increase the Pressure of a vampire sub-type Catalyst by 300. If \"Alucard\" is on your side of the field and is destroyed in battle, you may sacrifice the Catalyst equipped with this card to special spawn \"Alucard\" to the field from the Void and equip it with this card. This card may then be treated as \"First Sealbreaker\" (without the effect).",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hls-028-freakchip": {
@@ -10252,7 +10252,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Yan Valentine",
       "type": "Catalyst",
-      "desc": "When this card is summoned, destroy all Catalysts named \"The Hellsing Army\" that are face-up on the field. In addition, as long as this card remains face-up on the field, \"The Hellsing Army\" cannot be summoned.",
+      "desc": "When this card is spawned, destroy all Catalysts named \"The Hellsing Army\" that are face-up on the field. In addition, as long as this card remains face-up on the field, \"The Hellsing Army\" cannot be spawned.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "hls-038-bigbrothervalentine": {
@@ -10266,7 +10266,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "The Valentine Brothers",
       "type": "Fusion",
-      "desc": "\"Yan Valentine\" + \"Big Brother Valentine\" When this card is summoned, destroy all Catalysts named \"The Hellsing Army\" and \"Fergusson\" that are face-up on the field. In addition, as long as this card remains face-up on the field, \"The Hellsing Army\" and \"Fergusson\" cannot be summoned and decrease the Pressure of \"Walter\", \"Celes Victoria\", and \"Integral Hellsing\" by 500.",
+      "desc": "\"Yan Valentine\" + \"Big Brother Valentine\" When this card is spawned, destroy all Catalysts named \"The Hellsing Army\" and \"Fergusson\" that are face-up on the field. In addition, as long as this card remains face-up on the field, \"The Hellsing Army\" and \"Fergusson\" cannot be spawned and decrease the Pressure of \"Walter\", \"Celes Victoria\", and \"Integral Hellsing\" by 500.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "hls-040-bubbancy": {
@@ -10280,28 +10280,28 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Loki Seto",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned by the effect of \"Thunder God of Death\". When this card is destroyed, increase the Pressure of \"Incognito\" by 500. This card cannot be discarded to pay for the equal-Level Special Summon mechanic.",
+      "desc": "This card can only be Special Spawned by the effect of \"Thunder God of Death\". When this card is destroyed, increase the Pressure of \"Incognito\" by 500. This card cannot be discarded to pay for the equal-Level Special Spawn mechanic.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "hls-042-thundergodofdeath": {
       "status": "manual",
       "name": "Thunder God of Death",
       "type": "Palm Trick",
-      "desc": "This card can only be summoned when \"Incognito\" is on your side of the field. Send any five Catalysts from either your hand or the field to the Void to special summon \"Loki Seto\" from your hand to the field.",
+      "desc": "This card can only be spawned when \"Incognito\" is on your side of the field. Send any five Catalysts from either your hand or the field to the Void to special spawn \"Loki Seto\" from your hand to the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hls-043-fullmoon": {
       "status": "manual",
       "name": "Full Moon",
       "type": "Palm Trick",
-      "desc": "When \"Alucard\" is in your Void, pay 1500 Chi in order to special summon it to your side of the field and increase its Pressure by 1000 points in addition to the following effect: \"Pay 1500 Chi to permanently take control of one of your opponent's Catalysts and change it's type to zombie and it's sub-type to vampire.\" When this card is sent to the Void, treat \"Alucard\" as if he is equipped with \"First Sealbreaker\" and \"Second Sealbreaker\" (without the effects) as long as this card exists in your Void and Alucard remains face-up on the field. (limited to 1)",
+      "desc": "When \"Alucard\" is in your Void, pay 1500 Chi in order to special spawn it to your side of the field and increase its Pressure by 1000 points in addition to the following effect: \"Pay 1500 Chi to permanently take control of one of your opponent's Catalysts and change it's type to zombie and it's sub-type to vampire.\" When this card is sent to the Void, treat \"Alucard\" as if he is equipped with \"First Sealbreaker\" and \"Second Sealbreaker\" (without the effects) as long as this card exists in your Void and Alucard remains face-up on the field. (limited to 1)",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "hls-044-darkvampireritual": {
       "status": "manual",
       "name": "Dark Vampire Ritual",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Incognito\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Incognito\".",
+      "desc": "Special Spawn \"Incognito\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Incognito\".",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "hls-045-eternaldamnation": {
@@ -10336,7 +10336,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Inu-Yasha - Full Blooded",
       "type": "Catalyst",
-      "desc": "This card can only be summoned by offering \"Inu-yasha\" on your side of the field as a tribute. If this card is in face-up Defense position on the field, destroy this card. The controller of this card must attack with this card when possible. As long as this card remains face up, the control of this card may not switch.",
+      "desc": "This card can only be spawned by offering \"Inu-yasha\" on your side of the field as a tribute. If this card is in face-up Defense position on the field, destroy this card. The controller of this card must attack with this card when possible. As long as this card remains face up, the control of this card may not switch.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "inu-004-tetsaiga": {
@@ -10350,14 +10350,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Demons Fury",
       "type": "Palm Trick",
-      "desc": "Special summon one lvl 6 or lower Beast, Fiend, or Demon Catalyst from your grave. Lower the Catalysts Pressure and Counter Pressure by 700.",
+      "desc": "Special spawn one lvl 6 or lower Beast, Fiend, or Demon Catalyst from your grave. Lower the Catalysts Pressure and Counter Pressure by 700.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "inu-004-tetsuaiga": {
       "status": "manual",
       "name": "Tessaiga",
       "type": "Palm Trick",
-      "desc": "You and your Opponent pay 500 Chi. Both of you select 1 Warrior-type Catalyst from your Respective Void, Special Summon it on the Field in face-up Attack position. When this card is destroyed, the Catalysts are also destroyed.",
+      "desc": "You and your Opponent pay 500 Chi. Both of you select 1 Warrior-type Catalyst from your Respective Void, Special Spawn it on the Field in face-up Attack position. When this card is destroyed, the Catalysts are also destroyed.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "inu-005-windscar": {
@@ -10399,7 +10399,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Wind Tunnel",
       "type": "Concealed Trick",
-      "desc": "This card can only be activated when \"Miroku\" is face-up on the field. As long as \"Wind Tunnel\" remains face-up on the field, any Catalyst summoned with an Pressure of 1400 or lower on your opponents is instantly destroyed and removed from the game. Also Miroku may not be attacked.",
+      "desc": "This card can only be activated when \"Miroku\" is face-up on the field. As long as \"Wind Tunnel\" remains face-up on the field, any Catalyst spawned with an Pressure of 1400 or lower on your opponents is instantly destroyed and removed from the game. Also Miroku may not be attacked.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "inu-011-narakusinsects": {
@@ -10448,7 +10448,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Kikyo",
       "type": "Catalyst",
-      "desc": "This card can only be Special Summoned by removing 1 LIGHT and 1 DARK Catalyst in your Void from game. This card may only use this effect if \"Soul Snatchers\" is active: Destroy 1 \"Soul Snatchers\" on your side of the field to destroy all Palm/Concealed Tricks on the field.",
+      "desc": "This card can only be Special Spawned by removing 1 LIGHT and 1 DARK Catalyst in your Void from game. This card may only use this effect if \"Soul Snatchers\" is active: Destroy 1 \"Soul Snatchers\" on your side of the field to destroy all Palm/Concealed Tricks on the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "inu-016-soulsnatchers": {
@@ -10469,14 +10469,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Naraku - The Great",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned from your hand by the effect of \"Demons Devour Me\". To do this, discard 1 \"Onigumo - The Bandit\" and any additional Catalysts from your hand whose total Levels exactly equal this card's Level. Pay 1000 Chi to send all cards in both players' hands and on the field to the Void. Inflict 300 damage to your opponent's Chi for each card sent to the Void by this effect. (Restricted To 2!)",
+      "desc": "This Catalyst can only be Special Spawned from your hand by the effect of \"Demons Devour Me\". To do this, discard 1 \"Onigumo - The Bandit\" and any additional Catalysts from your hand whose total Levels exactly equal this card's Level. Pay 1000 Chi to send all cards in both players' hands and on the field to the Void. Inflict 300 damage to your opponent's Chi for each card sent to the Void by this effect. (Restricted To 2!)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "inu-019-demonsdevourme": {
       "status": "auto",
       "name": "Demons Devour Me",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Naraku - The Great\" from your hand. To do this, discard 1 \"Onigumo - The Bandit\" and any additional Catalysts from your hand whose total Levels exactly equal the Level of \"Naraku - The Great\".",
+      "desc": "Special Spawn \"Naraku - The Great\" from your hand. To do this, discard 1 \"Onigumo - The Bandit\" and any additional Catalysts from your hand whose total Levels exactly equal the Level of \"Naraku - The Great\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "inu-020-onigumo": {
@@ -10490,21 +10490,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Kaede's Prayer",
       "type": "Counter Trick",
-      "desc": "Negate the summon of 1 fiend Catalyst by paying 1000 Chi.",
+      "desc": "Negate the spawn of 1 fiend Catalyst by paying 1000 Chi.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "inu-022-kohakurevived": {
       "status": "manual",
       "name": "Kohaku - Revived",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned from your hand by the effect of \"Revival With Shikon Jewels\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. When this Catalyst inflicts damage to your opponent's Chi, your opponent must discard 1 card at random from their hand.",
+      "desc": "This Catalyst can only be Special Spawned from your hand by the effect of \"Revival With Shikon Jewels\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. When this Catalyst inflicts damage to your opponent's Chi, your opponent must discard 1 card at random from their hand.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "inu-023-revivalwithshikonjewels": {
       "status": "auto",
       "name": "Revival With Shikon Jewels",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Kohaku - Revived\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Kohaku - Revived\".",
+      "desc": "Special Spawn \"Kohaku - Revived\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Kohaku - Revived\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "inu-025-shikonjewel": {
@@ -10525,7 +10525,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Koga",
       "type": "Catalyst",
-      "desc": "When this card is Special, Normal, or Flip Summoned. Special Summon 1 \"Wolf Demon\" from your hand or deck to the feild.",
+      "desc": "When this card is Special, Normal, or Flip Spawned. Special Spawn 1 \"Wolf Demon\" from your hand or deck to the feild.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "inu-026-wolfdemontribe": {
@@ -10539,7 +10539,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Tessaiga",
       "type": "Palm Trick",
-      "desc": "This card may only be equipped to a Catalyst with \"Sesshomaru\" in his name excluding \"Sesshomaru - Transformed\". Decrease the equiped Catalyst's Pressure and Counter Pressure by 300. Any Catalyst destroyed in battle by the equiped Catalyst may be special summoned to your side of the feild at the end of the turn. If the reborned Catalyst has an effect it may not be activated under any situation.",
+      "desc": "This card may only be equipped to a Catalyst with \"Sesshomaru\" in his name excluding \"Sesshomaru - Transformed\". Decrease the equiped Catalyst's Pressure and Counter Pressure by 300. Any Catalyst destroyed in battle by the equiped Catalyst may be special spawned to your side of the feild at the end of the turn. If the reborned Catalyst has an effect it may not be activated under any situation.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "inu-107-innocentvillagers": {
@@ -10567,7 +10567,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Corpse Dance",
       "type": "Palm Trick",
-      "desc": "During each of your Stand-By phases pay 200 Chi, if you cannot this card is destroyed. During each of your opponents Stand-By phases, summon one \"Reanimated Zombie\" to the field.",
+      "desc": "During each of your Stand-By phases pay 200 Chi, if you cannot this card is destroyed. During each of your opponents Stand-By phases, spawn one \"Reanimated Zombie\" to the field.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "inu-119-kanna": {
@@ -10581,7 +10581,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Naraku's Detachments",
       "type": "Palm Trick",
-      "desc": "Remove One \"Naraku - The Great\" in your hand from play to Special Summon two of the following Catalysts from your hand (You cannot summon two of the same Catalysts): Kagura, Kanna - The Great, Goshinki, Kageroumaru, Juuroumaru, Hakudoushi, And Naraku's Baby.",
+      "desc": "Remove One \"Naraku - The Great\" in your hand from play to Special Spawn two of the following Catalysts from your hand (You cannot spawn two of the same Catalysts): Kagura, Kanna - The Great, Goshinki, Kageroumaru, Juuroumaru, Hakudoushi, And Naraku's Baby.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "inu-121-hiten": {
@@ -10609,7 +10609,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Hiten's Revenge",
       "type": "Concealed Trick",
-      "desc": "When \"Manten\" is destroyed and sent to the Void as a result of battle, special summon one \"Hiten\" from your deck.",
+      "desc": "When \"Manten\" is destroyed and sent to the Void as a result of battle, special spawn one \"Hiten\" from your deck.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "inu-107-goshinki": {
@@ -10630,7 +10630,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Juuroumaru",
       "type": "Catalyst",
-      "desc": "When this card is Normal Summoneded. Special summon 1 \"Kageroumaru\" from your Deck, Hand, or Void to the feild in face up attack postion.",
+      "desc": "When this card is Normal Summoneded. Special spawn 1 \"Kageroumaru\" from your Deck, Hand, or Void to the feild in face up attack postion.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "inu-107-hakudoushi": {
@@ -10665,35 +10665,35 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Kirby - the Swordsman",
       "type": "Catalyst",
-      "desc": "This card cannot be normal summoned or set. This card can only be special summoned by offering one card that has \"Kirby\" in its name on your side of the field as a tribute.",
+      "desc": "This card cannot be normal spawned or set. This card can only be special spawned by offering one card that has \"Kirby\" in its name on your side of the field as a tribute.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "kir-001-kirbythemagician": {
       "status": "auto",
       "name": "Kirby - the Magician",
       "type": "Palm Trick",
-      "desc": "This card cannot be normal summoned or set. This card can only be special summoned by offering one card that has \"Kirby\" in its name on your side of the field as a tribute.",
+      "desc": "This card cannot be normal spawned or set. This card can only be special spawned by offering one card that has \"Kirby\" in its name on your side of the field as a tribute.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "kir-001-kirbytherock": {
       "status": "auto",
       "name": "Kirby - the Rock",
       "type": "Catalyst",
-      "desc": "This card cannot be normal summoned or set. This card can only be special summoned by offering one card that has \"Kirby\" in its name on your side of the field as a tribute",
+      "desc": "This card cannot be normal spawned or set. This card can only be special spawned by offering one card that has \"Kirby\" in its name on your side of the field as a tribute",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "kir-001-kirbytheninja": {
       "status": "auto",
       "name": "Kirby - the Ninja",
       "type": "Catalyst",
-      "desc": "This card cannot be normal summoned or set. This card can only be special summoned by offering one card that has \"Kirby\" in its name on your side of the field as a tribute",
+      "desc": "This card cannot be normal spawned or set. This card can only be special spawned by offering one card that has \"Kirby\" in its name on your side of the field as a tribute",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "kir-001-kingdedede": {
       "status": "auto",
       "name": "King DeDeDe",
       "type": "Catalyst",
-      "desc": "You may pay 500 Chi to special summon one \"Waddle Dee\" from your deck to the field in face-up defense position.",
+      "desc": "You may pay 500 Chi to special spawn one \"Waddle Dee\" from your deck to the field in face-up defense position.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "kir-001-waddledee": {
@@ -10763,7 +10763,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Ice Dragon",
       "type": "Palm Trick",
-      "desc": "Offer this face-up card as a tribute to special summon one \"Chilly\" from your deck to the field in face-up attack position.",
+      "desc": "Offer this face-up card as a tribute to special spawn one \"Chilly\" from your deck to the field in face-up attack position.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "kir-017-warpstar": {
@@ -10784,21 +10784,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "N.M.E price drop",
       "type": "Palm Trick",
-      "desc": "Pay 220 Chi to special summon a Catalyst with 1000 Pressure or less from your hand.",
+      "desc": "Pay 220 Chi to special spawn a Catalyst with 1000 Pressure or less from your hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "kir-020-nmepriceincrease": {
       "status": "manual",
       "name": "N.M.E The Great Price Increase",
       "type": "Palm Trick",
-      "desc": "Pay 2000 Chi to special summon a Catalyst with 3000 Pressure or less from your hand. (Restricted To 1!)",
+      "desc": "Pay 2000 Chi to special spawn a Catalyst with 3000 Pressure or less from your hand. (Restricted To 1!)",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "kir-021-nmesalesguy": {
       "status": "auto",
       "name": "N.M.E sales guy",
       "type": "Palm Trick",
-      "desc": "Pay 500 Chi to special summon one lvl 4 or lower DARK Catalyst from you deck.",
+      "desc": "Pay 500 Chi to special spawn one lvl 4 or lower DARK Catalyst from you deck.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "kir-022-popstar": {
@@ -10875,7 +10875,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Alter Alias",
       "type": "Catalyst",
-      "desc": "\"Alter Cost\" must be in your hand, deck or Void for this card to be summoned and Martin Jigmar must be on the field equipped with \"Unleash Alter\" for this card to remain on the field. When this card is summoned, search your deck, hand, or Void for \"Alter cost\" and place it face-down on the field. After three turns after this card is summoned, \"Alter cost\" must be activated.",
+      "desc": "\"Alter Cost\" must be in your hand, deck or Void for this card to be spawned and Martin Jigmar must be on the field equipped with \"Unleash Alter\" for this card to remain on the field. When this card is spawned, search your deck, hand, or Void for \"Alter cost\" and place it face-down on the field. After three turns after this card is spawned, \"Alter cost\" must be activated.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "syd-002-altercost": {
@@ -10910,7 +10910,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Eternal Devote",
       "type": "Palm Trick",
-      "desc": "Can only be activated when Sherrice is equipped with \"Unleash Alter.\" Activate one of the following effects: Decrease the attack of Sherrice to increase the attack of one of your Catalysts or decrease the attack of one of your opponent's Catalysts OR Send Sherrice to the Void to special summon a card from your Void.",
+      "desc": "Can only be activated when Sherrice is equipped with \"Unleash Alter.\" Activate one of the following effects: Decrease the attack of Sherrice to increase the attack of one of your Catalysts or decrease the attack of one of your opponent's Catalysts OR Send Sherrice to the Void to special spawn a card from your Void.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "syd-007-eternityeight": {
@@ -10924,7 +10924,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Hammer",
       "type": "Catalyst",
-      "desc": "Can only be special summoned when \"The one with the Big Alter\" is equipped with \"Unleash Alter.\"",
+      "desc": "Can only be special spawned when \"The one with the Big Alter\" is equipped with \"Unleash Alter.\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-009-hold": {
@@ -10959,7 +10959,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Kazuma",
       "type": "Catalyst",
-      "desc": "Offer this card with \"Unleash Alter\" to special summon Kazuma's Alter from your hand or deck.",
+      "desc": "Offer this card with \"Unleash Alter\" to special spawn Kazuma's Alter from your hand or deck.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-015-kazumafinalform": {
@@ -10973,14 +10973,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Kazuma of the Shell Bullet",
       "type": "Catalyst",
-      "desc": "Can only be summoned by the effect of \"Kazuma's Alter.\" This card only loses 1000 Pressure when \"Alter cost\" is on the field.",
+      "desc": "Can only be spawned by the effect of \"Kazuma's Alter.\" This card only loses 1000 Pressure when \"Alter cost\" is on the field.",
       "reason": "No-effect / Normal Catalyst has explicit runtime support in beta."
     },
     "syd-017-kazumasalter": {
       "status": "manual",
       "name": "Kazuma's Alter",
       "type": "Catalyst",
-      "desc": "Can only be summoned by the effect of Kazuma. Offer this card equipped with \"The Crystal's Power\" to special summon \"Kazuma of the shell bullet\" from your hand or deck. This card only loses 300 Pressure when \"alter cost\" is on the field.",
+      "desc": "Can only be spawned by the effect of Kazuma. Offer this card equipped with \"The Crystal's Power\" to special spawn \"Kazuma of the shell bullet\" from your hand or deck. This card only loses 300 Pressure when \"alter cost\" is on the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-018-kimishima": {
@@ -11008,7 +11008,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Martin Jigmar",
       "type": "Catalyst",
-      "desc": "When equipped with \"Unleash Alter,\" special summon Alter Alias from your deck or hand.",
+      "desc": "When equipped with \"Unleash Alter,\" special spawn Alter Alias from your deck or hand.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-022-mimori": {
@@ -11029,21 +11029,21 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Mujou Kyouji",
       "type": "Catalyst",
-      "desc": "When this card is equipped with Unleash Alter, Absorption, White Trick, and Black Joker, you are able to special summon \"Mujou-Ultimate Mode.\"",
+      "desc": "When this card is equipped with Unleash Alter, Absorption, White Trick, and Black Joker, you are able to special spawn \"Mujou-Ultimate Mode.\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-025-mujouultimatemode": {
       "status": "manual",
       "name": "Mujou-Ultimate mode",
       "type": "Catalyst",
-      "desc": "Gains all of the effects that were previously on Mujou Kyouji before he was offered to summon this card and the effects of the cards that were equipped to him. Can only be summoned by the effect of Mujou Kyouji. This card is not affected by \"Alter Cost.\"",
+      "desc": "Gains all of the effects that were previously on Mujou Kyouji before he was offered to spawn this card and the effects of the cards that were equipped to him. Can only be spawned by the effect of Mujou Kyouji. This card is not affected by \"Alter Cost.\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-026-ryuhou": {
       "status": "manual",
       "name": "Ryuhou",
       "type": "Catalyst",
-      "desc": "Offer this card equipped with \"Unleash Alter\" to Special Summon \"Ryuhou-the one who commands Zetseui\" and \"Zetsuei.\"",
+      "desc": "Offer this card equipped with \"Unleash Alter\" to Special Spawn \"Ryuhou-the one who commands Zetseui\" and \"Zetsuei.\"",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-027-ryuhouofzetsuei": {
@@ -11085,7 +11085,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "The Crystal from the other world",
       "type": "Catalyst",
-      "desc": "Offer any three Catalysts on the field to summon this card. Also, \"Alter Cost\" does not affect this card.",
+      "desc": "Offer any three Catalysts on the field to spawn this card. Also, \"Alter Cost\" does not affect this card.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-033-thecrystalspower": {
@@ -11120,7 +11120,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Watermelons",
       "type": "Palm Trick",
-      "desc": "Can only be activated when a Urizane card is equipped with \"Unleash Alter.\" Return Urizane to your hand and special summon a Catalyst of equal level from your hand, or deck.",
+      "desc": "Can only be activated when a Urizane card is equipped with \"Unleash Alter.\" Return Urizane to your hand and special spawn a Catalyst of equal level from your hand, or deck.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-038-whitetrick": {
@@ -11134,14 +11134,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Zetsuei",
       "type": "Catalyst",
-      "desc": "Can only be summoned when \"Ryuhou-the one who commands Zetsuei\" is face-up on them field. This card only loses 1000 Pressure when \"Alter cost\" is face-up on the field. Your opponent cannot attack a card with \"Ryuhou\" in it's name as long as this card remains face-up on the field.",
+      "desc": "Can only be spawned when \"Ryuhou-the one who commands Zetsuei\" is face-up on them field. This card only loses 1000 Pressure when \"Alter cost\" is face-up on the field. Your opponent cannot attack a card with \"Ryuhou\" in it's name as long as this card remains face-up on the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "syd-040-zetsueiunbound": {
       "status": "manual",
       "name": "Zetsuei-Unbound",
       "type": "Catalyst",
-      "desc": "Can only be summoned when \"Ryuhou-the one who commands Zetsuei\" is face-up on them field and is equipped with \"The Crystal's Power.\" This card only loses 1000 Pressure when \"Alter cost\" is on the field.",
+      "desc": "Can only be spawned when \"Ryuhou-the one who commands Zetsuei\" is face-up on them field and is equipped with \"The Crystal's Power.\" This card only loses 1000 Pressure when \"Alter cost\" is on the field.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "tg1-001-claimyourbounty": {
@@ -11155,28 +11155,28 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Rem Saverem",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned from your hand by the effect of \"Saving Rem\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. After this card is Summoned, send all cards with \"Vash\" and/or \"Knives\" in their names from both players' decks and hands to the Void.",
+      "desc": "This Catalyst can only be Special Spawned from your hand by the effect of \"Saving Rem\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. After this card is Spawned, send all cards with \"Vash\" and/or \"Knives\" in their names from both players' decks and hands to the Void.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-003-savingrem": {
       "status": "auto",
       "name": "Saving Rem",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Rem Saverem\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Rem Saverem\".",
+      "desc": "Special Spawn \"Rem Saverem\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Rem Saverem\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-005-corruptingthepriest": {
       "status": "auto",
       "name": "Corrupting The Priest",
       "type": "Palm Trick",
-      "desc": "Special Summon \"Wolfwood - Gung-Ho Gun In Training\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Wolfwood - Gung-Ho Gun In Training\".",
+      "desc": "Special Spawn \"Wolfwood - Gung-Ho Gun In Training\" from your hand. To do this, discard Catalysts from your hand whose total Levels exactly equal the Level of \"Wolfwood - Gung-Ho Gun In Training\".",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-004-wolfwoodgunghogunintraining": {
       "status": "auto",
       "name": "Wolfwood - Gung-Ho Gun In Training",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be Special Summoned from your hand by the effect of \"Corrupting The Priest\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. When this card inflicts battle damage to your opponent's Chi, choose and execute 1 of these effects: your opponent discards 1 card from their hand, or destroy 1 card on their side of the field.",
+      "desc": "This Catalyst can only be Special Spawned from your hand by the effect of \"Corrupting The Priest\". To do this, discard Catalysts from your hand whose total Levels exactly equal this card's Level. When this card inflicts battle damage to your opponent's Chi, choose and execute 1 of these effects: your opponent discards 1 card from their hand, or destroy 1 card on their side of the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-006-legatoleaderofthegunghoguns": {
@@ -11218,14 +11218,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Leonof the Puppetmaster - 8th Gung-Ho Gun",
       "type": "Palm Trick",
-      "desc": "By paying 500 Chi you can special summon 1 \"Puppet Of Demise\" To Your side of the field from your hand, deck or Void.",
+      "desc": "By paying 500 Chi you can special spawn 1 \"Puppet Of Demise\" To Your side of the field from your hand, deck or Void.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-012-graytheninelives7thgunghogun": {
       "status": "auto",
       "name": "Gray the Ninelives - 7th Gung-Ho Gun",
       "type": "Catalyst",
-      "desc": "After this card is destroyed, it is special summoned during your stand-by phase with 500 less Pressure points than the last time it existed on the field. When this Catalyst's Pressure reaches 0 this card is RFGed.",
+      "desc": "After this card is destroyed, it is special spawned during your stand-by phase with 500 less Pressure points than the last time it existed on the field. When this Catalyst's Pressure reaches 0 this card is RFGed.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-013-zaziethebeast4thgunghogun": {
@@ -11309,7 +11309,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Dead-Man Walking",
       "type": "Palm Trick",
-      "desc": "Special summon 1 Catalyst with \"Gung-Ho Gun\" or \"Legato\" in its name from your Void. Th Catalyst may not attack in the same turn that it is summoned.",
+      "desc": "Special spawn 1 Catalyst with \"Gung-Ho Gun\" or \"Legato\" in its name from your Void. Th Catalyst may not attack in the same turn that it is spawned.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-022-ambush": {
@@ -11330,28 +11330,28 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Fighter Of Peace",
       "type": "Palm Trick",
-      "desc": "When this card is equipped to a Catalyst with \"Vash\" in its name, special summon one \"Vash - Great Fighter Of Peace\" from your hand, deck or Void.",
+      "desc": "When this card is equipped to a Catalyst with \"Vash\" in its name, special spawn one \"Vash - Great Fighter Of Peace\" from your hand, deck or Void.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-023-2ndwind": {
       "status": "auto",
       "name": "2nd Wind",
       "type": "Palm Trick",
-      "desc": "Pay 500 Chi. Select 1 LIGHT Catalyst Card in your Void and Special Summon it to the Field in face-up Attack position, and equip it with this card. When this card is destroyed, the Catalyst is also destroyed.",
+      "desc": "Pay 500 Chi. Select 1 LIGHT Catalyst Card in your Void and Special Spawn it to the Field in face-up Attack position, and equip it with this card. When this card is destroyed, the Catalyst is also destroyed.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-023-evilreturns": {
       "status": "auto",
       "name": "Evil Returns",
       "type": "Palm Trick",
-      "desc": "Pay 800 Chi. Select 1 DARK Catalyst Card in your Void and Special Summon it to the Field in face-up Attack position, and equip it with this card. When this card is destroyed, the Catalyst is also destroyed.",
+      "desc": "Pay 800 Chi. Select 1 DARK Catalyst Card in your Void and Special Spawn it to the Field in face-up Attack position, and equip it with this card. When this card is destroyed, the Catalyst is also destroyed.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-024-vashfighterofpeace": {
       "status": "auto",
       "name": "Vash - Great Fighter Of Peace",
       "type": "Catalyst",
-      "desc": "This card may only be special summoned by the effect of \"Fighter Of Peace\". Increase the Pressure and Counter Pressure of this Catalyst by 300 for every card with \"Vash\" in its name in the Void.(Restricted To 2!)",
+      "desc": "This card may only be special spawned by the effect of \"Fighter Of Peace\". Increase the Pressure and Counter Pressure of this Catalyst by 300 for every card with \"Vash\" in its name in the Void.(Restricted To 2!)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-101-legatobluesummers": {
@@ -11365,7 +11365,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Vash",
       "type": "Catalyst",
-      "desc": "If a Catalyst with \"Knives\" in its name Is Face-Up On The field, Special Summon 1 \"Vash - The Legendary Gunman\" From Your Hand Or Your Deck.",
+      "desc": "If a Catalyst with \"Knives\" in its name Is Face-Up On The field, Special Spawn 1 \"Vash - The Legendary Gunman\" From Your Hand Or Your Deck.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "tg1-103-vashthelegendarygunman": {
@@ -11379,7 +11379,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Vash - The Great Stampede",
       "type": "Catalyst",
-      "desc": "This card cannot be Normal Summoned or Set. This card cannot be Special Summoned except by offering 1 face-up card with \"Vash\" in its name on your side of the field as a Tribute while that card is equipped with \"Knives Manipultion\". If a Catalyst with \"Knives\" in its name is on your side of the field, tribute it to destroy all cards on the field except for \"Vash - The Great Stampede\".(Restricted To 2!)",
+      "desc": "This card cannot be Normal Spawned or Set. This card cannot be Special Spawned except by offering 1 face-up card with \"Vash\" in its name on your side of the field as a Tribute while that card is equipped with \"Knives Manipultion\". If a Catalyst with \"Knives\" in its name is on your side of the field, tribute it to destroy all cards on the field except for \"Vash - The Great Stampede\".(Restricted To 2!)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-104-puppetofdemise": {
@@ -11407,7 +11407,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Kuroneko",
       "type": "Catalyst",
-      "desc": "When this card is destroyed and sent to the Void, take 1 \"Kuroneko\" from your Deck and Special Summon it to the field in face-up Attack or Defense position. The Deck is then shuffled.",
+      "desc": "When this card is destroyed and sent to the Void, take 1 \"Kuroneko\" from your Deck and Special Spawn it to the field in face-up Attack or Defense position. The Deck is then shuffled.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-108-merylstrife": {
@@ -11442,14 +11442,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Nicholas D. Wolfwood",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing 1 Light & 1 Dark Catalyst in your Void from game. When this card destroys a Catalyst in battle, it may also destroy 1 Palm or Concealed Tricks.",
+      "desc": "This card can only be special spawned by removing 1 Light & 1 Dark Catalyst in your Void from game. When this card destroys a Catalyst in battle, it may also destroy 1 Palm or Concealed Tricks.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-112-knivesdestroyerofmankind": {
       "status": "auto",
       "name": "Knives - Great Destroyer Of Mankind",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by removing 2 Dark Catalysts in the Void from game. Also a Catalyst with \"Vash\" Or \"Gung-Ho Gun\" in its name must be face-up on the field. As long as this card is face-up the controller of this card may take control of all face-up cards with \"Gung-Ho Guns\" in their name. Pay 1000 of your Chi to send all cards in both players' hands to the Void. Inflict 200 points of damage to your opponent's Chi for each card that is sent to the Void by this effect.(Restricted To 1!)",
+      "desc": "This card can only be special spawned by removing 2 Dark Catalysts in the Void from game. Also a Catalyst with \"Vash\" Or \"Gung-Ho Gun\" in its name must be face-up on the field. As long as this card is face-up the controller of this card may take control of all face-up cards with \"Gung-Ho Guns\" in their name. Pay 1000 of your Chi to send all cards in both players' hands to the Void. Inflict 200 points of damage to your opponent's Chi for each card that is sent to the Void by this effect.(Restricted To 1!)",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-113-60000000000bountyonyourhead": {
@@ -11519,7 +11519,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Brad",
       "type": "Catalyst",
-      "desc": "Offer this card as a tribute to special summon \"Vash\" from the Void.",
+      "desc": "Offer this card as a tribute to special spawn \"Vash\" from the Void.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "tg1-007-ericks": {
@@ -11652,7 +11652,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Hiei The Great",
       "type": "Catalyst",
-      "desc": "This card can only be summoned by sacrificing \"Hiei\" equipped with \"Jagan Eye\". Before your battle step roll a di. If the result is Odd, Destroy 1 Card on the feild. If the result, is Even you may attack twice.",
+      "desc": "This card can only be spawned by sacrificing \"Hiei\" equipped with \"Jagan Eye\". Before your battle step roll a di. If the result is Odd, Destroy 1 Card on the feild. If the result, is Even you may attack twice.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "yyh-017-kayko": {
@@ -11666,7 +11666,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Koenma",
       "type": "Catalyst",
-      "desc": "Flip: Special summon 1 Level 4 or lower Demon or Spirit Catalyst from your hand to the field.",
+      "desc": "Flip: Special spawn 1 Level 4 or lower Demon or Spirit Catalyst from your hand to the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "yyh-024-spiritequipment": {
@@ -11687,7 +11687,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Yoko Kurama",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by offering a \"Kurama\" Equipped with \"Idun Box\". Flip A Coin once during your main phase 1. If the result is heads, destroy 1 card on the field. If the result is tails, skip your battle phase.",
+      "desc": "This card can only be special spawned by offering a \"Kurama\" Equipped with \"Idun Box\". Flip A Coin once during your main phase 1. If the result is heads, destroy 1 card on the field. If the result is tails, skip your battle phase.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "yyh-020-kuwabara": {
@@ -11722,14 +11722,14 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Yusuke Fired Up",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be summoned by tributing \"Yusuke\" equipped with \"Spirit Orb\". When this card destroys a Catalyst, you can add 1 counter to this Catalyst.(3max) You may offer one counter to destroy 1 Catalyst on the field.",
+      "desc": "This Catalyst can only be spawned by tributing \"Yusuke\" equipped with \"Spirit Orb\". When this card destroys a Catalyst, you can add 1 counter to this Catalyst.(3max) You may offer one counter to destroy 1 Catalyst on the field.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "yyh-031-yukina": {
       "status": "auto",
       "name": "Yukina",
       "type": "Catalyst",
-      "desc": "Flip: Special summon 1 \"Kuwabura\" or \"Hiei\" from your hand to the field. If this card is face-up on your side of the field, \"Kuwabura\" and \"Hiei\" cannot be attacked.",
+      "desc": "Flip: Special spawn 1 \"Kuwabura\" or \"Hiei\" from your hand to the field. If this card is face-up on your side of the field, \"Kuwabura\" and \"Hiei\" cannot be attacked.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "yyh-004-bui": {
@@ -11750,7 +11750,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Elder Togoro",
       "type": "Palm Trick",
-      "desc": "Once per turn, during your Main Phase, if you control this Catalyst on the field you may equip it to any Catalyst with \"Togoro\" in its name as an Equip Palm Tricks OR change it back to a Catalyst in face-up Attack position. Everytime this card is destroyed in battle, it may be special summoned from the Void at the end of your turn if \"Togoro\" is face-up on your side of the field.",
+      "desc": "Once per turn, during your Main Phase, if you control this Catalyst on the field you may equip it to any Catalyst with \"Togoro\" in its name as an Equip Palm Tricks OR change it back to a Catalyst in face-up Attack position. Everytime this card is destroyed in battle, it may be special spawned from the Void at the end of your turn if \"Togoro\" is face-up on your side of the field.",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
     "yyh-014-jin": {
@@ -11764,7 +11764,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "manual",
       "name": "Kaito",
       "type": "Palm Trick",
-      "desc": "When this Catalyst is normal summoned, place 3 counter on it. When this Catalyst if destroyed in battle, remove one counter instead. Damage calculations are still applied as normal.",
+      "desc": "When this Catalyst is normal spawned, place 3 counter on it. When this Catalyst if destroyed in battle, remove one counter instead. Damage calculations are still applied as normal.",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "yyh-016-karasu": {
@@ -11792,7 +11792,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Togoro 110%",
       "type": "Catalyst",
-      "desc": "This Catalyst can only be summoned by tributing \"Togoro\" equipped with \"Elder Togoru\". You may discard one card from your hand to either draw another card, or destroy any Palm Trick or Concealed Trick.",
+      "desc": "This Catalyst can only be spawned by tributing \"Togoro\" equipped with \"Elder Togoru\". You may discard one card from your hand to either draw another card, or destroy any Palm Trick or Concealed Trick.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "yyh-001-atsuko": {
@@ -11834,7 +11834,7 @@ window.CTF_CARD_PLAYABILITY = {
       "status": "auto",
       "name": "Hiei with the Jagan Eye",
       "type": "Catalyst",
-      "desc": "This card can only be special summoned by tributing \"Hiei\" equipped with \"Jagan Eye\". Pay 100 Chi to see one of your opponent's face down cards. Pay 500 Chi to see your opponent's hand.",
+      "desc": "This card can only be special spawned by tributing \"Hiei\" equipped with \"Jagan Eye\". Pay 100 Chi to see one of your opponent's face down cards. Pay 500 Chi to see your opponent's hand.",
       "reason": "Card appears to have explicit scripted or registry support."
     },
     "yyh-035-yukinaslove": {

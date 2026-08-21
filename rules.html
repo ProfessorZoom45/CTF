@@ -315,14 +315,14 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <div class="rules-layout">
 <aside class="sidebar">
-<a href="#start-here">Start Here</a><a href="#battle-cheat">Battle Cheat Sheet</a><a href="#setup">Game Setup</a><a href="#deck-rules">Deck Rules</a><a href="#field">The Field</a><a href="#turn">Turn Structure</a><a href="#summoning">Summoning</a><a href="#shotgun">Shotgun Rule</a><a href="#combat">Combat</a><a href="#win">Win Conditions</a><a href="#chi-ko">Chi KO</a><a href="#kills">7 Kills</a><a href="#extractions">7 Extractions</a><a href="#box">The Box</a><a href="#end-phase">End Phase</a><a href="#card-types">Card Types</a><a href="#kinds">KINDS</a><a href="#libra">Libra Summon</a><a href="#great">Great Cards</a><a href="#chains">Chains</a><a href="#modes">Multiplayer</a><a href="#locked">22 Locked Rules</a>
+<a href="#start-here">Start Here</a><a href="#battle-cheat">Battle Cheat Sheet</a><a href="#setup">Game Setup</a><a href="#deck-rules">Deck Rules</a><a href="#field">The Field</a><a href="#turn">Turn Structure</a><a href="#summoning">Spawning</a><a href="#shotgun">Shotgun Rule</a><a href="#combat">Combat</a><a href="#win">Win Conditions</a><a href="#chi-ko">Chi KO</a><a href="#kills">7 Kills</a><a href="#extractions">7 Extractions</a><a href="#box">The Box</a><a href="#end-phase">End Phase</a><a href="#card-types">Card Types</a><a href="#kinds">KINDS</a><a href="#libra">Libra Spawn</a><a href="#great">Great Cards</a><a href="#chains">Chains</a><a href="#modes">Multiplayer</a><a href="#locked">22 Locked Rules</a>
 </aside>
 
 <main class="rules-content">
 
 <div class="rule-section" id="start-here">
 <h2>Start Here — Learn CTF Fast</h2>
-<p>If you are brand new, do not try to memorize everything at once. Learn the game in this order: <strong>board → summoning → battle → End Phase → win conditions</strong>.</p>
+<p>If you are brand new, do not try to memorize everything at once. Learn the game in this order: <strong>board → spawning → battle → End Phase → win conditions</strong>.</p>
 <div class="callout"><strong>Quick loop:</strong> Draw 1 card, play cards in Action Phase, decide whether to attack in Battle Phase, then choose an End Phase action or END TURN.</div>
 <table class="rule-table">
 <thead><tr><th>Thing to learn first</th><th>What it means in plain language</th></tr></thead>
@@ -365,8 +365,8 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td style="color:var(--flame);font-weight:700">Starting Hand</td><td>5 cards <span class="locked">🔒 LOCKED</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Draw Per Turn</td><td>1 card (Draw Phase). Deck empty = skip draw, NOT a loss <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">First Player</td><td>P1 draws normally on Turn 1 but CANNOT attack. Battle Phase skipped. <span class="locked">🔒</span></td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Normal Summons</td><td>1 per turn. Free for Lv 1–4. Lv 5–6 = 1 Tribute. Lv 7+ = 2 Tributes.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Special Summon Cap</td><td><span data-ctf="CTF_CONFIG.game.shotgun.maxSpecialSummonsPerTurn">5</span> per turn (hard cap). Each triggers the Shotgun Rule. <span class="locked">🔒</span></td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Normal Spawns</td><td>1 per turn. Free for Lv 1–4. Lv 5–6 = 1 Tribute. Lv 7+ = 2 Tributes.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Special Spawn Cap</td><td><span data-ctf="CTF_CONFIG.game.shotgun.maxSpecialSummonsPerTurn">5</span> per turn (hard cap). Each triggers the Shotgun Rule. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Hand Limit</td><td><span data-ctf="ui.handLimit">7</span> at End Phase — player chooses which to discard <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Mandatory Attack</td><td>REMOVED / INACTIVE. Attacking is always optional. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Platform</td><td>Online-only digital card game</td></tr>
@@ -413,30 +413,30 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 
 <div class="rule-section" id="summoning">
-<h2>Summoning</h2>
+<h2>Spawning</h2>
 <table class="rule-table">
-<thead><tr><th>Summon Type</th><th>Limit</th><th>Shotgun?</th><th>How It Works</th></tr></thead>
+<thead><tr><th>Spawn Type</th><th>Limit</th><th>Shotgun?</th><th>How It Works</th></tr></thead>
 <tbody>
-<tr><td>Normal Summon</td><td>1 per turn</td><td>No</td><td>Lv 1–4 free. Lv 5–6 = 1 Tribute. Lv 7+ = 2 Tributes.</td></tr>
-<tr><td>Special Summon</td><td>Max 5/turn (hard cap)</td><td>YES — every time</td><td>Effect-based. Opponent draws 1 card each SS.</td></tr>
-<tr><td>Libra Summon</td><td>Counts as 1 SS</td><td>YES — once</td><td>Normal Catalysts in Libra Zones summon between scales.</td></tr>
-<tr><td>Fusion Summon</td><td>Counts as 1 SS</td><td>YES — once</td><td>Named materials to Void + Fusion enabler card.</td></tr>
-<tr><td>Set</td><td>Counts as Normal Summon</td><td>No</td><td>Place Catalyst face-down DEF, or set a Trick face-down.</td></tr>
+<tr><td>Normal Spawn</td><td>1 per turn</td><td>No</td><td>Lv 1–4 free. Lv 5–6 = 1 Tribute. Lv 7+ = 2 Tributes.</td></tr>
+<tr><td>Special Spawn</td><td>Max 5/turn (hard cap)</td><td>YES — every time</td><td>Effect-based. Opponent draws 1 card each SS.</td></tr>
+<tr><td>Libra Spawn</td><td>Counts as 1 SS</td><td>YES — once</td><td>Normal Catalysts in Libra Zones spawn between scales.</td></tr>
+<tr><td>Fusion Spawn</td><td>Counts as 1 SS</td><td>YES — once</td><td>Named materials to Void + Fusion enabler card.</td></tr>
+<tr><td>Set</td><td>Counts as Normal Spawn</td><td>No</td><td>Place Catalyst face-down DEF, or set a Trick face-down.</td></tr>
 </tbody></table>
 </div>
 
 <div class="rule-section" id="shotgun">
 <h2>The Shotgun Rule <span class="locked">🔒 LOCKED</span></h2>
-<p><span data-ctf="ui.shotgunSummary">Every Special Summon causes the opponent to draw 1 card. Libra Summon counts as 1 Special Summon. Hard cap: 5 per turn.</span></p>
+<p><span data-ctf="ui.shotgunSummary">Every Special Spawn causes the opponent to draw 1 card. Libra Spawn counts as 1 Special Spawn. Hard cap: 5 per turn.</span></p>
 <table class="rule-table">
-<thead><tr><th>Special Summon #</th><th>Shotgun?</th><th>Opponent Draws</th><th>Total This Turn</th></tr></thead>
+<thead><tr><th>Special Spawn #</th><th>Shotgun?</th><th>Opponent Draws</th><th>Total This Turn</th></tr></thead>
 <tbody>
 <tr><td>1st</td><td>YES</td><td>1 card</td><td>1</td></tr>
 <tr><td>2nd</td><td>YES</td><td>1 card</td><td>2</td></tr>
 <tr><td>3rd</td><td>YES</td><td>1 card</td><td>3</td></tr>
 <tr><td>4th</td><td>YES</td><td>1 card</td><td>4</td></tr>
 <tr><td>5th (HARD CAP)</td><td>YES</td><td>1 card</td><td>5</td></tr>
-<tr><td>Libra Summon</td><td>YES — once only</td><td>1 card (not per card summoned)</td><td>Max +1</td></tr>
+<tr><td>Libra Spawn</td><td>YES — once only</td><td>1 card (not per card spawned)</td><td>Max +1</td></tr>
 </tbody></table>
 </div>
 
@@ -536,7 +536,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td style="color:var(--flame);font-weight:700">Palm Tricks</td><td>Proactive spells</td><td>Your Action Phase only. Can NEVER be counter-type. Always Link 1. Type: Palm. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Concealed Tricks</td><td>Reactive traps</td><td>Set face-down, activate either turn. Cannot activate same turn set. Type: Concealed. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Field Tricks</td><td>Environment effects</td><td>1 per player active. In Main Deck. Refresh at Ignition Phase. Type: Field. <span class="locked">🔒</span></td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Fusion Cards</td><td>Combined Catalysts</td><td>Fusion Deck only. Named materials to Void + enabler. 1 Special Summon. <span class="locked">🔒</span></td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Fusion Cards</td><td>Combined Catalysts</td><td>Fusion Deck only. Named materials to Void + enabler. 1 Special Spawn. <span class="locked">🔒</span></td></tr>
 </tbody></table>
 <h3>Speed System <span class="locked">🔒 LOCKED</span></h3>
 <p><strong>Palm Tricks</strong> = proactive (your turn, Link 1 only). <strong>Concealed Tricks</strong> = reactive (either turn, any chain position). <strong>Counter Tricks</strong> = highest priority (once on chain, only another Counter can respond above it). This split is strict — no exceptions.</p>
@@ -549,8 +549,8 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 
 <div class="rule-section" id="libra">
-<h2>Libra Summon <span class="locked">🔒 LOCKED</span></h2>
-<p><span data-ctf="ui.libraSummary">Place Normal Catalysts in the two outermost Libra Zones. Their Levels become your Scales. You may Libra Summon up to 5 Catalysts whose Levels are strictly between those Scales. The whole Libra Summon counts as exactly 1 Special Summon and causes exactly 1 Shotgun draw total.</span></p>
+<h2>Libra Spawn <span class="locked">🔒 LOCKED</span></h2>
+<p><span data-ctf="ui.libraSummary">Place Normal Catalysts in the two outermost Libra Zones. Their Levels become your Scales. You may Libra Spawn up to 5 Catalysts whose Levels are strictly between those Scales. The whole Libra Spawn counts as exactly 1 Special Spawn and causes exactly 1 Shotgun draw total.</span></p>
 <table class="rule-table">
 <thead><tr><th>Left Scale</th><th>Right Scale</th><th>Valid Levels</th><th>Excluded</th></tr></thead>
 <tbody>
@@ -559,7 +559,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td>3</td><td>7</td><td>4, 5, 6</td><td>1–3, 7+</td></tr>
 <tr><td>4</td><td>8</td><td>5, 6, 7</td><td>1–4, 8+</td></tr>
 </tbody></table>
-<p>Libra Zone Catalysts are treated as Trick cards for targeting. They cannot be used as End Phase sacrifices. If a Scale is destroyed mid-combo, already-summoned Catalysts remain on the field.</p>
+<p>Libra Zone Catalysts are treated as Trick cards for targeting. They cannot be used as End Phase sacrifices. If a Scale is destroyed mid-combo, already-spawned Catalysts remain on the field.</p>
 </div>
 
 <div class="rule-section" id="great">
@@ -595,8 +595,8 @@ body.ctf-nav-pad { padding-top: 0; }
 <thead><tr><th>Mode</th><th>Players</th><th>Chi</th><th>Key Rules</th></tr></thead>
 <tbody>
 <tr><td style="color:var(--flame);font-weight:700">Standard 1v1</td><td>2</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Default. Best of 3: loser picks first. Side Deck swaps.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Team 2v2</td><td>4 (2 teams)</td><td><span data-ctf="ui.startingChi">10,000</span> shared</td><td>Shared Chi. 1 Normal Summon/player. Shared Chi to 0 = team loses. <span class="locked">🔒</span></td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Boss Battle 3v1</td><td>4 (3 vs 1)</td><td><span data-ctf="ui.startingChi">10,000</span> each side</td><td>Boss: 2 Normal Summons/turn, 2 draws/turn, 1 free Fusion Turn 1.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Team 2v2</td><td>4 (2 teams)</td><td><span data-ctf="ui.startingChi">10,000</span> shared</td><td>Shared Chi. 1 Normal Spawn/player. Shared Chi to 0 = team loses. <span class="locked">🔒</span></td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Boss Battle 3v1</td><td>4 (3 vs 1)</td><td><span data-ctf="ui.startingChi">10,000</span> each side</td><td>Boss: 2 Normal Spawns/turn, 2 draws/turn, 1 free Fusion Turn 1.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Free For All</td><td>4</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Elimination. Last above 0 Chi wins. Attacks simultaneous and secret.</td></tr>
 </tbody></table>
 </div>
@@ -611,7 +611,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td>02</td><td>P1 Turn 1</td><td>Draws Turn 1, CANNOT attack. Battle Phase skipped.</td></tr>
 <tr><td>03</td><td>Deck Out</td><td>NOT a loss. Skip draw, continue.</td></tr>
 <tr><td>04</td><td>Max Catalysts</td><td>5 on field simultaneously.</td></tr>
-<tr><td>05</td><td>Shotgun Rule</td><td><span data-ctf="ui.shotgunSummary">Every Special Summon causes the opponent to draw 1 card. Libra Summon counts as 1 Special Summon. Hard cap: 5 per turn.</span></td></tr>
+<tr><td>05</td><td>Shotgun Rule</td><td><span data-ctf="ui.shotgunSummary">Every Special Spawn causes the opponent to draw 1 card. Libra Spawn counts as 1 Special Spawn. Hard cap: 5 per turn.</span></td></tr>
 <tr><td>06</td><td>Rescue Dest.</td><td>YOUR Catalyst from opponent's Box → YOUR Deck (shuffled).</td></tr>
 <tr><td>07</td><td>7 Kills</td><td>Battle ONLY. Effects/Destroy Trick = destroyed, not Kills.</td></tr>
 <tr><td>08</td><td>Starting Hand</td><td>5 cards before Turn 1.</td></tr>
@@ -619,12 +619,12 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td>10</td><td>ATK = DEF</td><td>Attacker bounces. Defender survives. Nothing captured.</td></tr>
 <tr><td>11</td><td>Great DEF</td><td>→ Void (not Box). +1 Kill. Only DEF battle that = Kill.</td></tr>
 <tr><td>12</td><td>Direct Attack</td><td>Catalyst Zones empty. Tricks do NOT block.</td></tr>
-<tr><td>13</td><td>Position Change</td><td>Cannot change same turn summoned.</td></tr>
+<tr><td>13</td><td>Position Change</td><td>Cannot change same turn spawned.</td></tr>
 <tr><td>14</td><td>Mandatory Atk</td><td>REMOVED. Attacking always optional.</td></tr>
 <tr><td>15</td><td>Win Priority</td><td>Chi KO > 7 Kills > 7 Extractions.</td></tr>
 <tr><td>16</td><td>Hand Discard</td><td>Player chooses which to discard to <span data-ctf="ui.handLimit">7</span>.</td></tr>
 <tr><td>17</td><td>2v2 Shared Chi</td><td>0 = entire team loses immediately.</td></tr>
-<tr><td>18</td><td>Normal Summon</td><td>1/turn. Free Lv 1–4. Lv 5–6 = 1 Tribute. Lv 7+ = 2.</td></tr>
+<tr><td>18</td><td>Normal Spawn</td><td>1/turn. Free Lv 1–4. Lv 5–6 = 1 Tribute. Lv 7+ = 2.</td></tr>
 <tr><td>19</td><td>End Phase</td><td>Choose Extraction / Rescue / Destroy Trick if you want to pay with an eligible Catalyst, or choose END TURN with no cost.</td></tr>
 <tr><td>20</td><td>Libra</td><td>Normal Catalysts only. Outermost. Levels strictly BETWEEN.</td></tr>
 <tr><td>21</td><td>Extracted Cards</td><td>RFG for duel. Return to owner's deck next duel.</td></tr>

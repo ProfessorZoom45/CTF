@@ -24,7 +24,7 @@ const CLIENT_CFG = (window.CTF_CONFIG && window.CTF_CONFIG.game) ? window.CTF_CO
 const BETA_CFG = window.CTF_CONFIG ? window.CTF_CONFIG.beta : {};
 const TUTORIAL_KEY = 'ctf:tutorial-progress';
 const TUTORIAL_STEPS = [
-  { title: 'Match 1 — Core Loop', copy: "Get familiar with the board using Reese's Trigun. Draw, summon Vash or Brad, and pressure the opponent toward a Chi KO.", points: ["Use the phase rail to move through your turn — Draw, Standby, Main, Battle, End.", 'Focus on summoning Level 4 or lower Catalysts like Vash, Brad, Meryl, and Milly without tributing.', 'Winning is less important than completing the full turn loop at least once.'] },
+  { title: 'Match 1 — Core Loop', copy: "Get familiar with the board using Reese's Trigun. Draw, spawn Vash or Brad, and pressure the opponent toward a Chi KO.", points: ["Use the phase rail to move through your turn — Draw, Standby, Main, Battle, End.", 'Focus on spawning Level 4 or lower Catalysts like Vash, Brad, Meryl, and Milly without tributing.', 'Winning is less important than completing the full turn loop at least once.'] },
   { title: 'Match 2 — Trick Timing', copy: "Start setting and using the deck's Palm and Concealed Tricks — Ambush, Jessica's Love, and 2nd Wind are your tools.", points: ["Set at least one Concealed Trick face-down during Main Phase.", "Use the helper panel when the chain opens to see what actions are legal.", "Check the result card after the match to see how many chains opened."] },
   { title: 'Match 3 — Battle & Kills', copy: 'Practice attack declarations with Vash and the gunman crew. Learn how a Kill differs from a Capture.', points: ['Compare Pressure and Counter Pressure before each attack.', 'P beats P = Kill + Chi damage. P beats CP = Capture unless the defender is a Great Card.', 'P loses to CP = no Kill or Capture; the attacking controller takes Chi damage equal to the difference.'] },
   { title: 'Match 4 — End Phase Control', copy: "Use Extraction, Rescue, and Destroy Trick from the End Phase. Kuroneko and Claim Your Bounty reward you for cycling the Void.", points: ['You need an eligible Catalyst to pay the cost for Extraction, Rescue, or Destroy Trick.', 'Extraction uses YOUR Box. Rescue pulls YOUR card from the opponent Box.', 'END TURN is always legal and costs nothing.'] },
@@ -322,7 +322,7 @@ function renderTutorialPhaseBanner(){
     turnStart:  'Turn begins. Any start-of-turn effects resolve here. Press Continue to draw.',
     draw:       'Draw Phase. Click "Draw Card" to draw 1 from your deck, or "Skip Draw Phase" if your deck is empty. Empty deck is NOT a loss.',
     ignition:   'Ignition Phase. Revives, upkeep and per-turn effects activate. Press Continue to open Action Phase.',
-    action:     'Action Phase. This is your main play window: Normal Summon, activate Palm Tricks, set Tricks, Libra or Fusion Summons. When finished, press → To Battle Phase.',
+    action:     'Action Phase. This is your main play window: Normal Spawn, activate Palm Tricks, set Tricks, Libra or Fusion Spawns. When finished, press → To Battle Phase.',
     battle:     'Battle Phase. Declare attacks with P-position Catalysts or go direct if opponent has no Catalysts. Press → To End Phase when done.',
     resolution: 'Resolution Phase. Set face-down Tricks if you wish, change ONE non-attacking Catalyst\'s position, or pass. Win conditions check here. Press Continue to move to End Phase.',
     end:        'End Phase. Pick ONE End-Phase action: Extraction, Rescue, Destroy Trick, OR End Turn. Then press Continue to pass the turn.'
@@ -761,7 +761,7 @@ function renderResultCardCanvas(snapshot){
   drawStatBox(ctx, 76, 448, 442, 132, 'Player 1', snapshot.p1);
   drawStatBox(ctx, 562, 448, 442, 132, 'Player 2', snapshot.p2);
   drawStatBox(ctx, 76, 600, 442, 132, 'Combat', snapshot.combat);
-  drawStatBox(ctx, 562, 600, 442, 132, 'Summons', snapshot.summons);
+  drawStatBox(ctx, 562, 600, 442, 132, 'Spawns', snapshot.summons);
 
   ctx.fillStyle = 'rgba(255,255,255,0.035)';
   ctx.strokeStyle = 'rgba(255,255,255,0.08)';
@@ -895,8 +895,8 @@ function showPostMatchSummary() {
     '',
     `Total log entries: ${summary.totalActions}`,
     `Battles: ${summary.combatCount}  |  Chains: ${summary.chainCount}`,
-    `Special Summons: ${summary.specialSummonCount}  |  Fusions: ${summary.fusionCount}`,
-    `Libra Summons: ${summary.libraSummonCount}  |  Shotgun draws: ${summary.shotgunDraws}`,
+    `Special Spawns: ${summary.specialSummonCount}  |  Fusions: ${summary.fusionCount}`,
+    `Libra Spawns: ${summary.libraSummonCount}  |  Shotgun draws: ${summary.shotgunDraws}`,
     `Effect scripts fired: ${summary.effectScriptCount}`,
     `Desync events: ${summary.desyncEvents}`,
     '',
@@ -1432,7 +1432,7 @@ function preparePalmActivation(card, sourceCtx, onReady) {
     const fireVoid = me.void.map((id, idx) => ({ idx, card: getCard(id) })).filter(x => x.card && x.card.cardType === 'Catalyst' && cardHasAlignment(x.card, 'Fire'));
     const modes = [
       { mode: 'double', label: 'Double FIRE Pressure', meta: 'Pay 2000 Chi. Double your FIRE Catalysts until End Phase.' },
-      { mode: 'revive', label: 'Revive from Void', meta: 'Pay 1000 Chi. Special Summon 1 FIRE Catalyst from your Void.' }
+      { mode: 'revive', label: 'Revive from Void', meta: 'Pay 1000 Chi. Special Spawn 1 FIRE Catalyst from your Void.' }
     ].filter(x => x.mode !== 'revive' || fireVoid.length > 0);
     if (!modes.length) return onReady(null);
     return openChoiceModal('Phoenix Soul', 'Choose which effect to use.', modes.map(x => ({ label: x.label, meta: x.meta })), (pickIdx) => {
@@ -1453,9 +1453,9 @@ function prepareConcealedResponse(card, zoneIdx, onReady) {
   const me = GS.players[myPlayer];
   const name = String(card?.name || '').toLowerCase();
   if (name !== 'the chosen one') return onReady(null);
-  const targets = me.deck.map((id, idx) => ({ idx, card: getCard(id) })).filter(x => x.card && x.card.cardType === 'Catalyst' && !/can only be special summoned|can only be summoned by/i.test(String(x.card.desc || '')));
+  const targets = me.deck.map((id, idx) => ({ idx, card: getCard(id) })).filter(x => x.card && x.card.cardType === 'Catalyst' && !/can only be special spawned|can only be spawned by/i.test(String(x.card.desc || '')));
   if (!targets.length) return onReady(null);
-  openChoiceModal('The Chosen One', 'Choose the Deck Catalyst to Special Summon if this resolves.', targets.map(x => ({ label: x.card.name, meta: `Deck #${x.idx + 1} · Pressure ${x.card.pr || 0} / ${x.card.cp || 0}` })), (pickIdx) => {
+  openChoiceModal('The Chosen One', 'Choose the Deck Catalyst to Special Spawn if this resolves.', targets.map(x => ({ label: x.card.name, meta: `Deck #${x.idx + 1} · Pressure ${x.card.pr || 0} / ${x.card.cp || 0}` })), (pickIdx) => {
     closeChoiceModal();
     onReady({ deckIdx: targets[pickIdx].idx, zoneIdx });
   });
@@ -1768,7 +1768,7 @@ function startLibraSummon() {
     const remainingCards = eligible.filter(x => !chosenHands.includes(x.idx));
     const remainingZones = emptyZones.filter(z => !chosenZones.includes(z));
     if (!remainingCards.length || !remainingZones.length || chosenHands.length >= 5) return finish();
-    openChoiceModal(`Libra Summon — Choose Card ${chosenHands.length + 1}`, `Scales ${scales.left} and ${scales.right}. Choose a Catalyst to Special Summon.`, remainingCards.map(x => ({ label: x.card.name, meta: `Lv ${x.card.level || 0} · ${x.card.pr || 0}/${x.card.cp || 0}`, sensitive:true, hiddenLabel:'Libra Candidate', hiddenMeta:`Lv ${x.card.level || 0} · Hidden stats` })), (pickIdx) => {
+    openChoiceModal(`Libra Spawn — Choose Card ${chosenHands.length + 1}`, `Scales ${scales.left} and ${scales.right}. Choose a Catalyst to Special Spawn.`, remainingCards.map(x => ({ label: x.card.name, meta: `Lv ${x.card.level || 0} · ${x.card.pr || 0}/${x.card.cp || 0}`, sensitive:true, hiddenLabel:'Libra Candidate', hiddenMeta:`Lv ${x.card.level || 0} · Hidden stats` })), (pickIdx) => {
       const chosenCard = remainingCards[pickIdx];
       closeChoiceModal();
       openChoiceModal('Choose Destination Zone', 'Pick an empty Catalyst Zone.', remainingZones.map(z => ({ label: `Catalyst Zone C${z + 1}` })), (zonePickIdx) => {
@@ -1778,7 +1778,7 @@ function startLibraSummon() {
         const afterCards = eligible.filter(x => !chosenHands.includes(x.idx));
         const afterZones = emptyZones.filter(z => !chosenZones.includes(z));
         if (!afterCards.length || !afterZones.length || chosenHands.length >= 5) return finish();
-        openChoiceModal('Continue Libra Summon?', 'A Libra Summon can bring out up to 5 Catalysts at once.', [{ label: 'Add another Catalyst', meta: 'Keep building this Libra Summon' }, { label: 'Finish Libra Summon', meta: `Summon ${chosenHands.length} chosen card(s) now` }], (contIdx) => {
+        openChoiceModal('Continue Libra Spawn?', 'A Libra Spawn can bring out up to 5 Catalysts at once.', [{ label: 'Add another Catalyst', meta: 'Keep building this Libra Spawn' }, { label: 'Finish Libra Spawn', meta: `Spawn ${chosenHands.length} chosen card(s) now` }], (contIdx) => {
           closeChoiceModal();
           if (contIdx === 0) askCard(); else finish();
         });
@@ -1786,7 +1786,7 @@ function startLibraSummon() {
     });
   }
   function finish() {
-    if (!chosenHands.length) return showToast('No Catalysts were chosen for the Libra Summon.');
+    if (!chosenHands.length) return showToast('No Catalysts were chosen for the Libra Spawn.');
     const result = libraSummon(GS, myPlayer, chosenHands, chosenZones);
     if (!result.ok) return showToast(result.msg);
     sendAction({ type: 'libraSummon', player: myPlayer, handIdxs: chosenHands, zoneIdxs: chosenZones }); renderAll();
@@ -1797,7 +1797,7 @@ function startLibraSummon() {
 function startFusionSummon() {
   const me = GS.players[myPlayer];
   const options = getAvailableFusionSummons(GS, myPlayer);
-  if (!options.length) return showToast('No legal Fusion Summon is available right now.');
+  if (!options.length) return showToast('No legal Fusion Spawn is available right now.');
   const emptyZones = me.catalysts.map((c, i) => c === null ? i : -1).filter(i => i >= 0);
   if (!emptyZones.length) return showToast('No empty Catalyst Zones are available.');
   const activeField = me.fieldTrick ? getCard(me.fieldTrick.cardId) : null;
@@ -1805,7 +1805,7 @@ function startFusionSummon() {
   openChoiceModal('Choose Fusion Card', 'Select the Fusion Monster you want to bring out.', options.map(o => ({ label: o.fusionCard.name, meta: `Materials: ${o.materials.join(' + ')}` })), (pickIdx) => {
     const picked = options[pickIdx];
     closeChoiceModal();
-    openChoiceModal('Choose Fusion Zone', 'Pick an empty Catalyst Zone for the Fusion Summon.', emptyZones.map(z => ({ label: `Catalyst Zone C${z + 1}` })), (zonePickIdx) => {
+    openChoiceModal('Choose Fusion Zone', 'Pick an empty Catalyst Zone for the Fusion Spawn.', emptyZones.map(z => ({ label: `Catalyst Zone C${z + 1}` })), (zonePickIdx) => {
       const zone = emptyZones[zonePickIdx];
       closeChoiceModal();
       if (!detailed) {
@@ -1828,7 +1828,7 @@ function startFusionSummon() {
         if (fusionName.includes('destin')) {
           const warriorOptions = me.hand.map((id, idx) => ({ idx, card: getCard(id) })).filter(x => x.card && x.card.cardType === 'Catalyst' && Number(x.card.pr || 0) <= 1000 && (x.card.kinds || []).some(k => /warrior/i.test(k)));
           if (!warriorOptions.length) return finish(null);
-          openChoiceModal('Destin Follow-Up', 'Choose the Warrior in your hand that Destin will Special Summon.', warriorOptions.map(x => ({ label: x.card.name, meta: `Hand #${x.idx + 1} · Pressure ${x.card.pr || 0}`, sensitive:true, hiddenLabel:'Warrior Hand Card', hiddenMeta:`Hand #${x.idx + 1}` })), (wpick) => {
+          openChoiceModal('Destin Follow-Up', 'Choose the Warrior in your hand that Destin will Special Spawn.', warriorOptions.map(x => ({ label: x.card.name, meta: `Hand #${x.idx + 1} · Pressure ${x.card.pr || 0}`, sensitive:true, hiddenLabel:'Warrior Hand Card', hiddenMeta:`Hand #${x.idx + 1}` })), (wpick) => {
             closeChoiceModal();
             finish({ destin: { handIdx: warriorOptions[wpick].idx } });
           });
@@ -1953,10 +1953,10 @@ function getLegalActionsList() {
   if (!isMyTurn) return [{ label: 'Watch board', tone: 'blocked' }];
   if (GS.pendingDiscard && GS.pendingDiscard.playerIdx === myPlayer) return [{ label: 'Discard to 7', tone: 'warn' }];
   if (GS.phaseName === 'action') {
-    if (!me.normalSummonUsed) items.push({ label: 'Normal Summon', tone: '' });
+    if (!me.normalSummonUsed) items.push({ label: 'Normal Spawn', tone: '' });
     if (me.hand.some(id => ['Palm Trick','Concealed Trick','Counter Trick','Field Trick'].includes(getCard(id)?.cardType))) items.push({ label: 'Set / play Trick', tone: '' });
-    if (getLibraScales(GS, myPlayer)) items.push({ label: 'Libra Summon', tone: '' });
-    if (getAvailableFusionSummons(GS, myPlayer).length) items.push({ label: 'Fusion Summon', tone: '' });
+    if (getLibraScales(GS, myPlayer)) items.push({ label: 'Libra Spawn', tone: '' });
+    if (getAvailableFusionSummons(GS, myPlayer).length) items.push({ label: 'Fusion Spawn', tone: '' });
     if (me.catalysts.some((c, i) => c && !me.posChanged.has(i) && !me.summonedThisTurn.has(i))) items.push({ label: 'Change position', tone: '' });
     if (!items.length) items.push({ label: 'Continue phase', tone: 'warn' });
     return items;
@@ -2005,15 +2005,15 @@ function getStatusMessage() {
       const selected = selectedHandIdx >= 0 ? getCard(me.hand[selectedHandIdx]) : null;
       if (selected) {
         if (isWatchModeEnabled()) {
-          if (selected.cardType === 'Catalyst') return { main: `${turnLead} Summon your selected hidden card.`, sub: 'Click an empty Catalyst Zone. Level 5+ needs manual Tribute selection.', mode: '' };
+          if (selected.cardType === 'Catalyst') return { main: `${turnLead} Spawn your selected hidden card.`, sub: 'Click an empty Catalyst Zone. Level 5+ needs manual Tribute selection.', mode: '' };
           if (selected.cardType === 'Field Trick') return { main: `${turnLead} Activate your selected hidden card.`, sub: 'Click your Field slot to set it. If one is already active, you will be asked to confirm the overwrite.', mode: '' };
           return { main: `${turnLead} Use your selected hidden card.`, sub: 'Click an open Trick Zone. Palm Tricks may activate from hand or be set face-down first.', mode: '' };
         }
-        if (selected.cardType === 'Catalyst') return { main: `${turnLead} Summon ${selected.name}.`, sub: 'Click an empty Catalyst Zone. Level 5+ needs manual Tribute selection.', mode: '' };
+        if (selected.cardType === 'Catalyst') return { main: `${turnLead} Spawn ${selected.name}.`, sub: 'Click an empty Catalyst Zone. Level 5+ needs manual Tribute selection.', mode: '' };
         if (selected.cardType === 'Field Trick') return { main: `${turnLead} Activate ${selected.name}.`, sub: 'Click your Field slot to set it. If one is already active, you will be asked to confirm the overwrite.', mode: '' };
         return { main: `${turnLead} Set or activate ${selected.name}.`, sub: 'Click an open Trick Zone. Palm Tricks may activate from hand or be set face-down first.', mode: '' };
       }
-      return { main: turnLead, sub: 'Action Phase: summon, set, activate, or change one Catalyst position. Use Continue when you are done.', mode: isMyTurn ? '' : 'waiting' };
+      return { main: turnLead, sub: 'Action Phase: spawn, set, activate, or change one Catalyst position. Use Continue when you are done.', mode: isMyTurn ? '' : 'waiting' };
     }
     case 'battle':
       if (!isMyTurn) return { main: turnLead, sub: 'Watch for attacks and upcoming responses.', mode: 'waiting' };
@@ -2048,12 +2048,12 @@ function getHelperCopy() {
   if (GS.phaseName === 'action') {
     const selected = selectedHandIdx >= 0 ? getCard(me.hand[selectedHandIdx]) : null;
     if (selected && isWatchModeEnabled()) return 'A hidden hand card is selected. Use the board to place or activate it without showing its contents on screen.';
-    if (selected?.cardType === 'Catalyst') return 'Selected Catalyst: click an empty Catalyst Zone to Normal Summon. Level 5–6 needs 1 Tribute. Level 7+ needs 2 Tributes.';
+    if (selected?.cardType === 'Catalyst') return 'Selected Catalyst: click an empty Catalyst Zone to Normal Spawn. Level 5–6 needs 1 Tribute. Level 7+ needs 2 Tributes.';
     if (selected?.cardType === 'Field Trick') return 'Selected Field Trick: click your Field slot to set it. Overwriting an active Field Trick now asks for confirmation.';
     if (selected?.cardType === 'Palm Trick') return 'Selected Palm Trick: activate it from hand with the Palm button. Patch 9 adds scripted Palm resolution for supported cards.';
-    if (selected?.cardType === 'Catalyst') return 'Selected Catalyst: click an empty Catalyst Zone to Normal Summon, or click a Libra Zone with a Normal Catalyst to place a Scale.';
+    if (selected?.cardType === 'Catalyst') return 'Selected Catalyst: click an empty Catalyst Zone to Normal Spawn, or click a Libra Zone with a Normal Catalyst to place a Scale.';
     if (selected) return 'Selected Concealed/Counter Trick: click an open Trick Zone to set it face-down.';
-    return 'No card selected. You can summon once, set tricks, activate supported scripted effects, or rotate one Catalyst that was not summoned this turn.';
+    return 'No card selected. You can spawn once, set tricks, activate supported scripted effects, or rotate one Catalyst that was not spawned this turn.';
   }
   if (GS.phaseName === 'battle') {
     if (attackMode && attackerZone < 0) return 'Attack mode is live. Pick one of your P-position Catalysts that has not attacked this turn.';
@@ -2432,7 +2432,7 @@ function renderActions(isMyTurn) {
     const me = GS.players[myPlayer];
     if (me.toolboxActive) html += `<button class="act-btn act-btn-blue" onclick="startToolboxIgnition()">Use Toolbox</button>`;
   } else if (phase === 'action') {
-    html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Normal Summon, activate Palm Tricks, set Tricks face-down, place Libra Scales, flip a set Field Trick, or Fusion Summon.</div>`;
+    html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Normal Spawn, activate Palm Tricks, set Tricks face-down, place Libra Scales, flip a set Field Trick, or Fusion Spawn.</div>`;
     const selected = selectedHandIdx >= 0 ? getCard(GS.players[myPlayer].hand[selectedHandIdx]) : null;
     if (selected?.cardType === 'Palm Trick') html += `<button class="act-btn act-btn-fire" onclick="startActivatePalm()">Activate Palm</button>`;
     const setPalmZones = GS.players[myPlayer].tricks.map((t,i)=>({t,i})).filter(x => x.t && x.t.faceDown && !x.t.isLibra && getCard(x.t.cardId)?.cardType === 'Palm Trick');
@@ -2449,8 +2449,8 @@ function renderActions(isMyTurn) {
       const manualLabel = cardNeedsManualEffectAssist(currentEffectCard.card) ? 'Manual Effect / Printed Text' : 'Printed Effect';
       html += `<button class="act-btn ${manualTone}" onclick="showCurrentCardEffectInfo()">${manualLabel}</button>`;
     }
-    if (getLibraScales(GS, myPlayer)) html += `<button class="act-btn act-btn-fire" onclick="startLibraSummon()">Libra Summon</button>`;
-    if (getAvailableFusionSummons(GS, myPlayer).length) html += `<button class="act-btn act-btn-fire" onclick="startFusionSummon()">Fusion Summon</button>`;
+    if (getLibraScales(GS, myPlayer)) html += `<button class="act-btn act-btn-fire" onclick="startLibraSummon()">Libra Spawn</button>`;
+    if (getAvailableFusionSummons(GS, myPlayer).length) html += `<button class="act-btn act-btn-fire" onclick="startFusionSummon()">Fusion Spawn</button>`;
     html += `<button class="act-btn act-btn-ghost" onclick="doAdvance()">→ To Battle Phase</button>`;
     if (selectedHandIdx >= 0) {
       html += `<button class="act-btn act-btn-red" onclick="cancelSelection()">Cancel Selection</button>`;
@@ -2626,7 +2626,7 @@ function zoneClick(player, type, zone) {
     }
   }
 
-  // Normal Summon — place from hand
+  // Normal Spawn — place from hand
   if (selectedHandIdx >= 0 && player === 'me') {
     const cardId = GS.players[myPlayer].hand[selectedHandIdx];
     const card = getCard(cardId);
@@ -2648,7 +2648,7 @@ function zoneClick(player, type, zone) {
       const executeSummon = async (tributeZones=[]) => {
         if (tributeZones.length) {
           const tributeNames = tributeZones.map((tz) => getCard(GS.players[myPlayer].catalysts[tz]?.cardId)?.name || `C${tz+1}`).join(', ');
-          const ok = await ctfConfirm(isWatchModeEnabled() ? `Normal Summon your selected hidden card by sending ${tributeNames} to the Void?` : `Normal Summon ${card.name} by sending ${tributeNames} to the Void?`, 'Confirm Tribute Summon');
+          const ok = await ctfConfirm(isWatchModeEnabled() ? `Normal Spawn your selected hidden card by sending ${tributeNames} to the Void?` : `Normal Spawn ${card.name} by sending ${tributeNames} to the Void?`, 'Confirm Tribute Spawn');
           if (!ok) return;
         }
         const result = normalSummon(GS, myPlayer, handIdx, zone, 'atk', tributeZones);

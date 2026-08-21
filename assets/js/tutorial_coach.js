@@ -6,7 +6,7 @@
     turnStart: 'Turn Start: automatic start-of-turn effects resolve here.',
     draw: 'Draw Phase: draw 1 card. Empty deck is not a loss in CTF.',
     ignition: 'Ignition Phase: ongoing effects and upkeep-style effects check here.',
-    action: 'Action Phase: summon, set Tricks, activate Palm Tricks, change one eligible position, Libra/Fusion if available.',
+    action: 'Action Phase: spawn, set Tricks, activate Palm Tricks, change one eligible position, Libra/Fusion if available.',
     battle: 'Battle Phase: attacks are optional. Player 1 cannot attack on their first turn.',
     resolution: 'Resolution Phase: battle outcomes, Chi damage, Box/Void movement, and win checks finalize.',
     end: 'End Phase: choose one action if eligible, then discard down to 7 cards.'

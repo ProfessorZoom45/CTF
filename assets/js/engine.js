@@ -296,7 +296,7 @@ function isFieldTrickActive(slot) {
 function fieldTrickProvidesFusion(slot) {
   const c = slot ? getCard(slot.cardId) : null;
   if (!c || slot.faceDown) return false;
-  return /fusion zone|fusion summon/i.test(`${c.name||''} ${c.desc||''}`);
+  return /fusion zone|fusion spawn/i.test(`${c.name||''} ${c.desc||''}`);
 }
 
 
@@ -306,7 +306,7 @@ function isZeroDegreesLockActive(state) {
 
 function summonNamedToken(state, playerIdx, tokenId, count, sourceLabel, extraProps) {
   const p = state.players[playerIdx];
-  let summoned = 0;
+  let spawned = 0;
   for (let i = 0; i < Number(count || 0); i++) {
     if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) break;
     const zoneIdx = getFirstEmptyCatalystZone(state, playerIdx);
@@ -324,10 +324,10 @@ function summonNamedToken(state, playerIdx, tokenId, count, sourceLabel, extraPr
     }, extraProps || {});
     p.summonedThisTurn.add(zoneIdx);
     registerSpecialSummon(state, playerIdx, sourceLabel || 'Token Effect');
-    addLog(state, `P${playerIdx+1} Special Summoned ${getCard(tokenId)?.name || 'a token'} to C${zoneIdx+1}${sourceLabel ? ' via ' + sourceLabel : ''}.`);
-    summoned += 1;
+    addLog(state, `P${playerIdx+1} Special Spawned ${getCard(tokenId)?.name || 'a token'} to C${zoneIdx+1}${sourceLabel ? ' via ' + sourceLabel : ''}.`);
+    spawned += 1;
   }
-  return { ok: summoned > 0, summoned };
+  return { ok: spawned > 0, summoned: spawned };
 }
 
 function normalizeNameToken(v) {
@@ -492,7 +492,7 @@ function activateToolboxIgnition(state, playerIdx, handIdx) {
 
 function specialSummonSerpent(state, playerIdx, handIdx, zoneIdx, voidIdxs) {
   const p = state.players[playerIdx];
-  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok:false, msg:'Serpent can only be Special Summoned during your Action Phase.' };
+  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok:false, msg:'Serpent can only be Special Spawned during your Action Phase.' };
   const cardId = p.hand[handIdx];
   const card = getCard(cardId);
   if (!card || !/serpent/i.test(card.name || '')) return { ok:false, msg:'Selected card is not Serpent.' };
@@ -513,15 +513,15 @@ function specialSummonSerpent(state, playerIdx, handIdx, zoneIdx, voidIdxs) {
     p.rfg.push(banished);
   });
   p.hand.splice(handIdx, 1);
-  const placed = specialSummonToZone(state, playerIdx, cardId, zoneIdx, 'Serpent Special Summon');
+  const placed = specialSummonToZone(state, playerIdx, cardId, zoneIdx, 'Serpent Special Spawn');
   if (!placed.ok) return placed;
-  addLog(state, 'Effect Script: Serpent removed 2 EARTH and 2 WIND Catalysts from the Void from play to Special Summon itself.');
+  addLog(state, 'Effect Script: Serpent removed 2 EARTH and 2 WIND Catalysts from the Void from play to Special Spawn itself.');
   return { ok:true, cardId };
 }
 
 function fusionSummonDetailed(state, playerIdx, fusionDeckIdx, zoneIdx, fieldIdxs, handIdxs, removeMode, manual) {
   const p = state.players[playerIdx];
-  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Fusion Summon can only happen in your Action Phase.' };
+  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Fusion Spawn can only happen in your Action Phase.' };
   const fusionId = p.fusionDeck[fusionDeckIdx];
   const fusionCard = getCard(fusionId);
   if (!fusionCard) return { ok:false, msg:'Invalid Fusion card.' };
@@ -558,7 +558,7 @@ function fusionSummonDetailed(state, playerIdx, fusionDeckIdx, zoneIdx, fieldIdx
   }
   p._manualSummonContext = manual || null;
   const removedFusionId = p.fusionDeck.splice(fusionDeckIdx, 1)[0];
-  const placed = specialSummonToZone(state, playerIdx, removedFusionId, zoneIdx, removeMode === 'rfg' ? 'Fusion Zone' : 'Fusion Summon');
+  const placed = specialSummonToZone(state, playerIdx, removedFusionId, zoneIdx, removeMode === 'rfg' ? 'Fusion Zone' : 'Fusion Spawn');
   p._manualSummonContext = null;
   if (!placed.ok) return placed;
   addLog(state, `Fusion materials used: ${(fusionSpec && fusionSpec.pickN) ? chosenNames.join(' + ') : materials.join(' + ')}.${removeMode === 'rfg' ? ' Materials were removed from game.' : ''}`);
@@ -617,7 +617,7 @@ function destroyTrickTarget(state, target, reason) {
   if (c && /blazeing inferno/i.test(c.name || '')) pl.blazeingInferno = 0;
   if (c && /saiyan space pod/i.test(c.name || '')) {
     const res = specialSummonFromDeckByPredicate(state, target.player, cc => cc.cardType === 'Catalyst' && cardHasKind(cc, 'Saiyan') && Number(cc.level || 0) <= 4, c.name);
-    addLog(state, res.ok ? 'Effect Script: Saiyan Space Pod Special Summoned a Level 4 or lower Saiyan from the Deck.' : `Effect Script: Saiyan Space Pod found no valid Saiyan target. (${res.msg})`);
+    addLog(state, res.ok ? 'Effect Script: Saiyan Space Pod Special Spawned a Level 4 or lower Saiyan from the Deck.' : `Effect Script: Saiyan Space Pod found no valid Saiyan target. (${res.msg})`);
   }
   return true;
 }
@@ -714,17 +714,17 @@ function getSummonRestriction(state, summoningPlayer, card) {
     const slotCard = getCard(slot.cardId);
     if (slot._pilafRobotSummonLock && card) {
       const isSaiyanLow = (cardHasKind(card, 'Saiyan') || /saiyan/i.test(String(card.subType || card.sub || card.desc || ''))) && Number(card.level || 0) <= 4;
-      if (isSaiyanLow) return `${slotCard?.name || "Emperor Pilaf's Great Robot"} prevents Level 4 or lower Saiyan Catalysts from being summoned.`;
+      if (isSaiyanLow) return `${slotCard?.name || "Emperor Pilaf's Great Robot"} prevents Level 4 or lower Saiyan Catalysts from being spawned.`;
     }
     if (slot._valentineLock && card) {
       if (/the hellsing army|fergusson|furgusson/i.test(String(card.name || ''))) {
-        return `${slotCard?.name || 'The Valentine Brothers'} prevents that Catalyst from being summoned.`;
+        return `${slotCard?.name || 'The Valentine Brothers'} prevents that Catalyst from being spawned.`;
       }
     }
     for (const eff of getAllCardEffects(slot.cardId)) {
       if (eff.type !== 'continuous') continue;
       if (eff.action === 'blockSpecialSummonAbovePR' && Number(card?.pr || 0) >= Number(eff.minPR || 0)) {
-        return `${getCard(slot.cardId)?.name || 'An effect'} prevents Special Summoning Catalysts with ${eff.minPR}+ Pressure.`;
+        return `${getCard(slot.cardId)?.name || 'An effect'} prevents Special Spawning Catalysts with ${eff.minPR}+ Pressure.`;
       }
     }
   }
@@ -738,7 +738,7 @@ function getSummonRestriction(state, summoningPlayer, card) {
 // a registry entry — not a custom if/else block.
 //
 // Trigger types:
-//   onSummon        — fires when this Catalyst is summoned
+//   onSummon        — fires when this Catalyst is spawned
 //   continuous      — modifies stats while this card is face-up on field
 //   onAttackDeclare — fires when this Catalyst declares an attack
 //   onBattleCalc    — modifies PR during damage calculation only
@@ -847,7 +847,7 @@ function inferCommonStringEffects(cardOrId) {
     if (/until the selected catalyst is destroyed|permanent/.test(lower)) controlBase.duration = 'permanent';
     if (/all face[- ]up/i.test(lower) || /take control of all/i.test(lower)) controlBase.takeAll = true;
     if (card.cardType === 'Catalyst') {
-      if (!/when (?:this (?:card|catalyst) )?(?:is )?(?:normal summoned|special summoned|summoned)/i.test(desc)) {
+      if (!/when (?:this (?:card|catalyst) )?(?:is )?(?:normal spawned|special spawned|spawned)/i.test(desc)) {
         effects.push({ type:'activeAbility', tag:'genericTakeControl', ...controlBase });
       }
     } else if (card.cardType === 'Palm Trick' || card.cardType === 'Concealed Trick' || card.cardType === 'Counter Trick') {
@@ -856,8 +856,8 @@ function inferCommonStringEffects(cardOrId) {
   }
 
 
-  // Generic on-summon possession
-  if (card.cardType === 'Catalyst' && /when (?:this (?:card|catalyst) )?(?:is )?(?:normal summoned|special summoned|summoned)/i.test(desc) && /take control of/.test(lower)) {
+  // Generic on-spawn possession
+  if (card.cardType === 'Catalyst' && /when (?:this (?:card|catalyst) )?(?:is )?(?:normal spawned|special spawned|spawned)/i.test(desc) && /take control of/.test(lower)) {
     const onSummon = { type:'onSummon', tag:'genericOnSummonSteal', action:'generic_takeControl', _inferred:true, duration:/destroyed|permanent/.test(lower) ? 'permanent' : 'end', faceUpOnly:/face[- ]up/.test(lower) };
     const kind = desc.match(/take control of (?:one|1|a)?\s*(?:face[- ]up\s*)?([A-Za-z\- ]+?)(?:\s+sub)?-?type\s+catalyst/i);
     const align = desc.match(/take control of (?:one|1|a)?\s*(Dark|Light|Fire|Earth|Water|Wind|Thunder|Divine)\s+catalysts?/i);
@@ -885,10 +885,10 @@ function inferCommonStringEffects(cardOrId) {
   const searchNamedCat = desc.match(/^Search your deck for\s+(\d+)\s+"([^"]+)"\s+Catalyst(?:s)?\s+and add (?:it|them) to your hand/i);
   if (searchNamedCat) effects.push({ type:'genericAction', action:'searchNamedCatalyst', count:Number(searchNamedCat[1]), nameToken:searchNamedCat[2], _inferred:true, tag:'searchNamedCatalyst' });
 
-  const summonVoidNamed = desc.match(/^Special Summon\s+(\d+)\s+Level\s+(\d+)\s+or lower\s+"([^"]+)"\s+Catalyst(?:s)?\s+from the Void/i);
+  const summonVoidNamed = desc.match(/^Special Spawn\s+(\d+)\s+Level\s+(\d+)\s+or lower\s+"([^"]+)"\s+Catalyst(?:s)?\s+from the Void/i);
   if (summonVoidNamed) effects.push({ type:'genericAction', action:'specialSummonNamedFromVoid', count:Number(summonVoidNamed[1]), maxLevel:Number(summonVoidNamed[2]), nameToken:summonVoidNamed[3], _inferred:true, tag:'ssNamedFromVoid' });
 
-  const summonHandIfEmpty = desc.match(/^If you control no Catalysts:\s*Special Summon\s+(\d+)\s+"([^"]+)"\s+Catalyst(?:s)?\s+from your hand/i);
+  const summonHandIfEmpty = desc.match(/^If you control no Catalysts:\s*Special Spawn\s+(\d+)\s+"([^"]+)"\s+Catalyst(?:s)?\s+from your hand/i);
   if (summonHandIfEmpty) effects.push({ type:'genericAction', action:'specialSummonNamedFromHandIfEmpty', count:Number(summonHandIfEmpty[1]), nameToken:summonHandIfEmpty[2], _inferred:true, tag:'ssNamedFromHandIfEmpty' });
 
   const allStatShift = desc.match(/^All Catalysts (gain|lose)\s+(\d+)\s+Pressure\/Counter Pressure\s+until end of turn/i);
@@ -945,7 +945,7 @@ function resetEffectsUsed(state) {
 // Newz The Great Watcher, Stro Donari - The Great, Goku - The Great,
 // Psychic Burst The Great — no registration needed
 
-// === ON-SUMMON EFFECTS ===
+// === ON-SPAWN EFFECTS ===
 regEffect('anm-000-reesethegreatsgundam', {
   type: 'onSummon', tag: 'search',
   action: 'searchByName', names: ['Road To Greatness'],
@@ -1068,13 +1068,13 @@ regEffect('gck-000-rudothegreat', {
   log: 'gained 200 Pressure when a card was sent to the Void'
 });
 
-// === MONARCH ANTARES — ON SUMMON MASS DESTROY + BURN ===
+// === MONARCH ANTARES — ON SPAWN MASS DESTROY + BURN ===
 regEffect('sl1-020-monarchantaresthegreat', {
   type: 'onSummon', tag: 'massDestroy',
   action: 'custom_monarchAntares'
 });
 
-// === SUNG JINWOO — ON SUMMON TOKEN GEN ===
+// === SUNG JINWOO — ON SPAWN TOKEN GEN ===
 regEffect('sl1-019-sungjinwoothegreat', {
   type: 'onSummon', tag: 'tokenGen',
   action: 'custom_sungJinwoo'
@@ -1092,7 +1092,7 @@ regEffect('anm-000-newzthegreatwatcher', {
   log: 'all Warrior-Type Catalysts gain 200 Pressure'
 });
 
-// === DESTIN — ON FUSION SUMMON, SS WARRIOR ≤1000 PR FROM HAND ===
+// === DESTIN — ON FUSION SPAWN, SS WARRIOR ≤1000 PR FROM HAND ===
 regEffect('anm-000-destinthegreatwarlord', {
   type: 'onSummon', tag: 'fusionSS',
   action: 'custom_destin'
@@ -1406,7 +1406,7 @@ regEffect('loz-020-spirittemple', { type:'fieldAuraCP',    tag:'spiritTemple', c
 // ─── MGM ADDITIONS ───
 regEffect('mgm-001-megaman',   { type:'continuous',     tag:'megaman_handPR',   action:'custom_megamanHandPR' });
 regEffect('mgm-004-roll',      { type:'continuous',     tag:'roll_noDirectAtk', action:'cannotAttackDirectly' });
-regEffect('mgm-005-pharohman', { type:'onSummon',       tag:'pharoh_draw',      action:'draw', count:1, log:'drew 1 card on summon' });
+regEffect('mgm-005-pharohman', { type:'onSummon',       tag:'pharoh_draw',      action:'draw', count:1, log:'drew 1 card on spawn' });
 regEffect('mgm-007-torchman',  { type:'onBattleResult', tag:'torch_killBoost',  resultType:'kill', action:'custom_torchmanKill' });
 regEffect('mgm-008-torchman',  { type:'onFlip',         tag:'torch_flipSearch', action:'custom_torchmanFlip' });
 regEffect('mgm-009-heatman', [
@@ -1532,7 +1532,7 @@ regEffect('dnd-008-serpoalien',     { type:'onSummon',       tag:'serpo_discard'
 // ─── GCK (GUSHING OVER MAGICAL GIRLS) ───
 regEffect('gck-004-tamsy',          { type:'onTakeBattleDamage', tag:'tamsy_pr',    action:'boostSelfPR', amount:300, log:'Tamsy gained 300 Pressure' });
 regEffect('gck-005-amo',            { type:'onAnyPalmUsed',  tag:'amo_cpBoost',     side:'self', action:'boostSelfCP', amount:200, log:'Amo gained 200 Counter Pressure' });
-regEffect('gck-006-semiu',          { type:'onSummon',       tag:'semiu_chi',       action:'gainChi', amount:500, log:'Semiu gained 500 Chi on summon' });
+regEffect('gck-006-semiu',          { type:'onSummon',       tag:'semiu_chi',       action:'gainChi', amount:500, log:'Semiu gained 500 Chi on spawn' });
 regEffect('gck-007-enginescrew',    { type:'continuous',     tag:'crew_boost',      condition:'namedAllyOnField', conditionName:'enjin the great', prBoost:400 });
 regEffect('gck-008-jinkiscrapguard',{ type:'activated',      tag:'jinki_setCard',   action:'custom_jinkiSet', oncePerTurn:true });
 
@@ -2130,8 +2130,8 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
   for (const eff of effects) {
     if (eff.type !== 'onSummon') continue;
     if (eff.action === 'generic_takeControl') {
-      const steal = runGenericTakeControl(state, playerIdx, slot.cardId, eff, null, `Summon effect: ${getCard(slot.cardId)?.name || 'A Catalyst'}`);
-      if (!steal.ok) addLog(state, `Effect Script: ${getCard(slot.cardId)?.name || 'A Catalyst'} had no valid Catalyst to take control of on summon.`);
+      const steal = runGenericTakeControl(state, playerIdx, slot.cardId, eff, null, `Spawn effect: ${getCard(slot.cardId)?.name || 'A Catalyst'}`);
+      if (!steal.ok) addLog(state, `Effect Script: ${getCard(slot.cardId)?.name || 'A Catalyst'} had no valid Catalyst to take control of on spawn.`);
     } else if (eff.action === 'searchByName') {
       const found = addCardToHandFromDeckByNameToken(state, playerIdx, eff.names);
       if (found) addLog(state, `Effect Script: ${getCard(slot.cardId)?.name} ${eff.log || 'searched a card'}.`);
@@ -2160,7 +2160,7 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
       opp.chi = Math.max(0, opp.chi - 600);
       addLog(state, `Effect Script: Isshiki reduced all opponent Catalysts to 1/1 and dealt 600 Chi damage.`);
     } else if (eff.action === 'custom_sungJinwoo') {
-      let summoned = 0;
+      let spawned = 0;
       for (let i = 0; i < 3; i++) {
         const emptyZone = getFirstEmptyCatalystZone(state, playerIdx);
         if (emptyZone < 0) break;
@@ -2170,9 +2170,9 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
           extraAttackThisTurn: 0, cannotAttackThisTurn: false,
           isToken: true, tokenName: 'Shadow Token', tokenPR: 800, tokenCP: 800
         };
-        summoned++;
+        spawned++;
       }
-      if (summoned) addLog(state, `Effect Script: Sung Jinwoo created ${summoned} Shadow Token(s) (800/800).`);
+      if (spawned) addLog(state, `Effect Script: Sung Jinwoo created ${spawned} Shadow Token(s) (800/800).`);
     } else if (eff.action === 'custom_destin') {
       const ctx = state._manualSummonContext && state._manualSummonContext.destin;
       const handIdx = ctx && typeof ctx.handIdx === 'number' ? ctx.handIdx : p.hand.findIndex(id => {
@@ -2187,7 +2187,7 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
           p.catalysts[emptyZone] = { cardId: ssId, position: 'atk', faceDown: false, attackedThisTurn: false, atkMod: 0, cpMod: 0, extraAttackThisTurn: 0, cannotAttackThisTurn: true };
           p.summonedThisTurn.add(emptyZone);
           registerSpecialSummon(state, playerIdx, 'Destin The Great Warlord');
-          addLog(state, `Effect Script: Destin Special Summoned ${ssCard?.name || 'a Warrior'} from hand (cannot attack this turn).`);
+          addLog(state, `Effect Script: Destin Special Spawned ${ssCard?.name || 'a Warrior'} from hand (cannot attack this turn).`);
         }
       }
     } else if (eff.action === 'custom_magusSearch') {
@@ -2225,7 +2225,7 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
         let nId;
         if (nejiHand>=0) { [nId]=p.hand.splice(nejiHand,1); }
         else if (nejiVoid>=0) { [nId]=p.void.splice(nejiVoid,1); }
-        if (nId) { p.catalysts[ez]={cardId:nId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false}; registerSpecialSummon(state,playerIdx,'Hinata'); addLog(state,`Effect Script: Hinata Special Summoned ${getCard(nId)?.name||'Neji'}.`); }
+        if (nId) { p.catalysts[ez]={cardId:nId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false}; registerSpecialSummon(state,playerIdx,'Hinata'); addLog(state,`Effect Script: Hinata Special Spawned ${getCard(nId)?.name||'Neji'}.`); }
       }
     } else if (eff.action === 'custom_nidaimeBlock') {
       p._nidaimeBlockTurns=2; state._nidaimeOwner=playerIdx;
@@ -2238,7 +2238,7 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
           const [bId]=p.hand.splice(bi,1);
           p.catalysts[ez]={cardId:bId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};
           registerSpecialSummon(state,playerIdx,'Quent Yaiden');
-          addLog(state,`Effect Script: Quent Yaiden Special Summoned ${getCard(bId)?.name||'Blue Wolf Mode'} from hand.`);
+          addLog(state,`Effect Script: Quent Yaiden Special Spawned ${getCard(bId)?.name||'Blue Wolf Mode'} from hand.`);
         }
       }
     } else if (eff.action === 'custom_eggbotTokens') {
@@ -2248,7 +2248,7 @@ function runRegisteredOnSummon(state, playerIdx, zoneIdx) {
     } else if (eff.action === 'custom_elecmanSummon') {
       const opp=state.players[1-playerIdx];
       const oz=opp.catalysts.findIndex(Boolean);
-      if (oz>=0) { const c=getCard(opp.catalysts[oz].cardId); opp.void.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null; p.kills++; addLog(state,`Effect Script: ElecMan destroyed ${c?.name||'a Catalyst'} on summon. +1 Kill.`); checkWinConditions(state); }
+      if (oz>=0) { const c=getCard(opp.catalysts[oz].cardId); opp.void.push(opp.catalysts[oz].cardId); opp.catalysts[oz]=null; p.kills++; addLog(state,`Effect Script: ElecMan destroyed ${c?.name||'a Catalyst'} on spawn. +1 Kill.`); checkWinConditions(state); }
 
     }
   }
@@ -3040,10 +3040,10 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
     if (eff.type !== 'onSelfDestroyed') continue;
     if (eff.action === 'custom_duelgundam') {
       const res = specialSummonFromHandOrVoidByPredicate(state, ownerPlayer, c => cardNameHas(c, 'assault shroud duel gundam'), 'Duel Gundam');
-      addLog(state, res.ok ? 'Effect Script: Duel Gundam brought out Assault Shroud Duel Gundam.' : `Effect Script: Duel Gundam had no Assault Shroud Duel Gundam to summon. (${res.msg})`);
+      addLog(state, res.ok ? 'Effect Script: Duel Gundam brought out Assault Shroud Duel Gundam.' : `Effect Script: Duel Gundam had no Assault Shroud Duel Gundam to spawn. (${res.msg})`);
     } else if (eff.action === 'custom_kuroneko') {
       const res = specialSummonFromDeckByPredicate(state, ownerPlayer, c => c.id === cardId, 'Kuroneko');
-      addLog(state, res.ok ? 'Effect Script: Kuroneko Special Summoned another Kuroneko from the Deck.' : `Effect Script: Kuroneko had no valid copy left in the Deck. (${res.msg})`);
+      addLog(state, res.ok ? 'Effect Script: Kuroneko Special Spawned another Kuroneko from the Deck.' : `Effect Script: Kuroneko had no valid copy left in the Deck. (${res.msg})`);
     } else if (eff.action === 'custom_lightseeker') {
       const found = addCardToHandFromDeckByPredicate(state, ownerPlayer, c => c.cardType === 'Catalyst' && cardHasAlignment(c, 'Light') && Number(c.level || 0) <= 5);
       if (found) addLog(state, `Effect Script: Light Seeker added ${found.name} to hand.`);
@@ -3052,10 +3052,10 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
       addLog(state, 'Effect Script: Future Trunks will revive on your next Ignition Phase with +500 Pressure.');
     } else if (eff.action === 'custom_piccolo') {
       const res = specialSummonFromHandOrVoidByPredicate(state, ownerPlayer, c => c.cardType === 'Catalyst' && cardHasKind(c, 'Warrior') && Number(c.level || 0) <= 6, 'Piccolo');
-      addLog(state, res.ok ? 'Effect Script: Piccolo Special Summoned a Level 6 or lower Warrior-Type Catalyst.' : `Effect Script: Piccolo had no valid Warrior target. (${res.msg})`);
+      addLog(state, res.ok ? 'Effect Script: Piccolo Special Spawned a Level 6 or lower Warrior-Type Catalyst.' : `Effect Script: Piccolo had no valid Warrior target. (${res.msg})`);
     } else if (eff.action === 'custom_android17') {
       const res = specialSummonFromDeckByPredicate(state, ownerPlayer, c => c.cardType === 'Catalyst' && cardHasKind(c, 'Android'), 'Android 17');
-      addLog(state, res.ok ? 'Effect Script: Android 17 Special Summoned an Android-Type Catalyst from the Deck.' : `Effect Script: Android 17 had no valid Android target. (${res.msg})`);
+      addLog(state, res.ok ? 'Effect Script: Android 17 Special Spawned an Android-Type Catalyst from the Deck.' : `Effect Script: Android 17 had no valid Android target. (${res.msg})`);
     } else if (eff.action === 'custom_raidei') {
       const destroyer = ctx && typeof ctx.destroyerPlayer === 'number' ? state.players[ctx.destroyerPlayer]?.catalysts?.[ctx.destroyerZone] : null;
       if (destroyer) {
@@ -3078,7 +3078,7 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
       addLog(state, `Effect Script: Freedom Gundam destroyed ${destroyed} card(s) on the opponent field.`);
     } else if (eff.action === 'custom_astrayblue') {
       const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /gundam astray red frame/i.test(c.name || ''), 'Gundam Astray Blue Frame');
-      addLog(state, res.ok ? 'Effect Script: Gundam Astray Blue Frame Special Summoned Gundam Astray Red Frame from the Void.' : `Effect Script: Gundam Astray Blue Frame had no Red Frame in the Void. (${res.msg})`);
+      addLog(state, res.ok ? 'Effect Script: Gundam Astray Blue Frame Special Spawned Gundam Astray Red Frame from the Void.' : `Effect Script: Gundam Astray Blue Frame had no Red Frame in the Void. (${res.msg})`);
     } else if (eff.action === 'custom_onigumo') {
       if (ctx && ctx.reason === 'battle') {
         const found = addCardToHandFromDeckByNameToken(state, ownerPlayer, ['demons devour me']);
@@ -3115,7 +3115,7 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
       addLog(state, `Effect Script: Assault Shroud Duel Gundam was removed from game instead of going to the Void.`);
     } else if (eff.action === 'custom_ayekamasaki') {
       const materialIds = ctx && Array.isArray(ctx.fusionMaterialIds) ? ctx.fusionMaterialIds.slice() : [];
-      let summoned = 0;
+      let spawned = 0;
       for (const mid of materialIds) {
         const voidIdx = owner.void.indexOf(mid);
         const zoneIdx = getFirstEmptyCatalystZone(state, ownerPlayer);
@@ -3123,10 +3123,10 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
         if (voidIdx >= 0 && zoneIdx >= 0 && mc && mc.cardType === 'Catalyst') {
           owner.void.splice(voidIdx, 1);
           owner.catalysts[zoneIdx] = { cardId: mid, position:'atk', faceDown:false, attackedThisTurn:false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false };
-          summoned += 1;
+          spawned += 1;
         }
       }
-      if (summoned) addLog(state, `Effect Script: Ayeka Masaki re-formed ${summoned} Fusion material Catalyst(s) from the Void.`);
+      if (spawned) addLog(state, `Effect Script: Ayeka Masaki re-formed ${spawned} Fusion material Catalyst(s) from the Void.`);
     } else if (eff.action === 'custom_aylaDestroy') {
       const opp=state.players[1-ownerPlayer];
       const tgts=[];
@@ -3151,7 +3151,7 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
       if(vi>=0&&ez>=0){const[rId]=owner.void.splice(vi,1);owner.catalysts[ez]={cardId:rId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};addLog(state,'Effect Script: Fire Luigi revived Luigi from Void.');}
     } else if (eff.action === 'custom_koopaRevive') {
       const res=specialSummonFromDeckByPredicate(state,ownerPlayer,c=>/koopa troopa/i.test(c.name||''),'Koopa Troopa');
-      addLog(state,res.ok?'Effect Script: Koopa Troopa Special Summoned another from Deck.':`Effect Script: Koopa Troopa — no copy in Deck. (${res.msg})`);
+      addLog(state,res.ok?'Effect Script: Koopa Troopa Special Spawned another from Deck.':`Effect Script: Koopa Troopa — no copy in Deck. (${res.msg})`);
     } else if (eff.action === 'custom_wolfReviveOnce') {
       if(!state._wolfRevived) state._wolfRevived={};
       if(!state._wolfRevived[cardId]){
@@ -3161,7 +3161,7 @@ function runOnSelfDestroyed(state, ownerPlayer, cardId, ctx) {
       } else addLog(state,`Effect Script: ${getCard(cardId)?.name||'Wolf'} already used its once-per-duel revive.`);
     } else if (eff.action === 'custom_zatoEddie') {
       const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,ownerPlayer,c=>/^eddie$/i.test(c.name||''),'Zato-1');
-      addLog(state,res.ok?'Effect Script: Zato-1 Special Summoned Eddie.':`Effect Script: Zato-1 — no Eddie found. (${res.msg})`);
+      addLog(state,res.ok?'Effect Script: Zato-1 Special Spawned Eddie.':`Effect Script: Zato-1 — no Eddie found. (${res.msg})`);
     } else if (eff.action === 'custom_baikenEndBP') {
       if(ctx&&ctx.reason==='battle'&&state.activePlayer!==ownerPlayer){state._endBattlePhaseNow=true;addLog(state,"Effect Script: Baiken's destruction ends the opponent's Battle Phase.");}
     } else if (eff.action === 'rfgSelf') {
@@ -3219,7 +3219,7 @@ function runOnSummonScripts(state, playerIdx, zoneIdx, summonType) {
     const found = addCardToHandFromDeckByNameToken(state, playerIdx, ['limited moon']);
     if (found) addLog(state, `Effect Script: RedXIII - Trance added ${found.name} to hand.`);
   }
-  // ─── PATCH 26: ADDITIONAL ON-SUMMON / FLIP / CONTINUOUS HANDLERS ───
+  // ─── PATCH 26: ADDITIONAL ON-SPAWN / FLIP / CONTINUOUS HANDLERS ───
   else if (name === 'agent x') {
     // FLIP: destroy 1 Catalyst on the field
     if (summonType === 'flip' || summonType === 'normal') {
@@ -3238,10 +3238,10 @@ function runOnSummonScripts(state, playerIdx, zoneIdx, summonType) {
     // FLIP: draw 1 card
     if (summonType === 'flip') {
       drawCard(state, playerIdx);
-      addLog(state, 'Effect Script: Yajirobe drew 1 card on flip summon.');
+      addLog(state, 'Effect Script: Yajirobe drew 1 card on flip spawn.');
     }
   } else if (name === 'fire dragon2-enraged' || name === 'fire dragon2 - enraged') {
-    // On summon: mark with negate-targeting ability
+    // On spawn: mark with negate-targeting ability
     slot._fireDragonNegate = true;
     addLog(state, 'Effect Script: Fire Dragon2-Enraged can pay 2000 Chi to negate targeting effects.');
   } else if (name === 'pyrotor') {
@@ -3294,7 +3294,7 @@ function runOnSummonScripts(state, playerIdx, zoneIdx, summonType) {
       }
     }
     slot._pilafRobotSummonLock = true;
-    if (destroyed) addLog(state, `Effect Script: Emperor Pilaf's Great Robot destroyed ${destroyed} Level 4 or lower Saiyan Catalyst(s) on summon.`);
+    if (destroyed) addLog(state, `Effect Script: Emperor Pilaf's Great Robot destroyed ${destroyed} Level 4 or lower Saiyan Catalyst(s) on spawn.`);
   } else if (name === 'the valentine brothers') {
     let destroyed = 0;
     for (let px = 0; px < 2; px++) {
@@ -3310,9 +3310,9 @@ function runOnSummonScripts(state, playerIdx, zoneIdx, summonType) {
       }
     }
     slot._valentineLock = true;
-    if (destroyed) addLog(state, `Effect Script: The Valentine Brothers destroyed ${destroyed} Hellsing Army / Furgusson target(s) on summon.`);
+    if (destroyed) addLog(state, `Effect Script: The Valentine Brothers destroyed ${destroyed} Hellsing Army / Furgusson target(s) on spawn.`);
   }
-  // Registry-driven on-summon effects
+  // Registry-driven on-spawn effects
   runRegisteredOnSummon(state, playerIdx, zoneIdx);
 }
 
@@ -3368,18 +3368,18 @@ function runInferredGenericAction(state, playerIdx, card, manual, sourceLabel) {
       addLog(state, found ? `Effect Script: ${sourceLabel || card.name} added ${found} ${eff.nameToken} Catalyst card(s) to hand.` : `Effect Script: ${sourceLabel || card.name} found no ${eff.nameToken} Catalyst in the Deck.`);
       handled += 1;
     } else if (eff.action === 'specialSummonNamedFromVoid') {
-      let summoned = 0;
+      let spawned = 0;
       for (let i = 0; i < Number(eff.count || 1); i++) {
         const res = specialSummonFromVoidByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && Number(c.level || 0) <= Number(eff.maxLevel || 99) && cardNameHas(c, eff.nameToken), sourceLabel || card.name);
-        if (res.ok) summoned += 1;
+        if (res.ok) spawned += 1;
       }
-      addLog(state, summoned ? `Effect Script: ${sourceLabel || card.name} Special Summoned ${summoned} ${eff.nameToken} Catalyst card(s) from the Void.` : `Effect Script: ${sourceLabel || card.name} found no valid ${eff.nameToken} target in the Void.`);
+      addLog(state, spawned ? `Effect Script: ${sourceLabel || card.name} Special Spawned ${spawned} ${eff.nameToken} Catalyst card(s) from the Void.` : `Effect Script: ${sourceLabel || card.name} found no valid ${eff.nameToken} target in the Void.`);
       handled += 1;
     } else if (eff.action === 'specialSummonNamedFromHandIfEmpty') {
       if (p.catalysts.some(Boolean)) {
         addLog(state, `Effect Script: ${sourceLabel || card.name} needs you to control no Catalysts.`);
       } else {
-        let summoned = 0;
+        let spawned = 0;
         for (let i = 0; i < Number(eff.count || 1); i++) {
           const handIdx = p.hand.findIndex(id => {
             const c = getCard(id);
@@ -3390,9 +3390,9 @@ function runInferredGenericAction(state, playerIdx, card, manual, sourceLabel) {
           if (zoneIdx < 0) break;
           const [cardId] = p.hand.splice(handIdx, 1);
           const res = specialSummonToZone(state, playerIdx, cardId, zoneIdx, sourceLabel || card.name);
-          if (res.ok) summoned += 1;
+          if (res.ok) spawned += 1;
         }
-        addLog(state, summoned ? `Effect Script: ${sourceLabel || card.name} Special Summoned ${summoned} ${eff.nameToken} Catalyst card(s) from hand.` : `Effect Script: ${sourceLabel || card.name} found no valid ${eff.nameToken} Catalyst in hand.`);
+        addLog(state, spawned ? `Effect Script: ${sourceLabel || card.name} Special Spawned ${spawned} ${eff.nameToken} Catalyst card(s) from hand.` : `Effect Script: ${sourceLabel || card.name} found no valid ${eff.nameToken} Catalyst in hand.`);
       }
       handled += 1;
     } else if (eff.action === 'allCatalystsStatShift') {
@@ -3467,14 +3467,14 @@ function runPalmScript(state, playerIdx, card, manual) {
     if (searched) addLog(state, `Effect Script: Book of Virtue added ${searched.name} to hand.`);
   } else if (name === 'born again') {
     const result = specialSummonFromVoidByPredicate(state, playerIdx, c => ['serge','kidd','korcha'].some(t => cardHasNameToken(c, t)), 'Born Again');
-    if (result.ok) addLog(state, 'Effect Script: Born Again Special Summoned a named Catalyst from the Void.');
+    if (result.ok) addLog(state, 'Effect Script: Born Again Special Spawned a named Catalyst from the Void.');
     else addLog(state, `Effect Script: Born Again had no valid target. (${result.msg})`);
   } else if (name === 'marle') {
     const faceUpCount = p.catalysts.filter(Boolean).length;
     if (faceUpCount === 1 && p.chi >= 1000) {
       p.chi = Math.max(0, p.chi - 1000);
       const result = specialSummonFromVoidByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && Number(c.level || 0) === 4, 'Marle');
-      addLog(state, result.ok ? 'Effect Script: Marle paid 1000 Chi to Special Summon a Level 4 Catalyst from the Void.' : `Effect Script: Marle paid 1000 Chi but found no valid Level 4 target. (${result.msg})`);
+      addLog(state, result.ok ? 'Effect Script: Marle paid 1000 Chi to Special Spawn a Level 4 Catalyst from the Void.' : `Effect Script: Marle paid 1000 Chi but found no valid Level 4 target. (${result.msg})`);
     }
   } else if (name === 'frozen flame') {
     const zoneIdx = getFirstFaceUpCatalystZone(state, playerIdx);
@@ -3575,7 +3575,7 @@ function runPalmScript(state, playerIdx, card, manual) {
   } else if (card.id === 'slm-011-silvercrystal') {
     let res = specialSummonFromHandByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && cardNameHas(c, 'sailor'), 'The Great Silver Crystal');
     if (!res.ok) res = specialSummonFromDeckByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && cardNameHas(c, 'sailor'), 'The Great Silver Crystal');
-    addLog(state, res.ok ? 'Effect Script: The Great Silver Crystal Special Summoned a Sailor Catalyst.' : `Effect Script: The Great Silver Crystal had no valid Sailor target. (${res.msg})`);
+    addLog(state, res.ok ? 'Effect Script: The Great Silver Crystal Special Spawned a Sailor Catalyst.' : `Effect Script: The Great Silver Crystal had no valid Sailor target. (${res.msg})`);
   } else if (card.id === 'ss1-016-spelloverload') {
     const trickCount = () => p.hand.filter(id => /trick/i.test(getCard(id)?.cardType || '')).length;
     let draws = 0;
@@ -3600,8 +3600,8 @@ function runPalmScript(state, playerIdx, card, manual) {
           slot.atkMod = Number(slot.atkMod || 0) + 1000;
           slot.tempAtkMod = Number(slot.tempAtkMod || 0) + 1000;
           slot._greatFullMoon = true;
-          addLog(state, 'Effect Script: Full Moon Special Summoned Alucard from the Void with +1000 Pressure.');
-        } else addLog(state, `Effect Script: Full Moon failed to summon Alucard. (${res.msg})`);
+          addLog(state, 'Effect Script: Full Moon Special Spawned Alucard from the Void with +1000 Pressure.');
+        } else addLog(state, `Effect Script: Full Moon failed to spawn Alucard. (${res.msg})`);
       }
     }
   } else if (card.id === 'kir-020-nmepriceincrease') {
@@ -3609,7 +3609,7 @@ function runPalmScript(state, playerIdx, card, manual) {
     else {
       p.chi -= 2000;
       const res = specialSummonFromHandByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && Number(c.pr || 0) <= 3000, 'N.M.E The Great Price Increase');
-      addLog(state, res.ok ? 'Effect Script: N.M.E The Great Price Increase Special Summoned a Catalyst from the hand.' : `Effect Script: N.M.E The Great Price Increase had no valid hand target. (${res.msg})`);
+      addLog(state, res.ok ? 'Effect Script: N.M.E The Great Price Increase Special Spawned a Catalyst from the hand.' : `Effect Script: N.M.E The Great Price Increase had no valid hand target. (${res.msg})`);
     }
 
 } else if (name === 'flying numbus') {
@@ -3665,10 +3665,10 @@ function runPalmScript(state, playerIdx, card, manual) {
   const vashZone = findFirstCatalystZoneByPredicate(state, playerIdx, c => cardNameHas(c, 'vash'));
   if (vashZone >= 0) {
     const res = specialSummonFromHandOrDeckOrVoidByPredicate ? specialSummonFromHandOrDeckOrVoidByPredicate(state, playerIdx, c => canonicalScriptName(c.name || '') === 'vash - fighter of peace', 'Fighter Of Peace') : specialSummonFromHandOrVoidByPredicate(state, playerIdx, c => canonicalScriptName(c.name || '') === 'vash - fighter of peace', 'Fighter Of Peace');
-    if (res.ok) addLog(state, 'Effect Script: Fighter Of Peace Special Summoned Vash - Fighter Of Peace.');
+    if (res.ok) addLog(state, 'Effect Script: Fighter Of Peace Special Spawned Vash - Fighter Of Peace.');
     else {
       const deckRes = specialSummonFromDeckByPredicate(state, playerIdx, c => canonicalScriptName(c.name || '') === 'vash - fighter of peace', 'Fighter Of Peace');
-      addLog(state, deckRes.ok ? 'Effect Script: Fighter Of Peace Special Summoned Vash - Fighter Of Peace from the Deck.' : `Effect Script: Fighter Of Peace had no valid Vash - Fighter Of Peace target. (${deckRes.msg})`);
+      addLog(state, deckRes.ok ? 'Effect Script: Fighter Of Peace Special Spawned Vash - Fighter Of Peace from the Deck.' : `Effect Script: Fighter Of Peace had no valid Vash - Fighter Of Peace target. (${deckRes.msg})`);
     }
   } else addLog(state, 'Effect Script: Fighter Of Peace needs a Vash Catalyst on your field.');
 } else if (name === 'legato bluesummers') {
@@ -3680,12 +3680,12 @@ function runPalmScript(state, playerIdx, card, manual) {
 } else if (name === '60,000,000,000 bounty on your head') {
   equipToFirstMatching(c => cardNameHas(c, 'vash'), { atk:700 }, { _bountyOnHead:true }, '60,000,000,000 Bounty On Your Head');
   } else if (name === '1-up mushroom') {
-    if (p.chi >= 800) { p.chi -= 800; const res = specialSummonFromVoidByPredicate(state, playerIdx, c => c.cardType === 'Catalyst', '1-Up Mushroom'); addLog(state, res.ok ? 'Effect Script: 1-Up Mushroom Special Summoned a Catalyst from the Void.' : `Effect Script: 1-Up Mushroom had no valid target. (${res.msg})`); }
+    if (p.chi >= 800) { p.chi -= 800; const res = specialSummonFromVoidByPredicate(state, playerIdx, c => c.cardType === 'Catalyst', '1-Up Mushroom'); addLog(state, res.ok ? 'Effect Script: 1-Up Mushroom Special Spawned a Catalyst from the Void.' : `Effect Script: 1-Up Mushroom had no valid target. (${res.msg})`); }
   } else if (name === '2nd wind') {
-    if (p.chi >= 500) { p.chi -= 500; const res = specialSummonFromVoidByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && cardHasAlignment(c, 'Light'), '2nd Wind'); addLog(state, res.ok ? 'Effect Script: 2nd Wind Special Summoned a LIGHT Catalyst from the Void.' : `Effect Script: 2nd Wind had no valid LIGHT target. (${res.msg})`); }
+    if (p.chi >= 500) { p.chi -= 500; const res = specialSummonFromVoidByPredicate(state, playerIdx, c => c.cardType === 'Catalyst' && cardHasAlignment(c, 'Light'), '2nd Wind'); addLog(state, res.ok ? 'Effect Script: 2nd Wind Special Spawned a LIGHT Catalyst from the Void.' : `Effect Script: 2nd Wind had no valid LIGHT target. (${res.msg})`); }
   } else if (name === 'keep it moving') {
     const res = summonNamedToken(state, playerIdx, '__buck_token_1000__', 3, 'Keep It Moving');
-    addLog(state, `Effect Script: Keep It Moving Special Summoned ${res.summoned || 0} BuCk The Great Token(s).`);
+    addLog(state, `Effect Script: Keep It Moving Special Spawned ${res.summoned || 0} BuCk The Great Token(s).`);
   } else if (name === "terra's past") {
     const targetZone = Number(manual && manual.targetZone);
     if (targetZone >= 0 && p.catalysts[targetZone] && cardNameHas(getCard(p.catalysts[targetZone].cardId), 'terra')) {
@@ -3699,7 +3699,7 @@ function runPalmScript(state, playerIdx, card, manual) {
     } else addLog(state, `Effect Script: Terra's Past had no valid chosen Terra target.`);
   } else if (name === 'lightning strike') {
     const res = summonNamedToken(state, playerIdx, '__buck_token_1500__', 3, 'Lightning Strike');
-    addLog(state, `Effect Script: Lightning Strike Special Summoned ${res.summoned || 0} BuCk The Great Token(s).`);
+    addLog(state, `Effect Script: Lightning Strike Special Spawned ${res.summoned || 0} BuCk The Great Token(s).`);
   } else if (name === "hyottoko's burn") {
     const opp = state.players[1 - playerIdx];
     const targetZ = Number(manual && manual.targetZone);
@@ -3774,7 +3774,7 @@ function runPalmScript(state, playerIdx, card, manual) {
             p.catalysts[res.zoneIdx].cannotAttackThisTurn = true;
             p.catalysts[res.zoneIdx]._cannotAttackUntilTurn = state.turn + 2;
             p.catalysts[res.zoneIdx]._cannotActivateEffectsUntilTurn = state.turn + 2;
-            addLog(state, `Effect Script: Ultimate Price Special Summoned ${getCard(p.catalysts[res.zoneIdx].cardId)?.name || 'a Catalyst'} from the Deck. It cannot attack or use its effects for 3 turns.`);
+            addLog(state, `Effect Script: Ultimate Price Special Spawned ${getCard(p.catalysts[res.zoneIdx].cardId)?.name || 'a Catalyst'} from the Deck. It cannot attack or use its effects for 3 turns.`);
           }
         } else addLog(state, 'Effect Script: Ultimate Price had no empty Catalyst Zone.');
       }
@@ -3806,7 +3806,7 @@ function runPalmScript(state, playerIdx, card, manual) {
           if (zoneIdx >= 0) {
             const [cardId] = p.void.splice(voidIdx, 1);
             const res = specialSummonToZone(state, playerIdx, cardId, zoneIdx, 'Phoenix Soul');
-            addLog(state, res.ok ? 'Effect Script: Phoenix Soul Special Summoned a FIRE Catalyst from the Void.' : `Effect Script: Phoenix Soul could not revive the chosen target. (${res.msg})`);
+            addLog(state, res.ok ? 'Effect Script: Phoenix Soul Special Spawned a FIRE Catalyst from the Void.' : `Effect Script: Phoenix Soul could not revive the chosen target. (${res.msg})`);
           } else addLog(state, 'Effect Script: Phoenix Soul had no empty Catalyst Zone.');
         }
       }
@@ -3893,7 +3893,7 @@ function runPalmScript(state, playerIdx, card, manual) {
         const remIdx = p.hand.indexOf(p.hand.find(id => cardNameHas(getCard(id), 'rem saverem')));
         const [remId] = p.hand.splice(p.hand.findIndex(id => cardNameHas(getCard(id), 'rem saverem')), 1);
         const zone = getFirstEmptyCatalystZone(state, playerIdx);
-        if (zone >= 0) { specialSummonToZone(state, playerIdx, remId, zone, 'Saving Rem'); addLog(state, 'Effect Script: Saving Rem Special Summoned Rem Saverem.'); }
+        if (zone >= 0) { specialSummonToZone(state, playerIdx, remId, zone, 'Saving Rem'); addLog(state, 'Effect Script: Saving Rem Special Spawned Rem Saverem.'); }
         else { p.hand.push(remId); addLog(state, 'Effect Script: Saving Rem — no empty Catalyst Zone for Rem Saverem.'); }
       }
     }
@@ -3916,7 +3916,7 @@ function runPalmScript(state, playerIdx, card, manual) {
         for (const idx of toDiscard.sort((a,b)=>b-a)) { p.void.push(p.hand.splice(idx,1)[0]); }
         const [wolfId] = p.hand.splice(p.hand.findIndex(id => cardNameHas(getCard(id), 'wolfwood gung ho gun in training')), 1);
         const zone = getFirstEmptyCatalystZone(state, playerIdx);
-        if (zone >= 0) { specialSummonToZone(state, playerIdx, wolfId, zone, 'Corrupting The Priest'); addLog(state, 'Effect Script: Corrupting The Priest Special Summoned Wolfwood - Gung-Ho Gun In Training.'); }
+        if (zone >= 0) { specialSummonToZone(state, playerIdx, wolfId, zone, 'Corrupting The Priest'); addLog(state, 'Effect Script: Corrupting The Priest Special Spawned Wolfwood - Gung-Ho Gun In Training.'); }
         else { p.hand.push(wolfId); addLog(state, 'Effect Script: Corrupting The Priest — no empty Catalyst Zone.'); }
       }
     }
@@ -3958,7 +3958,7 @@ function runPalmScript(state, playerIdx, card, manual) {
         const [id] = p.void.splice(ghgIdx, 1);
         const res = specialSummonToZone(state, playerIdx, id, zone, 'Dead-Man Walking');
         if (res.ok && p.catalysts[zone]) p.catalysts[zone].cannotAttackThisTurn = true;
-        addLog(state, res.ok ? `Effect Script: Dead-Man Walking Special Summoned ${getCard(id)?.name||'a Catalyst'} from Void. It cannot attack this turn.` : `Effect Script: Dead-Man Walking failed. (${res.msg})`);
+        addLog(state, res.ok ? `Effect Script: Dead-Man Walking Special Spawned ${getCard(id)?.name||'a Catalyst'} from Void. It cannot attack this turn.` : `Effect Script: Dead-Man Walking failed. (${res.msg})`);
       }
     }
   } else if (name === "vash's revenge") {
@@ -3988,7 +3988,7 @@ function runPalmScript(state, playerIdx, card, manual) {
             p.catalysts[zone]._equipCount = (p.catalysts[zone]._equipCount||0) + 1;
             p.catalysts[zone]._evilReturnsEquipped = true;
           }
-          addLog(state, res.ok ? `Effect Script: Evil Returns Special Summoned ${getCard(id)?.name||'a DARK Catalyst'} and equipped it.` : `Effect Script: Evil Returns failed. (${res.msg})`);
+          addLog(state, res.ok ? `Effect Script: Evil Returns Special Spawned ${getCard(id)?.name||'a DARK Catalyst'} and equipped it.` : `Effect Script: Evil Returns failed. (${res.msg})`);
         }
       }
     }
@@ -4133,7 +4133,7 @@ function activateCatalystEffect(state, playerIdx, zoneIdx, effectTag, manual) {
     // SS Vash to the zone Brad was in
     const [vashId] = p.void.splice(voidIdx, 1);
     const res = specialSummonToZone(state, playerIdx, vashId, zoneIdx, 'Brad');
-    addLog(state, res.ok ? `Effect Script: Brad tributed himself to Special Summon ${getCard(vashId)?.name} from the Void.` : `Effect Script: Brad tribute failed. (${res.msg})`);
+    addLog(state, res.ok ? `Effect Script: Brad tributed himself to Special Spawn ${getCard(vashId)?.name} from the Void.` : `Effect Script: Brad tribute failed. (${res.msg})`);
     return res;
   }
 
@@ -4156,7 +4156,7 @@ function activateCatalystEffect(state, playerIdx, zoneIdx, effectTag, manual) {
     return { ok:true };
   }
 
-  // Magnet Man: pay 1000 Chi → draw 2 (once per summon)
+  // Magnet Man: pay 1000 Chi → draw 2 (once per spawn)
   if (effectTag === 'custom_magnetman' || name === 'magnet man') {
     if (isEffectUsed(state, playerIdx, slot.cardId, 'magnetDraw')) return { ok:false, msg:'Magnet Man already used this ability.' };
     if (p.chi < 1000) return { ok:false, msg:'Need 1000 Chi.' };
@@ -4486,7 +4486,7 @@ function activateCatalystEffect(state, playerIdx, zoneIdx, effectTag, manual) {
     if (p.chi < 500) return { ok:false, msg:'Not enough Chi (need 500).' };
     p.chi -= 500;
     const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, playerIdx, c => cardNameHas(c, 'puppet of demise'), 'Leonof');
-    addLog(state, res.ok ? 'Effect Script: Leonof Special Summoned Puppet of Demise.' : `Effect Script: No Puppet of Demise available. (${res.msg})`);
+    addLog(state, res.ok ? 'Effect Script: Leonof Special Spawned Puppet of Demise.' : `Effect Script: No Puppet of Demise available. (${res.msg})`);
     return { ok:true };
   }
 
@@ -4635,10 +4635,10 @@ function runConcealedResolutionScript(state, link) {
     else if (p.hand.length > 0 || p.catalysts.some(Boolean)) addLog(state, 'Effect Script: The Chosen One needs no cards in hand and no Catalysts on your field.');
     else {
       p.chi -= 1500;
-      const res = specialSummonFromDeckByPredicate(state, link.player, c => c.cardType === 'Catalyst' && !/can only be special summoned|can only be summoned by/i.test(String(c.desc || '')), 'The Chosen One');
+      const res = specialSummonFromDeckByPredicate(state, link.player, c => c.cardType === 'Catalyst' && !/can only be special spawned|can only be spawned by/i.test(String(c.desc || '')), 'The Chosen One');
       if (res.ok) {
         if (typeof link.zoneIdx === 'number' && p.tricks[link.zoneIdx]) p.tricks[link.zoneIdx]._chosenOneLinkedCardId = p.catalysts[res.zoneIdx]?.cardId;
-        addLog(state, `Effect Script: The Chosen One paid 1500 Chi and Special Summoned ${getCard(p.catalysts[res.zoneIdx]?.cardId)?.name || 'a Catalyst'} from the Deck.`);
+        addLog(state, `Effect Script: The Chosen One paid 1500 Chi and Special Spawned ${getCard(p.catalysts[res.zoneIdx]?.cardId)?.name || 'a Catalyst'} from the Deck.`);
       } else addLog(state, `Effect Script: The Chosen One had no valid target. (${res.msg})`);
     }
   } else if (name === 'ambush' && attacker) {
@@ -4728,7 +4728,7 @@ function runConcealedResolutionScript(state, link) {
     const chiChiZone = findFirstCatalystZoneByPredicate(state, link.player, c => cardNameHas(c, 'chi chi'));
     if (chiChiZone >= 0) state.players[link.player].catalysts[chiChiZone].position = 'def';
     const res = specialSummonFromDeckByPredicate(state, link.player, c => c.cardType === 'Catalyst' && Number(c.level || 0) <= 4 && cardNameHas(c, 'goku'), card.name);
-    addLog(state, res.ok ? "Effect Script: Goku's Promise shifted Chi-Chi to DEF and Special Summoned a small Goku from the Deck." : `Effect Script: Goku's Promise had no valid Goku target. (${res.msg})`);
+    addLog(state, res.ok ? "Effect Script: Goku's Promise shifted Chi-Chi to DEF and Special Spawned a small Goku from the Deck." : `Effect Script: Goku's Promise had no valid Goku target. (${res.msg})`);
   }
   // ─── PATCH 26: ADDITIONAL CONCEALED TRICK HANDLERS ───
   else if (name === "jessica's love") {
@@ -4849,9 +4849,9 @@ function generatePostMatchSummary(state) {
     totalActions: state.log.length,
     combatCount: state.log.filter(e => e.msg.includes('⚔')).length,
     chainCount: state.log.filter(e => e.msg.toLowerCase().includes('chain opened')).length,
-    specialSummonCount: state.log.filter(e => e.msg.includes('Special Summon')).length,
-    fusionCount: state.log.filter(e => e.msg.includes('Fusion Summon')).length,
-    libraSummonCount: state.log.filter(e => e.msg.includes('Libra Summon')).length,
+    specialSummonCount: state.log.filter(e => e.msg.includes('Special Spawn')).length,
+    fusionCount: state.log.filter(e => e.msg.includes('Fusion Spawn')).length,
+    libraSummonCount: state.log.filter(e => e.msg.includes('Libra Spawn')).length,
     effectScriptCount: state.log.filter(e => e.msg.includes('Effect Script')).length,
     shotgunDraws: state.log.filter(e => e.msg.includes('Shotgun Rule')).length,
     desyncEvents: state.log.filter(e => e.msg.toLowerCase().includes('desync')).length,
@@ -5000,7 +5000,7 @@ function executePhaseAuto(state) {
       addLog(state, `Phase 3: Ignition Phase`);
       processDelayedRevives(state, p);
       runStarterIgnitionUpkeep(state, p);
-      // Field trick refresh / turn-limited summon enablers reset into availability
+      // Field trick refresh / turn-limited spawn enablers reset into availability
       break;
 
     case 'action':
@@ -5142,7 +5142,7 @@ function endTurn(state) {
   finalizeTurnSwitch(state);
 }
 
-// ── SUMMONING ──
+// ── SPAWNING ──
 function canNormalSummon(state, playerIdx) {
   const p = state.players[playerIdx];
   if (p.normalSummonUsed) return false;
@@ -5156,14 +5156,14 @@ function normalSummon(state, playerIdx, handIdx, zoneIdx, position, tributeZones
   const cardId = p.hand[handIdx];
   const card = getCard(cardId);
   if (!card) return { ok: false, msg: 'Invalid card.' };
-  if (p.normalSummonUsed) return { ok: false, msg: 'Already used Normal Summon this turn.' };
+  if (p.normalSummonUsed) return { ok: false, msg: 'Already used Normal Spawn this turn.' };
   if (p.catalysts[zoneIdx] !== null) return { ok: false, msg: 'Zone is occupied.' };
-  if (card.cardType !== 'Catalyst') return { ok: false, msg: 'Only Catalysts can be Normal Summoned.' };
+  if (card.cardType !== 'Catalyst') return { ok: false, msg: 'Only Catalysts can be Normal Spawned.' };
 
   const level = card.level || 0;
-  // Summon restrictions — cards that cannot be Normal Summoned
-  if (/vash.*the stampede/i.test(card.name || '')) return { ok: false, msg: 'Vash - The Stampede cannot be Normal Summoned. It must be Special Summoned by offering a "Vash" equipped with "Knives Manipulation".' };
-  if (/megastarky/i.test(card.name || '') && !p.catalysts.some(s => s && cardNameHas(getCard(s.cardId), 'starky'))) return { ok: false, msg: 'MegaStarky can only be summoned by tributing Starky.' };
+  // Spawn restrictions — cards that cannot be Normal Spawned
+  if (/vash.*the stampede/i.test(card.name || '')) return { ok: false, msg: 'Vash - The Stampede cannot be Normal Spawned. It must be Special Spawned by offering a "Vash" equipped with "Knives Manipulation".' };
+  if (/megastarky/i.test(card.name || '') && !p.catalysts.some(s => s && cardNameHas(getCard(s.cardId), 'starky'))) return { ok: false, msg: 'MegaStarky can only be spawned by tributing Starky.' };
   const isNolan = /nolan-the-great/i.test(card.name || '');
   const requiredTributes = isNolan ? 0 : (level >= 7 ? 2 : level >= 5 ? 1 : 0);
   const occupiedZones = p.catalysts.map((c, i) => c !== null ? i : -1).filter(i => i >= 0 && i !== zoneIdx);
@@ -5224,7 +5224,7 @@ function normalSummon(state, playerIdx, handIdx, zoneIdx, position, tributeZones
   p.normalSummonUsed = true;
   p.summonedThisTurn.add(zoneIdx);
 
-  addLog(state, `P${playerIdx+1} Normal Summoned ${card.name} (Lv${card.level}, ${card.pr}/${card.cp}) in ${position === 'def' ? 'DEF' : 'ATK'} position.`);
+  addLog(state, `P${playerIdx+1} Normal Spawned ${card.name} (Lv${card.level}, ${card.pr}/${card.cp}) in ${position === 'def' ? 'DEF' : 'ATK'} position.`);
   runOnSummonScripts(state, playerIdx, zoneIdx, 'normal');
   return { ok: true };
 }
@@ -5263,7 +5263,7 @@ function changePosition(state, playerIdx, zoneIdx) {
   const p = state.players[playerIdx];
   const cat = p.catalysts[zoneIdx];
   if (!cat) return { ok: false, msg: 'No catalyst in this zone.' };
-  if (p.summonedThisTurn.has(zoneIdx)) return { ok: false, msg: 'Cannot change position the same turn summoned.' };
+  if (p.summonedThisTurn.has(zoneIdx)) return { ok: false, msg: 'Cannot change position the same turn spawned.' };
   if (p.posChanged.has(zoneIdx)) return { ok: false, msg: 'Already changed position this turn.' };
 
   cat.position = cat.position === 'atk' ? 'def' : 'atk';
@@ -5279,7 +5279,7 @@ function isNormalCatalystCard(card) {
   // Great Cards that are Normal (non-effect) Catalysts ARE allowed in Libra.
   const desc = String(card.desc || '').trim();
   if (card.sub === 'Effect') return false;
-  const effectWords = /(when|if|once|special summon|destroy|draw|search|pay |increase|decrease|take control|cannot|during|flip|return|banish|remove from game|inflict)/i;
+  const effectWords = /(when|if|once|special spawn|destroy|draw|search|pay |increase|decrease|take control|cannot|during|flip|return|banish|remove from game|inflict)/i;
   return !effectWords.test(desc);
 }
 
@@ -5292,7 +5292,7 @@ function registerSpecialSummon(state, playerIdx, label) {
     const drawn = drawCard(state, oppIdx);
     if (drawn) {
       const c = getCard(drawn);
-      addLog(state, `Shotgun Rule: P${oppIdx+1} drew ${c ? c.name : 'a card'} because P${playerIdx+1} Special Summoned${label ? ' (' + label + ')' : ''}.`);
+      addLog(state, `Shotgun Rule: P${oppIdx+1} drew ${c ? c.name : 'a card'} because P${playerIdx+1} Special Spawned${label ? ' (' + label + ')' : ''}.`);
     } else {
       addLog(state, `Shotgun Rule: P${oppIdx+1} skipped draw because deck is empty.`);
     }
@@ -5304,13 +5304,13 @@ function specialSummonToZone(state, playerIdx, cardId, zoneIdx, sourceLabel) {
   const card = getCard(cardId);
   const summonBlock = getSummonRestriction(state, playerIdx, card);
   if (summonBlock) return { ok:false, msg:summonBlock };
-  if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok: false, msg: `Maximum of ${MAX_SPECIAL_SUMMONS} Special Summons reached this turn.` };
+  if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok: false, msg: `Maximum of ${MAX_SPECIAL_SUMMONS} Special Spawns reached this turn.` };
   if (p.catalysts[zoneIdx] !== null) return { ok: false, msg: 'Chosen Catalyst Zone is occupied.' };
   p.catalysts[zoneIdx] = { cardId, position: 'atk', faceDown: false, attackedThisTurn: false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false };
   p.summonedThisTurn.add(zoneIdx);
   registerSpecialSummon(state, playerIdx, sourceLabel);
   const c = getCard(cardId);
-  addLog(state, `P${playerIdx+1} Special Summoned ${c ? c.name : 'a card'} to C${zoneIdx+1}${sourceLabel ? ' via ' + sourceLabel : ''}.`);
+  addLog(state, `P${playerIdx+1} Special Spawned ${c ? c.name : 'a card'} to C${zoneIdx+1}${sourceLabel ? ' via ' + sourceLabel : ''}.`);
   runOnSummonScripts(state, playerIdx, zoneIdx, 'special');
   return { ok: true, zoneIdx, cardId };
 }
@@ -5341,26 +5341,26 @@ function libraSummon(state, playerIdx, handIdxs, zoneIdxs) {
   const scales = getLibraScales(state, playerIdx);
   const p = state.players[playerIdx];
   if (!scales) return { ok: false, msg: 'Both Libra Zones need valid scales first.' };
-  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Libra Summon can only happen in your Action Phase.' };
+  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Libra Spawn can only happen in your Action Phase.' };
   if (!Array.isArray(handIdxs) || !Array.isArray(zoneIdxs) || handIdxs.length === 0 || handIdxs.length !== zoneIdxs.length) return { ok: false, msg: 'Choose 1 to 5 Catalysts and matching zones.' };
-  if (handIdxs.length > 5) return { ok: false, msg: 'Libra Summon can Special Summon up to 5 Catalysts.' };
-  if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok: false, msg: `Maximum of ${MAX_SPECIAL_SUMMONS} Special Summons reached this turn.` };
+  if (handIdxs.length > 5) return { ok: false, msg: 'Libra Spawn can Special Spawn up to 5 Catalysts.' };
+  if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok: false, msg: `Maximum of ${MAX_SPECIAL_SUMMONS} Special Spawns reached this turn.` };
   const uniqueHands = [...new Set(handIdxs)];
   const uniqueZones = [...new Set(zoneIdxs)];
   if (uniqueHands.length !== handIdxs.length || uniqueZones.length !== zoneIdxs.length) return { ok: false, msg: 'Duplicate cards or zones were selected.' };
   const chosen = handIdxs.map((h, i) => ({ h, z: zoneIdxs[i], id: p.hand[h], card: getCard(p.hand[h]) }));
   for (const entry of chosen) {
-    if (!entry.card || entry.card.cardType !== 'Catalyst') return { ok: false, msg: 'Libra Summon only Special Summons Catalysts.' };
+    if (!entry.card || entry.card.cardType !== 'Catalyst') return { ok: false, msg: 'Libra Spawn only Special Spawns Catalysts.' };
     const lv = entry.card.level || 0;
     if (!(lv > scales.min && lv < scales.max)) return { ok: false, msg: `${entry.card.name} is not strictly between your Libra Scales.` };
     if (p.catalysts[entry.z] !== null) return { ok: false, msg: `Catalyst Zone C${entry.z+1} is occupied.` };
   }
   for (const entry of chosen.sort((a,b)=>b.h-a.h)) { p.hand.splice(entry.h, 1); }
-  registerSpecialSummon(state, playerIdx, 'Libra Summon');
+  registerSpecialSummon(state, playerIdx, 'Libra Spawn');
   for (const entry of chosen) {
     p.catalysts[entry.z] = { cardId: entry.id, position: 'atk', faceDown: false, attackedThisTurn: false };
     p.summonedThisTurn.add(entry.z);
-    addLog(state, `Libra Summon: ${entry.card.name} entered C${entry.z+1}.`);
+    addLog(state, `Libra Spawn: ${entry.card.name} entered C${entry.z+1}.`);
   }
   return { ok: true };
 }
@@ -5604,7 +5604,7 @@ function getAvailableFusionSummons(state, playerIdx) {
 
 function fusionSummonDetailed(state, playerIdx, fusionDeckIdx, zoneIdx, fieldIdxs, handIdxs, removeMode, manual) {
   const p = state.players[playerIdx];
-  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Fusion Summon can only happen in your Action Phase.' };
+  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Fusion Spawn can only happen in your Action Phase.' };
   const fusionId = p.fusionDeck[fusionDeckIdx];
   const fusionCard = getCard(fusionId);
   if (!fusionCard) return { ok:false, msg:'Invalid Fusion card.' };
@@ -5636,7 +5636,7 @@ function fusionSummonDetailed(state, playerIdx, fusionDeckIdx, zoneIdx, fieldIdx
   (handIdxs || []).slice().sort((a,b)=>b-a).forEach(idx => { const sent = p.hand.splice(idx,1)[0]; if (sent) { consumedIds.push(sent); if (finalRemoveMode === 'rfg') p.rfg.push(sent); else p.void.push(sent); } });
   p._manualSummonContext = manual || null;
   const removedFusionId = p.fusionDeck.splice(fusionDeckIdx, 1)[0];
-  const placed = specialSummonToZone(state, playerIdx, removedFusionId, zoneIdx, finalRemoveMode === 'rfg' ? 'Fusion Zone' : 'Fusion Summon');
+  const placed = specialSummonToZone(state, playerIdx, removedFusionId, zoneIdx, finalRemoveMode === 'rfg' ? 'Fusion Zone' : 'Fusion Spawn');
   p._manualSummonContext = null;
   if (!placed.ok) { p.fusionDeck.splice(fusionDeckIdx, 0, removedFusionId); return placed; }
   if (p.catalysts[zoneIdx]) p.catalysts[zoneIdx]._fusionMaterialIds = consumedIds.slice();
@@ -5646,10 +5646,10 @@ function fusionSummonDetailed(state, playerIdx, fusionDeckIdx, zoneIdx, fieldIdx
 
 function fusionSummon(state, playerIdx, fusionDeckIdx, zoneIdx) {
   const p = state.players[playerIdx];
-  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Fusion Summon can only happen in your Action Phase.' };
+  if (state.phaseName !== 'action' || state.activePlayer !== playerIdx) return { ok: false, msg: 'Fusion Spawn can only happen in your Action Phase.' };
   const options = getAvailableFusionSummons(state, playerIdx);
   const option = options.find(o => o.fusionDeckIdx === fusionDeckIdx);
-  if (!option) return { ok: false, msg: 'No legal Fusion Summon available for that card.' };
+  if (!option) return { ok: false, msg: 'No legal Fusion Spawn available for that card.' };
   if (p.catalysts[zoneIdx] !== null) return { ok: false, msg: 'Chosen Catalyst Zone is occupied.' };
   if (!option.freeFusion) {
     option.fieldIdxs.slice().sort((a,b)=>b-a).forEach(idx => { const sent = p.catalysts[idx]; p.catalysts[idx] = null; if (sent) p.void.push(sent.cardId); });
@@ -5657,11 +5657,11 @@ function fusionSummon(state, playerIdx, fusionDeckIdx, zoneIdx) {
   }
   if (!option.usesFieldEnabler && !p.fusionEnabled) return { ok: false, msg: 'Fusion Dance or Fusion Zone is required.' };
   const fusionId = p.fusionDeck.splice(option.fusionDeckIdx, 1)[0];
-  const placed = specialSummonToZone(state, playerIdx, fusionId, zoneIdx, option.usesFieldEnabler ? 'Fusion Zone' : 'Fusion Summon');
+  const placed = specialSummonToZone(state, playerIdx, fusionId, zoneIdx, option.usesFieldEnabler ? 'Fusion Zone' : 'Fusion Spawn');
   if (!placed.ok) { p.fusionDeck.splice(option.fusionDeckIdx, 0, fusionId); return placed; }
   if (p.catalysts[zoneIdx]) p.catalysts[zoneIdx]._fusionMaterialIds = (option.materialCardIds || []).slice();
   p.fusionEnabled = !!option.usesFieldEnabler;
-  addLog(state, option.freeFusion ? `Legacy Fusion Summon: ${option.fusionCard.name} used no explicit material line in source data.` : `Fusion materials used: ${option.materials.join(' + ')}.`);
+  addLog(state, option.freeFusion ? `Legacy Fusion Spawn: ${option.fusionCard.name} used no explicit material line in source data.` : `Fusion materials used: ${option.materials.join(' + ')}.`);
   return { ok: true, fusionId, materials: option.materials };
 }
 
@@ -6747,7 +6747,7 @@ function custom_gagaShield(state,pi){const p=state.players[pi];const z=p.catalys
 function custom_tokimitsuSummon(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&Number(getCard(s.cardId)?.cp||0)<Number(getCard(opp.catalysts[opp.catalysts.findIndex(Boolean)]?.cardId)?.cp||999));if(oz>=0){opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;state.players[pi].kills++;addLog(state,`Effect Script: Tokimitsu destroyed the opponent's lowest CP Catalyst. +1 Kill.`);checkWinConditions(state);}}
 
 // AOT
-function custom_historiaHeal(state,pi){state.players[pi].chi=Math.min(state.players[pi].chi+500,99999);addLog(state,'Effect Script: Historia gained 500 Chi on summon.');}
+function custom_historiaHeal(state,pi){state.players[pi].chi=Math.min(state.players[pi].chi+500,99999);addLog(state,'Effect Script: Historia gained 500 Chi on spawn.');}
 function custom_bertBurn(state,pi){state.players[1-pi].chi=Math.max(0,state.players[1-pi].chi-800);addLog(state,'Effect Script: Bertholdt inflicted 800 damage on destroy.');checkWinConditions(state);}
 function custom_hangePeek(state,pi){const p=state.players[pi];if(!p.deck.length){addLog(state,'Effect Script: Hange — empty deck.');return;}const c=getCard(p.deck[0]);if(c&&c.cardType!=='Catalyst'){const d=p.deck.shift();p.void.push(d);addLog(state,`Effect Script: Hange peeked ${c?.name||'top card'} — it was a Trick, discarded.`);}else addLog(state,`Effect Script: Hange peeked top card: ${c?.name||'unknown'}.`);}
 
@@ -6756,7 +6756,7 @@ function custom_saradaPeek(state,pi){const opp=state.players[1-pi];if(!opp.hand.
 function custom_mitsukiBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'mitsuki'));if(z<0)return;state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+500;state.players[pi].catalysts[z].cpMod=(state.players[pi].catalysts[z].cpMod||0)+500;addLog(state,'Effect Script: Mitsuki +500 PR/CP until End Phase.');}
 function custom_kawakiKarma(state,pi){if(!state._kawakiCounters)state._kawakiCounters=0;if(state._kawakiCounters<1){addLog(state,'Effect Script: Kawaki has no Karma Counters.');return;}state._kawakiCounters--;const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Kawaki — no opponent Catalyst.');return;}opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;state.players[pi].kills++;addLog(state,`Effect Script: Kawaki removed 1 Karma Counter, destroyed 1 Catalyst. +1 Kill.`);checkWinConditions(state);}
 function custom_naruto7thClone(state,pi){const p=state.players[pi];const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: No zone for Shadow Clone Token.');return;}p.catalysts[ez]={cardId:'__shadowClone__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Shadow Clone Token',tokenPR:1000,tokenCP:800};addLog(state,'Effect Script: Naruto (7th Hokage) SS\'d a Shadow Clone Token (1000/800).');}
-function custom_sasukeTrickNuke(state,pi){const tgts=getAllDestroyableTrickTargets(state).filter(t=>t.player!==pi).slice(0,2);for(const t of tgts)destroyTrickTarget(state,t,'Sasuke Uchiha Rogue');addLog(state,`Effect Script: Sasuke Rogue destroyed ${tgts.length} Palm/Concealed Trick(s) on summon.`);}
+function custom_sasukeTrickNuke(state,pi){const tgts=getAllDestroyableTrickTargets(state).filter(t=>t.player!==pi).slice(0,2);for(const t of tgts)destroyTrickTarget(state,t,'Sasuke Uchiha Rogue');addLog(state,`Effect Script: Sasuke Rogue destroyed ${tgts.length} Palm/Concealed Trick(s) on spawn.`);}
 function custom_codeBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'code'));if(z<0)return;const discards=state._codeDiscardCount||0;state.players[pi].catalysts[z].atkMod=discards*300;}
 
 // BLC
@@ -6782,11 +6782,11 @@ function custom_yujiSearch(state,pi){const found=addCardToHandFromDeckByPredicat
 function custom_igrisToken(state,pi){const p=state.players[pi];const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0)return;p.catalysts[ez]={cardId:'__shadow_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Shadow Token',tokenPR:800,tokenCP:800};addLog(state,'Effect Script: Shadow Soldier Igris SS\'d a Shadow Token (800/800).');}
 function custom_kaiselDestroy(state,pi){const opp=state.players[1-pi];const faceDowns=[];for(let i=0;i<5;i++)if(opp.catalysts[i]&&opp.catalysts[i].faceDown)faceDowns.push(i);for(const z of faceDowns){opp.void.push(opp.catalysts[z].cardId);opp.catalysts[z]=null;state.players[pi].kills++;}addLog(state,`Effect Script: Shadow Mage Kaisel destroyed ${faceDowns.length} face-down Catalyst(s). +${faceDowns.length} Kill(s).`);if(faceDowns.length)checkWinConditions(state);}
 function custom_baekSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'hunter'));if(found)addLog(state,`Effect Script: Baek Yoon-ho searched ${found.name} after a kill.`);}
-function custom_minBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'min byung'));if(z>=0){state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+500;addLog(state,'Effect Script: Min Byung-Gyu +500 Pressure on summon.');}}
+function custom_minBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'min byung'));if(z>=0){state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+500;addLog(state,'Effect Script: Min Byung-Gyu +500 Pressure on spawn.');}}
 
 // DBZ
-function custom_ss4VegetaRitual(state,pi){const p=state.players[pi];const bi=p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'vegeta - super saiyan'));if(bi<0){addLog(state,'Effect Script: SS4 Vegeta needs Vegeta SS in hand to activate.');return;}const[sId]=p.hand.splice(bi,1);p.void.push(sId);const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: No empty zone.');return;}addLog(state,'Effect Script: Vegeta SS4 Special Summoned via Vegeta SS sacrifice.');}
-function custom_ss4GokuRitual(state,pi){const p=state.players[pi];const bi=p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'goku - super saiyan'));if(bi<0){addLog(state,'Effect Script: SS4 Goku needs Goku SS in hand to activate.');return;}const[sId]=p.hand.splice(bi,1);p.void.push(sId);addLog(state,'Effect Script: Goku SS4 Special Summoned via Goku SS sacrifice.');}
+function custom_ss4VegetaRitual(state,pi){const p=state.players[pi];const bi=p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'vegeta - super saiyan'));if(bi<0){addLog(state,'Effect Script: SS4 Vegeta needs Vegeta SS in hand to activate.');return;}const[sId]=p.hand.splice(bi,1);p.void.push(sId);const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: No empty zone.');return;}addLog(state,'Effect Script: Vegeta SS4 Special Spawned via Vegeta SS sacrifice.');}
+function custom_ss4GokuRitual(state,pi){const p=state.players[pi];const bi=p.hand.findIndex(id=>cardNameHas(getCard(id)||{},'goku - super saiyan'));if(bi<0){addLog(state,'Effect Script: SS4 Goku needs Goku SS in hand to activate.');return;}const[sId]=p.hand.splice(bi,1);p.void.push(sId);addLog(state,'Effect Script: Goku SS4 Special Spawned via Goku SS sacrifice.');}
 function custom_saiyanFury(state,pi){const p=state.players[pi];const si=p.void.findIndex(id=>cardNameHas(getCard(id)||{},'saiyan'));if(si<0){addLog(state,'Effect Script: Saiyan Fury — no Saiyan in Void.');return;}const[sId]=p.void.splice(si,1);const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: No empty zone.');return;}p.catalysts[ez]={cardId:sId,position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false};registerSpecialSummon(state,pi,'Saiyan Fury');addLog(state,`Effect Script: Saiyan Fury revived ${getCard(sId)?.name||'a Saiyan'} after opponent destroyed one.`);}
 function custom_youngGohanSSCond(state,pi){const p=state.players[pi];if(p.catalysts.filter(Boolean).length>1){addLog(state,'Effect Script: Young Gohan SS — field must be empty.');return;}addLog(state,'Effect Script: Young Gohan SS condition met (sole Catalyst).');}
 function custom_krillinSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'android'));if(found)addLog(state,`Effect Script: Krillin searched ${found.name} after inflicting damage.`);}
@@ -6834,7 +6834,7 @@ function custom_hanyaDebuff(state,pi){const opp=state.players[1-pi];const z=opp.
 // TUV
 function custom_tenchiFlip(state,pi){const res=specialSummonFromDeckByPredicate(state,pi,c=>cardNameHas(c,'ryoko'),'Tenchi Masaki');addLog(state,res.ok?'Effect Script: Tenchi (Flip) SS\'d Ryoko from Deck.':`Effect Script: Tenchi — no Ryoko in Deck. (${res.msg})`);}
 function custom_ryokoControl(state,pi){const p=state.players[pi];if(p.chi<2000){addLog(state,'Effect Script: Ryoko needs 2000 Chi.');return;}const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Ryoko — no opponent Catalyst.');return;}const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: Ryoko — no empty zone.');return;}p.chi-=2000;const stolen=opp.catalysts[oz];opp.catalysts[oz]=null;p.catalysts[ez]={...stolen,_stolenByRyoko:true};addLog(state,`Effect Script: Ryoko paid 2000 Chi, took control of ${getCard(stolen.cardId)?.name||'a Catalyst'}.`);}
-function custom_ayekaTribute(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'ayeka'));if(z<0)return;p.void.push(p.catalysts[z].cardId);p.catalysts[z]=null;const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,pi,c=>cardNameHas(c,'tsunami'),'Ayeka');addLog(state,res.ok?'Effect Script: Ayeka tributed herself to SS Tsunami.':`Effect Script: Ayeka — no Tsunami to summon. (${res.msg})`);}
+function custom_ayekaTribute(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'ayeka'));if(z<0)return;p.void.push(p.catalysts[z].cardId);p.catalysts[z]=null;const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,pi,c=>cardNameHas(c,'tsunami'),'Ayeka');addLog(state,res.ok?'Effect Script: Ayeka tributed herself to SS Tsunami.':`Effect Script: Ayeka — no Tsunami to spawn. (${res.msg})`);}
 function custom_droppingTheTowel(state,pi){const found=addCardToHandFromDeckByNameToken(state,pi,['nudity']);if(found)addLog(state,`Effect Script: Dropping The Towel added ${found.name} from Deck.`);}
 function custom_mihoshiSS(state,pi){const p=state.players[pi];if(p.chi<1000){addLog(state,'Effect Script: Mihoshi needs 1000 Chi.');return;}const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,pi,c=>cardNameHas(c,'mihoshi')&&c.cardType==='Catalyst','Mihoshi');addLog(state,res.ok?'Effect Script: Mihoshi SS\'d from hand/deck/void.':`Effect Script: Mihoshi SS failed. (${res.msg})`);if(res.ok)p.chi-=1000;}
 function custom_sasamiFlip(state,pi){const p=state.players[pi];for(let i=0;i<2;i++){if(p.void.length){const id=p.void.pop();p.deck.push(id);}}p.deck.sort(()=>Math.random()-.5);addLog(state,'Effect Script: Sasami (Flip) returned 2 Void cards to Deck and shuffled.');}
@@ -6844,7 +6844,7 @@ function custom_kagatoNuke(state,pi){const p=state.players[pi],opp=state.players
 // CC1
 function custom_pipBattle(state,pi){const p=state.players[pi];const idx=p.hand.findIndex(id=>id===p.hand.find(id2=>cardNameHas(getCard(id2)||{},'pip')));if(idx>=0){const[d]=p.hand.splice(idx,1);p.void.push(d);}addLog(state,'Effect Script: Pip: discard during opponent\'s Battle Phase to (flavour — timing window effect).');}
 function custom_turnabout(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz>=0){const pr=getEffectivePressure(state,1-pi,oz);const cp=getEffectiveCP(state,1-pi,oz);const slot=opp.catalysts[oz];slot.atkMod=(slot.atkMod||0)+(cp-pr);slot.cpMod=(slot.cpMod||0)+(pr-cp);addLog(state,`Effect Script: Turnabout swapped ${getCard(slot.cardId)?.name||'a Catalyst'}'s ATK and DEF.`);}}
-function custom_lynxSummon(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>c.cardType==='Palm Trick');if(found)addLog(state,`Effect Script: Lynx searched ${found.name} on summon.`);}
+function custom_lynxSummon(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>c.cardType==='Palm Trick');if(found)addLog(state,`Effect Script: Lynx searched ${found.name} on spawn.`);}
 function custom_acaciaFlip(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>c.cardType==='Catalyst'&&Number(c.level||0)<=4);if(found)addLog(state,`Effect Script: Acacia (Flip) searched ${found.name}.`);}
 function custom_sergeKiddBoost(state,pi){const sergeZ=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'serge'));const kiddZ=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'kidd'));if(sergeZ>=0&&kiddZ>=0){state.players[pi].catalysts[sergeZ].atkMod=(state.players[pi].catalysts[sergeZ].atkMod||0)+200;state.players[pi].catalysts[kiddZ].atkMod=(state.players[pi].catalysts[kiddZ].atkMod||0)+200;}}
 function custom_spriggCopy(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz<0){addLog(state,'Effect Script: Sprigg — no face-up target.');return;}const copyId=opp.catalysts[oz].cardId;const effs=getAllCardEffects(copyId);const spZ=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'sprigg'));if(spZ<0) return;if(!EFFECT_REGISTRY[state.players[pi].catalysts[spZ].cardId])EFFECT_REGISTRY[state.players[pi].catalysts[spZ].cardId]=[];for(const e of effs)EFFECT_REGISTRY[state.players[pi].catalysts[spZ].cardId].push({...e,_copiedBySprigg:true,tag:'sprigg_'+e.tag});addLog(state,`Effect Script: Sprigg copied ${getCard(copyId)?.name||'target'}'s effects (once per duel).`);}
@@ -6853,7 +6853,7 @@ function custom_funguyPoison(state,pi){if(!state._funguyPoison)state._funguyPois
 function custom_porrexSearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardNameHas(c,'radical dreamers'));if(found)addLog(state,`Effect Script: Porrex searched ${found.name} after a kill.`);}
 function custom_neoFioPalmBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'neo fio'));if(z<0)return;const palmCount=state.players[pi].tricks.filter(s=>s&&getCard(s.cardId)?.cardType==='Palm Trick').length;state.players[pi].catalysts[z].atkMod=palmCount*300;}
 function custom_zoahPR(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'zoah'));if(z<0)return;const c=getCard(state.players[pi].catalysts[z].cardId);const base=Number(c?.cp||0);state.players[pi].catalysts[z].atkMod=base-Number(c?.pr||0);}
-function custom_darioToken(state,pi){const p=state.players[pi];const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0)return;p.catalysts[ez]={cardId:'__dario_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Dario Token',tokenPR:600,tokenCP:600};addLog(state,'Effect Script: Dario placed a Token (600/600) on summon.');}
+function custom_darioToken(state,pi){const p=state.players[pi];const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0)return;p.catalysts[ez]={cardId:'__dario_token__',position:'atk',faceDown:false,attackedThisTurn:false,atkMod:0,cpMod:0,extraAttackThisTurn:0,cannotAttackThisTurn:false,isToken:true,tokenName:'Dario Token',tokenPR:600,tokenCP:600};addLog(state,'Effect Script: Dario placed a Token (600/600) on spawn.');}
 function custom_dittoCopy(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz<0){addLog(state,'Effect Script: Ditto — no face-up target.');return;}const dittoZ=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'ditto'));if(dittoZ<0)return;const tCard=getCard(opp.catalysts[oz].cardId);state.players[pi].catalysts[dittoZ].atkMod=Number(tCard?.pr||0)-Number(getCard(state.players[pi].catalysts[dittoZ].cardId)?.pr||0);state.players[pi].catalysts[dittoZ].cpMod=Number(tCard?.cp||0)-Number(getCard(state.players[pi].catalysts[dittoZ].cardId)?.cp||0);addLog(state,`Effect Script: Ditto copied ${tCard?.name||'target'}'s stats.`);}
 function custom_prismBounce(state,pi){const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(s=>s&&!s.faceDown);if(oz<0){addLog(state,'Effect Script: Prism — no face-up target.');return;}const bounced=opp.catalysts[oz];opp.catalysts[oz]=null;opp.hand.push(bounced.cardId);addLog(state,`Effect Script: Prism returned ${getCard(bounced.cardId)?.name||'a Catalyst'} to opponent hand.`);}
 
@@ -7045,7 +7045,7 @@ function custom_searchSergeKiddKorcha(state, pi) {
 }
 function custom_bornAgainRevive(state, pi) {
   const res = specialSummonFromVoidByPredicate(state, pi, c => ['serge','kidd','korcha'].some(t=>cardNameHas(c,t)), 'Born Again');
-  addLog(state, res.ok ? 'Effect Script: Born Again Special Summoned from Void.' : `Effect Script: Born Again — no valid target. (${res.msg})`);
+  addLog(state, res.ok ? 'Effect Script: Born Again Special Spawned from Void.' : `Effect Script: Born Again — no valid target. (${res.msg})`);
 }
 
 // CT1
@@ -7313,8 +7313,8 @@ function custom_shukakuCond(state, pi) {
   p.void.push(p.catalysts[garaZ].cardId); p.catalysts[garaZ] = null;
 }
 function custom_summoningJutsu(state, pi) {
-  // Cards SS'd by Summoning no Jutsu - validated at summon time
-  addLog(state,'Effect Script: Summoning Jutsu summon condition acknowledged.');
+  // Cards SS'd by Spawning no Jutsu - validated at spawn time
+  addLog(state,'Effect Script: Spawning Jutsu spawn condition acknowledged.');
 }
 
 // OP1
@@ -7424,7 +7424,7 @@ function custom_baranWipeSS(state, pi) {
         if (pl !== p) p.kills++;
         n++;
       }
-  addLog(state,`Effect Script: Monarch Baran paid 1000 Chi, destroyed ${n} Special Summoned Catalyst(s).`);
+  addLog(state,`Effect Script: Monarch Baran paid 1000 Chi, destroyed ${n} Special Spawned Catalyst(s).`);
   checkWinConditions(state);
 }
 
@@ -7868,7 +7868,7 @@ regEffect('loz-020-spirittemple', { type:'fieldAuraCP',     tag:'spiritTempleCP'
 regEffect('mgm-001-megaman',      { type:'continuous',  tag:'megamanDynPR',    action:'custom_megamanPR' });
 regEffect('mgm-003-gutsman',      { type:'continuous',  tag:'gutsmanTrap',     action:'custom_gutsmanTrap' });
 regEffect('mgm-004-roll',         { type:'continuous',  tag:'rollNoDirect',    action:'cannotAttackDirect' });
-regEffect('mgm-005-pharohman',    { type:'onSummon',    tag:'pharohDraw',      action:'draw', count:1, log:'drew 1 card on summon' });
+regEffect('mgm-005-pharohman',    { type:'onSummon',    tag:'pharohDraw',      action:'draw', count:1, log:'drew 1 card on spawn' });
 regEffect('mgm-007-torchman',     { type:'onBattleResult', tag:'torchKillPR',  resultType:'kill', action:'custom_torchmanKill' });
 regEffect('mgm-008-torchman',     { type:'onFlip',      tag:'torchFlipEquip',  action:'custom_torchmanFlip' });
 regEffect('mgm-009-heatman',      { type:'summonCondition', tag:'heatmanTribute', action:'tributeByName', tributeName:'torch man' });
@@ -8063,9 +8063,9 @@ function p55_marioSS(state, playerIdx, cardId) {
   // Must tribute Mini-Mario while Magic Mushroom (Field) is active
   const p = state.players[playerIdx];
   const hasMushroom = p.fieldTrick && !p.fieldTrick.faceDown && /magic mushroom/i.test(getCard(p.fieldTrick.cardId)?.name || '');
-  if (!hasMushroom) return { ok:false, msg:'Magic Mushroom (Field) must be active to summon Mario.' };
+  if (!hasMushroom) return { ok:false, msg:'Magic Mushroom (Field) must be active to spawn Mario.' };
   const miniIdx = p.catalysts.findIndex(s => s && /mini.mario/i.test(getCard(s.cardId)?.name || ''));
-  if (miniIdx < 0) return { ok:false, msg:'Tribute Mini-Mario to summon Mario.' };
+  if (miniIdx < 0) return { ok:false, msg:'Tribute Mini-Mario to spawn Mario.' };
   runOnSelfDestroyed(state, playerIdx, p.catalysts[miniIdx].cardId, { reason:'tribute' });
   p.void.push(p.catalysts[miniIdx].cardId);
   p.catalysts[miniIdx] = null;
@@ -8180,7 +8180,7 @@ function p55_quentSummon(state, playerIdx, zoneIdx) {
       const blueId = p.hand.splice(blueIdx, 1)[0];
       p.catalysts[emptyZone] = { cardId:blueId, position:'atk', faceDown:false, attackedThisTurn:false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false };
       registerSpecialSummon(state, playerIdx, 'Quent Yaiden');
-      addLog(state, `Effect Script: Quent Yaiden Special Summoned ${getCard(blueId)?.name || 'Blue - Wolf Mode'} from hand.`);
+      addLog(state, `Effect Script: Quent Yaiden Special Spawned ${getCard(blueId)?.name || 'Blue - Wolf Mode'} from hand.`);
     }
   }
 }
@@ -8223,19 +8223,19 @@ function p55_mayFlip(state, playerIdx, zoneIdx) {
     if (emptyZone >= 0) {
       p.catalysts[emptyZone] = { cardId:jId, position:'atk', faceDown:false, attackedThisTurn:false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false };
       registerSpecialSummon(state, playerIdx, 'May (flip)');
-      addLog(state, `Effect Script: May's flip summoned Johnny from hand.`);
+      addLog(state, `Effect Script: May's flip spawned Johnny from hand.`);
     }
   } else {
     // Try deck
     const res = specialSummonFromDeckByPredicate(state, playerIdx, c => /^johnny$/i.test(c.name || ''), 'May (flip)');
-    if (res.ok) addLog(state, 'Effect Script: May\'s flip summoned Johnny from the Deck.');
-    else { const rv = specialSummonFromVoidByPredicate(state, playerIdx, c => /^johnny$/i.test(c.name || ''), 'May (flip)'); if(rv.ok) addLog(state,'Effect Script: May\'s flip summoned Johnny from the Void.'); }
+    if (res.ok) addLog(state, 'Effect Script: May\'s flip spawned Johnny from the Deck.');
+    else { const rv = specialSummonFromVoidByPredicate(state, playerIdx, c => /^johnny$/i.test(c.name || ''), 'May (flip)'); if(rv.ok) addLog(state,'Effect Script: May\'s flip spawned Johnny from the Void.'); }
   }
 }
 
 function p55_zato1Destroyed(state, ownerPlayer, cardId) {
   const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, ownerPlayer, c => /^eddie$/i.test(c.name || ''), 'Zato-1');
-  if (res.ok) addLog(state, 'Effect Script: Zato-1 Special Summoned Eddie from hand/deck/Void.');
+  if (res.ok) addLog(state, 'Effect Script: Zato-1 Special Spawned Eddie from hand/deck/Void.');
 }
 
 function p55_eddieDecay(state, playerIdx) {
@@ -8295,7 +8295,7 @@ function p55_axlContinuous(state, playerIdx) {
       p.catalysts[z] = null;
     }
     const res = specialSummonFromHandOrDeckOrVoidByPredicate(state, playerIdx, c => /^raven$/i.test(c.name||''), 'Axl Low');
-    if (res.ok) addLog(state, `Effect Script: Axl Low — all Axl Low tributed to summon Raven.`);
+    if (res.ok) addLog(state, `Effect Script: Axl Low — all Axl Low tributed to spawn Raven.`);
   }
 }
 
@@ -8495,7 +8495,7 @@ function p55_elecman(state, playerIdx, zoneIdx) {
     opp.void.push(opp.catalysts[tz].cardId);
     opp.catalysts[tz] = null;
     state.players[playerIdx].kills++;
-    addLog(state, `Effect Script: ElecMan destroyed ${tc?.name||'a Catalyst'} on summon.`);
+    addLog(state, `Effect Script: ElecMan destroyed ${tc?.name||'a Catalyst'} on spawn.`);
     checkWinConditions(state);
   }
 }
@@ -8677,7 +8677,7 @@ function p55_mizunoSS(state, playerIdx, zoneIdx) {
   p.catalysts[zoneIdx] = null;
   const res = specialSummonFromDeckByPredicate(state, playerIdx, c => /^sailor mercury$/i.test(c.name||''), 'Mizuno Ami');
   if (!res.ok) { addLog(state, 'Effect Script: Mizuno Ami could not find Sailor Mercury in the Deck.'); return { ok:false, msg:'No Sailor Mercury in Deck.' }; }
-  addLog(state, 'Effect Script: Mizuno Ami tributed herself to summon Sailor Mercury from Deck.');
+  addLog(state, 'Effect Script: Mizuno Ami tributed herself to spawn Sailor Mercury from Deck.');
   return { ok:true };
 }
 window.p55_mizunoSS = p55_mizunoSS;
@@ -8815,7 +8815,7 @@ function p55_kaykoFlip(state, playerIdx, zoneIdx) {
 function p55_koenmaFlip(state, playerIdx, zoneIdx) {
   const res = specialSummonFromHandByPredicate(state, playerIdx,
     c => c.cardType === 'Catalyst' && Number(c.level||0) <= 4 && (c.kinds||[]).some(k => /demon|spirit/i.test(k)), 'Koenma');
-  if (res.ok) addLog(state, 'Effect Script: Koenma summoned a Lvl 4 or lower Demon/Spirit from hand.');
+  if (res.ok) addLog(state, 'Effect Script: Koenma spawned a Lvl 4 or lower Demon/Spirit from hand.');
 }
 
 function p55_kurama(state, playerIdx, zoneIdx) {
@@ -8885,7 +8885,7 @@ function p55_yukinaFlip(state, playerIdx, zoneIdx) {
   const p = state.players[playerIdx];
   const res = specialSummonFromHandByPredicate(state, playerIdx,
     c => /^(kuwabara|hiei)$/i.test(c.name||''), 'Yukina');
-  if (res.ok) addLog(state, 'Effect Script: Yukina summoned Kuwabara or Hiei from hand.');
+  if (res.ok) addLog(state, 'Effect Script: Yukina spawned Kuwabara or Hiei from hand.');
 }
 
 function p55_yukinaProtect(state, playerIdx) {
@@ -8945,11 +8945,11 @@ runRegisteredOnSummon = function(state, playerIdx, zoneIdx) {
     else if (eff.action === 'custom_kankuro')  { p55_kankuro(state, playerIdx, zoneIdx); }
     else if (eff.action === 'custom_garaSwitch') {
       const slot2 = state.players[playerIdx].catalysts[zoneIdx];
-      if (slot2) { slot2.position = 'def'; addLog(state, 'Effect Script: Gara switched to Defense position on summon.'); }
+      if (slot2) { slot2.position = 'def'; addLog(state, 'Effect Script: Gara switched to Defense position on spawn.'); }
     }
     else if (eff.action === 'custom_hinataSummon') {
       const res = specialSummonFromHandOrVoidByPredicate(state, playerIdx, c => /^neji$/i.test(c.name||''), 'Hinata');
-      if (res.ok) addLog(state, 'Effect Script: Hinata Special Summoned Neji from hand/Void.');
+      if (res.ok) addLog(state, 'Effect Script: Hinata Special Spawned Neji from hand/Void.');
     }
     else if (eff.action === 'custom_nidaime')    { p55_nidaime(state, playerIdx, zoneIdx); }
     else if (eff.action === 'custom_roboDebuff') {
@@ -8986,23 +8986,23 @@ runOnSelfDestroyed = function(state, ownerPlayer, cardId, ctx) {
     else if (eff.action === 'custom_wolfReviveOnce') { p55_wolfReviveOnce(state, ownerPlayer, cardId, eff); }
     else if (eff.action === 'custom_koopaRevive') {
       const res = specialSummonFromDeckByPredicate(state, ownerPlayer, c => /koopa troopa/i.test(c.name||''), 'Koopa Troopa');
-      if (res.ok) addLog(state, 'Effect Script: Koopa Troopa summoned another Koopa Troopa from Deck.');
+      if (res.ok) addLog(state, 'Effect Script: Koopa Troopa spawned another Koopa Troopa from Deck.');
     }
     else if (eff.action === 'custom_marioRevive') {
       const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /^mini.mario$/i.test(c.name||''), 'Mario');
-      if (res.ok) addLog(state, 'Effect Script: Mario summoned Mini-Mario from Void on destruction.');
+      if (res.ok) addLog(state, 'Effect Script: Mario spawned Mini-Mario from Void on destruction.');
     }
     else if (eff.action === 'custom_luigiRevive') {
       const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /^mini.luigi$/i.test(c.name||''), 'Luigi');
-      if (res.ok) addLog(state, 'Effect Script: Luigi summoned Mini-Luigi from Void on destruction.');
+      if (res.ok) addLog(state, 'Effect Script: Luigi spawned Mini-Luigi from Void on destruction.');
     }
     else if (eff.action === 'custom_fireMarioRevive') {
       const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /^mario$/i.test(c.name||''), 'Fire Mario');
-      if (res.ok) addLog(state, 'Effect Script: Fire Mario summoned Mario from Void on destruction.');
+      if (res.ok) addLog(state, 'Effect Script: Fire Mario spawned Mario from Void on destruction.');
     }
     else if (eff.action === 'custom_fireLuigiRevive') {
       const res = specialSummonFromVoidByPredicate(state, ownerPlayer, c => /^luigi$/i.test(c.name||''), 'Fire Luigi');
-      if (res.ok) addLog(state, 'Effect Script: Fire Luigi summoned Luigi from Void on destruction.');
+      if (res.ok) addLog(state, 'Effect Script: Fire Luigi spawned Luigi from Void on destruction.');
     }
     else if (eff.action === 'custom_adultLinkRevive') { p55_adultLinkRevive(state, ownerPlayer, cardId); }
     else if (eff.action === 'custom_bishopReturn')    { p55_bishopReturn(state, ownerPlayer, cardId); }

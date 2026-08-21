@@ -55,7 +55,7 @@
         opponentDrawsPerSpecialSummon: 1,
         appliesFromSummonNumber: 1,
         libraCountsAsOneSpecialSummon: true,
-        summary: 'Every Special Summon causes the opponent to draw 1 card. Libra Summon counts as 1 Special Summon. Hard cap: 5 per turn.'
+        summary: 'Every Special Spawn causes the opponent to draw 1 card. Libra Spawn counts as 1 Special Spawn. Hard cap: 5 per turn.'
       },
       libra: {
         requiresNormalCatalysts: true,
@@ -68,7 +68,7 @@
         treatedAsTricksWhileInZone: true,
         cannotBeEndPhaseSacrifice: true,
         destroyedScaleDoesNotRemoveExistingSummons: true,
-        summary: 'Place Normal Catalysts in the two outermost Libra Zones. Their Levels become your Scales. You may Libra Summon up to 5 Catalysts whose Levels are strictly between those Scales. The whole Libra Summon counts as exactly 1 Special Summon and causes exactly 1 Shotgun draw total.'
+        summary: 'Place Normal Catalysts in the two outermost Libra Zones. Their Levels become your Scales. You may Libra Spawn up to 5 Catalysts whose Levels are strictly between those Scales. The whole Libra Spawn counts as exactly 1 Special Spawn and causes exactly 1 Shotgun draw total.'
       },
       assertions: {
         sideDeckOptionalRange: '0–15',
@@ -136,14 +136,14 @@
     get libraSummary(){ return CTF_CONFIG.game.libra.summary; },
     get logicTestAssumptions(){ return [
       `Side Deck: ${CTF_CONFIG.game.assertions.sideDeckOptionalRange}`,
-      'Shotgun: every Special Summon draws 1 for the opponent',
+      'Shotgun: every Special Spawn draws 1 for the opponent',
       'END TURN: locked beta path and always legal',
       `Opening hand: ${CTF_CONFIG.game.startingHand}`,
       'Deck-out: skip draw, not a loss',
       'Rescue: returns to Deck and shuffles',
       'Paid End Phase actions: any eligible Catalyst required (Great or non-Great)',
       `Libra: ${CTF_CONFIG.game.libra.summary}`,
-      `Special Summon cap: ${CTF_CONFIG.game.assertions.maxSpecialSummonsPerTurn}`,
+      `Special Spawn cap: ${CTF_CONFIG.game.assertions.maxSpecialSummonsPerTurn}`,
       'Great Extract redirect: Void + Kill, not Extraction'
     ].join(' • '); },
     get discordLimitNote(){ return `Invite active until ${CTF_CONFIG.beta.discordInviteLimit} joins are used.`; }
