@@ -7,7 +7,8 @@ sends exactly two emails through the `changethewrld@outlook.com` mailbox:
 
 1. `{Submitter Name}'s Custom Cards` to `changethewrld@outlook.com`, with the
    submitted JSON attached and the submitter set as Reply-To.
-2. A thank-you/review notice to the submitter, without the attachment.
+2. A thank-you/review notice to the submitter, with the official CTF logo PNG
+   attached as `Carry-The-Flame-Logo.png`.
 
 SQLite delivery flags make retries idempotent. If the first email succeeds and
 the second fails, a retry sends only the second email.
@@ -19,8 +20,9 @@ the second fails, a retry sends only the second email.
 2. Create a Turnstile widget for `professorzoom45.github.io`.
 3. Give the Oracle VM a stable HTTPS hostname. Point DNS at the VM, allow TCP
    80/443 in the OCI VCN and the VM firewall, and install Caddy.
-4. Copy this directory to `/opt/ctf-card-email/app`, create a virtual environment,
-   and install `requirements.txt`.
+4. Copy this directory to `/opt/ctf-card-email/app`, copy
+   `assets/img/ctf-logo-v2.png` there, create a virtual environment, and install
+   `requirements.txt`.
 5. Create `/opt/ctf-card-email/secrets/ctf-card-email.env` from the example and
    set mode `600`.
 6. Run `bootstrap_outlook.py` once and authorize

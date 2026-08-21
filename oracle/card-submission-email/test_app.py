@@ -50,6 +50,8 @@ def payload():
 class SubmissionServiceTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         self.temporary = tempfile.TemporaryDirectory()
+        self.logo_path = Path(self.temporary.name) / "ctf-logo-v2.png"
+        self.logo_path.write_bytes(b"test-png-logo")
         self.mailer = FakeMailer()
         self.config = Config(
             allowed_origin=ORIGIN,
@@ -61,6 +63,7 @@ class SubmissionServiceTests(unittest.IsolatedAsyncioTestCase):
             turnstile_secret="test-secret",
             expected_hostname="professorzoom45.github.io",
             database_path=Path(self.temporary.name) / "submissions.sqlite3",
+            logo_path=self.logo_path,
             bind_host="127.0.0.1",
             bind_port=8787,
             rate_limit_per_hour=20,
@@ -93,7 +96,14 @@ class SubmissionServiceTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(list(owner.iter_attachments())), 1)
         self.assertEqual(submitter["To"], "alex@example.com")
         self.assertIn("Cards Are Under Review", submitter["Subject"])
-        self.assertIn("reviewed for possible inclusion", submitter.get_content())
+        submitter_text = submitter.get_body(preferencelist=("plain",)).get_content()
+        self.assertIn("reviewed for possible inclusion", submitter_text)
+        self.assertIn("Perfect Timing Gaming", submitter_text)
+        self.assertNotIn("Makairis Holding Group", submitter_text)
+        submitter_attachments = list(submitter.iter_attachments())
+        self.assertEqual(len(submitter_attachments), 1)
+        self.assertEqual(submitter_attachments[0].get_filename(), "Carry-The-Flame-Logo.png")
+        self.assertEqual(submitter_attachments[0].get_content_type(), "image/png")
 
     async def test_duplicate_request_does_not_send_duplicate_emails(self):
         self.assertEqual((await self.post()).status, 200)

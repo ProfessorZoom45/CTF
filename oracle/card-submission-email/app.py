@@ -37,6 +37,7 @@ class Config:
     turnstile_secret: str
     expected_hostname: str
     database_path: Path
+    logo_path: Path
     bind_host: str
     bind_port: int
     rate_limit_per_hour: int
@@ -53,6 +54,7 @@ class Config:
             turnstile_secret=os.getenv("CTF_TURNSTILE_SECRET", "").strip(),
             expected_hostname=os.getenv("CTF_EXPECTED_HOSTNAME", "professorzoom45.github.io").strip(),
             database_path=Path(os.getenv("CTF_DATABASE_PATH", "/opt/ctf-card-email/state/submissions.sqlite3")),
+            logo_path=Path(os.getenv("CTF_LOGO_PATH", "/opt/ctf-card-email/app/ctf-logo-v2.png")),
             bind_host=os.getenv("CTF_BIND_HOST", "127.0.0.1").strip(),
             bind_port=int(os.getenv("CTF_BIND_PORT", "8787")),
             rate_limit_per_hour=max(1, int(os.getenv("CTF_RATE_LIMIT_PER_HOUR", "5"))),
@@ -67,6 +69,8 @@ class Config:
             raise RuntimeError("Missing configuration: " + ", ".join(missing))
         if not EMAIL_RE.match(self.owner_email) or not EMAIL_RE.match(self.sender_email):
             raise RuntimeError("Configured email address is invalid")
+        if not self.logo_path.is_file():
+            raise RuntimeError(f"CTF logo is missing: {self.logo_path}")
 
 
 class RateLimiter:
@@ -247,8 +251,14 @@ Your custom cards have been received and are now being thoughtfully reviewed for
 Thank you for helping us carry the flame forward. We're grateful to have you as part of this journey.
 
 Keep carrying the flame,
-Perfect Timing Gaming / Makairis Holding Group
+Perfect Timing Gaming
 """
+    )
+    message.add_attachment(
+        config.logo_path.read_bytes(),
+        maintype="image",
+        subtype="png",
+        filename="Carry-The-Flame-Logo.png",
     )
     return message
 
