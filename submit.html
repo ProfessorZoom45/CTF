@@ -888,6 +888,10 @@ function renderPreview(){
 }
 
 // ═══════ SUBMIT ═══════
+// OperatorStack's current form UUID. The previous frm_* key belonged to the
+// retired form-key format and no longer maps to this project's Submit form.
+const REVIEW_FORM_ID='fb59a637-f3a7-4bb2-8830-54da36e0bd6e';
+
 async function submitCards(){
  if(!allValid)return;
  const st=$('submit-status');
@@ -965,7 +969,10 @@ async function submitCards(){
  };
 
  try{
-  await OperatorStack.submitForm('frm_hz1no8yg5r', osPayload);
+  if(!window.OperatorStack||typeof window.OperatorStack.submitForm!=='function'){
+   throw new Error('submission service did not load');
+  }
+  await window.OperatorStack.submitForm(REVIEW_FORM_ID, osPayload);
 
   // ── STEP 3: Open mailto via anchor-click (window.open is blocked after await) ──
   st.textContent='[3/3] Opening email client...'; st.className='submit-status';
