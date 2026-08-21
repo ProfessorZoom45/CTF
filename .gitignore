@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 /dist/
+workers/**/.dev.vars
+workers/**/.wrangler/
 
 # System Files
 .DS_Store
