@@ -892,6 +892,18 @@ function renderPreview(){
 // retired form-key format and no longer maps to this project's Submit form.
 const REVIEW_FORM_ID='fb59a637-f3a7-4bb2-8830-54da36e0bd6e';
 
+// Track custom form events with metadata, without sending submitter PII to analytics.
+function trackReviewQueueEvent(status,metadata){
+ const sdk=window.OperatorStack;
+ if(!sdk||typeof sdk.trackEvent!=='function')return;
+ sdk.trackEvent('custom_card_form_submission',{
+  form_id:REVIEW_FORM_ID,
+  form_name:'Submit',
+  status,
+  ...metadata
+ });
+}
+
 async function submitCards(){
  if(!allValid)return;
  const st=$('submit-status');
@@ -967,12 +979,26 @@ async function submitCards(){
   // Reserved OperatorStack field
   _subject:`CTF Submission — ${V('sub-name')}`
  };
+ const eventMetadata={
+  submission_timestamp:sub.timestamp,
+  card_count:sub.cards.length,
+  catalyst_count:3,
+  fusion_count:1,
+  trick_count:1,
+  trick_type:trickType,
+  pool_pr_used:sub.poolUsed.pressure,
+  pool_cp_used:sub.poolUsed.counterPressure,
+  total_images_attached:sub.totalImages,
+  image_slot_count:Object.keys(sub.images).length
+ };
 
  try{
   if(!window.OperatorStack||typeof window.OperatorStack.submitForm!=='function'){
    throw new Error('submission service did not load');
   }
+  trackReviewQueueEvent('attempted',eventMetadata);
   await window.OperatorStack.submitForm(REVIEW_FORM_ID, osPayload);
+  trackReviewQueueEvent('succeeded',eventMetadata);
 
   // ── STEP 3: Open mailto via anchor-click (window.open is blocked after await) ──
   st.textContent='[3/3] Opening email client...'; st.className='submit-status';
@@ -984,6 +1010,9 @@ async function submitCards(){
  }catch(err){
   // OperatorStack failed — surface the error clearly, re-enable button, mailto still works
   const errMsg=err&&err.message?err.message:'connection error';
+  const errorType=!window.OperatorStack?'sdk_unavailable':
+   /load failed|failed to fetch|network/i.test(errMsg)?'network_error':'service_error';
+  trackReviewQueueEvent('failed',{...eventMetadata,error_type:errorType});
   st.innerHTML=`<strong style="color:var(--ember)">⚠ Review queue unavailable (${errMsg})</strong><br>Your JSON was saved locally. Please email it to <a href="${mailtoUrl}" style="color:var(--flame)">changethewrld@outlook.com</a> manually.`;
   st.className='submit-status status-err';
   btn.disabled=false;
