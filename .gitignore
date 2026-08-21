@@ -5,6 +5,11 @@ node_modules/
 /dist/
 workers/**/.dev.vars
 workers/**/.wrangler/
+oracle/**/.venv/
+oracle/**/*.env
+!oracle/**/*.env.example
+oracle/**/msal-cache.json
+oracle/**/*.sqlite3
 
 # System Files
 .DS_Store

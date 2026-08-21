@@ -1,5 +1,9 @@
 # CTF card-submission email worker
 
+> Legacy alternative: the active implementation is now the Oracle-hosted
+> service in `oracle/card-submission-email`. This Worker is retained as a
+> documented fallback and is not referenced by the public runtime configuration.
+
 This Cloudflare Worker accepts the full card-submission JSON after the browser
 successfully writes metadata to OperatorStack. It validates Cloudflare
 Turnstile, rate-limits by client IP, and sends the exact JSON as an attachment

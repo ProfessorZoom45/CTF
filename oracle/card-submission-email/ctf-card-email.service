@@ -1,0 +1,24 @@
+[Unit]
+Description=Carry The Flame card-submission email service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=opc
+Group=opc
+WorkingDirectory=/opt/ctf-card-email/app
+EnvironmentFile=/opt/ctf-card-email/secrets/ctf-card-email.env
+ExecStart=/opt/ctf-card-email/app/.venv/bin/python /opt/ctf-card-email/app/app.py
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/ctf-card-email/state /opt/ctf-card-email/secrets
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
