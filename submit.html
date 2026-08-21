@@ -148,6 +148,9 @@ textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);l
 .submit-status{font-family:var(--font-mono);font-size:.8rem;text-align:center;margin-top:.8rem;padding:.6rem;min-height:2rem}
 .status-ok{color:var(--green);background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.2)}
 .status-err{color:var(--red);background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2)}
+.delivery-verification{display:flex;justify-content:center;margin:0 0 1rem;min-height:66px;align-items:center;font-family:var(--font-mono);font-size:.72rem;color:var(--ash);text-align:center}
+.backup-download{display:none;margin:.7rem auto 0;width:max-content;max-width:100%;font-family:var(--font-mono);font-size:.75rem;padding:.45rem .7rem;border:1px solid rgba(255,106,0,.35);color:var(--flame)}
+.backup-download:hover{border-color:var(--amber)}
 
 /* ── IMAGE UPLOAD ── */
 .img-upload-section{margin-top:.8rem;padding:.8rem;background:var(--coal);border:1px solid rgba(255,106,0,.08);border-radius:2px}
@@ -195,6 +198,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 </style>
 
 <script defer src="assets/js/embers-bg.js"></script>
+<script src="assets/js/submission-delivery-config.js"></script>
 <!-- OperatorStack: HTTPS-only guard (fixes crypto.subtle error + local-dev analytics pollution) -->
 <!-- OperatorStack: block local-dev environments (fixes /home/ path leakage + crypto.subtle errors) -->
 <script>
@@ -648,8 +652,10 @@ body.ctf-nav-pad { padding-top: 0; }
 <input type="checkbox" id="agree-check" onchange="U()" style="margin-top:.3rem;accent-color:var(--flame);width:18px;height:18px;cursor:pointer;flex-shrink:0">
 <label for="agree-check" style="font-size:.8rem;color:var(--cream);line-height:1.6;cursor:pointer">I confirm that all card names are my original creations and do not infringe on any existing intellectual property. I understand that approved cards become the property of Perfect Timing Gaming / Makairis Holding Group, are subject to modification or rejection, and will be part of the official Carry The Flame canon.</label>
 </div>
+<div class="delivery-verification" id="delivery-verification">Loading secure email verification…</div>
 <button class="btn-submit" id="submit-btn" onclick="submitCards()" disabled>Submit 5 Cards for Review</button>
 <div class="submit-status" id="submit-status"></div>
+<a class="backup-download" id="backup-download" href="#" download>Download JSON Backup Again</a>
 </div>
 </div>
 
@@ -672,19 +678,95 @@ const CAPS={
 let mats=new Set(); // selected material IDs
 let trickType='Concealed Trick';
 let allValid=false;
+let submissionId=createSubmissionId();
+let turnstileToken='';
+let turnstileWidgetId=null;
+let operatorStackAcceptedId='';
 
 // ═══════ HELPERS ═══════
 const $=id=>document.getElementById(id);
 const V=id=>$(id).value;
 const N=id=>parseInt($(id).value)||0;
 
+function createSubmissionId(){
+ if(window.crypto&&typeof window.crypto.randomUUID==='function')return window.crypto.randomUUID();
+ return 'ctf-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,14);
+}
+
+function resetSubmissionIdentity(){submissionId=createSubmissionId();}
+
+function getDeliveryConfig(){
+ const cfg=window.CTF_SUBMISSION_DELIVERY||{};
+ return {endpoint:String(cfg.endpoint||'').trim(),turnstileSiteKey:String(cfg.turnstileSiteKey||'').trim()};
+}
+
+function deliveryConfigured(){
+ const cfg=getDeliveryConfig();
+ return /^https:\/\//.test(cfg.endpoint)&&!!cfg.turnstileSiteKey;
+}
+
+function initDeliveryVerification(){
+ const host=$('delivery-verification');
+ const cfg=getDeliveryConfig();
+ if(!deliveryConfigured()){
+  host.textContent='Secure email delivery is not configured yet.';
+  validate();
+  return;
+ }
+ const script=document.createElement('script');
+ script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+ script.async=true; script.defer=true;
+ script.onload=()=>{
+  turnstileWidgetId=window.turnstile.render(host,{
+   sitekey:cfg.turnstileSiteKey,
+   action:'card_submission',
+   theme:'dark',
+   callback:token=>{turnstileToken=token;validate();},
+   'expired-callback':()=>{turnstileToken='';validate();},
+   'error-callback':()=>{turnstileToken='';validate();}
+  });
+ };
+ script.onerror=()=>{host.textContent='Secure email verification could not load.';validate();};
+ document.head.appendChild(script);
+}
+
+async function deliverSubmissionEmail(jsonText,fileName,stableSubmissionId){
+ const cfg=getDeliveryConfig();
+ if(!deliveryConfigured())throw new Error('automatic email delivery is not configured');
+ if(!turnstileToken)throw new Error('complete the secure email verification');
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),45000);
+ let response;
+ try{
+  response=await fetch(cfg.endpoint,{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({
+    submission_id:stableSubmissionId,
+    file_name:fileName,
+    turnstile_token:turnstileToken,
+    json:jsonText
+   }),
+   signal:controller.signal
+  });
+ }catch(err){
+  throw new Error(err&&err.name==='AbortError'?'automatic email timed out':'automatic email connection failed');
+ }finally{clearTimeout(timeout)}
+ let result={};
+ try{result=await response.json()}catch{}
+ if(!response.ok)throw new Error(`automatic email failed (${result.error||response.status})`);
+ return result;
+}
+
 function setTT(type,btn){
+ resetSubmissionIdentity();
  trickType=type; $('t-type').value=type;
  document.querySelectorAll('.tt-btn').forEach(b=>b.classList.remove('selected'));
  btn.classList.add('selected'); U();
 }
 
 function toggleMat(id){
+ resetSubmissionIdentity();
  if(mats.has(id))mats.delete(id);
  else if(mats.size<2)mats.add(id);
  document.querySelectorAll('.mat-btn').forEach(b=>b.classList.toggle('selected',mats.has(b.id.replace('mat-',''))));
@@ -861,6 +943,10 @@ function validate(){
  const agreed=$('agree-check').checked;
  errs.push({ok:agreed,text:agreed?'IP & ownership agreement accepted':'You must accept the IP & ownership agreement'});
 
+ // Secure server delivery
+ errs.push({ok:deliveryConfigured(),text:deliveryConfigured()?'Automatic JSON email configured':'Automatic JSON email is not configured'});
+ errs.push({ok:!!turnstileToken,text:turnstileToken?'Secure email verification complete':'Secure email verification required'});
+
  $('v-list').innerHTML=errs.map(e=>`<div class="v-item"><span class="v-dot ${e.ok?'v-ok':'v-err'}"></span>${e.text}</div>`).join('');
  allValid=errs.every(e=>e.ok);
  $('submit-btn').disabled=!allValid;
@@ -912,7 +998,8 @@ async function submitCards(){
  st.textContent=''; st.className='submit-status';
 
  // ── Build submission object ──
- const sub={submitter:{name:V('sub-name'),email:V('sub-email')},timestamp:new Date().toISOString(),cards:[]};
+ const stableSubmissionId=submissionId;
+ const sub={submission_id:stableSubmissionId,submitter:{name:V('sub-name'),email:V('sub-email')},timestamp:new Date().toISOString(),cards:[]};
 
  ['c1','c2','c3'].forEach((m,i)=>{
   sub.cards.push({slot:`Catalyst ${i+1}`,type:'Normal Catalyst',name:V(m+'-name'),level:N(m+'-level'),alignment:V(m+'-align'),kinds:V(m+'-kinds'),pressure:N(m+'-pr'),counterPressure:N(m+'-cp'),text:V(m+'-lore')});
@@ -929,24 +1016,20 @@ async function submitCards(){
  const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
  const mailtoUrl=`mailto:changethewrld@outlook.com?subject=${subject}&body=${emailBodyEncoded}`;
 
- // Helper — anchor-click opens mailto without browser popup-blocker (window.open is blocked after await)
- function openMailtoNow(){
-  const a=document.createElement('a');
-  a.href=mailtoUrl; a.target='_blank'; a.rel='noopener noreferrer';
-  a.style.display='none'; document.body.appendChild(a);
-  a.click(); setTimeout(()=>a.remove(),300);
- }
-
  // ── STEP 1: Download JSON (full image data included via getImageDataFull) ──
  st.textContent='[1/3] Saving backup JSON...'; st.className='submit-status';
  sub.images=getImageSummary();         // metadata for readability
- sub.imagesFull=getImageDataFull();    // full base64 for local archive
+ sub.imagesFull=getImageDataFull();    // full base64 for backup + email attachment
  sub.totalImages=getTotalImageCount();
- const blob=new Blob([JSON.stringify(sub,null,2)],{type:'application/json'});
+ const jsonText=JSON.stringify(sub,null,2);
+ const blob=new Blob([jsonText],{type:'application/json'});
+ const fileName=`CTF_Cards_${V('sub-name').replace(/[^a-zA-Z0-9_-]+/g,'_')||'Creator'}_${stableSubmissionId.slice(0,8)}.json`;
  const dl=document.createElement('a');
  dl.href=URL.createObjectURL(blob);
- dl.download=`CTF_Cards_${V('sub-name').replace(/\s+/g,'_')}.json`;
+ dl.download=fileName;
  dl.click();
+ const backupLink=$('backup-download');
+ backupLink.href=dl.href; backupLink.download=fileName; backupLink.style.display='block';
 
  // ── STEP 2: Submit to OperatorStack (metadata only — no base64 images) ──
  st.textContent='[2/3] Submitting to review queue...'; st.className='submit-status';
@@ -976,6 +1059,7 @@ async function submitCards(){
   // Image metadata (no base64 — sizes/names only)
   total_images_attached:sub.totalImages,
   image_slots_used:Object.keys(sub.images).join(', ')||'none',
+  submission_id:stableSubmissionId,
   // Reserved OperatorStack field
   _subject:`CTF Submission — ${V('sub-name')}`
  };
@@ -997,12 +1081,16 @@ async function submitCards(){
    throw new Error('submission service did not load');
   }
   trackReviewQueueEvent('attempted',eventMetadata);
-  await window.OperatorStack.submitForm(REVIEW_FORM_ID, osPayload);
-  trackReviewQueueEvent('succeeded',eventMetadata);
+  if(operatorStackAcceptedId!==stableSubmissionId){
+   await window.OperatorStack.submitForm(REVIEW_FORM_ID, osPayload);
+   operatorStackAcceptedId=stableSubmissionId;
+  }
 
-  // ── STEP 3: Open mailto via anchor-click (window.open is blocked after await) ──
-  st.textContent='[3/3] Opening email client...'; st.className='submit-status';
-  openMailtoNow();
+  // ── STEP 3: Email the exact backup JSON as an attachment ──
+  st.textContent='[3/3] Emailing JSON backup securely...'; st.className='submit-status';
+  if(blob.size>20*1024*1024)throw new Error('JSON backup exceeds the 20 MB automatic-email limit');
+  await deliverSubmissionEmail(jsonText,fileName,stableSubmissionId);
+  trackReviewQueueEvent('succeeded',{...eventMetadata,email_delivery:'succeeded'});
 
   // ── Redirect to thank-you page ──
   setTimeout(()=>{ window.location.href='thanks.html'; }, 900);
@@ -1012,11 +1100,14 @@ async function submitCards(){
   const errMsg=err&&err.message?err.message:'connection error';
   const errorType=!window.OperatorStack?'sdk_unavailable':
    /load failed|failed to fetch|network/i.test(errMsg)?'network_error':'service_error';
-  trackReviewQueueEvent('failed',{...eventMetadata,error_type:errorType});
-  st.innerHTML=`<strong style="color:var(--ember)">⚠ Review queue unavailable (${errMsg})</strong><br>Your JSON was saved locally. Please email it to <a href="${mailtoUrl}" style="color:var(--flame)">changethewrld@outlook.com</a> manually.`;
+  trackReviewQueueEvent('failed',{...eventMetadata,error_type:errorType,email_delivery:'failed'});
+  st.innerHTML=`<strong style="color:var(--ember)">⚠ Submission delivery incomplete (${errMsg})</strong><br>Your JSON backup was saved locally. You can retry, or <a href="${mailtoUrl}" style="color:var(--flame)">open a manual email</a> and attach the downloaded JSON.`;
   st.className='submit-status status-err';
   btn.disabled=false;
-  console.error('OperatorStack submitForm error:', err);
+  turnstileToken='';
+  if(window.turnstile&&turnstileWidgetId!==null)window.turnstile.reset(turnstileWidgetId);
+  validate();
+  console.error('Submission delivery error:',err);
  }
 }
 
@@ -1042,6 +1133,7 @@ function dzDrop(e,id){
 }
 
 function addImages(id,files){
+  resetSubmissionIdentity();
   const store=getStore(id);
   const limit=IMG_LIMITS[id]||3;
   const remaining=limit-store.length;
@@ -1061,6 +1153,7 @@ function addImages(id,files){
 }
 
 function removeImg(id,idx){
+  resetSubmissionIdentity();
   const store=getStore(id);
   store.splice(idx,1);
   renderThumbs(id);
@@ -1094,7 +1187,7 @@ function getImageSummary(){
   return summary;
 }
 
-// Full image data (base64 included) — for local JSON download only
+// Full image data (base64 included) — used by the local backup and email attachment
 function getImageDataFull(){
   const keys=['c1','c2','c3','fusion','trick','concept'];
   const full={};
@@ -1107,6 +1200,10 @@ function getTotalImageCount(){
 }
 
 // ═══════ INIT ═══════
+document.addEventListener('input',event=>{
+ if(event.target&&event.target.name!=='cf-turnstile-response')resetSubmissionIdentity();
+});
+initDeliveryVerification();
 U();
 </script>
 </body>

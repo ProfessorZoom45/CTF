@@ -43,6 +43,16 @@ A fully original tactical card game by Perfect Timing Gaming / Makairis Holding 
 - `assets/js/engine.js` — game state machine, combat resolver, WebRTC networking
 - PeerJS for WebRTC signaling (play.html)
 
+## Card-submission delivery
+
+`submit.html` writes submission metadata to OperatorStack, downloads the full
+JSON to the creator's device, and sends that same JSON to the protected email
+worker in `workers/card-submission-email`. See the worker README for the
+required Cloudflare Turnstile, Resend, and deployment configuration. The public
+worker URL and Turnstile site key belong in
+`assets/js/submission-delivery-config.js`; secret keys never belong in this
+repository.
+
 ## Board Layout
 
 See `assets/img/ctf-board-layout.png` for the official board diagram.
