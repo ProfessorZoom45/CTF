@@ -155,14 +155,18 @@ textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);l
 .submission-modal[hidden]{display:none}
 .submission-modal-card{width:min(100%,520px);padding:2rem;background:linear-gradient(145deg,var(--coal-light),var(--coal));border:1px solid rgba(255,106,0,.45);box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 35px rgba(255,106,0,.12);text-align:center}
 .submission-modal-icon{display:grid;place-items:center;width:58px;height:58px;margin:0 auto 1rem;border:1px solid rgba(76,175,80,.45);border-radius:50%;background:rgba(76,175,80,.1);color:var(--green);font-family:var(--font-display);font-size:1.8rem}
+.submission-modal-card.failure{border-color:rgba(231,76,60,.55);box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 35px rgba(231,76,60,.1)}
+.submission-modal-icon.failure{border-color:rgba(231,76,60,.5);background:rgba(231,76,60,.1);color:var(--red)}
 .submission-modal-title{margin:0;color:var(--white);font-family:var(--font-display);font-size:1.55rem;letter-spacing:2px;text-transform:uppercase}
 .submission-modal-copy{margin:.8rem 0;color:var(--cream);font-size:.9rem;line-height:1.65}
+.submission-modal-copy strong{color:var(--amber)}
 .submission-modal-file{display:block;margin:1rem 0;padding:.7rem;border:1px solid rgba(255,106,0,.18);background:rgba(0,0,0,.3);color:var(--amber);font-family:var(--font-mono);font-size:.72rem;line-height:1.45;overflow-wrap:anywhere}
 .submission-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1.2rem}
-.modal-download,.modal-continue{display:flex;align-items:center;justify-content:center;min-height:46px;padding:.7rem 1rem;border:1px solid var(--flame);font-family:var(--font-label);font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
-.modal-download{background:linear-gradient(135deg,var(--flame),var(--ember));color:#fff}
-.modal-continue{background:transparent;color:var(--cream)}
-.modal-download:hover,.modal-continue:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,106,0,.2)}
+.modal-download,.modal-email,.modal-continue,.modal-retry{display:flex;align-items:center;justify-content:center;min-height:46px;padding:.7rem 1rem;border:1px solid var(--flame);font-family:var(--font-label);font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.modal-download,.modal-email{background:linear-gradient(135deg,var(--flame),var(--ember));color:#fff}
+.modal-continue,.modal-retry{background:transparent;color:var(--cream)}
+.modal-retry{width:100%;margin-top:.7rem;border-color:rgba(255,106,0,.35)}
+.modal-download:hover,.modal-email:hover,.modal-continue:hover,.modal-retry:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,106,0,.2)}
 @media(max-width:520px){.submission-modal-card{padding:1.35rem}.submission-modal-actions{grid-template-columns:1fr}}
 
 /* ── IMAGE UPLOAD ── */
@@ -686,6 +690,22 @@ body.ctf-nav-pad { padding-top: 0; }
   </div>
 </div>
 
+<!-- FAILED DELIVERY + MANUAL EMAIL DIALOG -->
+<div class="submission-modal" id="submission-failure-modal" role="dialog" aria-modal="true" aria-labelledby="submission-failure-title" aria-describedby="submission-failure-copy" hidden>
+  <div class="submission-modal-card failure">
+    <div class="submission-modal-icon failure" aria-hidden="true">!</div>
+    <h2 class="submission-modal-title" id="submission-failure-title">Submission Failed</h2>
+    <p class="submission-modal-copy" id="submission-failure-copy">The automatic submission could not be completed. Please email the downloaded JSON to <strong>changethewrld@outlook.com</strong> with the subject <strong>Submit Cards</strong>.</p>
+    <p class="submission-modal-copy" id="submission-failure-reason"></p>
+    <code class="submission-modal-file" id="submission-failure-filename"></code>
+    <div class="submission-modal-actions">
+      <a class="modal-download" id="submission-failure-download" href="#" download>Download JSON</a>
+      <a class="modal-email" id="submission-failure-email" href="mailto:changethewrld@outlook.com?subject=Submit%20Cards">Open Email</a>
+    </div>
+    <button class="modal-retry" id="submission-failure-retry" type="button">Close &amp; Retry</button>
+  </div>
+</div>
+
 <!-- FOOTER (matches all pages) -->
 <footer>
 <div class="footer-brand">CARRY THE FLAME</div>
@@ -1039,7 +1059,7 @@ async function submitCards(){
 
  // ── Build mailto URL BEFORE any async ops (user-gesture context required) ──
  const emailBody=sub.cards.map(c=>`--- ${c.slot} ---\nName: ${c.name}\nType: ${c.type}\n${c.level?'Level: '+c.level+'\n':''}${c.alignment?'Alignment: '+c.alignment+'\n':''}${c.kinds?'KINDS: '+c.kinds+'\n':''}${c.pressure!==undefined?'Pressure: '+c.pressure+'\nCounter Pressure: '+c.counterPressure+'\n':''}${c.materials?'Materials: '+c.materials.join(' + ')+'\n':''}Text: ${c.text}`).join('\n\n');
- const subject=encodeURIComponent(`CTF Custom Card Submission — ${V('sub-name')}`);
+ const subject=encodeURIComponent('Submit Cards');
  const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
  const mailtoUrl=`mailto:changethewrld@outlook.com?subject=${subject}&body=${emailBodyEncoded}`;
 
@@ -1139,16 +1159,32 @@ async function submitCards(){
   trackReviewQueueEvent('failed',{...eventMetadata,error_type:errorType,email_delivery:'failed'});
   st.innerHTML=`<strong style="color:var(--ember)">⚠ Submission delivery incomplete (${errMsg})</strong><br>Your JSON backup was saved locally. You can retry, or <a href="${mailtoUrl}" style="color:var(--flame)">open a manual email</a> and attach the downloaded JSON.`;
   st.className='submit-status status-err';
+  const failureModal=$('submission-failure-modal');
+  const failureDownload=$('submission-failure-download');
+  failureDownload.href=dl.href;
+  failureDownload.download=fileName;
+  $('submission-failure-filename').textContent=fileName;
+  $('submission-failure-email').href=mailtoUrl;
+  $('submission-failure-reason').textContent=`Error: ${errMsg}`;
+  failureModal.hidden=false;
+  document.body.style.overflow='hidden';
   btn.disabled=false;
   turnstileToken='';
   if(window.turnstile&&turnstileWidgetId!==null)window.turnstile.reset(turnstileWidgetId);
   validate();
+  requestAnimationFrame(()=>failureDownload.focus());
   console.error('Submission delivery error:',err);
  }
 }
 
 $('submission-modal-continue').addEventListener('click',()=>{
  window.location.href='thanks.html';
+});
+
+$('submission-failure-retry').addEventListener('click',()=>{
+ $('submission-failure-modal').hidden=true;
+ document.body.style.overflow='';
+ $('submit-btn').focus();
 });
 
 // ═══════ IMAGE UPLOAD SYSTEM ═══════
