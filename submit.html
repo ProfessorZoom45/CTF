@@ -151,6 +151,19 @@ textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);l
 .delivery-verification{display:flex;justify-content:center;margin:0 0 1rem;min-height:66px;align-items:center;font-family:var(--font-mono);font-size:.72rem;color:var(--ash);text-align:center}
 .backup-download{display:none;margin:.7rem auto 0;width:max-content;max-width:100%;font-family:var(--font-mono);font-size:.75rem;padding:.45rem .7rem;border:1px solid rgba(255,106,0,.35);color:var(--flame)}
 .backup-download:hover{border-color:var(--amber)}
+.submission-modal{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(5,4,3,.88);backdrop-filter:blur(5px)}
+.submission-modal[hidden]{display:none}
+.submission-modal-card{width:min(100%,520px);padding:2rem;background:linear-gradient(145deg,var(--coal-light),var(--coal));border:1px solid rgba(255,106,0,.45);box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 35px rgba(255,106,0,.12);text-align:center}
+.submission-modal-icon{display:grid;place-items:center;width:58px;height:58px;margin:0 auto 1rem;border:1px solid rgba(76,175,80,.45);border-radius:50%;background:rgba(76,175,80,.1);color:var(--green);font-family:var(--font-display);font-size:1.8rem}
+.submission-modal-title{margin:0;color:var(--white);font-family:var(--font-display);font-size:1.55rem;letter-spacing:2px;text-transform:uppercase}
+.submission-modal-copy{margin:.8rem 0;color:var(--cream);font-size:.9rem;line-height:1.65}
+.submission-modal-file{display:block;margin:1rem 0;padding:.7rem;border:1px solid rgba(255,106,0,.18);background:rgba(0,0,0,.3);color:var(--amber);font-family:var(--font-mono);font-size:.72rem;line-height:1.45;overflow-wrap:anywhere}
+.submission-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1.2rem}
+.modal-download,.modal-continue{display:flex;align-items:center;justify-content:center;min-height:46px;padding:.7rem 1rem;border:1px solid var(--flame);font-family:var(--font-label);font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.modal-download{background:linear-gradient(135deg,var(--flame),var(--ember));color:#fff}
+.modal-continue{background:transparent;color:var(--cream)}
+.modal-download:hover,.modal-continue:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,106,0,.2)}
+@media(max-width:520px){.submission-modal-card{padding:1.35rem}.submission-modal-actions{grid-template-columns:1fr}}
 
 /* ── IMAGE UPLOAD ── */
 .img-upload-section{margin-top:.8rem;padding:.8rem;background:var(--coal);border:1px solid rgba(255,106,0,.08);border-radius:2px}
@@ -659,6 +672,20 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 </div>
 
+<!-- SUCCESS + JSON BACKUP DIALOG -->
+<div class="submission-modal" id="submission-success-modal" role="dialog" aria-modal="true" aria-labelledby="submission-success-title" aria-describedby="submission-success-copy" hidden>
+  <div class="submission-modal-card">
+    <div class="submission-modal-icon" aria-hidden="true">✓</div>
+    <h2 class="submission-modal-title" id="submission-success-title">Cards Submitted</h2>
+    <p class="submission-modal-copy" id="submission-success-copy">Your cards were submitted to OperatorStack and the JSON was emailed securely. Your first backup download already started; keep a copy so you can attach it manually or edit it later.</p>
+    <code class="submission-modal-file" id="submission-backup-filename"></code>
+    <div class="submission-modal-actions">
+      <a class="modal-download" id="submission-modal-download" href="#" download>Download JSON Backup</a>
+      <button class="modal-continue" id="submission-modal-continue" type="button">Continue</button>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER (matches all pages) -->
 <footer>
 <div class="footer-brand">CARRY THE FLAME</div>
@@ -1092,8 +1119,17 @@ async function submitCards(){
   await deliverSubmissionEmail(jsonText,fileName,stableSubmissionId);
   trackReviewQueueEvent('succeeded',{...eventMetadata,email_delivery:'succeeded'});
 
-  // ── Redirect to thank-you page ──
-  setTimeout(()=>{ window.location.href='thanks.html'; }, 900);
+  // ── Confirm success and offer the exact same JSON backup again ──
+  const successModal=$('submission-success-modal');
+  const modalDownload=$('submission-modal-download');
+  $('submission-backup-filename').textContent=fileName;
+  modalDownload.href=dl.href;
+  modalDownload.download=fileName;
+  successModal.hidden=false;
+  document.body.style.overflow='hidden';
+  st.textContent='Submission complete — your JSON backup is ready.';
+  st.className='submit-status status-ok';
+  requestAnimationFrame(()=>modalDownload.focus());
 
  }catch(err){
   // OperatorStack failed — surface the error clearly, re-enable button, mailto still works
@@ -1110,6 +1146,10 @@ async function submitCards(){
   console.error('Submission delivery error:',err);
  }
 }
+
+$('submission-modal-continue').addEventListener('click',()=>{
+ window.location.href='thanks.html';
+});
 
 // ═══════ IMAGE UPLOAD SYSTEM ═══════
 const IMG_STORES = {};
