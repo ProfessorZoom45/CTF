@@ -756,7 +756,7 @@ function initDeliveryVerification(){
  const host=$('delivery-verification');
  const cfg=getDeliveryConfig();
  if(!deliveryConfigured()){
-  host.textContent='Secure email delivery is not configured yet.';
+  host.textContent='JSON backup + manual email fallback ready.';
   validate();
   return;
  }
@@ -990,9 +990,10 @@ function validate(){
  const agreed=$('agree-check').checked;
  errs.push({ok:agreed,text:agreed?'IP & ownership agreement accepted':'You must accept the IP & ownership agreement'});
 
- // Secure server delivery
- errs.push({ok:deliveryConfigured(),text:deliveryConfigured()?'Automatic JSON email configured':'Automatic JSON email is not configured'});
- errs.push({ok:!!turnstileToken,text:turnstileToken?'Secure email verification complete':'Secure email verification required'});
+ // Delivery never blocks the form: if secure email is unavailable, the saved
+ // JSON and pre-addressed manual-email dialog provide the fallback.
+ const automaticDeliveryReady=deliveryConfigured()&&!!turnstileToken;
+ errs.push({ok:true,text:automaticDeliveryReady?'Automatic JSON email ready':'JSON backup + manual email fallback ready'});
 
  $('v-list').innerHTML=errs.map(e=>`<div class="v-item"><span class="v-dot ${e.ok?'v-ok':'v-err'}"></span>${e.text}</div>`).join('');
  allValid=errs.every(e=>e.ok);
