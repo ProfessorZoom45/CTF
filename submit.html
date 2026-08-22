@@ -993,6 +993,10 @@ function validate(){
  const agreed=$('agree-check').checked;
  errs.push({ok:agreed,text:agreed?'IP & ownership agreement accepted':'You must accept the IP & ownership agreement'});
 
+ // Artwork is compressed in-browser before it is placed in the downloadable
+ // JSON. Do not allow submission while that asynchronous work is still active.
+ errs.push({ok:imageProcessingCount===0,text:imageProcessingCount===0?'Artwork ready':'Optimizing artwork for secure email...'});
+
  // Delivery never blocks the form: if secure email is unavailable, the saved
  // JSON and pre-addressed manual-email dialog provide the fallback.
  const automaticDeliveryReady=deliveryConfigured()&&!!turnstileToken;
@@ -1228,6 +1232,10 @@ $('submission-failure-retry').addEventListener('click',()=>{
 // ═══════ IMAGE UPLOAD SYSTEM ═══════
 const IMG_STORES = {};
 const IMG_LIMITS = {c1:3,c2:3,c3:3,fusion:3,trick:2,concept:6};
+const IMG_PENDING = {};
+const EMAIL_IMAGE_MAX_BYTES = 450*1024;
+const EMAIL_IMAGE_MAX_EDGE = 1600;
+let imageProcessingCount=0;
 
 function getStore(id){if(!IMG_STORES[id])IMG_STORES[id]=[];return IMG_STORES[id];}
 
@@ -1246,23 +1254,103 @@ function dzDrop(e,id){
   addImages(id,files);
 }
 
+function readFileDataUrl(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=()=>reject(new Error('Could not read '+file.name));
+    reader.readAsDataURL(file);
+  });
+}
+
+function canvasBlob(canvas,type,quality){
+  return new Promise((resolve,reject)=>canvas.toBlob(
+    blob=>blob?resolve(blob):reject(new Error('Could not optimize artwork')),
+    type,
+    quality
+  ));
+}
+
+function loadImage(dataUrl,name){
+  return new Promise((resolve,reject)=>{
+    const image=new Image();
+    image.onload=()=>resolve(image);
+    image.onerror=()=>reject(new Error('Could not decode '+name));
+    image.src=dataUrl;
+  });
+}
+
+async function optimizeImageForEmail(file){
+  const originalDataUrl=await readFileDataUrl(file);
+  if(file.size<=EMAIL_IMAGE_MAX_BYTES){
+    return {name:file.name,originalName:file.name,originalSize:file.size,size:file.size,dataUrl:originalDataUrl,type:file.type,optimized:false};
+  }
+
+  const image=await loadImage(originalDataUrl,file.name);
+  let scale=Math.min(1,EMAIL_IMAGE_MAX_EDGE/Math.max(image.naturalWidth,image.naturalHeight));
+  let quality=.86;
+  let blob=null;
+  let canvas=null;
+
+  // Keep reducing quality and, when necessary, dimensions until each image is
+  // small enough that even a maximum-size submission remains email-safe.
+  for(let attempt=0;attempt<12;attempt++){
+    const width=Math.max(1,Math.round(image.naturalWidth*scale));
+    const height=Math.max(1,Math.round(image.naturalHeight*scale));
+    canvas=document.createElement('canvas');
+    canvas.width=width; canvas.height=height;
+    const context=canvas.getContext('2d');
+    context.fillStyle='#fff';
+    context.fillRect(0,0,width,height);
+    context.drawImage(image,0,0,width,height);
+    blob=await canvasBlob(canvas,'image/jpeg',quality);
+    if(blob.size<=EMAIL_IMAGE_MAX_BYTES)break;
+    if(quality>.55)quality-=.1;
+    else scale*=.82;
+  }
+  if(!blob||blob.size>EMAIL_IMAGE_MAX_BYTES)throw new Error(file.name+' could not be reduced for automatic email');
+
+  const optimizedDataUrl=await readFileDataUrl(blob);
+  const jpgName=file.name.replace(/\.[^.]+$/, '')+'.jpg';
+  return {
+    name:jpgName,
+    originalName:file.name,
+    originalSize:file.size,
+    size:blob.size,
+    dataUrl:optimizedDataUrl,
+    type:'image/jpeg',
+    optimized:true
+  };
+}
+
 function addImages(id,files){
   resetSubmissionIdentity();
   const store=getStore(id);
   const limit=IMG_LIMITS[id]||3;
-  const remaining=limit-store.length;
+  const pending=IMG_PENDING[id]||0;
+  const remaining=limit-store.length-pending;
   if(remaining<=0){showImgWarn(id,`Max ${limit} images reached`);return;}
   const toAdd=files.slice(0,remaining);
-  let loaded=0;
-  toAdd.forEach(file=>{
-    if(file.size>5*1024*1024){showImgWarn(id,file.name+' exceeds 5 MB — skipped');return;}
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      store.push({name:file.name,size:file.size,dataUrl:ev.target.result,type:file.type});
-      loaded++;
-      if(loaded===toAdd.length)renderThumbs(id);
-    };
-    reader.readAsDataURL(file);
+  const accepted=toAdd.filter(file=>{
+    if(file.size<=5*1024*1024)return true;
+    showImgWarn(id,file.name+' exceeds 5 MB — skipped');
+    return false;
+  });
+  if(!accepted.length)return;
+
+  IMG_PENDING[id]=pending+accepted.length;
+  imageProcessingCount+=accepted.length;
+  renderThumbs(id);
+  validate();
+  Promise.allSettled(accepted.map(optimizeImageForEmail)).then(results=>{
+    results.forEach((result,index)=>{
+      if(result.status==='fulfilled')store.push(result.value);
+      else showImgWarn(id,result.reason?.message||('Could not add '+accepted[index].name));
+    });
+    IMG_PENDING[id]=Math.max(0,(IMG_PENDING[id]||0)-accepted.length);
+    imageProcessingCount=Math.max(0,imageProcessingCount-accepted.length);
+    renderThumbs(id);
+    validate();
   });
 }
 
@@ -1286,7 +1374,10 @@ function renderThumbs(id){
       <div class="img-thumb-name">${img.name}</div>
     </div>`).join('');
   const cls=store.length>=limit?'img-warn':'img-ok';
-  countEl.innerHTML=store.length>0?`<span class="${cls}">${store.length}/${limit} image${store.length!==1?'s':''} attached</span>`:'';
+  const pending=IMG_PENDING[id]||0;
+  countEl.innerHTML=pending
+    ?`<span class="img-ok">Optimizing ${pending} image${pending!==1?'s':''} for secure email...</span>`
+    :store.length>0?`<span class="${cls}">${store.length}/${limit} image${store.length!==1?'s':''} attached · email optimized</span>`:'';
 }
 
 function showImgWarn(id,msg){
@@ -1297,7 +1388,7 @@ function showImgWarn(id,msg){
 function getImageSummary(){
   const keys=['c1','c2','c3','fusion','trick','concept'];
   const summary={};
-  keys.forEach(k=>{const s=getStore(k);if(s.length)summary[k]=s.map(i=>({name:i.name,size:i.size,type:i.type}));});
+  keys.forEach(k=>{const s=getStore(k);if(s.length)summary[k]=s.map(i=>({name:i.name,originalName:i.originalName,size:i.size,originalSize:i.originalSize,type:i.type,optimized:i.optimized}));});
   return summary;
 }
 

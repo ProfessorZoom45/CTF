@@ -10,11 +10,11 @@ import json
 import os
 from pathlib import Path
 import re
-import smtplib
 import sqlite3
-import ssl
 import time
 from typing import Deque, Dict, Optional, Tuple
+import urllib.error
+import urllib.request
 
 from aiohttp import ClientSession, ClientTimeout, web
 import msal
@@ -129,8 +129,8 @@ class SubmissionStore:
                 )
 
 
-class OutlookSmtpMailer:
-    scopes = ["https://outlook.office.com/SMTP.Send"]
+class OutlookGraphMailer:
+    scopes = ["https://graph.microsoft.com/Mail.Send"]
 
     def __init__(self, config: Config) -> None:
         self.config = config
@@ -163,16 +163,26 @@ class OutlookSmtpMailer:
 
     def _send_sync(self, message: EmailMessage) -> None:
         token = self._load_token()
-        auth = f"user={self.config.sender_email}\x01auth=Bearer {token}\x01\x01"
-        encoded_auth = base64.b64encode(auth.encode("utf-8")).decode("ascii")
-        with smtplib.SMTP("smtp-mail.outlook.com", 587, timeout=45) as smtp:
-            smtp.ehlo()
-            smtp.starttls(context=ssl.create_default_context())
-            smtp.ehlo()
-            code, response = smtp.docmd("AUTH", "XOAUTH2 " + encoded_auth)
-            if code != 235:
-                raise RuntimeError(f"Outlook authentication failed ({code})")
-            smtp.send_message(message)
+        # Graph accepts the complete RFC 822 message as base64 MIME content.
+        # This preserves attachments and works when SMTP AUTH is disabled on
+        # the dedicated Outlook mailbox.
+        payload = base64.b64encode(message.as_bytes())
+        request = urllib.request.Request(
+            "https://graph.microsoft.com/v1.0/me/sendMail",
+            data=payload,
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "text/plain",
+            },
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=45) as response:
+                if response.status != 202:
+                    raise RuntimeError(f"Microsoft Graph email failed ({response.status})")
+        except urllib.error.HTTPError as error:
+            detail = error.read().decode("utf-8", "replace")[:500]
+            raise RuntimeError(f"Microsoft Graph email failed ({error.code}): {detail}") from error
 
 
 class TurnstileVerifier:
@@ -313,7 +323,7 @@ def client_ip(request: web.Request) -> str:
 
 async def create_app(
     config: Config,
-    mailer: Optional[OutlookSmtpMailer] = None,
+    mailer: Optional[OutlookGraphMailer] = None,
     verifier: Optional[TurnstileVerifier] = None,
 ) -> web.Application:
     config.validate()
@@ -321,7 +331,7 @@ async def create_app(
     session = ClientSession(timeout=ClientTimeout(total=45))
     app["config"] = config
     app["session"] = session
-    app["mailer"] = mailer or OutlookSmtpMailer(config)
+    app["mailer"] = mailer or OutlookGraphMailer(config)
     app["verifier"] = verifier or TurnstileVerifier(config, session)
     app["store"] = SubmissionStore(config.database_path)
     app["limiter"] = RateLimiter(config.rate_limit_per_hour)
@@ -378,7 +388,11 @@ async def submit_card(request: web.Request) -> web.Response:
                 await request.app["mailer"].send(build_submitter_message(config, submission))
                 await request.app["store"].mark(submission_id, "submitter_sent")
                 submitter_sent = True
-        except Exception:
+        except Exception as exc:
+            print(
+                f"Email delivery failed for {submission_id}: {type(exc).__name__}: {exc}",
+                flush=True,
+            )
             return web.json_response(
                 {
                     "ok": False,
