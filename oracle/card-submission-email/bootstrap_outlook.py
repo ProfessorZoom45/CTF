@@ -11,7 +11,7 @@ client_id = os.environ["CTF_MS_CLIENT_ID"].strip()
 authority = os.getenv("CTF_MS_AUTHORITY", "https://login.microsoftonline.com/consumers").strip()
 sender = os.environ["CTF_OUTLOOK_SENDER"].strip()
 cache_path = Path(os.getenv("CTF_MS_TOKEN_CACHE", "/opt/ctf-card-email/secrets/msal-cache.json"))
-scopes = ["https://outlook.office.com/SMTP.Send"]
+scopes = ["https://graph.microsoft.com/Mail.Send"]
 
 cache = msal.SerializableTokenCache()
 if cache_path.exists():

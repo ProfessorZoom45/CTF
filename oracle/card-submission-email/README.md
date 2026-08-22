@@ -3,7 +3,8 @@
 This service runs beside the existing Discord bot on the Oracle VM. It does not
 import the bot, read its Discord token, or share its process. It accepts only the
 CTF GitHub Pages origin, verifies Cloudflare Turnstile, rate-limits callers, and
-sends exactly two emails through the dedicated `CTF.OTCG@outlook.com` mailbox:
+sends exactly two emails through the dedicated `CTF.OTCG@outlook.com` mailbox
+using Microsoft Graph delegated `Mail.Send` authorization:
 
 1. `{Submitter Name}'s Custom Cards` to `changethewrld@outlook.com`, with the
    submitted JSON attached and the submitter set as Reply-To.
