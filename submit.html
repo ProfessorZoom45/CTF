@@ -681,7 +681,7 @@ body.ctf-nav-pad { padding-top: 0; }
   <div class="submission-modal-card">
     <div class="submission-modal-icon" aria-hidden="true">✓</div>
     <h2 class="submission-modal-title" id="submission-success-title">Cards Submitted</h2>
-    <p class="submission-modal-copy" id="submission-success-copy">Your cards were submitted to OperatorStack and the JSON was emailed securely. Your first backup download already started; keep a copy so you can attach it manually or edit it later.</p>
+    <p class="submission-modal-copy" id="submission-success-copy">Your cards were submitted to OperatorStack, the JSON was emailed securely for review, and a confirmation email was sent to you. Your first backup download already started; keep a copy so you can edit it later.</p>
     <code class="submission-modal-file" id="submission-backup-filename"></code>
     <div class="submission-modal-actions">
       <a class="modal-download" id="submission-modal-download" href="#" download>Download JSON Backup</a>
@@ -777,7 +777,7 @@ function initDeliveryVerification(){
  document.head.appendChild(script);
 }
 
-async function deliverSubmissionEmail(jsonText,fileName,stableSubmissionId){
+async function deliverSubmissionEmails(jsonText,fileName,stableSubmissionId){
  const cfg=getDeliveryConfig();
  if(!deliveryConfigured())throw new Error('automatic email delivery is not configured');
  if(!turnstileToken)throw new Error('complete the secure email verification');
@@ -802,6 +802,9 @@ async function deliverSubmissionEmail(jsonText,fileName,stableSubmissionId){
  let result={};
  try{result=await response.json()}catch{}
  if(!response.ok)throw new Error(`automatic email failed (${result.error||response.status})`);
+ if(!result.owner_email_sent||!result.submitter_email_sent){
+  throw new Error('automatic email delivery was incomplete');
+ }
  return result;
 }
 
@@ -1064,8 +1067,7 @@ async function submitCards(){
  const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
  const mailtoUrl=`mailto:changethewrld@outlook.com?subject=${subject}&body=${emailBodyEncoded}`;
 
- // ── STEP 1: Download JSON (full image data included via getImageDataFull) ──
- st.textContent='[1/3] Saving backup JSON...'; st.className='submit-status';
+ // ── Prepare the exact JSON used for the local backup and both email steps ──
  sub.images=getImageSummary();         // metadata for readability
  sub.imagesFull=getImageDataFull();    // full base64 for backup + email attachment
  sub.totalImages=getTotalImageCount();
@@ -1075,12 +1077,18 @@ async function submitCards(){
  const dl=document.createElement('a');
  dl.href=URL.createObjectURL(blob);
  dl.download=fileName;
- dl.click();
  const backupLink=$('backup-download');
- backupLink.href=dl.href; backupLink.download=fileName; backupLink.style.display='block';
+ let backupPresented=false;
+ const presentBackup=()=>{
+  if(backupPresented)return;
+  backupPresented=true;
+  dl.click();
+  backupLink.href=dl.href;
+  backupLink.download=fileName;
+  backupLink.style.display='block';
+ };
 
- // ── STEP 2: Submit to OperatorStack (metadata only — no base64 images) ──
- st.textContent='[2/3] Submitting to review queue...'; st.className='submit-status';
+ // ── STEP 1: Submit to OperatorStack (metadata only — no base64 images) ──
  const osPayload={
   name:V('sub-name'), email:V('sub-email'), submission_timestamp:sub.timestamp,
   // Catalyst 1
@@ -1125,6 +1133,7 @@ async function submitCards(){
  };
 
  try{
+  st.textContent='[1/3] Submitting to OperatorStack...'; st.className='submit-status';
   if(!window.OperatorStack||typeof window.OperatorStack.submitForm!=='function'){
    throw new Error('submission service did not load');
   }
@@ -1134,11 +1143,20 @@ async function submitCards(){
    operatorStackAcceptedId=stableSubmissionId;
   }
 
-  // ── STEP 3: Email the exact backup JSON as an attachment ──
-  st.textContent='[3/3] Emailing JSON backup securely...'; st.className='submit-status';
-  if(blob.size>20*1024*1024)throw new Error('JSON backup exceeds the 20 MB automatic-email limit');
-  await deliverSubmissionEmail(jsonText,fileName,stableSubmissionId);
-  trackReviewQueueEvent('succeeded',{...eventMetadata,email_delivery:'succeeded'});
+  // ── STEP 2: Download and present the exact JSON backup ──
+  st.textContent='[2/3] Saving and presenting JSON backup...'; st.className='submit-status';
+  presentBackup();
+
+  // ── STEP 3: Oracle sends the owner attachment and submitter thank-you ──
+  st.textContent='[3/3] Sending two emails securely...'; st.className='submit-status';
+  if(blob.size>14*1024*1024)throw new Error('JSON backup exceeds the 14 MB automatic-email limit');
+  const delivery=await deliverSubmissionEmails(jsonText,fileName,stableSubmissionId);
+  trackReviewQueueEvent('succeeded',{
+   ...eventMetadata,
+   email_delivery:'succeeded',
+   owner_email_sent:!!delivery.owner_email_sent,
+   submitter_email_sent:!!delivery.submitter_email_sent
+  });
 
   // ── Confirm success and offer the exact same JSON backup again ──
   const successModal=$('submission-success-modal');
@@ -1153,7 +1171,8 @@ async function submitCards(){
   requestAnimationFrame(()=>modalDownload.focus());
 
  }catch(err){
-  // OperatorStack failed — surface the error clearly, re-enable button, mailto still works
+  // Preserve the JSON and surface a manual-email fallback for any failed step.
+  presentBackup();
   const errMsg=err&&err.message?err.message:'connection error';
   const errorType=!window.OperatorStack?'sdk_unavailable':
    /load failed|failed to fetch|network/i.test(errMsg)?'network_error':'service_error';

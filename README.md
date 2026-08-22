@@ -45,11 +45,12 @@ A fully original tactical card game by Perfect Timing Gaming / Makairis Holding 
 
 ## Card-submission delivery
 
-`submit.html` writes submission metadata to OperatorStack, downloads the full
-JSON to the creator's device, and sends that same JSON to the protected email
-worker in `workers/card-submission-email`. See the worker README for the
-required Cloudflare Turnstile, Resend, and deployment configuration. The public
-worker URL and Turnstile site key belong in
+`submit.html` writes submission metadata to OperatorStack, downloads and presents
+the full JSON to the creator, then sends that same JSON to the protected Oracle
+service in `oracle/card-submission-email`. The Oracle service sends the owner a
+JSON attachment and sends the submitter a separate thank-you/review message.
+See the service README for the required HTTPS, Outlook OAuth, and Cloudflare
+Turnstile configuration. The public service URL and Turnstile site key belong in
 `assets/js/submission-delivery-config.js`; secret keys never belong in this
 repository.
 
