@@ -3,7 +3,7 @@
 This service runs beside the existing Discord bot on the Oracle VM. It does not
 import the bot, read its Discord token, or share its process. It accepts only the
 CTF GitHub Pages origin, verifies Cloudflare Turnstile, rate-limits callers, and
-sends exactly two emails through the `changethewrld@outlook.com` mailbox:
+sends exactly two emails through the dedicated `CTF.OTCG@outlook.com` mailbox:
 
 1. `{Submitter Name}'s Custom Cards` to `changethewrld@outlook.com`, with the
    submitted JSON attached and the submitter set as Reply-To.
@@ -26,7 +26,7 @@ the second fails, a retry sends only the second email.
 5. Create `/opt/ctf-card-email/secrets/ctf-card-email.env` from the example and
    set mode `600`.
 6. Run `bootstrap_outlook.py` once and authorize
-   `changethewrld@outlook.com` using Microsoft's device page.
+   `CTF.OTCG@outlook.com` using Microsoft's device page.
 7. Install `ctf-card-email.service`, start it, and proxy the public hostname to
    `127.0.0.1:8787` with Caddy.
 8. Put the HTTPS `/submit-card` URL and public Turnstile site key in

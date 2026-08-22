@@ -1,4 +1,4 @@
-cards-api.example.com {
+ctf-cards.193-122-174-254.sslip.io {
     encode zstd gzip
     reverse_proxy 127.0.0.1:8787
 

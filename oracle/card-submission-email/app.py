@@ -47,7 +47,7 @@ class Config:
         return cls(
             allowed_origin=os.getenv("CTF_ALLOWED_ORIGIN", "https://professorzoom45.github.io").rstrip("/"),
             owner_email=os.getenv("CTF_OWNER_EMAIL", "changethewrld@outlook.com").strip(),
-            sender_email=os.getenv("CTF_OUTLOOK_SENDER", "changethewrld@outlook.com").strip(),
+            sender_email=os.getenv("CTF_OUTLOOK_SENDER", "CTF.OTCG@outlook.com").strip(),
             ms_client_id=os.getenv("CTF_MS_CLIENT_ID", "").strip(),
             ms_authority=os.getenv("CTF_MS_AUTHORITY", "https://login.microsoftonline.com/consumers").strip(),
             token_cache_path=Path(os.getenv("CTF_MS_TOKEN_CACHE", "/opt/ctf-card-email/secrets/msal-cache.json")),

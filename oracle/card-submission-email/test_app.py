@@ -56,7 +56,7 @@ class SubmissionServiceTests(unittest.IsolatedAsyncioTestCase):
         self.config = Config(
             allowed_origin=ORIGIN,
             owner_email="changethewrld@outlook.com",
-            sender_email="changethewrld@outlook.com",
+            sender_email="CTF.OTCG@outlook.com",
             ms_client_id="test-client-id",
             ms_authority="https://login.microsoftonline.com/consumers",
             token_cache_path=Path(self.temporary.name) / "cache.json",
@@ -90,11 +90,13 @@ class SubmissionServiceTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result, {"ok": True, "owner_email_sent": True, "submitter_email_sent": True})
         self.assertEqual(len(self.mailer.messages), 2)
         owner, submitter = self.mailer.messages
+        self.assertEqual(owner["From"], "CTF.OTCG@outlook.com")
         self.assertEqual(owner["To"], "changethewrld@outlook.com")
         self.assertEqual(owner["Subject"], "Alex Flame's Custom Cards")
         self.assertEqual(owner["Reply-To"], "alex@example.com")
         self.assertEqual(len(list(owner.iter_attachments())), 1)
         self.assertEqual(submitter["To"], "alex@example.com")
+        self.assertEqual(submitter["From"], "CTF.OTCG@outlook.com")
         self.assertIn("Cards Are Under Review", submitter["Subject"])
         submitter_text = submitter.get_body(preferencelist=("plain",)).get_content()
         self.assertIn("reviewed for possible inclusion", submitter_text)
