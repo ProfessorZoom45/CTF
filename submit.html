@@ -1028,6 +1028,8 @@ function renderPreview(){
 // OperatorStack's current form UUID. The previous frm_* key belonged to the
 // retired form-key format and no longer maps to this project's Submit form.
 const REVIEW_FORM_ID='fb59a637-f3a7-4bb2-8830-54da36e0bd6e';
+const OPERATORSTACK_PROJECT_KEY='pk_k4xr4vnpsizd';
+const OPERATORSTACK_API='https://operator-stack-api-prod.onrender.com';
 
 // Track custom form events with metadata, without sending submitter PII to analytics.
 function trackReviewQueueEvent(status,metadata){
@@ -1039,6 +1041,22 @@ function trackReviewQueueEvent(status,metadata){
   status,
   ...metadata
  });
+}
+
+// OperatorStack's current SDK posts programmatic submissions to /v1/f/:id,
+// which can return 404 even while the form is enabled. Its embedded forms use
+// the project-scoped route below, so use that same public route for reliability.
+async function submitOperatorStackForm(data){
+ const sdk=window.OperatorStack;
+ if(!sdk)throw new Error('submission service did not load');
+ const visitorId=typeof sdk.getVisitorId==='function'?sdk.getVisitorId():null;
+ const response=await fetch(`${OPERATORSTACK_API}/v1/projects/${OPERATORSTACK_PROJECT_KEY}/forms/${REVIEW_FORM_ID}/submit`,{
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({data,visitor_id:visitorId})
+ });
+ if(!response.ok)throw new Error(`OperatorStack form failed (${response.status})`);
+ return response.json().catch(()=>({ok:true}));
 }
 
 async function submitCards(){
@@ -1134,12 +1152,12 @@ async function submitCards(){
 
  try{
   st.textContent='[1/3] Submitting to OperatorStack...'; st.className='submit-status';
-  if(!window.OperatorStack||typeof window.OperatorStack.submitForm!=='function'){
+  if(!window.OperatorStack){
    throw new Error('submission service did not load');
   }
   trackReviewQueueEvent('attempted',eventMetadata);
   if(operatorStackAcceptedId!==stableSubmissionId){
-   await window.OperatorStack.submitForm(REVIEW_FORM_ID, osPayload);
+   await submitOperatorStackForm(osPayload);
    operatorStackAcceptedId=stableSubmissionId;
   }
 
