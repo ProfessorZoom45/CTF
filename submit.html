@@ -162,7 +162,7 @@ textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);l
 .submission-modal-copy strong{color:var(--amber)}
 .submission-modal-file{display:block;margin:1rem 0;padding:.7rem;border:1px solid rgba(255,106,0,.18);background:rgba(0,0,0,.3);color:var(--amber);font-family:var(--font-mono);font-size:.72rem;line-height:1.45;overflow-wrap:anywhere}
 .submission-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1.2rem}
-.modal-download,.modal-email,.modal-continue,.modal-retry{display:flex;align-items:center;justify-content:center;min-height:46px;padding:.7rem 1rem;border:1px solid var(--flame);font-family:var(--font-label);font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.modal-download,.modal-email,.modal-continue,.modal-retry{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-height:46px;padding:.7rem 1rem;border:1px solid var(--flame);font-family:var(--font-label);font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;touch-action:manipulation;transition:all .2s}
 .modal-download,.modal-email{background:linear-gradient(135deg,var(--flame),var(--ember));color:#fff}
 .modal-continue,.modal-retry{background:transparent;color:var(--cream)}
 .modal-retry{width:100%;margin-top:.7rem;border-color:rgba(255,106,0,.35)}
@@ -684,8 +684,8 @@ body.ctf-nav-pad { padding-top: 0; }
     <p class="submission-modal-copy" id="submission-success-copy">Your cards were submitted to OperatorStack, the JSON was emailed securely for review, and a confirmation email was sent to you. Your first backup download already started; keep a copy so you can edit it later.</p>
     <code class="submission-modal-file" id="submission-backup-filename"></code>
     <div class="submission-modal-actions">
+      <a class="modal-continue" id="submission-modal-continue" href="thanks.html">Continue</a>
       <a class="modal-download" id="submission-modal-download" href="#" download>Download JSON Backup</a>
-      <button class="modal-continue" id="submission-modal-continue" type="button">Continue</button>
     </div>
   </div>
 </div>
@@ -1096,19 +1096,27 @@ async function submitCards(){
  const jsonText=JSON.stringify(sub,null,2);
  const blob=new Blob([jsonText],{type:'application/json'});
  const fileName=`CTF_Cards_${V('sub-name').replace(/[^a-zA-Z0-9_-]+/g,'_')||'Creator'}_${stableSubmissionId.slice(0,8)}.json`;
- const dl=document.createElement('a');
- dl.href=URL.createObjectURL(blob);
- dl.download=fileName;
+ const backupUrl=URL.createObjectURL(blob);
  const backupLink=$('backup-download');
+ backupLink.href=backupUrl;
+ backupLink.download=fileName;
  let backupPresented=false;
  const presentBackup=()=>{
   if(backupPresented)return;
   backupPresented=true;
-  dl.click();
-  backupLink.href=dl.href;
-  backupLink.download=fileName;
+  // Use a disposable element for the automatic download. Keeping this action
+  // separate from navigation links prevents later clicks from being treated
+  // as another JSON download by the browser.
+  const automaticDownload=document.createElement('a');
+  automaticDownload.href=backupUrl;
+  automaticDownload.download=fileName;
+  automaticDownload.hidden=true;
+  document.body.appendChild(automaticDownload);
+  automaticDownload.click();
+  automaticDownload.remove();
   backupLink.style.display='block';
  };
+ window.addEventListener('pagehide',()=>URL.revokeObjectURL(backupUrl),{once:true});
 
  // ── STEP 1: Submit to OperatorStack (metadata only — no base64 images) ──
  const osPayload={
@@ -1184,13 +1192,15 @@ async function submitCards(){
   const successModal=$('submission-success-modal');
   const modalDownload=$('submission-modal-download');
   $('submission-backup-filename').textContent=fileName;
-  modalDownload.href=dl.href;
+  modalDownload.href=backupUrl;
   modalDownload.download=fileName;
   successModal.hidden=false;
   document.body.style.overflow='hidden';
   st.textContent='Submission complete — your JSON backup is ready.';
   st.className='submit-status status-ok';
-  requestAnimationFrame(()=>modalDownload.focus());
+  // Continue is the default post-submit action. The download remains an
+  // explicit secondary choice and never receives automatic focus.
+  requestAnimationFrame(()=>$('submission-modal-continue').focus());
 
  }catch(err){
   // Preserve the JSON and surface a manual-email fallback for any failed step.
@@ -1203,7 +1213,7 @@ async function submitCards(){
   st.className='submit-status status-err';
   const failureModal=$('submission-failure-modal');
   const failureDownload=$('submission-failure-download');
-  failureDownload.href=dl.href;
+  failureDownload.href=backupUrl;
   failureDownload.download=fileName;
   $('submission-failure-filename').textContent=fileName;
   $('submission-failure-email').href=mailtoUrl;
@@ -1218,10 +1228,6 @@ async function submitCards(){
   console.error('Submission delivery error:',err);
  }
 }
-
-$('submission-modal-continue').addEventListener('click',()=>{
- window.location.href='thanks.html';
-});
 
 $('submission-failure-retry').addEventListener('click',()=>{
  $('submission-failure-modal').hidden=true;
