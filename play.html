@@ -6,27 +6,27 @@
 <title>Play — Carry The Flame</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
-<meta name="description" content="Play the Carry The Flame browser beta with tutorial, local, and online modes.">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/img/ctf-favicon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/img/ctf-icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/img/ctf-apple-touch-icon.png">
+<meta name="description" content="Request access to the exclusive Carry The Flame alpha through the Perfect Timing Gaming Discord.">
+<link rel="icon" type="image/png" href="assets/img/ctf-mark.png">
+<link rel="apple-touch-icon" href="assets/img/ctf-mark.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Carry The Flame">
 <meta property="og:title" content="Play — Carry The Flame">
-<meta property="og:description" content="Play the Carry The Flame browser beta with tutorial, local, and online modes.">
-<meta property="og:image" content="https://professorzoom45.github.io/CTF/assets/img/ctf-social-preview.png">
+<meta property="og:description" content="The exclusive Carry The Flame alpha is available by request in the Perfect Timing Gaming Discord.">
+<meta property="og:image" content="https://professorzoom45.github.io/CTF/assets/img/carry-the-flame-horizontal.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Carry The Flame flaming torch logo">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Play — Carry The Flame">
-<meta name="twitter:description" content="Play the Carry The Flame browser beta with tutorial, local, and online modes.">
-<meta name="twitter:image" content="https://professorzoom45.github.io/CTF/assets/img/ctf-social-preview.png">
+<meta name="twitter:description" content="The exclusive Carry The Flame alpha is available by request in the Perfect Timing Gaming Discord.">
+<meta name="twitter:image" content="https://professorzoom45.github.io/CTF/assets/img/carry-the-flame-horizontal.png">
 <meta name="twitter:image:alt" content="Carry The Flame flaming torch logo">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/ctf-brand-refresh.css">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -40,7 +40,7 @@ body.board-clarity .field-card{box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
 body.board-clarity .field-card.face-down::after{content:'SET';position:absolute;top:4px;right:4px;font-family:var(--font-mono);font-size:.44rem;letter-spacing:.5px;background:rgba(0,0,0,.7);padding:1px 4px;border:1px solid rgba(255,255,255,.12);color:var(--cream)}
 
 /* ═══ LOBBY ═══ */
-#lobby{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:1.5rem;padding:1.5rem}
+#lobby{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:1.1rem;padding:1.5rem;overflow-y:auto}
 .lobby-title{font-family:var(--font-display);font-size:clamp(2rem,6vw,4rem);letter-spacing:3px;text-transform:uppercase;color:var(--flame);text-align:center}
 .lobby-sub{color:var(--cream);text-align:center;font-size:.95rem;max-width:500px}
 .lobby-box{background:var(--coal-light);border:1px solid rgba(255,106,0,.15);padding:1.5rem;width:100%;max-width:420px}
@@ -859,18 +859,31 @@ body.ctf-nav-pad { padding-top: 0; }
 <!-- ═══ LOBBY ═══ -->
 <div id="lobby">
 <a href="index.html" style="font-family:var(--font-label);font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;display:inline-block">← Back to Home</a>
-<div class="lobby-title">Carry The Flame</div>
-<div class="lobby-sub">Browser-First Beta — tutorial, hot-seat, solo test play, and friend-code rooms.</div>
+<img class="ctf-brand-image ctf-brand-horizontal" src="assets/img/carry-the-flame-horizontal.png" alt="Carry The Flame">
+<img class="ctf-brand-image ctf-brand-vertical" src="assets/img/carry-the-flame-vertical.png" alt="Carry The Flame">
+<div class="lobby-title">Exclusive Alpha Access</div>
+<div class="lobby-sub">The Carry The Flame alpha download is available by request through the Perfect Timing Gaming Discord.</div>
+<section class="ctf-alpha-panel" aria-label="Carry The Flame alpha download information">
+  <img class="ctf-alpha-panel__badge" src="assets/img/ctf-torch-badge.png" alt="Carry The Flame torch badge">
+  <div>
+    <p class="ctf-alpha-panel__eyebrow">Perfect Timing Gaming</p>
+    <h2 class="ctf-alpha-panel__title">Request the Alpha Download</h2>
+    <p class="ctf-alpha-panel__copy">Join the community, introduce yourself, and request the exclusive alpha version of Carry The Flame. The team will provide download access through the Discord.</p>
+    <div class="ctf-alpha-panel__actions">
+      <a class="lb-btn lb-btn-fire" href="https://discord.gg/cKj3ayt2Mp" target="_blank" rel="noopener">Join Perfect Timing Gaming Discord</a>
+    </div>
+  </div>
+</section>
 <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
-  <button class="lb-btn lb-btn-fire" onclick="startTutorial()">5-Match Tutorial</button>
+  <button class="lb-btn lb-btn-fire" onclick="startTutorial()">Browser Tutorial</button>
   <button class="lb-btn lb-btn-ghost" onclick="startHotSeat()">Hot-Seat Local</button>
   <button class="lb-btn lb-btn-ghost" onclick="startSandbox()">Solo Sandbox</button>
-  <a class="lb-btn lb-btn-ghost" href="https://discord.gg/EQJQxD679m" target="_blank" rel="noopener">Discord Beta Hub</a>
+  <a class="lb-btn lb-btn-ghost" href="https://discord.gg/cKj3ayt2Mp" target="_blank" rel="noopener">Alpha Discord</a>
   <span class="net-pill" id="net-state">Offline</span>
   <button class="lb-btn lb-btn-ghost" id="reconnect-btn" onclick="reconnectRoom()" style="display:none">Reconnect</button>
   <button class="lb-btn lb-btn-ghost" id="install-btn" onclick="installApp()" style="display:none">Install App</button>
 </div>
-<div class="lobby-note">Free browser beta now. Accounts, cloud inventory, and friend-match backend come later. Discord invite currently lasts until 100 joins are used.</div>
+<div class="lobby-note">Browser tools remain available for preview and testing. For the exclusive alpha build and download, join Perfect Timing Gaming and request access.</div>
 
 <div class="lobby-box">
 <h3>Select Deck</h3>

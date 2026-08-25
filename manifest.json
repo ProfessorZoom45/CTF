@@ -1,20 +1,20 @@
 {
-  "name": "Carry The Flame \u2014 Browser-First Beta",
-  "short_name": "CTF Beta",
+  "name": "Carry The Flame \u2014 Exclusive Alpha",
+  "short_name": "CTF Alpha",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#0d0d0d",
-  "description": "Carry The Flame browser-first beta: all cards viewable, deckbuilder live, tutorial and hot-seat local play, PWA install ready.",
+  "description": "Carry The Flame exclusive alpha. Join the Perfect Timing Gaming Discord to request download access.",
   "icons": [
     {
-      "src": "assets/img/ctf-icon-192.png",
-      "sizes": "192x192",
+      "src": "assets/img/ctf-mark.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/img/ctf-icon-512.png",
+      "src": "assets/img/ctf-mark.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
@@ -27,7 +27,7 @@
   ],
   "shortcuts": [
     {
-      "name": "Play Beta",
+      "name": "Request Alpha Access",
       "short_name": "Play",
       "url": "./play.html"
     },

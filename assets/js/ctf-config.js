@@ -2,7 +2,7 @@
   const CTF_CONFIG = {
     build: {
       version: '',
-      label: 'Browser-First Beta',
+      label: 'Exclusive Alpha',
       releasedAt: '2026-04-21'
     },
     beta: {
@@ -13,8 +13,8 @@
       hotSeat: true,
       sandbox: true,
       betaSignup: true,
-      discordInvite: 'https://discord.gg/EQJQxD679m',
-      discordInviteLimit: 100,
+      discordInvite: 'https://discord.gg/cKj3ayt2Mp',
+      discordInviteLimit: null,
       accountSystems: 'Later',
       futureStack: ['Node/Express','PostgreSQL','WebRTC friend matches']
     },
@@ -146,7 +146,7 @@
       `Special Spawn cap: ${CTF_CONFIG.game.assertions.maxSpecialSummonsPerTurn}`,
       'Great Extract redirect: Void + Kill, not Extraction'
     ].join(' • '); },
-    get discordLimitNote(){ return `Invite active until ${CTF_CONFIG.beta.discordInviteLimit} joins are used.`; }
+    get discordLimitNote(){ return 'Join Perfect Timing Gaming to request exclusive alpha download access.'; }
   };
 
   function resolvePath(path){
