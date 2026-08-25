@@ -1102,7 +1102,7 @@ regEffect('anm-000-destinthegreatwarlord', {
 // (Handled via runPalmScript below — not registry since it's a Palm Trick)
 
 // === BORUTO — DOUBLE ATTACK (counter removal part not yet implemented) ===
-regEffect('bro-019-borutouzumakithegreat', {
+regEffect('bor-019-borutouzumakithegreat', {
   type: 'doubleAttack', tag: 'dblAtk'
 });
 
@@ -1463,7 +1463,7 @@ regEffect('yyh-004-bui', { type:'activated', tag:'bui_discard', action:'custom_b
 
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PATCH 56 — BULK SCRIPTING: OP1, BL1, AOT, BRO, BLC, DND, GCK, HLP, SL1,
+// PATCH 56 — BULK SCRIPTING: OP1, BL1, AOT, BOR, BLC, DND, GCK, HLP, SL1,
 //            DBZ, DB1, DBS, FF7, INU, HLS, RKN, TUV, CC1, SS1
 // Strategy: use existing generic action types wherever possible; custom_ only
 //           for truly unique logic. Keeps engine maintainable.
@@ -1505,15 +1505,15 @@ regEffect('aot-008-sashablouse',    { type:'standbyChiGain', tag:'sasha_chi',   
 regEffect('aot-009-reinerbraun',    { type:'continuous',     tag:'reiner_armor',    action:'halveDirectDamage' });
 regEffect('aot-010-annieleonhart',  { type:'onFlip',         tag:'annie_destroy',   action:'destroyFacedownCatalyst' });
 
-// ─── BRO (BORUTO) ───
-regEffect('bro-001-saradauchiha',   { type:'activated',      tag:'sarada_peek',     action:'custom_saradaPeek', oncePerTurn:true });
-regEffect('bro-002-mitsuki',        { type:'activated',      tag:'mitsuki_boost',   action:'custom_mitsukiBoost', oncePerTurn:true });
-regEffect('bro-003-kawaki',         { type:'activated',      tag:'kawaki_karma',    action:'custom_kawakiKarma', oncePerTurn:true });
-regEffect('bro-004-narutouzumakiseventhhokage', { type:'activated', tag:'naruto7th_clone', action:'custom_naruto7thClone', oncePerTurn:true });
-regEffect('bro-005-sasukeuchiharogue', { type:'onSummon',    tag:'sasuke_trickNuke',action:'custom_sasukeTrickNuke' });
-regEffect('bro-006-code',           { type:'continuous',     tag:'code_discardBoost',action:'custom_codeBoost' });
-regEffect('bro-007-daemon',         { type:'standbyBurn',    tag:'daemon_burn',     damage:500 });
-regEffect('bro-008-eida',           { type:'activated',      tag:'eida_negate',     action:'negateDestroyEffect', oncePerTurn:true });
+// ─── BOR (BORUTO) ───
+regEffect('bor-001-saradauchiha',   { type:'activated',      tag:'sarada_peek',     action:'custom_saradaPeek', oncePerTurn:true });
+regEffect('bor-002-mitsuki',        { type:'activated',      tag:'mitsuki_boost',   action:'custom_mitsukiBoost', oncePerTurn:true });
+regEffect('bor-003-kawaki',         { type:'activated',      tag:'kawaki_karma',    action:'custom_kawakiKarma', oncePerTurn:true });
+regEffect('bor-004-narutouzumakiseventhhokage', { type:'activated', tag:'naruto7th_clone', action:'custom_naruto7thClone', oncePerTurn:true });
+regEffect('bor-005-sasukeuchiharogue', { type:'onSummon',    tag:'sasuke_trickNuke',action:'custom_sasukeTrickNuke' });
+regEffect('bor-006-code',           { type:'continuous',     tag:'code_discardBoost',action:'custom_codeBoost' });
+regEffect('bor-007-daemon',         { type:'standbyBurn',    tag:'daemon_burn',     damage:500 });
+regEffect('bor-008-eida',           { type:'activated',      tag:'eida_negate',     action:'negateDestroyEffect', oncePerTurn:true });
 
 // ─── BLC (BLEACH) ───
 regEffect('blc-004-rukiakuchiki',   { type:'continuous',     tag:'rukia_chiBoost',  condition:'namedAllyOnField', conditionName:'ichigo the great', action:'custom_rukiaChi' });
@@ -1686,9 +1686,9 @@ regEffect('ss1-009-miniboomer',       { type:'palmScript',      tag:'miniBoomer'
 regEffect('aot-019-wallmariafield', {"type": "onTakeBattleDamage", "tag": "aot-019-wallmariafield_dmgDraw", "action": "draw", "count": 1, "log": "drew 1 after taking damage"});
 regEffect('aot-023-scoutchargethegreat', {"type": "palmScript", "tag": "aot-023-scoutchargethegreat_wipeTricks", "action": "destroyAllPalmConcealed"});
 regEffect('bl1-032-bluelockcounter', {"type": "palmScript", "tag": "bl1-032-bluelockcounter_wipeTricks", "action": "destroyAllPalmConcealed"});
-regEffect('bro-000-borutouzumaki', {"type": "onBattleResult", "tag": "bro-000-borutouzumaki_killDraw", "resultType": "kill", "action": "draw", "count": 1, "log": "drew 1 card(s) after a kill"});
-regEffect('bro-012-metallee', {"type": "doubleAttack", "tag": "bro-012-metallee_dbl"});
-regEffect('bro-026-scientificninjatool', {"type": "onBattleResult", "tag": "bro-026-scientificninjatool_killBoost", "resultType": "kill", "action": "boostSelfPR", "amount": 600, "log": "gained 600 Pressure after a kill"});
+regEffect('bor-000-borutouzumaki', {"type": "onBattleResult", "tag": "bor-000-borutouzumaki_killDraw", "resultType": "kill", "action": "draw", "count": 1, "log": "drew 1 card(s) after a kill"});
+regEffect('bor-012-metallee', {"type": "doubleAttack", "tag": "bor-012-metallee_dbl"});
+regEffect('bor-026-scientificninjatool', {"type": "onBattleResult", "tag": "bor-026-scientificninjatool_killBoost", "resultType": "kill", "action": "boostSelfPR", "amount": 600, "log": "gained 600 Pressure after a kill"});
 regEffect('cbb-007-theredtail', {"type": "equip", "tag": "cbb-007-theredtail_equip", "prBoost": 200, "targetNameIncludes": "faye"});
 regEffect('cbb-008-thehammerhead', {"type": "equip", "tag": "cbb-008-thehammerhead_equip", "prBoost": 200, "targetNameIncludes": "jet"});
 regEffect('cc1-006-dragonfortress', {"type": "onBattleDamage", "tag": "cc1-006-dragonfortress_burn", "action": "burnOpponent", "damage": 500, "directOnly": true, "log": "inflicted 500 extra damage on direct attack"});
@@ -1817,11 +1817,11 @@ regEffect('blc-009-kisukeurahara',    { type:'activated',     tag:'kisuke_setPal
 regEffect('blc-013-ulquiorra',        { type:'activated',     tag:'ulqui_discardDraw',action:'drawThenDiscard', oncePerTurn:true });
 regEffect('blc-014-hollowswarm',      { type:'onBattleResult',tag:'hollow_swarm',    resultType:'kill', action:'custom_bothDiscard' });
 
-// BRO
-regEffect('bro-009-jigen',            { type:'activated',     tag:'jigen_destroy',   action:'destroyOneTrick', oncePerTurn:true });
-regEffect('bro-014-chochoakimichi',   { type:'activated',     tag:'chocho_switch',   action:'custom_chochoSwitch', oncePerTurn:true });
-regEffect('bro-015-himawariuzumaki',  { type:'fieldAuraPR',   tag:'himawari_boost',  prBoostAll:200, targetNameIncludesAny:['boruto','naruto'], scope:'self' });
-regEffect('bro-020-isshikiotsutsukithegreat',{ type:'onSummon',tag:'isshikiGrt',     action:'custom_isshiki' });
+// BOR
+regEffect('bor-009-jigen',            { type:'activated',     tag:'jigen_destroy',   action:'destroyOneTrick', oncePerTurn:true });
+regEffect('bor-014-chochoakimichi',   { type:'activated',     tag:'chocho_switch',   action:'custom_chochoSwitch', oncePerTurn:true });
+regEffect('bor-015-himawariuzumaki',  { type:'fieldAuraPR',   tag:'himawari_boost',  prBoostAll:200, targetNameIncludesAny:['boruto','naruto'], scope:'self' });
+regEffect('bor-020-isshikiotsutsukithegreat',{ type:'onSummon',tag:'isshikiGrt',     action:'custom_isshiki' });
 
 // CBB
 regEffect('cbb-003-edward',           { type:'activated',     tag:'ed_controlMachine',action:'custom_edControlMachine', cost:500, oncePerTurn:true });
@@ -2070,7 +2070,7 @@ function resolveRegistryIds() {
     'vegeta - the great': 'dbs-000-vegetathegreat',
     'zanka the great': 'gck-000-zankathegreat',
     'yuzuriha the great': 'hlp-000-yuzurihathegreat',
-    'boruto uzumaki - the great': 'bro-019-borutouzumakithegreat',
+    'boruto uzumaki - the great': 'bor-019-borutouzumakithegreat',
     'goku - the great': 'dbs-025-gokuthegreat',
     'ace the great': 'anm-000-acethegreat',
   };
@@ -5444,8 +5444,8 @@ const FUSION_SPECS = {
   'bl1-021-rinandsaeitoshibrothers': { materials:[{label:'Rin Itoshi', exact:'Rin Itoshi'},{label:'Sae Itoshi - The Great', exact:'Sae Itoshi - The Great'}], inferred:true },
   'blc-016-bankaiichigofusion': { materials:[{label:'Ichigo The Great', exact:'Ichigo The Great'},{label:'Rukia Kuchiki', exact:'Rukia Kuchiki'}] },
   'blc-017-hogyokuascensionfusion': { materials:[{label:'Aizen The Great', exact:'Aizen The Great'},{label:'Grimmjow', exact:'Grimmjow'}] },
-  'bro-017-borutokarmaawakened': { materials:[{label:'Boruto Uzumaki', exact:'Boruto Uzumaki'},{label:'Kawaki', exact:'Kawaki'}], inferred:true },
-  'bro-018-team7nextgeneration': { materials:[{label:'Boruto Uzumaki', exact:'Boruto Uzumaki'},{label:'Sarada Uchiha', exact:'Sarada Uchiha'},{label:'Mitsuki', exact:'Mitsuki'}], inferred:true },
+  'bor-017-borutokarmaawakened': { materials:[{label:'Boruto Uzumaki', exact:'Boruto Uzumaki'},{label:'Kawaki', exact:'Kawaki'}], inferred:true },
+  'bor-018-team7nextgeneration': { materials:[{label:'Boruto Uzumaki', exact:'Boruto Uzumaki'},{label:'Sarada Uchiha', exact:'Sarada Uchiha'},{label:'Mitsuki', exact:'Mitsuki'}], inferred:true },
   'cbb-005-edwardthebountyhunter': { materials:[{label:'Ein', exact:'Ein'},{label:'Edward', exact:'Edward'}] },
   'db1-023-emperorpilafsgreatrobot': { materials:[{label:'Mai', exact:'Mai'},{label:'Shu', exact:'Shu'},{label:'Emperor Pilaf', exact:'Emperor Pilaf'}] },
   'dbs-021-gogetasupersaiyanblue': { materials:[{label:'Son Goku - Super Saiyan Blue', exact:'Son Goku - Super Saiyan Blue'},{label:'Vegeta - Super Saiyan Blue', exact:'Vegeta - Super Saiyan Blue'}], inferred:true },
@@ -6751,7 +6751,7 @@ function custom_historiaHeal(state,pi){state.players[pi].chi=Math.min(state.play
 function custom_bertBurn(state,pi){state.players[1-pi].chi=Math.max(0,state.players[1-pi].chi-800);addLog(state,'Effect Script: Bertholdt inflicted 800 damage on destroy.');checkWinConditions(state);}
 function custom_hangePeek(state,pi){const p=state.players[pi];if(!p.deck.length){addLog(state,'Effect Script: Hange — empty deck.');return;}const c=getCard(p.deck[0]);if(c&&c.cardType!=='Catalyst'){const d=p.deck.shift();p.void.push(d);addLog(state,`Effect Script: Hange peeked ${c?.name||'top card'} — it was a Trick, discarded.`);}else addLog(state,`Effect Script: Hange peeked top card: ${c?.name||'unknown'}.`);}
 
-// BRO
+// BOR
 function custom_saradaPeek(state,pi){const opp=state.players[1-pi];if(!opp.hand.length){addLog(state,'Effect Script: Sarada — opponent hand empty.');return;}const idx=Math.floor(Math.random()*opp.hand.length);const c=getCard(opp.hand[idx]);const discarded=opp.hand.splice(idx,1)[0];opp.void.push(discarded);addLog(state,`Effect Script: Sarada looked at opponent's hand and discarded ${c?.name||'a card'}.`);}
 function custom_mitsukiBoost(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'mitsuki'));if(z<0)return;state.players[pi].catalysts[z].atkMod=(state.players[pi].catalysts[z].atkMod||0)+500;state.players[pi].catalysts[z].cpMod=(state.players[pi].catalysts[z].cpMod||0)+500;addLog(state,'Effect Script: Mitsuki +500 PR/CP until End Phase.');}
 function custom_kawakiKarma(state,pi){if(!state._kawakiCounters)state._kawakiCounters=0;if(state._kawakiCounters<1){addLog(state,'Effect Script: Kawaki has no Karma Counters.');return;}state._kawakiCounters--;const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Kawaki — no opponent Catalyst.');return;}opp.void.push(opp.catalysts[oz].cardId);opp.catalysts[oz]=null;state.players[pi].kills++;addLog(state,`Effect Script: Kawaki removed 1 Karma Counter, destroyed 1 Catalyst. +1 Kill.`);checkWinConditions(state);}
@@ -7012,7 +7012,7 @@ function custom_bothDiscard(state, pi) {
   addLog(state,'Effect Script: Both players discarded 1 card.');
 }
 
-// BRO
+// BOR
 function custom_chochoSwitch(state, pi) {
   const z = state.players[pi].catalysts.findIndex(s=>s && cardNameHas(getCard(s.cardId)||{},'chocho'));
   if (z<0) return;

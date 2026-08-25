@@ -75,25 +75,25 @@ window.CTF_CARD_PLAYABILITY = {
     "blc-042-spiritguard",
     "blc-044-uraharasswitch",
     "blc-045-hollowhowl",
-    "bro-010-isshikiotsutsuki",
-    "bro-011-momoshikiotsutsuki",
-    "bro-013-shikadainara",
-    "bro-016-adasenrigan",
-    "bro-022-karmaseal",
-    "bro-023-villageoftheleaf",
-    "bro-024-ninjutsucombination",
-    "bro-025-rasenganbarrage",
-    "bro-027-karmaactivation",
-    "bro-029-otsutsukisjudgment",
-    "bro-030-hiddenleafprotocol",
-    "bro-031-jougansight",
-    "bro-032-borutosvow",
-    "bro-033-shadowclonebarricade",
-    "bro-034-leafvillagedefense",
-    "bro-035-teambonding",
-    "bro-036-kararesurrection",
-    "bro-037-otsutsukisdescent",
-    "bro-038-kawakissacrifice",
+    "bor-010-isshikiotsutsuki",
+    "bor-011-momoshikiotsutsuki",
+    "bor-013-shikadainara",
+    "bor-016-adasenrigan",
+    "bor-022-karmaseal",
+    "bor-023-villageoftheleaf",
+    "bor-024-ninjutsucombination",
+    "bor-025-rasenganbarrage",
+    "bor-027-karmaactivation",
+    "bor-029-otsutsukisjudgment",
+    "bor-030-hiddenleafprotocol",
+    "bor-031-jougansight",
+    "bor-032-borutosvow",
+    "bor-033-shadowclonebarricade",
+    "bor-034-leafvillagedefense",
+    "bor-035-teambonding",
+    "bor-036-kararesurrection",
+    "bor-037-otsutsukisdescent",
+    "bor-038-kawakissacrifice",
     "cbb-005-edwardthebountyhunter",
     "cbb-011-ultimatebattle",
     "cbb-012-ganymede",
@@ -1827,270 +1827,270 @@ window.CTF_CARD_PLAYABILITY = {
       "desc": "When your opponent declares an attack: Inflict 300 damage to your opponent. [BLC]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-000-borutouzumaki": {
+    "bor-000-borutouzumaki": {
       "status": "auto",
       "name": "Boruto Uzumaki",
       "type": "Catalyst",
-      "desc": "When it destroys a Catalyst in battle, draw 1 card. [BRO]",
+      "desc": "When it destroys a Catalyst in battle, draw 1 card. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-001-saradauchiha": {
+    "bor-001-saradauchiha": {
       "status": "auto",
       "name": "Sarada Uchiha",
       "type": "Catalyst",
-      "desc": "Once per turn (Sharingan): look at your opponent's hand and choose 1 card. [BRO]",
+      "desc": "Once per turn (Sharingan): look at your opponent's hand and choose 1 card. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-002-mitsuki": {
+    "bor-002-mitsuki": {
       "status": "auto",
       "name": "Mitsuki",
       "type": "Catalyst",
-      "desc": "Once per turn, this card gains 500 Pressure and Counter Pressure until the End Phase (Sage Mode). [BRO]",
+      "desc": "Once per turn, this card gains 500 Pressure and Counter Pressure until the End Phase (Sage Mode). [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-003-kawaki": {
+    "bor-003-kawaki": {
       "status": "auto",
       "name": "Kawaki",
       "type": "Catalyst",
-      "desc": "Once per turn, remove 1 Karma Counter to destroy 1 opponent's Catalyst with Pressure lower than this card's Pressure. [BRO]",
+      "desc": "Once per turn, remove 1 Karma Counter to destroy 1 opponent's Catalyst with Pressure lower than this card's Pressure. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-004-narutouzumakiseventhhokage": {
+    "bor-004-narutouzumakiseventhhokage": {
       "status": "auto",
       "name": "Naruto Uzumaki - Seventh Hokage",
       "type": "Catalyst",
-      "desc": "Once per turn, Special Spawn 1 Shadow Clone Token (Wind/Warrior/1 Star/Pressure=this card's Pressure/Counter Pressure 500). [BRO]",
+      "desc": "Once per turn, Special Spawn 1 Shadow Clone Token (Wind/Warrior/1 Star/Pressure=this card's Pressure/Counter Pressure 500). [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-005-sasukeuchiharogue": {
+    "bor-005-sasukeuchiharogue": {
       "status": "auto",
       "name": "Sasuke Uchiha - Rogue",
       "type": "Catalyst",
-      "desc": "When Spawned, destroy up to 2 Palm or Concealed Trick on the field. [BRO]",
+      "desc": "When Spawned, destroy up to 2 Palm or Concealed Trick on the field. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-006-code": {
+    "bor-006-code": {
       "status": "auto",
       "name": "Code",
       "type": "Catalyst",
-      "desc": "Gains 300 Pressure for each card your opponent discards this Duel. [BRO]",
+      "desc": "Gains 300 Pressure for each card your opponent discards this Duel. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-007-daemon": {
+    "bor-007-daemon": {
       "status": "auto",
       "name": "Daemon",
       "type": "Catalyst",
-      "desc": "Once per turn, inflict 500 damage to your opponent. [BRO]",
+      "desc": "Once per turn, inflict 500 damage to your opponent. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-008-eida": {
+    "bor-008-eida": {
       "status": "auto",
       "name": "Eida",
       "type": "Catalyst",
-      "desc": "Once per turn, negate 1 card effect that would destroy a Catalyst on your side of the field. [BRO]",
+      "desc": "Once per turn, negate 1 card effect that would destroy a Catalyst on your side of the field. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-009-jigen": {
+    "bor-009-jigen": {
       "status": "auto",
       "name": "Jigen",
       "type": "Catalyst",
-      "desc": "Once per turn, destroy 1 card on the field. [BRO]",
+      "desc": "Once per turn, destroy 1 card on the field. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-010-isshikiotsutsuki": {
+    "bor-010-isshikiotsutsuki": {
       "status": "manual",
       "name": "Isshiki Otsutsuki",
       "type": "Catalyst",
-      "desc": "Once per turn, reduce 1 Catalyst on the field to 1 Pressure and 1 Counter Pressure permanently. [BRO]",
+      "desc": "Once per turn, reduce 1 Catalyst on the field to 1 Pressure and 1 Counter Pressure permanently. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-011-momoshikiotsutsuki": {
+    "bor-011-momoshikiotsutsuki": {
       "status": "manual",
       "name": "Momoshiki Otsutsuki",
       "type": "Catalyst",
-      "desc": "When Spawned, look at your opponent's hand and remove 1 card from play for the rest of the Duel. [BRO]",
+      "desc": "When Spawned, look at your opponent's hand and remove 1 card from play for the rest of the Duel. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-012-metallee": {
+    "bor-012-metallee": {
       "status": "auto",
       "name": "Metal Lee",
       "type": "Catalyst",
-      "desc": "Once per turn during the Battle Phase, this card may attack twice. [BRO]",
+      "desc": "Once per turn during the Battle Phase, this card may attack twice. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-013-shikadainara": {
+    "bor-013-shikadainara": {
       "status": "manual",
       "name": "Shikadai Nara",
       "type": "Catalyst",
-      "desc": "When Spawned, choose 1 opponent's Catalyst. [BRO]",
+      "desc": "When Spawned, choose 1 opponent's Catalyst. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-014-chochoakimichi": {
+    "bor-014-chochoakimichi": {
       "status": "auto",
       "name": "Chocho Akimichi",
       "type": "Catalyst",
-      "desc": "Once per turn, this card may switch to Attack position with 2300 Pressure, returning to Defense position at the End Phase. [BRO]",
+      "desc": "Once per turn, this card may switch to Attack position with 2300 Pressure, returning to Defense position at the End Phase. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-015-himawariuzumaki": {
+    "bor-015-himawariuzumaki": {
       "status": "auto",
       "name": "Himawari Uzumaki",
       "type": "Catalyst",
-      "desc": "While on the field, all \"Boruto Uzumaki\" and \"Naruto Uzumaki\" Catalysts gain 200 Pressure. [BRO]",
+      "desc": "While on the field, all \"Boruto Uzumaki\" and \"Naruto Uzumaki\" Catalysts gain 200 Pressure. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-016-adasenrigan": {
+    "bor-016-adasenrigan": {
       "status": "manual",
       "name": "Ada - Senrigan",
       "type": "Catalyst",
-      "desc": "Once per turn, look at the top 5 cards of your opponent's deck and send 1 to the Void. [BRO]",
+      "desc": "Once per turn, look at the top 5 cards of your opponent's deck and send 1 to the Void. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-017-borutokarmaawakened": {
+    "bor-017-borutokarmaawakened": {
       "status": "auto",
       "name": "Boruto - Karma Awakened",
       "type": "Fusion",
-      "desc": "Once per turn, remove 1 counter to destroy 1 card on the field. [BRO]",
+      "desc": "Once per turn, remove 1 counter to destroy 1 card on the field. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-018-team7nextgeneration": {
+    "bor-018-team7nextgeneration": {
       "status": "auto",
       "name": "Team 7 - Next Generation",
       "type": "Fusion",
-      "desc": "Once per turn, may attack all of your opponent's Catalysts once each. [BRO]",
+      "desc": "Once per turn, may attack all of your opponent's Catalysts once each. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-019-borutouzumakithegreat": {
+    "bor-019-borutouzumakithegreat": {
       "status": "auto",
       "name": "Boruto Uzumaki - The Great",
       "type": "Catalyst",
-      "desc": "When all counters are removed, this card gains 1200 Pressure permanently and may attack twice per Battle Phase. [BRO]",
+      "desc": "When all counters are removed, this card gains 1200 Pressure permanently and may attack twice per Battle Phase. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-020-isshikiotsutsukithegreat": {
+    "bor-020-isshikiotsutsukithegreat": {
       "status": "auto",
       "name": "Isshiki Otsutsuki - The Great",
       "type": "Catalyst",
-      "desc": "When Spawned, reduce all opponent's Catalysts to 1 Pressure and 1 Counter Pressure permanently and inflict 600 damage. [BRO]",
+      "desc": "When Spawned, reduce all opponent's Catalysts to 1 Pressure and 1 Counter Pressure permanently and inflict 600 damage. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-022-karmaseal": {
+    "bor-022-karmaseal": {
       "status": "manual",
       "name": "Karma Seal",
       "type": "Palm Trick",
-      "desc": "Equip only to a Ninja or Kara-Type Catalyst. Gains 500 Pressure. Once per turn, place 1 Karma Counter on this card. When 3 counters are on this card, remove them to Special Spawn 1 Otsutsuki-Type Catalyst from your hand or Void. [BRO]",
+      "desc": "Equip only to a Ninja or Kara-Type Catalyst. Gains 500 Pressure. Once per turn, place 1 Karma Counter on this card. When 3 counters are on this card, remove them to Special Spawn 1 Otsutsuki-Type Catalyst from your hand or Void. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-023-villageoftheleaf": {
+    "bor-023-villageoftheleaf": {
       "status": "manual",
       "name": "Village of the Leaf",
       "type": "Field Trick",
-      "desc": "All Ninja-Type Catalysts gain 300 Pressure and Counter Pressure. Once per turn, when a Ninja-Type Catalyst destroys an opponent's Catalyst in battle, draw 1 card. [BRO]",
+      "desc": "All Ninja-Type Catalysts gain 300 Pressure and Counter Pressure. Once per turn, when a Ninja-Type Catalyst destroys an opponent's Catalyst in battle, draw 1 card. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-024-ninjutsucombination": {
+    "bor-024-ninjutsucombination": {
       "status": "manual",
       "name": "Ninjutsu Combination",
       "type": "Palm Trick",
-      "desc": "Special Spawn 2 Level 3 or lower Ninja-Type Catalysts from your deck. They cannot attack the turn they are Spawned. [BRO]",
+      "desc": "Special Spawn 2 Level 3 or lower Ninja-Type Catalysts from your deck. They cannot attack the turn they are Spawned. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-025-rasenganbarrage": {
+    "bor-025-rasenganbarrage": {
       "status": "manual",
       "name": "Rasengan Barrage",
       "type": "Palm Trick",
-      "desc": "Pay 1000 Chi. Destroy all Catalysts on your opponent's field with Counter Pressure lower than 1800. Inflict 200 damage for each Catalyst destroyed. [BRO]",
+      "desc": "Pay 1000 Chi. Destroy all Catalysts on your opponent's field with Counter Pressure lower than 1800. Inflict 200 damage for each Catalyst destroyed. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-026-scientificninjatool": {
+    "bor-026-scientificninjatool": {
       "status": "auto",
       "name": "Scientific Ninja Tool",
       "type": "Palm Trick",
-      "desc": "During your Battle Phase, select 1 Ninja-Type Catalyst. It gains 600 Pressure this turn. If it destroys a Catalyst in battle, inflict 400 damage. [BRO]",
+      "desc": "During your Battle Phase, select 1 Ninja-Type Catalyst. It gains 600 Pressure this turn. If it destroys a Catalyst in battle, inflict 400 damage. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-027-karmaactivation": {
+    "bor-027-karmaactivation": {
       "status": "manual",
       "name": "Karma Activation",
       "type": "Concealed Trick",
-      "desc": "When a Ninja-Type Catalyst you control is targeted for destruction, negate the destruction and that Catalyst gains 400 Pressure until the End Phase. [BRO]",
+      "desc": "When a Ninja-Type Catalyst you control is targeted for destruction, negate the destruction and that Catalyst gains 400 Pressure until the End Phase. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-028-karaambush": {
+    "bor-028-karaambush": {
       "status": "auto",
       "name": "Kara Ambush",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent Normal Spawns a Catalyst. Destroy that Catalyst and inflict 500 damage. [BRO]",
+      "desc": "Activate when your opponent Normal Spawns a Catalyst. Destroy that Catalyst and inflict 500 damage. [BOR]",
       "reason": "Card appears to have explicit scripted or registry support."
     },
-    "bro-029-otsutsukisjudgment": {
+    "bor-029-otsutsukisjudgment": {
       "status": "manual",
       "name": "Otsutsuki's Judgment",
       "type": "Counter Trick",
-      "desc": "When your opponent activates a card or effect, Tribute 1 Ninja-Type Catalyst to negate that activation and destroy the card. If the Tributed Catalyst was Level 5 or higher, also inflict 800 damage. [BRO]",
+      "desc": "When your opponent activates a card or effect, Tribute 1 Ninja-Type Catalyst to negate that activation and destroy the card. If the Tributed Catalyst was Level 5 or higher, also inflict 800 damage. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-030-hiddenleafprotocol": {
+    "bor-030-hiddenleafprotocol": {
       "status": "manual",
       "name": "Hidden Leaf Protocol",
       "type": "Concealed Trick",
-      "desc": "While face-up, all Ninja-Type Catalysts gain 200 Pressure. When a Ninja-Type Catalyst is destroyed, place 1 Leaf Counter on this card. Remove 3 to Special Spawn 1 Level 4 Ninja-Type Catalyst from your Void. [BRO]",
+      "desc": "While face-up, all Ninja-Type Catalysts gain 200 Pressure. When a Ninja-Type Catalyst is destroyed, place 1 Leaf Counter on this card. Remove 3 to Special Spawn 1 Level 4 Ninja-Type Catalyst from your Void. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-031-jougansight": {
+    "bor-031-jougansight": {
       "status": "manual",
       "name": "Jougan Sight",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent Special Spawns a Catalyst. Look at your opponent's hand and reveal 1 card. If it is a Palm Tricks, send it to the Void. [BRO]",
+      "desc": "Activate when your opponent Special Spawns a Catalyst. Look at your opponent's hand and reveal 1 card. If it is a Palm Tricks, send it to the Void. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-032-borutosvow": {
+    "bor-032-borutosvow": {
       "status": "manual",
       "name": "Boruto's Vow",
       "type": "Concealed Trick",
-      "desc": "When \"Boruto Uzumaki\" would be destroyed, pay 700 Chi to prevent it. Boruto gains 600 Pressure until the End Phase. [BRO]",
+      "desc": "When \"Boruto Uzumaki\" would be destroyed, pay 700 Chi to prevent it. Boruto gains 600 Pressure until the End Phase. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-033-shadowclonebarricade": {
+    "bor-033-shadowclonebarricade": {
       "status": "manual",
       "name": "Shadow Clone Barricade",
       "type": "Concealed Trick",
-      "desc": "When your opponent's Catalyst attacks directly, Special Spawn up to 2 Shadow Clone Tokens (Wind/Warrior/1 Star/Pressure 500/Counter Pressure 500) to block. [BRO]",
+      "desc": "When your opponent's Catalyst attacks directly, Special Spawn up to 2 Shadow Clone Tokens (Wind/Warrior/1 Star/Pressure 500/Counter Pressure 500) to block. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-034-leafvillagedefense": {
+    "bor-034-leafvillagedefense": {
       "status": "manual",
       "name": "Leaf Village Defense",
       "type": "Concealed Trick",
-      "desc": "Activate when your opponent attacks a Ninja-Type Catalyst. Negate the attack and reduce the attacking Catalyst's Pressure by 600 until the end of your opponent's next turn. [BRO]",
+      "desc": "Activate when your opponent attacks a Ninja-Type Catalyst. Negate the attack and reduce the attacking Catalyst's Pressure by 600 until the end of your opponent's next turn. [BOR]",
       "reason": "Manual printed-effect assist needed for this beta card."
     },
-    "bro-035-teambonding": {
+    "bor-035-teambonding": {
       "status": "manual",
       "name": "Team Bonding",
       "type": "Concealed Trick",
-      "desc": "When 2 or more Ninja-Type Catalysts you control attack in the same Battle Phase, inflict 300 damage to your opponent for each Catalyst that attacked. [BRO]",
+      "desc": "When 2 or more Ninja-Type Catalysts you control attack in the same Battle Phase, inflict 300 damage to your opponent for each Catalyst that attacked. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-036-kararesurrection": {
+    "bor-036-kararesurrection": {
       "status": "manual",
       "name": "Kara Resurrection",
       "type": "Concealed Trick",
-      "desc": "When a Kara or Otsutsuki-Type Catalyst is destroyed, Special Spawn it back with half its original Pressure. It regains its full Pressure at the start of your next turn. [BRO]",
+      "desc": "When a Kara or Otsutsuki-Type Catalyst is destroyed, Special Spawn it back with half its original Pressure. It regains its full Pressure at the start of your next turn. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-037-otsutsukisdescent": {
+    "bor-037-otsutsukisdescent": {
       "status": "manual",
       "name": "Otsutsuki's Descent",
       "type": "Concealed Trick",
-      "desc": "When your opponent controls 3 or more Catalysts, Special Spawn 1 Otsutsuki-Type Catalyst from your hand regardless of Spawning conditions. That Catalyst cannot be destroyed by card effects this turn. [BRO]",
+      "desc": "When your opponent controls 3 or more Catalysts, Special Spawn 1 Otsutsuki-Type Catalyst from your hand regardless of Spawning conditions. That Catalyst cannot be destroyed by card effects this turn. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
-    "bro-038-kawakissacrifice": {
+    "bor-038-kawakissacrifice": {
       "status": "manual",
       "name": "Kawaki's Sacrifice",
       "type": "Concealed Trick",
-      "desc": "When all your Catalysts would be destroyed simultaneously, Tribute \"Kawaki\" from your field to prevent all other Catalysts from being destroyed. All remaining Catalysts gain 300 Pressure. [BRO]",
+      "desc": "When all your Catalysts would be destroyed simultaneously, Tribute \"Kawaki\" from your field to prevent all other Catalysts from being destroyed. All remaining Catalysts gain 300 Pressure. [BOR]",
       "reason": "Printed effect requires manual resolution support in beta environment."
     },
     "cbb-000-spikespiegel": {

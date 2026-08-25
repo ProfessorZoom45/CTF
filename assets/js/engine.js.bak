@@ -918,7 +918,7 @@ regEffect('anm-000-destinthegreatwarlord', {
 // (Handled via runPalmScript below — not registry since it's a Palm Trick)
 
 // === BORUTO — DOUBLE ATTACK (counter removal part not yet implemented) ===
-regEffect('bro-000-borutouzumakithegreat', {
+regEffect('bor-000-borutouzumakithegreat', {
   type: 'doubleAttack', tag: 'dblAtk'
 });
 
@@ -1101,7 +1101,7 @@ function resolveRegistryIds() {
     'vegeta - the great': 'dbs-000-vegetathegreat',
     'zanka the great': 'gck-000-zankathegreat',
     'yuzuriha the great': 'hlp-000-yuzurihathegreat',
-    'boruto uzumaki - the great': 'bro-000-borutouzumakithegreat',
+    'boruto uzumaki - the great': 'bor-000-borutouzumakithegreat',
     'goku - the great': 'dbs-000-gokuthegreat',
     'ace the great': 'anm-000-acethegreat',
   };
@@ -3713,8 +3713,8 @@ const FUSION_SPECS = {
   'bl1-021-rinandsaeitoshibrothers': { materials:[{label:'Rin Itoshi', exact:'Rin Itoshi'},{label:'Sae Itoshi - The Great', exact:'Sae Itoshi - The Great'}], inferred:true },
   'blc-016-bankaiichigofusion': { materials:[{label:'Ichigo The Great', exact:'Ichigo The Great'},{label:'Rukia Kuchiki', exact:'Rukia Kuchiki'}] },
   'blc-017-hogyokuascensionfusion': { materials:[{label:'Aizen The Great', exact:'Aizen The Great'},{label:'Grimmjow', exact:'Grimmjow'}] },
-  'bro-017-borutokarmaawakened': { materials:[{label:'Boruto Uzumaki', exact:'Boruto Uzumaki'},{label:'Kawaki', exact:'Kawaki'}], inferred:true },
-  'bro-018-team7nextgeneration': { materials:[{label:'Boruto Uzumaki', exact:'Boruto Uzumaki'},{label:'Sarada Uchiha', exact:'Sarada Uchiha'},{label:'Mitsuki', exact:'Mitsuki'}], inferred:true },
+  'bor-017-borutokarmaawakened': { materials:[{label:'Boruto Uzumaki', exact:'Boruto Uzumaki'},{label:'Kawaki', exact:'Kawaki'}], inferred:true },
+  'bor-018-team7nextgeneration': { materials:[{label:'Boruto Uzumaki', exact:'Boruto Uzumaki'},{label:'Sarada Uchiha', exact:'Sarada Uchiha'},{label:'Mitsuki', exact:'Mitsuki'}], inferred:true },
   'cbb-005-edwardthebountyhunter': { materials:[{label:'Ein', exact:'Ein'},{label:'Edward', exact:'Edward'}] },
   'db1-023-emperorpilafsgreatrobot': { materials:[{label:'Mai', exact:'Mai'},{label:'Shu', exact:'Shu'},{label:'Emperor Pilaf', exact:'Emperor Pilaf'}] },
   'dbs-021-gogetasupersaiyanblue': { materials:[{label:'Son Goku - Super Saiyan Blue', exact:'Son Goku - Super Saiyan Blue'},{label:'Vegeta - Super Saiyan Blue', exact:'Vegeta - Super Saiyan Blue'}], inferred:true },
