@@ -15,8 +15,19 @@
     "peppor/effect": "Peppor",
     "red xiii - trance": "RedXIII - Trance",
     "second sealbraker": "Second Sealbreaker",
-    "tetsuaiga": "Tessaiga",
+    "the chosen one": "The Great One",
+    "blazeing inferno": "Blazing Inferno",
+    "ayla prehystoric warrior": "Ayla Prehistoric Warrior",
+    "flying numbus": "Flying Nimbus",
+    "full moon": "Blood Moon",
+    "tetsuaiga": "Warriors Return",
     "tetsaiga": "Tessaiga",
+    "summoning nojustu": "Summoning no Jutsu",
+    "green laterns ring": "Green Lantern's Ring",
+    "green latern corps": "Green Lantern Corps",
+    "focus your engery": "Focus Your Energy",
+    "knives minipulation": "Knives Manipulation",
+    "spirit equipment": "The Great Spirit Equipment",
     "110 percent": "110%"
   };
   const STORAGE_KEYS = {

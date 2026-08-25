@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deck Builder — Carry The Flame</title>
+<title>Deck Builder 2.0 Alpha — Carry The Flame</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
-<meta name="description" content="Build and refine your Carry The Flame deck with the browser-based deck builder.">
+<meta name="description" content="Build, search, import, and export Carry The Flame Alpha decks from the complete 41-set card collection.">
 <link rel="icon" type="image/png" href="assets/img/ctf-mark.png">
 <link rel="apple-touch-icon" href="assets/img/ctf-mark.png">
 <meta property="og:type" content="website">
@@ -26,6 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/ctf-brand-refresh.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--coal:#0d0d0d;--coal-light:#1a1a1a;--coal-mid:#242424;--flame:#ff6a00;--ember:#c0392b;--amber:#ffb347;--ash:#888;--white:#f5f0e8;--cream:#e8e0d0;--green:#4CAF50;--red:#e74c3c;--blue:#2196F3;--purple:#9C27B0;--font-display:'Bebas Neue',sans-serif;--font-label:'Barlow Condensed',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Space Mono',monospace}
@@ -51,6 +52,10 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .pool-filters input,.pool-filters select{font-family:var(--font-body);background:var(--coal-mid);border:1px solid rgba(255,106,0,.12);color:var(--white);padding:.4rem .6rem;font-size:.8rem;outline:none}.pool-filters input:focus,.pool-filters select:focus{border-color:var(--flame)}
 .pool-filters select option{background:var(--coal-mid)}
 .pool-row{display:flex;gap:.4rem}.pool-row>*{flex:1}
+.pool-row.triple>*{min-width:0}.pool-row .filter-label{font-family:var(--font-mono);font-size:.58rem;color:var(--ash);padding:.15rem 0;align-self:center;white-space:nowrap}
+.pool-actions{display:flex;gap:.4rem}.pool-actions .btn{flex:1;padding:.4rem .45rem}
+.alpha-builder-brand{display:flex;align-items:center;gap:.75rem;border-bottom:1px solid rgba(255,106,0,.1);padding-bottom:.75rem;margin-bottom:.8rem}.alpha-builder-brand img{width:128px;height:62px;object-fit:contain}.alpha-builder-brand h1{font-family:var(--font-display);font-size:1.65rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase;line-height:1}.alpha-builder-brand p{font-size:.72rem;color:var(--cream);margin-top:.2rem}
+.import-status{width:100%;font-size:.74rem;color:var(--ash);line-height:1.35}.import-status.warn{color:var(--amber)}.import-status.ok{color:var(--green)}
 .pool-count{font-family:var(--font-mono);font-size:.7rem;color:var(--ash);padding:.3rem .8rem;border-bottom:1px solid rgba(255,106,0,.06)}
 .pool-list{flex:1;overflow-y:auto;padding:.3rem}
 .pc{display:flex;align-items:flex-start;gap:.5rem;padding:.35rem .6rem;margin-bottom:2px;background:var(--coal);border:1px solid transparent;cursor:pointer;transition:all .15s;font-size:.78rem;border-radius:2px;user-select:none}
@@ -352,7 +357,7 @@ body.ctf-nav-pad { padding-top: 0; }
     <ul class="nav-links" id="ctf-nav-list">
       <li><a href="index.html">Home</a></li>
       <li><a href="rules.html">Rules</a></li>
-      <li><a href="cards.html">Cards</a></li>
+      <li><a href="#collection">Collection</a></li>
       <li><a href="deckbuilder.html" class="active" aria-current="page">Deck Builder</a></li>
       <li><a href="play.html">Play</a></li>
       <li><a href="glossary.html">Glossary</a></li>
@@ -399,16 +404,29 @@ body.ctf-nav-pad { padding-top: 0; }
 <!-- LEFT — CARD POOL -->
 <div class="pool">
 <div class="pool-header">
-<h2>Card Pool — <span id="pool-total">0</span> cards</h2>
+<h2 id="collection">Card Collection — <span id="pool-total">0</span> cards</h2>
 <div class="pool-filters">
-<input type="text" id="pq" placeholder="Search name, kind, effect...">
+<input type="text" id="pq" placeholder="Search name, kind, effect, set, or card ID...">
 <div class="pool-row">
 <select id="pft"><option value="">All Types</option><option value="Catalyst">Catalyst</option><option value="Palm Trick">Palm Trick</option><option value="Concealed Trick">Concealed Trick</option><option value="Counter Trick">Counter Trick</option><option value="Field Trick">Field Trick</option><option value="Fusion">Fusion</option></select>
-<select id="pfa"><option value="">All Align</option><option value="Dark">Dark</option><option value="Light">Light</option><option value="Fire">Fire</option><option value="Earth">Earth</option><option value="Water">Water</option><option value="Wind">Wind</option><option value="Thunder">Thunder</option></select>
+<select id="pfa"><option value="">All Alignments</option></select>
 </div>
 <div class="pool-row">
 <select id="pfs"><option value="">All Sets</option></select>
 <select id="pfl"><option value="">All Lvl</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8+</option></select>
+</div>
+<div class="pool-row">
+<select id="pfk"><option value="">All Kinds</option></select>
+<select id="pfsu"><option value="">All Sub-Types</option></select>
+</div>
+<div class="pool-row triple">
+<select id="pfg"><option value="">All Cards</option><option value="great">Great Only</option><option value="standard">Non-Great</option></select>
+<input id="pfpr" type="number" min="0" step="100" placeholder="Min PR">
+<input id="pfcp" type="number" min="0" step="100" placeholder="Min CP">
+</div>
+<div class="pool-row">
+<select id="pfsort"><option value="name">Sort: Name</option><option value="set">Sort: Set</option><option value="type">Sort: Type</option><option value="level">Sort: Level ↓</option><option value="pr">Sort: Pressure ↓</option><option value="cp">Sort: Counter Pressure ↓</option></select>
+<div class="pool-actions"><button class="btn btn-ghost" type="button" onclick="clearPoolFilters()">Reset</button></div>
 </div>
 </div>
 </div>
@@ -418,12 +436,18 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <!-- RIGHT — DECK AREA -->
 <div class="deck-area">
+<div class="alpha-builder-brand">
+  <img src="assets/img/carry-the-flame-horizontal.png" alt="Carry The Flame">
+  <div><h1>Deck Builder 2.0 Alpha</h1><p>Browse the complete card collection, build a legal deck, and export a Reese-compatible deck file.</p></div>
+</div>
 <div class="deck-toolbar">
 <input type="text" class="deck-name" id="deck-name" value="My CTF Deck" placeholder="Deck Name...">
 <select id="starter-select" class="starter-select" onchange="loadStarterDeck()"><option value="">Load Starter Deck…</option></select>
 <button class="btn btn-ghost" onclick="loadStarterDeck()">Load Starter</button>
-<button class="btn btn-flame" onclick="exportDeck()">Export .txt</button>
-<button class="btn btn-green" onclick="showImport()">Import</button>
+<button class="btn btn-flame" onclick="exportDeck()">Export Deck</button>
+<button class="btn btn-green" onclick="showImport()">Paste Import</button>
+<button class="btn btn-green" onclick="document.getElementById('deck-file').click()">Open Deck File</button>
+<input id="deck-file" type="file" accept=".txt,.deck,.cnl,text/plain,*/*" hidden onchange="importDeckFile(this.files[0])">
 <button class="btn btn-ghost" onclick="saveDeckLocal()">Save</button>
 <button class="btn btn-green" onclick="launchPlayWithDeck()">Play This Deck</button>
 <button class="btn btn-ghost" onclick="loadDeckLocal()">Load</button>
@@ -432,8 +456,9 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <div class="valid" id="valid"></div>
 <div class="valid" style="margin-top:.8rem">
-  <div class="vr"><span class="dot dot-ok"></span><strong>Browser-First Beta:</strong>&nbsp; all cards viewable · deckbuilder live · local save · tutorial/hot-seat play in the browser</div>
+  <div class="vr"><span class="dot dot-ok"></span><strong>Alpha Collection:</strong>&nbsp; 41 updated sets · 1,599 active cards · artwork fallback checked</div>
   <div class="vr"><span class="dot dot-ok"></span><strong>Locked rules source:</strong>&nbsp; <span data-ctf="ui.mainDeckRange">40–60</span> main · <span data-ctf="ui.fusionDeckRange">0–15</span> fusion · <span data-ctf="ui.sideDeckRange">0–15</span> side · <span data-ctf="ui.greatCap">5</span> Great Card cap</div>
+  <div class="import-status" id="import-status" role="status">Reese-style export: <code>quantity|Set|Card Name</code> — no headers required.</div>
 </div>
 
 <!-- MAIN DECK -->
@@ -488,6 +513,7 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 
 <script src="assets/js/data.js"></script>
+<script src="assets/js/sets-2026-08-24-patch.js"></script>
 <script src="assets/js/card-image-map.js"></script>
 <script src="assets/js/deck-utils.js"></script>
 <script>
@@ -509,8 +535,12 @@ function safeCard(id){return cardMap[id]||{id,name:'Unknown',cardType:'Catalyst'
 function cardImg(c){const map=(window.CTF_CARD_IMAGES || (typeof CTF_CARD_IMAGES!=='undefined' ? CTF_CARD_IMAGES : null));return (map&&c&&c.id&&map[c.id]) || (c&&((c.img&&c.img.trim())||(c.image&&c.image.trim()))) || 'images/placeholder.gif'}
 function imgTag(c, cls){const alt=((c&&c.name)||'Card').replace(/\"/g,'&quot;');const src=cardImg(c);const gifClass=/\.gif$/i.test(src)?' is-gif':'';return `<img class="${cls}${gifClass}" src="${src}" alt="${alt}" loading="lazy" onerror="this.onerror=null;this.src='images/placeholder.gif';this.classList.add('is-gif')">`}
 
-// Populate filters + starter decks
-document.getElementById('pfs').innerHTML='<option value="">All Sets</option>'+ALL_SETS.map(s=>`<option value="${s}">${s}</option>`).join('');
+// Populate collection filters + starter decks
+function optionList(values, label){return `<option value="">${label}</option>`+[...values].filter(Boolean).sort((a,b)=>String(a).localeCompare(String(b))).map(v=>`<option value="${String(v).replace(/"/g,'&quot;')}">${v}</option>`).join('')}
+document.getElementById('pfs').innerHTML=optionList(new Set(ALL_CARDS.map(c=>c.set)),'All Sets');
+document.getElementById('pfa').innerHTML=optionList(new Set(ALL_CARDS.map(c=>c.alignment)),'All Alignments');
+document.getElementById('pfk').innerHTML=optionList(new Set(ALL_CARDS.flatMap(c=>Array.isArray(c.kinds)?c.kinds:[])),'All Kinds');
+document.getElementById('pfsu').innerHTML=optionList(new Set(ALL_CARDS.map(c=>c.sub)),'All Sub-Types');
 document.getElementById('pool-total').textContent=ALL_CARDS.length;
 if(STARTER_DECKS.length){
  const sel=document.getElementById('starter-select');
@@ -523,20 +553,47 @@ function pcClass(t){return t==='Catalyst'?'pc-catalyst':t==='Palm Trick'?'pc-pal
 
 // ── POOL RENDERING ──
 function filterPool(){
- const q=document.getElementById('pq').value.toLowerCase();
- const ft=document.getElementById('pft').value;
- const fa=document.getElementById('pfa').value;
- const fs=document.getElementById('pfs').value;
- const fl=document.getElementById('pfl').value;
- poolFiltered=ALL_CARDS.filter(c=>{
-  if(ft&&c.cardType!==ft)return false;
-  if(fa&&c.alignment!==fa)return false;
-  if(fs&&c.set!==fs)return false;
-  if(fl){const lv=+fl;if(lv>=8){if(c.level<8)return false}else if(c.level!==lv)return false}
-  if(q&&!c.name.toLowerCase().includes(q)&&!c.kindsStr.toLowerCase().includes(q)&&!c.desc.toLowerCase().includes(q))return false;
-  return true;
- });
- renderPool();
+  const q=document.getElementById('pq').value.toLowerCase();
+  const ft=document.getElementById('pft').value;
+  const fa=document.getElementById('pfa').value;
+  const fs=document.getElementById('pfs').value;
+  const fl=document.getElementById('pfl').value;
+  const fk=document.getElementById('pfk').value;
+  const fsu=document.getElementById('pfsu').value;
+  const fg=document.getElementById('pfg').value;
+  const minPr=Number(document.getElementById('pfpr').value||0);
+  const minCp=Number(document.getElementById('pfcp').value||0);
+  const sort=document.getElementById('pfsort').value;
+  poolFiltered=ALL_CARDS.filter(c=>{
+    if(ft&&c.cardType!==ft)return false;
+    if(fa&&c.alignment!==fa)return false;
+    if(fs&&c.set!==fs)return false;
+    if(fl){const lv=+fl;if(lv>=8){if(c.level<8)return false}else if(c.level!==lv)return false}
+    if(fk&&!(c.kinds||[]).includes(fk))return false;
+    if(fsu&&c.sub!==fsu)return false;
+    if(fg==='great'&&!c.great)return false;
+    if(fg==='standard'&&c.great)return false;
+    if(minPr&&(c.pr||0)<minPr)return false;
+    if(minCp&&(c.cp||0)<minCp)return false;
+    if(q&&!c.name.toLowerCase().includes(q)&&!c.kindsStr.toLowerCase().includes(q)&&!c.desc.toLowerCase().includes(q)&&!String(c.set||'').toLowerCase().includes(q)&&!String(c.id||'').toLowerCase().includes(q))return false;
+    return true;
+  });
+  const typeOrder={Catalyst:0,'Palm Trick':1,'Concealed Trick':2,'Counter Trick':3,'Field Trick':4,Fusion:5};
+  poolFiltered.sort((a,b)=>{
+    if(sort==='set')return String(a.set).localeCompare(String(b.set))||a.name.localeCompare(b.name);
+    if(sort==='type')return (typeOrder[a.cardType]||9)-(typeOrder[b.cardType]||9)||a.name.localeCompare(b.name);
+    if(sort==='level')return (b.level||0)-(a.level||0)||(b.pr||0)-(a.pr||0)||a.name.localeCompare(b.name);
+    if(sort==='pr')return (b.pr||0)-(a.pr||0)||(b.cp||0)-(a.cp||0)||a.name.localeCompare(b.name);
+    if(sort==='cp')return (b.cp||0)-(a.cp||0)||(b.pr||0)-(a.pr||0)||a.name.localeCompare(b.name);
+    return a.name.localeCompare(b.name);
+  });
+  renderPool();
+}
+
+function clearPoolFilters(){
+  ['pq','pft','pfa','pfs','pfl','pfk','pfsu','pfg','pfpr','pfcp'].forEach(id=>{document.getElementById(id).value=''});
+  document.getElementById('pfsort').value='name';
+  filterPool();
 }
 
 function renderPool(){
@@ -709,7 +766,7 @@ function exportDeck(){
  const a=document.createElement('a');
  const href=URL.createObjectURL(blob);
  a.href=href;
- a.download=sanitizeDeckFilename(name)+'.txt';
+  a.download=sanitizeDeckFilename(name);
  a.click();
  setTimeout(()=>URL.revokeObjectURL(href),1500);
 }
@@ -718,14 +775,36 @@ function exportDeck(){
 function showImport(){document.getElementById('imp-overlay').classList.add('open')}
 function hideImport(){document.getElementById('imp-overlay').classList.remove('open')}
 function importDeck(){
- const txt=document.getElementById('imp-text').value;
- if(!txt.trim()){hideImport();return}
- 
- mainDeck=[];fusionDeck=[];sideDeck=[];
- let currentZone='main';
- const nameMap=Object.fromEntries(ALL_CARDS.map(c=>[c.name.toLowerCase(),c.id]));
- const normalizeCardName=(window.CTFDeckUtils&&CTFDeckUtils.normalizeCardName)?CTFDeckUtils.normalizeCardName:(v=>v);
- const setNameMap=Object.fromEntries(ALL_CARDS.map(c=>[`${legacySetCode(c.set).toLowerCase()}|${c.name.toLowerCase()}`,c.id]));
+  const txt=document.getElementById('imp-text').value;
+  if(!txt.trim()){hideImport();return}
+  importDeckText(txt);
+  hideImport();
+  document.getElementById('imp-text').value='';
+}
+
+function importDeckFile(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>importDeckText(String(reader.result||''),file.name);
+  reader.onerror=()=>setImportStatus('Could not read that deck file.','warn');
+  reader.readAsText(file);
+  document.getElementById('deck-file').value='';
+}
+
+function setImportStatus(message,kind){
+  const el=document.getElementById('import-status');
+  el.textContent=message;
+  el.className='import-status '+(kind||'');
+}
+
+function importDeckText(txt,sourceName){
+  mainDeck=[];fusionDeck=[];sideDeck=[];
+  let currentZone='main';
+  const nameMap=Object.fromEntries(ALL_CARDS.map(c=>[c.name.toLowerCase(),c.id]));
+  const normalizeCardName=(window.CTFDeckUtils&&CTFDeckUtils.normalizeCardName)?CTFDeckUtils.normalizeCardName:(v=>v);
+  const setNameMap=Object.fromEntries(ALL_CARDS.map(c=>[`${legacySetCode(c.set).toLowerCase()}|${c.name.toLowerCase()}`,c.id]));
+  const rejected=[];
+  let imported=0;
  
  txt.split('\n').forEach(line=>{
   line=line.trim();
@@ -748,7 +827,9 @@ function importDeck(){
    if(id){
     const card=cardMap[id];
     const arr=card&&card.cardType==='Fusion'?fusionDeck:mainDeck;
-    for(let i=0;i<qty;i++)arr.push(id);
+    for(let i=0;i<qty;i++){arr.push(id);imported++}
+   }else{
+    rejected.push(line);
    }
    return;
   }
@@ -760,13 +841,18 @@ function importDeck(){
    const id=nameMap[cardName];
    if(id){
     const arr=currentZone==='fusion'?fusionDeck:currentZone==='side'?sideDeck:mainDeck;
-    for(let i=0;i<qty;i++)arr.push(id);
+    for(let i=0;i<qty;i++){arr.push(id);imported++}
+   }else{
+    rejected.push(line);
    }
   }
  });
- 
- hideImport();
- document.getElementById('imp-text').value='';
+
+ const check=CTFDeckUtils.validateDeck(currentDeckObject(),ALL_CARDS);
+ const source=sourceName?` from ${sourceName}`:'';
+ const unresolved=rejected.length?` ${rejected.length} unrecognized line${rejected.length===1?'':'s'} skipped.`:'';
+ const ruleNote=check.ok?' Deck is legal.':` ${check.errors.length} deck-rule issue${check.errors.length===1?'':'s'} shown below.`;
+ setImportStatus(`Imported ${imported} card${imported===1?'':'s'}${source}.${unresolved}${ruleNote}`,rejected.length?'warn':'ok');
  renderAll();
 }
 
@@ -812,10 +898,14 @@ function launchPlayWithDeck(){
 }
 
 // ── INIT ──
-['pq'].forEach(id=>document.getElementById(id).addEventListener('input',filterPool));
-['pft','pfa','pfs','pfl'].forEach(id=>document.getElementById(id).addEventListener('change',filterPool));
+['pq','pfpr','pfcp'].forEach(id=>document.getElementById(id).addEventListener('input',filterPool));
+['pft','pfa','pfs','pfl','pfk','pfsu','pfg','pfsort'].forEach(id=>document.getElementById(id).addEventListener('change',filterPool));
 filterPool();
 renderAll();
+if(window.CTF_ALPHA_SET_AUDIT){
+ const audit=window.CTF_ALPHA_SET_AUDIT;
+ setImportStatus(`${audit.source}: ${audit.activeSets} sets · ${audit.activeCards.toLocaleString()} active cards · ${audit.normalizedEntries} naming conflicts normalized.`, 'ok');
+}
 if(!poolFiltered.length && ALL_CARDS.length){ poolFiltered=[...ALL_CARDS]; renderPool(); document.getElementById('pool-total').textContent=ALL_CARDS.length; }
 
 // Load saved deck if exists
