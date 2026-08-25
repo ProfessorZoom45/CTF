@@ -357,9 +357,9 @@ body.ctf-nav-pad { padding-top: 0; }
     <ul class="nav-links" id="ctf-nav-list">
       <li><a href="index.html">Home</a></li>
       <li><a href="rules.html">Rules</a></li>
-      <li><a href="#collection">Collection</a></li>
+      <li><a href="collections.html">Collections</a></li>
       <li><a href="deckbuilder.html" class="active" aria-current="page">Deck Builder</a></li>
-      <li><a href="play.html">Play</a></li>
+      <li><a href="https://discord.gg/cKj3ayt2Mp">Play</a></li>
       <li><a href="glossary.html">Glossary</a></li>
       <li><a href="About_Us.html">About</a></li>
       <li><a href="submit.html">Submit Cards</a></li>
@@ -438,7 +438,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="deck-area">
 <div class="alpha-builder-brand">
   <img src="assets/img/carry-the-flame-horizontal.png" alt="Carry The Flame">
-  <div><h1>Deck Builder 2.0 Alpha</h1><p>Browse the complete card collection, build a legal deck, and export a Reese-compatible deck file.</p></div>
+  <div><h1>Deck Builder 2.0 Alpha</h1><p>Browse the complete card collection, build a legal deck, and export a CTF-compatible deck file.</p></div>
 </div>
 <div class="deck-toolbar">
 <input type="text" class="deck-name" id="deck-name" value="My CTF Deck" placeholder="Deck Name...">
@@ -493,7 +493,7 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <!-- TOOLTIP -->
 <div class="tooltip" id="tooltip">
-<img class="tt-img" id="tt-img" src="images/placeholder.gif" alt="Card art">
+<img class="tt-img" id="tt-img" src="images/placeholder.png" alt="Card art">
 <div class="tt-name" id="tt-name"></div>
 <div class="tt-type" id="tt-type"></div>
 <div class="tt-stats" id="tt-stats"></div>
@@ -514,13 +514,17 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <script src="assets/js/data.js"></script>
 <script src="assets/js/sets-2026-08-24-patch.js"></script>
+<script src="assets/js/sets-2026-08-25-patch.js"></script>
 <script src="assets/js/card-image-map.js"></script>
 <script src="assets/js/deck-utils.js"></script>
+<script src="assets/js/starter-decks-2026-08-25.js"></script>
 <script>
 // ── GUARD: data.js must load ──
 const ALL_CARDS = (typeof CTF_CARDS!=='undefined' && Array.isArray(CTF_CARDS) && CTF_CARDS.length) ? CTF_CARDS : ((window.CTF_CARDS && Array.isArray(window.CTF_CARDS)) ? window.CTF_CARDS : []);
 const ALL_SETS = (typeof CTF_SETS!=='undefined' && Array.isArray(CTF_SETS) && CTF_SETS.length) ? CTF_SETS : ((window.CTF_SETS && Array.isArray(window.CTF_SETS)) ? window.CTF_SETS : []);
 const STARTER_DECKS = (typeof CTF_STARTER_DECKS!=='undefined' && Array.isArray(CTF_STARTER_DECKS)) ? CTF_STARTER_DECKS : ((window.CTF_STARTER_DECKS && Array.isArray(window.CTF_STARTER_DECKS)) ? window.CTF_STARTER_DECKS : []);
+const DECK_CFG = (window.CTF_CONFIG && window.CTF_CONFIG.game && window.CTF_CONFIG.game.deck) || {mainMin:40,mainMax:60,fusionMax:15,sideMin:0,sideMax:15,copiesPerCard:3};
+const GREAT_CFG = (window.CTF_CONFIG && window.CTF_CONFIG.game && window.CTF_CONFIG.game.great) || {maxPerName:1,maxPerDeck:5};
 
 if(!ALL_CARDS.length){
  document.querySelector('.builder').innerHTML='<div style="grid-column:1/-1;padding:4rem 2rem;text-align:center"><h2 style="color:#ff6a00;font-family:Bebas Neue,sans-serif;font-size:2rem;margin-bottom:1rem">Card Database Not Loaded</h2><p style="color:#e8e0d0;max-width:500px;margin:0 auto;line-height:1.7">Make sure <code style="color:#ff6a00">data.js</code> is in the same folder as this HTML file. All site files must be deployed together in the repo structure.</p><p style="color:#888;margin-top:1rem;font-size:.85rem">Required files: index.html, rules.html, cards.html, deckbuilder.html, play.html, glossary.html, submit.html, data.js</p></div>';
@@ -531,9 +535,16 @@ if(!ALL_CARDS.length){
 let mainDeck=[],fusionDeck=[],sideDeck=[];
 let poolFiltered=[...ALL_CARDS];
 const cardMap=Object.fromEntries(ALL_CARDS.map(c=>[c.id,c]));
-function safeCard(id){return cardMap[id]||{id,name:'Unknown',cardType:'Catalyst',alignment:'',level:0,pr:0,cp:0,kinds:[],kindsStr:'',sub:null,desc:'',great:false,img:'images/placeholder.gif',image:'images/placeholder.gif',set:'?'}}
-function cardImg(c){const map=(window.CTF_CARD_IMAGES || (typeof CTF_CARD_IMAGES!=='undefined' ? CTF_CARD_IMAGES : null));return (map&&c&&c.id&&map[c.id]) || (c&&((c.img&&c.img.trim())||(c.image&&c.image.trim()))) || 'images/placeholder.gif'}
-function imgTag(c, cls){const alt=((c&&c.name)||'Card').replace(/\"/g,'&quot;');const src=cardImg(c);const gifClass=/\.gif$/i.test(src)?' is-gif':'';return `<img class="${cls}${gifClass}" src="${src}" alt="${alt}" loading="lazy" onerror="this.onerror=null;this.src='images/placeholder.gif';this.classList.add('is-gif')">`}
+function safeCard(id){return cardMap[id]||{id,name:'Unknown',cardType:'Catalyst',alignment:'',level:0,pr:0,cp:0,kinds:[],kindsStr:'',sub:null,desc:'',great:false,img:'images/placeholder.png',image:'images/placeholder.png',set:'?'}}
+function cardImg(c){const map=(window.CTF_CARD_IMAGES || (typeof CTF_CARD_IMAGES!=='undefined' ? CTF_CARD_IMAGES : null));return (map&&c&&c.id&&map[c.id]) || (c&&((c.img&&c.img.trim())||(c.image&&c.image.trim()))) || 'images/placeholder.png'}
+function advanceCardImage(img){
+ const id=img&&img.dataset&&img.dataset.cardId;
+ const candidates=(window.CTF_CARD_IMAGE_CANDIDATES&&id&&window.CTF_CARD_IMAGE_CANDIDATES[id])||[];
+ const nextIndex=Number(img.dataset.imageIndex||0)+1;
+ if(candidates[nextIndex]){img.dataset.imageIndex=String(nextIndex);img.src=candidates[nextIndex];return}
+ img.onerror=null;img.src='images/placeholder.png';img.classList.add('is-gif');
+}
+function imgTag(c, cls){const alt=((c&&c.name)||'Card').replace(/\"/g,'&quot;');const src=cardImg(c);const gifClass=/\.gif$/i.test(src)?' is-gif':'';return `<img class="${cls}${gifClass}" src="${src}" alt="${alt}" loading="lazy" data-card-id="${c.id}" data-image-index="0" onerror="advanceCardImage(this)">`}
 
 // Populate collection filters + starter decks
 function optionList(values, label){return `<option value="">${label}</option>`+[...values].filter(Boolean).sort((a,b)=>String(a).localeCompare(String(b))).map(v=>`<option value="${String(v).replace(/"/g,'&quot;')}">${v}</option>`).join('')}
@@ -542,6 +553,13 @@ document.getElementById('pfa').innerHTML=optionList(new Set(ALL_CARDS.map(c=>c.a
 document.getElementById('pfk').innerHTML=optionList(new Set(ALL_CARDS.flatMap(c=>Array.isArray(c.kinds)?c.kinds:[])),'All Kinds');
 document.getElementById('pfsu').innerHTML=optionList(new Set(ALL_CARDS.map(c=>c.sub)),'All Sub-Types');
 document.getElementById('pool-total').textContent=ALL_CARDS.length;
+const builderParams=new URLSearchParams(window.location.search);
+const requestedSet=String(builderParams.get('set')||'').trim();
+if(requestedSet){
+ const setOption=[...document.getElementById('pfs').options].find(option=>option.value.toLowerCase()===requestedSet.toLowerCase());
+ if(setOption) document.getElementById('pfs').value=setOption.value;
+}
+if(builderParams.get('search')) document.getElementById('pq').value=builderParams.get('search');
 if(STARTER_DECKS.length){
  const sel=document.getElementById('starter-select');
  sel.innerHTML='<option value="">Load Starter Deck…</option>'+STARTER_DECKS.map((d,i)=>`<option value="${i}">${d.name} (${(d.main||[]).length})</option>`).join('');
@@ -575,7 +593,8 @@ function filterPool(){
     if(fg==='standard'&&c.great)return false;
     if(minPr&&(c.pr||0)<minPr)return false;
     if(minCp&&(c.cp||0)<minCp)return false;
-    if(q&&!c.name.toLowerCase().includes(q)&&!c.kindsStr.toLowerCase().includes(q)&&!c.desc.toLowerCase().includes(q)&&!String(c.set||'').toLowerCase().includes(q)&&!String(c.id||'').toLowerCase().includes(q))return false;
+    const searchable=[c.name,c.kindsStr,Array.isArray(c.kinds)?c.kinds.join(' '):'',c.desc,c.set,c.id].filter(Boolean).join(' ').toLowerCase();
+    if(q&&!searchable.includes(q))return false;
     return true;
   });
   const typeOrder={Catalyst:0,'Palm Trick':1,'Concealed Trick':2,'Counter Trick':3,'Field Trick':4,Fusion:5};
@@ -723,7 +742,7 @@ function showTT(event,el,id){
  const tt=document.getElementById('tooltip');
  document.getElementById('tt-name').textContent=c.name+(c.great?' ★ GREAT':'');
  document.getElementById('tt-type').textContent=`${c.cardType}${c.sub&&c.sub!=='Normal'?' ('+c.sub+')':''} · ${c.set} · ${c.id}${c.alignment?' · '+c.alignment:''}${c.level?' · Lv '+c.level:''}${c.kindsStr?' · '+c.kindsStr:''}`;
- const ttImg=document.getElementById('tt-img');const ttSrc=cardImg(c);ttImg.src=ttSrc;ttImg.classList.toggle('is-gif', /\.gif$/i.test(ttSrc));ttImg.onerror=()=>{ttImg.onerror=null;ttImg.src='images/placeholder.gif';ttImg.classList.add('is-gif')};
+ const ttImg=document.getElementById('tt-img');const ttSrc=cardImg(c);ttImg.src=ttSrc;ttImg.dataset.cardId=c.id;ttImg.dataset.imageIndex='0';ttImg.classList.toggle('is-gif', /\.gif$/i.test(ttSrc));ttImg.onerror=()=>advanceCardImage(ttImg);
  const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
  document.getElementById('tt-stats').textContent=isC?`Pressure: ${c.pr}  ·  Counter Pressure: ${c.cp}`:'';
  document.getElementById('tt-desc').textContent=c.desc||'No effect text.';
@@ -894,7 +913,7 @@ function launchPlayWithDeck(){
  }
  CTFDeckUtils.saveLocalDeck(deck);
  CTFDeckUtils.setPlayDeck(deck);
- window.location.href='play.html?deck=custom';
+ window.location.href='https://discord.gg/cKj3ayt2Mp';
 }
 
 // ── INIT ──
@@ -904,7 +923,8 @@ filterPool();
 renderAll();
 if(window.CTF_ALPHA_SET_AUDIT){
  const audit=window.CTF_ALPHA_SET_AUDIT;
- setImportStatus(`${audit.source}: ${audit.activeSets} sets · ${audit.activeCards.toLocaleString()} active cards · ${audit.normalizedEntries} naming conflicts normalized.`, 'ok');
+ const typeFix=audit.catalystTypeCorrections?` · ${audit.catalystTypeCorrections} leveled Catalysts restored from Palm Trick classification`:'';
+ setImportStatus(`${audit.source}: ${audit.activeSets} sets · ${audit.activeCards.toLocaleString()} active cards · ${audit.normalizedEntries} naming conflicts normalized${typeFix}.`, 'ok');
 }
 if(!poolFiltered.length && ALL_CARDS.length){ poolFiltered=[...ALL_CARDS]; renderPool(); document.getElementById('pool-total').textContent=ALL_CARDS.length; }
 

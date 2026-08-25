@@ -21,7 +21,7 @@
 (function(global){
   'use strict';
 
-  var PLACEHOLDER = 'images/placeholder.gif';
+  var PLACEHOLDER = 'images/placeholder.png';
 
   // ── EMBEDDED DATA ─────────────────────────────────────────────────────
   // MANIFEST: SET -> { normkey -> actual filename } for exact match

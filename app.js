@@ -10,7 +10,7 @@ Rules enforced (Deck Builder):
 */
 
 const DATA_URL = 'data/cards.json';
-const PLACEHOLDER_IMAGE = 'images/placeholder.gif';
+const PLACEHOLDER_IMAGE = 'images/placeholder.png';
 
 const state = {
   cards: [],

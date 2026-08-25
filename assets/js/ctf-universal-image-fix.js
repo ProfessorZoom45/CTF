@@ -23,7 +23,7 @@
     return;
   }
 
-  var PLACEHOLDER = 'images/placeholder.gif';
+  var PLACEHOLDER = 'images/placeholder.png';
 
   function normalize(value){
     return String(value || '')

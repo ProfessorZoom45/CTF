@@ -28,6 +28,7 @@
     "focus your engery": "Focus Your Energy",
     "knives minipulation": "Knives Manipulation",
     "spirit equipment": "The Great Spirit Equipment",
+    "spawning buu": "Summoning Buu",
     "110 percent": "110%"
   };
   const STORAGE_KEYS = {

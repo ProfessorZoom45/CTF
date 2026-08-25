@@ -4,7 +4,7 @@
    Old explicit map still works first when present.
 */
 (function(global){
-  const PLACEHOLDER = 'images/placeholder.gif';
+  const PLACEHOLDER = 'images/placeholder.png';
 
   function cleanText(value){
     return String(value || '')

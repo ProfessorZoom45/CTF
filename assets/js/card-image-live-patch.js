@@ -27,7 +27,7 @@
   function normalizedPath(card){
     var set = setCode(card);
     var name = normalize(cardName(card));
-    if(!set || !name) return 'images/placeholder.gif';
+    if(!set || !name) return 'images/placeholder.png';
     return 'images/' + set + '/' + name + '.gif';
   }
 
@@ -37,7 +37,7 @@
     global.CTF_CARDS.forEach(function(card){
       if(!card || !card.id) return;
       var current = global.CTF_CARD_IMAGES[card.id];
-      if(!current || current === 'images/placeholder.gif'){
+      if(!current || current === 'images/placeholder.png'){
         global.CTF_CARD_IMAGES[card.id] = normalizedPath(card);
       }
     });
@@ -50,12 +50,12 @@
     img.onerror = function(){
       var src = this.getAttribute('src') || '';
       if(/\.gif$/i.test(src)){
-        this.onerror = function(){ this.onerror = null; this.src = 'images/placeholder.gif'; };
+        this.onerror = function(){ this.onerror = null; this.src = 'images/placeholder.png'; };
         this.src = src.replace(/\.gif$/i, '.png');
         return;
       }
       this.onerror = null;
-      this.src = 'images/placeholder.gif';
+      this.src = 'images/placeholder.png';
     };
   };
 
