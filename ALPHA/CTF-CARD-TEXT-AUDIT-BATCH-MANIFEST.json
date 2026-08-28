@@ -3,58 +3,88 @@
     "id": "all-sets:8a9f2cbde0df416d25f00fd65c1bc74c87f6458dae0ef119e5ea40ea844bbeeb",
     "hash": "8a9f2cbde0df416d25f00fd65c1bc74c87f6458dae0ef119e5ea40ea844bbeeb",
     "cardCount": 1613,
-    "generatedAt": "2026-08-28T19:30:30.703Z"
+    "generatedAt": "2026-08-28T20:16:44.081Z"
   },
   "versions": [
     {
       "version": 1,
       "first": "ANM",
-      "last": "DBS",
+      "last": "ANM",
       "setCodes": [
-        "ANM",
+        "ANM"
+      ],
+      "cardRecords": 34,
+      "largestSet": 34,
+      "file": "CTF-CARD-TEXT-AUDIT-V1-ANM.html"
+    },
+    {
+      "version": 2,
+      "first": "AOT",
+      "last": "CT1",
+      "setCodes": [
         "AOT",
         "BL1",
         "BLC",
         "BRO",
         "CBB",
         "CC1",
-        "CT1",
-        "DB1",
-        "DBS"
+        "CT1"
       ],
-      "cardRecords": 457,
+      "cardRecords": 323,
       "largestSet": 97,
-      "file": "CTF-CARD-TEXT-AUDIT-V1-ANM-TO-DBS.html"
+      "file": "CTF-CARD-TEXT-AUDIT-V2-AOT-TO-CT1.html"
     },
     {
-      "version": 2,
-      "first": "DBZ",
-      "last": "KH1",
+      "version": 3,
+      "first": "DB1",
+      "last": "DBZ",
       "setCodes": [
-        "DBZ",
+        "DB1",
+        "DBS",
+        "DBZ"
+      ],
+      "cardRecords": 141,
+      "largestSet": 54,
+      "file": "CTF-CARD-TEXT-AUDIT-V3-DB1-TO-DBZ.html"
+    },
+    {
+      "version": 4,
+      "first": "DND",
+      "last": "HLS",
+      "setCodes": [
         "DND",
         "FF7",
         "GCK",
         "GDS",
         "GGX",
         "HLP",
-        "HLS",
-        "INU",
-        "KH1"
+        "HLS"
       ],
-      "cardRecords": 413,
+      "cardRecords": 293,
       "largestSet": 51,
-      "file": "CTF-CARD-TEXT-AUDIT-V2-DBZ-TO-KH1.html"
+      "file": "CTF-CARD-TEXT-AUDIT-V4-DND-TO-HLS.html"
     },
     {
-      "version": 3,
-      "first": "KIR",
-      "last": "SL1",
+      "version": 5,
+      "first": "INU",
+      "last": "MGM",
       "setCodes": [
+        "INU",
+        "KH1",
         "KIR",
         "LOZ",
         "MB1",
-        "MGM",
+        "MGM"
+      ],
+      "cardRecords": 207,
+      "largestSet": 50,
+      "file": "CTF-CARD-TEXT-AUDIT-V5-INU-TO-MGM.html"
+    },
+    {
+      "version": 6,
+      "first": "NAR",
+      "last": "SL1",
+      "setCodes": [
         "NAR",
         "OP1",
         "RKN",
@@ -62,40 +92,50 @@
         "SH2",
         "SL1"
       ],
-      "cardRecords": 373,
+      "cardRecords": 245,
       "largestSet": 51,
-      "file": "CTF-CARD-TEXT-AUDIT-V3-KIR-TO-SL1.html"
+      "file": "CTF-CARD-TEXT-AUDIT-V6-NAR-TO-SL1.html"
     },
     {
-      "version": 4,
+      "version": 7,
       "first": "SLM",
-      "last": "WR1",
+      "last": "TG1",
       "setCodes": [
         "SLM",
         "SNC",
         "SS1",
         "SYD",
-        "T2F",
-        "TG1",
-        "TOKEN",
-        "TT1",
-        "TUV",
-        "WR1"
+        "TG1"
       ],
-      "cardRecords": 336,
+      "cardRecords": 202,
       "largestSet": 56,
-      "file": "CTF-CARD-TEXT-AUDIT-V4-SLM-TO-WR1.html"
+      "file": "CTF-CARD-TEXT-AUDIT-V7-SLM-TO-TG1.html"
     },
     {
-      "version": 5,
-      "first": "YYH",
+      "version": 8,
+      "first": "TT1",
       "last": "YYH",
       "setCodes": [
+        "TT1",
+        "TUV",
+        "WR1",
         "YYH"
       ],
-      "cardRecords": 34,
+      "cardRecords": 118,
       "largestSet": 34,
-      "file": "CTF-CARD-TEXT-AUDIT-V5-YYH-TO-YYH.html"
+      "file": "CTF-CARD-TEXT-AUDIT-V8-TT1-TO-YYH.html"
+    },
+    {
+      "version": 9,
+      "first": "T2F",
+      "last": "TOKEN",
+      "setCodes": [
+        "T2F",
+        "TOKEN"
+      ],
+      "cardRecords": 50,
+      "largestSet": 26,
+      "file": "CTF-CARD-TEXT-AUDIT-V9-T2F-TO-TOKEN.html"
     }
   ]
 }
