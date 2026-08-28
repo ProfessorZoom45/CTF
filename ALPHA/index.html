@@ -1,1 +1,78 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow, noarchive"><title>Carry The Flame Alpha — Tester Hub</title><style>:root{color-scheme:dark}body{margin:0;background:#090b12;color:#eef4ff;font:16px/1.5 system-ui,sans-serif}.page{max-width:1120px;margin:auto;padding:26px}.hero{padding:24px;border:1px solid #58456e;border-radius:18px;background:linear-gradient(120deg,#24152f,#11192b)}h1{font-size:clamp(1.7rem,4vw,3rem);margin:.2rem 0}.note{padding:12px 14px;margin:18px 0;border:1px solid #456888;border-radius:10px;background:#101c29}.stats{display:flex;gap:10px;flex-wrap:wrap}.stat{padding:10px 12px;border:1px solid #3a4c68;border-radius:9px;background:#101829}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:11px;margin-top:18px}.set{border:1px solid #344561;border-radius:12px;padding:15px;background:#121927}.set h2{margin:0;font-size:1.25rem}.set p{color:#b7c5dd;margin:.25rem 0}.set.current{border-color:#62be95;background:#143026}.ready{color:#69dca1}.source{font-size:.84rem;color:#aebbd2}a{color:#91c7ff}@media(max-width:600px){.page{padding:12px}}</style></head><body><main class="page"><section class="hero"><div style="letter-spacing:.12em;text-transform:uppercase;color:#e5b8ff;font-size:.78rem;font-weight:700">Direct-link alpha tester area • not linked from the live CTF pages</div><h1>Carry The Flame<br>Alpha Tester Hub</h1><p>Choose a version, then choose one set to audit at a time. Version 1 begins with ANM. This alpha area is kept out of live-site navigation and asks search engines not to index it.</p></section><p class="note"><b>Source guard:</b> these pages read a hash-pinned local snapshot and save review changes only in the browser. They cannot alter the database, source .ptcg cards, certification ledger, or engine.</p><section class="stats"><div class="stat"><b>5</b><br>version pages</div><div class="stat"><b>1613</b><br>cards split across versions</div><div class="stat"><b>97</b><br>largest active set audit</div><div class="stat"><b>300</b><br>maximum active review</div></section><section class="grid"><article class="set current"><h2>Version 1</h2><p><b>10</b> sets · 457 cards total</p><p class="ready">One selected set at a time (largest: 97 cards)</p><p class="source">ANM · AOT · BL1 · BLC · BRO · CBB · CC1 · CT1 · DB1 · DBS</p><a href="CTF-CARD-TEXT-AUDIT-V1-ANM-TO-DBS.html">Open Version 1</a></article><article class="set "><h2>Version 2</h2><p><b>10</b> sets · 413 cards total</p><p class="ready">One selected set at a time (largest: 51 cards)</p><p class="source">DBZ · DND · FF7 · GCK · GDS · GGX · HLP · HLS · INU · KH1</p><a href="CTF-CARD-TEXT-AUDIT-V2-DBZ-TO-KH1.html">Open Version 2</a></article><article class="set "><h2>Version 3</h2><p><b>10</b> sets · 373 cards total</p><p class="ready">One selected set at a time (largest: 51 cards)</p><p class="source">KIR · LOZ · MB1 · MGM · NAR · OP1 · RKN · S-M · SH2 · SL1</p><a href="CTF-CARD-TEXT-AUDIT-V3-KIR-TO-SL1.html">Open Version 3</a></article><article class="set "><h2>Version 4</h2><p><b>10</b> sets · 336 cards total</p><p class="ready">One selected set at a time (largest: 56 cards)</p><p class="source">SLM · SNC · SS1 · SYD · T2F · TG1 · TOKEN · TT1 · TUV · WR1</p><a href="CTF-CARD-TEXT-AUDIT-V4-SLM-TO-WR1.html">Open Version 4</a></article><article class="set "><h2>Version 5</h2><p><b>1</b> sets · 34 cards total</p><p class="ready">One selected set at a time (largest: 34 cards)</p><p class="source">YYH</p><a href="CTF-CARD-TEXT-AUDIT-V5-YYH-TO-YYH.html">Open Version 5</a></article></section></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="description" content="Carry The Flame Alpha tester and decision-maker hub.">
+  <title>Carry The Flame Alpha — Tester &amp; Decision Hub</title>
+  <style>
+    :root { color-scheme:dark; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#090b12; color:#eef4ff; font:16px/1.5 system-ui,sans-serif; }
+    .page { max-width:1120px; margin:auto; padding:26px; }
+    .hero { padding:24px; border:1px solid #58456e; border-radius:18px; background:linear-gradient(120deg,#24152f,#11192b); }
+    h1 { margin:.2rem 0; font-size:clamp(1.7rem,4vw,3rem); }
+    h2 { margin:2rem 0 .5rem; font-size:1.35rem; }
+    .note { padding:12px 14px; margin:18px 0; border:1px solid #456888; border-radius:10px; background:#101c29; }
+    .stats { display:flex; gap:10px; flex-wrap:wrap; }
+    .stat { padding:10px 12px; border:1px solid #3a4c68; border-radius:9px; background:#101829; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:11px; margin-top:18px; }
+    .set { border:1px solid #344561; border-radius:12px; padding:15px; background:#121927; }
+    .set h3 { margin:0; font-size:1.25rem; }
+    .set p { margin:.25rem 0; color:#b7c5dd; }
+    .set.current { border-color:#62be95; background:#143026; }
+    .image-tool { border-color:#805543; background:#211711; }
+    .image-tool h3 { color:#ffd5ad; }
+    .ready { color:#69dca1; }
+    .source { font-size:.84rem; color:#aebbd2; }
+    .section-note { margin:.2rem 0 0; color:#b7c5dd; }
+    a { color:#91c7ff; }
+    .image-tool a { color:#ffbd83; }
+    footer { margin-top:2rem; color:#aebbd2; font-size:.84rem; }
+    @media (max-width:600px) { .page { padding:12px; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div style="letter-spacing:.12em;text-transform:uppercase;color:#e5b8ff;font-size:.78rem;font-weight:700">Direct-link Alpha tester area &bull; not linked from the live CTF pages</div>
+      <h1>Carry The Flame<br>Alpha Tester &amp; Decision Hub</h1>
+      <p>Launch a card-text audit or an image-selector workspace from one Alpha location. Each audit version lets testers work one set at a time.</p>
+    </section>
+
+    <p class="note"><b>Source guard:</b> the card-text audit pages read a hash-pinned local snapshot and save review changes only in the browser. They cannot alter the database, source .ptcg cards, certification ledger, or engine.</p>
+
+    <section aria-labelledby="audit-tools">
+      <h2 id="audit-tools">Card-text audit tools</h2>
+      <div class="stats">
+        <div class="stat"><b>5</b><br>audit version pages</div>
+        <div class="stat"><b>1613</b><br>cards split across versions</div>
+        <div class="stat"><b>97</b><br>largest active set audit</div>
+        <div class="stat"><b>300</b><br>maximum active review</div>
+      </div>
+      <div class="grid">
+        <article class="set current"><h3>Version 1</h3><p><b>10</b> sets &middot; 457 cards total</p><p class="ready">One selected set at a time (largest: 97 cards)</p><p class="source">ANM &middot; AOT &middot; BL1 &middot; BLC &middot; BRO &middot; CBB &middot; CC1 &middot; CT1 &middot; DB1 &middot; DBS</p><a href="CTF-CARD-TEXT-AUDIT-V1-ANM-TO-DBS.html">Open Version 1</a></article>
+        <article class="set"><h3>Version 2</h3><p><b>10</b> sets &middot; 413 cards total</p><p class="ready">One selected set at a time (largest: 51 cards)</p><p class="source">DBZ &middot; DND &middot; FF7 &middot; GCK &middot; GDS &middot; GGX &middot; HLP &middot; HLS &middot; INU &middot; KH1</p><a href="CTF-CARD-TEXT-AUDIT-V2-DBZ-TO-KH1.html">Open Version 2</a></article>
+        <article class="set"><h3>Version 3</h3><p><b>10</b> sets &middot; 373 cards total</p><p class="ready">One selected set at a time (largest: 51 cards)</p><p class="source">KIR &middot; LOZ &middot; MB1 &middot; MGM &middot; NAR &middot; OP1 &middot; RKN &middot; S-M &middot; SH2 &middot; SL1</p><a href="CTF-CARD-TEXT-AUDIT-V3-KIR-TO-SL1.html">Open Version 3</a></article>
+        <article class="set"><h3>Version 4</h3><p><b>10</b> sets &middot; 336 cards total</p><p class="ready">One selected set at a time (largest: 56 cards)</p><p class="source">SLM &middot; SNC &middot; SS1 &middot; SYD &middot; T2F &middot; TG1 &middot; TOKEN &middot; TT1 &middot; TUV &middot; WR1</p><a href="CTF-CARD-TEXT-AUDIT-V4-SLM-TO-WR1.html">Open Version 4</a></article>
+        <article class="set"><h3>Version 5</h3><p><b>1</b> set &middot; 34 cards total</p><p class="ready">One selected set at a time (largest: 34 cards)</p><p class="source">YYH</p><a href="CTF-CARD-TEXT-AUDIT-V5-YYH-TO-YYH.html">Open Version 5</a></article>
+      </div>
+    </section>
+
+    <section aria-labelledby="image-tools">
+      <h2 id="image-tools">Card-image selector tools</h2>
+      <p class="section-note">Standalone selection workspaces supplied for the Alpha decision process.</p>
+      <div class="grid">
+        <article class="set image-tool"><h3>Version 1 &mdash; DB Edition</h3><p>The original database-focused image selection workspace.</p><a href="card-image-selector-v1-db-edition.html">Open image selector</a></article>
+        <article class="set image-tool"><h3>Version 2</h3><p>The second Alpha image selection workspace.</p><a href="card-image-selector-v2.html">Open image selector</a></article>
+        <article class="set image-tool"><h3>Version 3</h3><p>The third Alpha image selection workspace.</p><a href="card-image-selector-v3.html">Open image selector</a></article>
+        <article class="set image-tool"><h3>Version 4</h3><p>The latest supplied Alpha image selection workspace.</p><a href="card-image-selector-v4.html">Open image selector</a></article>
+      </div>
+    </section>
+
+    <p class="note"><b>Future Alpha tools:</b> additional decision-makers can be added in this folder and linked here, keeping this address as the stable Alpha launch point.</p>
+    <footer>Carry The Flame &copy; 2026</footer>
+  </main>
+</body>
+</html>
