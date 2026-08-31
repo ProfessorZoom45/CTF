@@ -1,7 +1,7 @@
 
 /*
-CTF Card Database + TheForge (Static / GitHub Pages)
-Rules enforced (TheForge):
+CTF Card Database + The Forge (Static / GitHub Pages)
+Rules enforced (The Forge):
 - Deck size: 40–60 cards (valid range)
 - Great cards: max 5 total
 - Each Great card: max 1 copy

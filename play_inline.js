@@ -106,7 +106,7 @@ function buildLobbyDecks(){
       id: 'custom-saved',
       source: 'custom',
       name: custom.name || 'Saved Custom Deck',
-      desc: 'Saved custom deck from TheForge',
+      desc: 'Saved custom deck from The Forge',
       fixedOpeningHand: [],
       deck: custom
     });
@@ -428,7 +428,7 @@ function advanceTutorialStep(){
   renderTutorialPhaseBanner();
   renderP1SkipBattleBanner();
     $('game-over')?.classList.remove('show');
-    showToast('Tutorial complete! Explore the TheForge or join the Discord next.');
+    showToast('Tutorial complete! Explore the The Forge or join the Discord next.');
     return;
   }
   tutorialStep += 1;
