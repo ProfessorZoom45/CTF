@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deck Builder 2.0 Alpha — Carry The Flame</title>
+<title>TheForge — Carry The Flame</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
 <meta name="description" content="Build, search, import, and export Carry The Flame Alpha decks from the complete 41-set card collection.">
@@ -11,17 +11,17 @@
 <link rel="apple-touch-icon" href="assets/img/ctf-mark.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Carry The Flame">
-<meta property="og:title" content="Deck Builder — Carry The Flame">
-<meta property="og:description" content="Build and refine your Carry The Flame deck with the browser-based deck builder.">
-<meta property="og:image" content="https://professorzoom45.github.io/CTF/assets/img/carry-the-flame-horizontal.png">
+<meta property="og:title" content="TheForge — Carry The Flame">
+<meta property="og:description" content="Forge and refine your Carry The Flame deck with the browser-based TheForge builder.">
+<meta property="og:image" content="https://professorzoom45.github.io/CTF/assets/img/the-forge-branded-background.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Carry The Flame flaming torch logo">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Deck Builder — Carry The Flame">
-<meta name="twitter:description" content="Build and refine your Carry The Flame deck with the browser-based deck builder.">
-<meta name="twitter:image" content="https://professorzoom45.github.io/CTF/assets/img/carry-the-flame-horizontal.png">
+<meta name="twitter:title" content="TheForge — Carry The Flame">
+<meta name="twitter:description" content="Forge and refine your Carry The Flame deck with the browser-based TheForge builder.">
+<meta name="twitter:image" content="https://professorzoom45.github.io/CTF/assets/img/the-forge-branded-background.png">
 <meta name="twitter:image:alt" content="Carry The Flame flaming torch logo">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,12 +30,12 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--coal:#0d0d0d;--coal-light:#1a1a1a;--coal-mid:#242424;--flame:#ff6a00;--ember:#c0392b;--amber:#ffb347;--ash:#888;--white:#f5f0e8;--cream:#e8e0d0;--green:#4CAF50;--red:#e74c3c;--blue:#2196F3;--purple:#9C27B0;--font-display:'Bebas Neue',sans-serif;--font-label:'Barlow Condensed',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Space Mono',monospace}
-body{background:var(--coal);color:var(--white);font-family:var(--font-body);line-height:1.5;overflow-x:hidden}
+body{background:linear-gradient(rgba(2,1,0,.58),rgba(2,1,0,.75)),url('assets/img/the-forge-branded-background.png') center/cover fixed,var(--coal);color:var(--white);font-family:var(--font-body);line-height:1.5;overflow-x:hidden}
 a{color:var(--flame);text-decoration:none}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--coal-mid)}::-webkit-scrollbar-thumb{background:var(--flame);border-radius:3px}
 
 /* Nav */
-nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,106,0,.15)}
+nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13,.82);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,106,0,.15)}
 .nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.2rem}
 .nav-brand{font-family:var(--font-display);font-size:1.4rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase}.nav-brand span{color:var(--white)}
 .nav-links{display:flex;gap:1.5rem;list-style:none}.nav-links a{font-family:var(--font-label);font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--cream);transition:color .2s}.nav-links a:hover,.nl a.active{color:var(--flame)}
@@ -45,7 +45,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .builder{display:grid;grid-template-columns:340px 1fr;gap:0;margin-top:48px;height:calc(100vh - 48px)}
 
 /* Left panel — card pool */
-.pool{background:var(--coal-light);border-right:1px solid rgba(255,106,0,.1);display:flex;flex-direction:column;overflow:hidden}
+.pool{background:rgba(18,12,8,.82);border-right:1px solid rgba(255,106,0,.16);display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(7px)}
 .pool-header{padding:.8rem;border-bottom:1px solid rgba(255,106,0,.08)}
 .pool-header h2{font-family:var(--font-display);font-size:1.2rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase;margin-bottom:.5rem}
 .pool-filters{display:flex;flex-direction:column;gap:.4rem}
@@ -54,7 +54,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .pool-row{display:flex;gap:.4rem}.pool-row>*{flex:1}
 .pool-row.triple>*{min-width:0}.pool-row .filter-label{font-family:var(--font-mono);font-size:.58rem;color:var(--ash);padding:.15rem 0;align-self:center;white-space:nowrap}
 .pool-actions{display:flex;gap:.4rem}.pool-actions .btn{flex:1;padding:.4rem .45rem}
-.alpha-builder-brand{display:flex;align-items:center;gap:.75rem;border-bottom:1px solid rgba(255,106,0,.1);padding-bottom:.75rem;margin-bottom:.8rem}.alpha-builder-brand img{width:128px;height:62px;object-fit:contain}.alpha-builder-brand h1{font-family:var(--font-display);font-size:1.65rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase;line-height:1}.alpha-builder-brand p{font-size:.72rem;color:var(--cream);margin-top:.2rem}
+.alpha-builder-brand{display:flex;align-items:center;gap:.75rem;border-bottom:1px solid rgba(255,106,0,.22);padding-bottom:.75rem;margin-bottom:.8rem}.forge-mark{width:54px;height:54px;display:grid;place-items:center;font-size:2rem;color:var(--amber);border:1px solid rgba(255,106,0,.45);background:rgba(12,5,1,.45);box-shadow:0 0 18px rgba(255,77,0,.2)}.alpha-builder-brand h1{font-family:var(--font-display);font-size:1.65rem;letter-spacing:2px;color:var(--flame);text-transform:uppercase;line-height:1}.alpha-builder-brand p{font-size:.72rem;color:var(--cream);margin-top:.2rem}.forge-analysis{font-family:var(--font-mono);font-size:.7rem;color:var(--cream);padding:.55rem .7rem;margin:-.1rem 0 .75rem;border:1px solid rgba(255,106,0,.18);background:rgba(9,4,1,.5);line-height:1.5}.forge-analysis strong{color:var(--amber)}.forge-save-state{font-family:var(--font-mono);font-size:.67rem;color:var(--ash);margin-left:auto}.forge-save-state.dirty{color:var(--amber)}
 .import-status{width:100%;font-size:.74rem;color:var(--ash);line-height:1.35}.import-status.warn{color:var(--amber)}.import-status.ok{color:var(--green)}
 .pool-count{font-family:var(--font-mono);font-size:.7rem;color:var(--ash);padding:.3rem .8rem;border-bottom:1px solid rgba(255,106,0,.06)}
 .pool-list{flex:1;overflow-y:auto;padding:.3rem}
@@ -75,7 +75,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .tt-img.is-gif{width:120px;height:120px;object-fit:contain;object-position:center;image-rendering:pixelated;image-rendering:crisp-edges;background:transparent}
 
 /* Right panel — deck zones */
-.deck-area{display:flex;flex-direction:column;overflow-y:auto;padding:1rem}
+.deck-area{display:flex;flex-direction:column;overflow-y:auto;padding:1rem;background:rgba(4,2,1,.52);backdrop-filter:blur(4px)}
 .deck-toolbar{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;flex-wrap:wrap}
 .deck-name{font-family:var(--font-body);background:var(--coal-mid);border:1px solid rgba(255,106,0,.15);color:var(--white);padding:.4rem .8rem;font-size:.9rem;outline:none;flex:1;min-width:200px}.deck-name:focus{border-color:var(--flame)}
 .btn{font-family:var(--font-label);font-weight:700;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;padding:.45rem .9rem;border:none;cursor:pointer;transition:all .2s;border-radius:2px}
@@ -98,7 +98,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .zone-sort{font-family:var(--font-label);font-size:.7rem;color:var(--ash);cursor:pointer;border:none;background:none;text-transform:uppercase;letter-spacing:1px}.zone-sort:hover{color:var(--flame)}
 
 /* Card grid in deck zones — CTF style compact tiles */
-.dg{display:flex;flex-wrap:wrap;gap:3px;min-height:50px;padding:4px;background:rgba(255,106,0,.02);border:1px dashed rgba(255,106,0,.08);border-radius:3px}
+.dg{display:flex;flex-wrap:wrap;gap:3px;min-height:50px;padding:4px;background:rgba(18,8,2,.35);border:1px dashed rgba(255,106,0,.16);border-radius:3px}
 .dc{width:96px;background:var(--coal-mid);border:1px solid rgba(255,106,0,.08);padding:4px;cursor:pointer;position:relative;transition:all .15s;border-radius:2px;user-select:none}
 .dc-thumb{width:100%;aspect-ratio:59/86;object-fit:cover;object-position:center;border-radius:2px;background:var(--coal);border:1px solid rgba(255,106,0,.06);margin-bottom:4px}
 .dc:hover{border-color:var(--flame);transform:translateY(-1px);box-shadow:0 3px 10px rgba(255,106,0,.12)}
@@ -171,7 +171,7 @@ body > nav.ctf-unified {
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: rgba(13, 13, 13, 0.92);
+  background: rgba(13, 13, 13, 0.82);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 106, 0, 0.2);
@@ -358,7 +358,7 @@ body.ctf-nav-pad { padding-top: 0; }
       <li><a href="index.html">Home</a></li>
       <li><a href="rules.html">Rules</a></li>
       <li><a href="collections.html">Collections</a></li>
-      <li><a href="deckbuilder.html" class="active" aria-current="page">Deck Builder</a></li>
+      <li><a href="deckbuilder.html" class="active" aria-current="page">TheForge</a></li>
       <li><a href="https://discord.gg/cKj3ayt2Mp">Play</a></li>
       <li><a href="glossary.html">Glossary</a></li>
       <li><a href="About_Us.html">About</a></li>
@@ -437,28 +437,37 @@ body.ctf-nav-pad { padding-top: 0; }
 <!-- RIGHT — DECK AREA -->
 <div class="deck-area">
 <div class="alpha-builder-brand">
-  <img src="assets/img/carry-the-flame-horizontal.png" alt="Carry The Flame">
-  <div><h1>Deck Builder 2.0 Alpha</h1><p>Browse the complete card collection, build a legal deck, and export a CTF-compatible deck file.</p></div>
+  <div class="forge-mark" aria-hidden="true">⚒</div>
+  <div><h1>TheForge</h1><p>Build a legal CTF! deck in the firelight. The centered torch mark is forged into the background itself.</p></div>
 </div>
 <div class="deck-toolbar">
 <input type="text" class="deck-name" id="deck-name" value="My CTF Deck" placeholder="Deck Name...">
 <select id="starter-select" class="starter-select" onchange="loadStarterDeck()"><option value="">Load Starter Deck…</option></select>
+<select id="vault-select" class="starter-select" onchange="loadDeckVault()"><option value="">Deck Vault…</option></select>
 <button class="btn btn-ghost" onclick="loadStarterDeck()">Load Starter</button>
 <button class="btn btn-flame" onclick="exportDeck()">Export Deck</button>
+<button class="btn btn-flame" onclick="copyForgeCode()">Copy Forge Code</button>
 <button class="btn btn-green" onclick="showImport()">Paste Import</button>
 <button class="btn btn-green" onclick="document.getElementById('deck-file').click()">Open Deck File</button>
 <input id="deck-file" type="file" accept=".txt,.deck,.cnl,text/plain,*/*" hidden onchange="importDeckFile(this.files[0])">
-<button class="btn btn-ghost" onclick="saveDeckLocal()">Save</button>
+<button class="btn btn-ghost" onclick="undoDeck()" id="undo-btn">Undo</button>
+<button class="btn btn-ghost" onclick="redoDeck()" id="redo-btn">Redo</button>
+<button class="btn btn-ghost" onclick="saveDeckVault()">Save Vault</button>
+<button class="btn btn-ghost" onclick="saveDeckLocal()">Save Active</button>
 <button class="btn btn-green" onclick="launchPlayWithDeck()">Play This Deck</button>
-<button class="btn btn-ghost" onclick="loadDeckLocal()">Load</button>
+<button class="btn btn-ghost" onclick="loadDeckLocal()">Load Active</button>
 <button class="btn btn-red" onclick="clearDeck()">Clear</button>
+<select id="chi-order" class="starter-select" onchange="renderForgeAnalysis()"><option value="low">Chi: Low → High</option><option value="high">Chi: High → Low</option></select>
+<span class="forge-save-state" id="forge-save-state">ALL CHANGES SAVED</span>
 </div>
+
+<div class="forge-analysis" id="forge-analysis" role="status">CHI ACTIVATION CURVE · Waiting for deck data…</div>
 
 <div class="valid" id="valid"></div>
 <div class="valid" style="margin-top:.8rem">
   <div class="vr"><span class="dot dot-ok"></span><strong>Alpha Collection:</strong>&nbsp; 41 updated sets · 1,599 active cards · artwork fallback checked</div>
   <div class="vr"><span class="dot dot-ok"></span><strong>Locked rules source:</strong>&nbsp; <span data-ctf="ui.mainDeckRange">40–60</span> main · <span data-ctf="ui.fusionDeckRange">0–15</span> fusion · <span data-ctf="ui.sideDeckRange">0–15</span> side · <span data-ctf="ui.greatCap">5</span> Great Card cap</div>
-  <div class="import-status" id="import-status" role="status">Reese-style export: <code>quantity|Set|Card Name</code> — no headers required.</div>
+  <div class="import-status" id="import-status" role="status">Import Reese-style <code>quantity|Set|Card Name</code> files or a versioned <code>CTF-FORGE-1:</code> code. Click removes a card; right-click moves Main ↔ Side.</div>
 </div>
 
 <!-- MAIN DECK -->
@@ -534,6 +543,9 @@ if(!ALL_CARDS.length){
 // ── STATE ──
 let mainDeck=[],fusionDeck=[],sideDeck=[];
 let poolFiltered=[...ALL_CARDS];
+let undoHistory=[],redoHistory=[],applyingHistory=false,deckDirty=false;
+const FORGE_CODE_PREFIX='CTF-FORGE-1:';
+const FORGE_VAULT_KEY='ctf_forge_vault_v1';
 const cardMap=Object.fromEntries(ALL_CARDS.map(c=>[c.id,c]));
 function safeCard(id){return cardMap[id]||{id,name:'Unknown',cardType:'Catalyst',alignment:'',level:0,pr:0,cp:0,kinds:[],kindsStr:'',sub:null,desc:'',great:false,img:'images/placeholder.png',image:'images/placeholder.png',set:'?'}}
 function cardImg(c){const map=(window.CTF_CARD_IMAGES || (typeof CTF_CARD_IMAGES!=='undefined' ? CTF_CARD_IMAGES : null));return (map&&c&&c.id&&map[c.id]) || (c&&((c.img&&c.img.trim())||(c.image&&c.image.trim()))) || 'images/placeholder.png'}
@@ -632,6 +644,107 @@ function renderPool(){
  }).join('');
 }
 
+// ── FORGE HISTORY, VAULT, AND VERSIONED DECK CODES ──
+function currentDeckObject(){
+ return {name:document.getElementById('deck-name').value||'My CTF Deck',main:[...mainDeck],fusion:[...fusionDeck],side:[...sideDeck]};
+}
+function captureDeckState(){return currentDeckObject()}
+function markDeckDirty(dirty=true){
+ deckDirty=dirty;
+ const state=document.getElementById('forge-save-state');
+ if(!state)return;
+ state.textContent=dirty?'UNSAVED FORGE CHANGES':'ALL CHANGES SAVED';
+ state.classList.toggle('dirty',dirty);
+}
+function updateHistoryButtons(){
+ const undo=document.getElementById('undo-btn'),redo=document.getElementById('redo-btn');
+ if(undo)undo.disabled=!undoHistory.length;
+ if(redo)redo.disabled=!redoHistory.length;
+}
+function recordHistory(){
+ if(applyingHistory)return;
+ undoHistory.push(captureDeckState());
+ if(undoHistory.length>60)undoHistory.shift();
+ redoHistory=[];
+ updateHistoryButtons();
+}
+function restoreDeckState(state){
+ applyingHistory=true;
+ document.getElementById('deck-name').value=state.name||'My CTF Deck';
+ mainDeck=[...(state.main||[])].filter(id=>cardMap[id]);
+ fusionDeck=[...(state.fusion||[])].filter(id=>cardMap[id]);
+ sideDeck=[...(state.side||[])].filter(id=>cardMap[id]);
+ applyingHistory=false;
+ renderAll();
+ markDeckDirty();
+ updateHistoryButtons();
+}
+function undoDeck(){
+ if(!undoHistory.length){setImportStatus('Nothing earlier to undo.','warn');return}
+ redoHistory.push(captureDeckState());
+ restoreDeckState(undoHistory.pop());
+ setImportStatus('Undid the last Forge change.','ok');
+}
+function redoDeck(){
+ if(!redoHistory.length){setImportStatus('Nothing to redo.','warn');return}
+ undoHistory.push(captureDeckState());
+ restoreDeckState(redoHistory.pop());
+ setImportStatus('Redid the last Forge change.','ok');
+}
+function deckFromPayload(payload){
+ if(!payload||!Array.isArray(payload.main)||!Array.isArray(payload.fusion)||!Array.isArray(payload.side))throw new Error('The deck payload is incomplete.');
+ const deck={name:String(payload.name||'Imported Forge Deck').slice(0,64),main:payload.main.filter(id=>cardMap[id]),fusion:payload.fusion.filter(id=>cardMap[id]),side:payload.side.filter(id=>cardMap[id])};
+ const supplied=payload.main.length+payload.fusion.length+payload.side.length;
+ if(deck.main.length+deck.fusion.length+deck.side.length!==supplied)throw new Error('The deck code references cards not present in this registry.');
+ return deck;
+}
+function forgeCode(){
+ const payload={format:'CTF-FORGE',version:1,savedUtc:new Date().toISOString(),...currentDeckObject()};
+ return FORGE_CODE_PREFIX+btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+}
+async function copyForgeCode(){
+ const code=forgeCode();
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(code);setImportStatus('Copied a versioned CTF-FORGE-1 deck code.','ok');return}}catch(e){}
+ window.prompt('Copy this CTF-FORGE-1 deck code:',code);
+ setImportStatus('Forge code ready to copy.','ok');
+}
+function tryImportForgeCode(txt){
+ const code=String(txt||'').trim();
+ if(!code.startsWith(FORGE_CODE_PREFIX))return false;
+ try{
+  const payload=JSON.parse(decodeURIComponent(escape(atob(code.slice(FORGE_CODE_PREFIX.length)))));
+  if(payload.format!=='CTF-FORGE'||payload.version!==1)throw new Error('This is not a supported Forge code.');
+  const deck=deckFromPayload(payload);
+  recordHistory();
+  document.getElementById('deck-name').value=deck.name;mainDeck=deck.main;fusionDeck=deck.fusion;sideDeck=deck.side;
+  renderAll();markDeckDirty();setImportStatus(`Imported ${deck.name} from CTF-FORGE-1 code.`,'ok');
+ }catch(e){setImportStatus(`Could not import Forge code: ${e.message}`,'warn')}
+ return true;
+}
+function readForgeVault(){
+ try{const data=JSON.parse(localStorage.getItem(FORGE_VAULT_KEY)||'[]');return Array.isArray(data)?data:[]}catch(e){return[]}
+}
+function refreshDeckVault(selectedName){
+ const select=document.getElementById('vault-select');if(!select)return;
+ const selected=selectedName||select.value;
+ const entries=readForgeVault();
+ select.innerHTML='<option value="">Deck Vault…</option>'+entries.map((entry,index)=>`<option value="${index}">${String(entry.name||'Untitled Deck').replace(/</g,'&lt;')}</option>`).join('');
+ const found=entries.findIndex(entry=>entry.name===selected);
+ if(found>=0)select.value=String(found);
+}
+function saveDeckVault(){
+ const deck={...currentDeckObject(),savedUtc:new Date().toISOString()};
+ const entries=readForgeVault();const index=entries.findIndex(entry=>String(entry.name).toLowerCase()===deck.name.toLowerCase());
+ if(index>=0)entries[index]=deck;else entries.unshift(deck);
+ localStorage.setItem(FORGE_VAULT_KEY,JSON.stringify(entries.slice(0,24)));
+ refreshDeckVault(deck.name);markDeckDirty(false);setImportStatus(`Saved ${deck.name} to the local Deck Vault.`,'ok');
+}
+function loadDeckVault(){
+ const select=document.getElementById('vault-select');if(select.value==='')return;const index=Number(select.value);const entry=readForgeVault()[index];
+ if(!entry)return;
+ try{const deck=deckFromPayload(entry);recordHistory();document.getElementById('deck-name').value=deck.name;mainDeck=deck.main;fusionDeck=deck.fusion;sideDeck=deck.side;renderAll();markDeckDirty();setImportStatus(`Loaded ${deck.name} from the Deck Vault.`,'ok')}catch(e){setImportStatus(`Could not load Deck Vault entry: ${e.message}`,'warn')}
+}
+
 // ── DECK OPERATIONS ──
 function countInAllDecks(id){return mainDeck.filter(x=>x===id).length+fusionDeck.filter(x=>x===id).length+sideDeck.filter(x=>x===id).length}
 
@@ -643,28 +756,49 @@ function addCard(id,zone){
 
  if(zone==='side'){
   if(sideDeck.length>=DECK_CFG.sideMax)return;
+  recordHistory();
   sideDeck.push(id);
  } else if(c.cardType==='Fusion'){
   if(fusionDeck.length>=DECK_CFG.fusionMax)return;
+  recordHistory();
   fusionDeck.push(id);
  } else {
   if(mainDeck.length>=DECK_CFG.mainMax)return;
+  recordHistory();
   mainDeck.push(id);
  }
  renderAll();
+ markDeckDirty();
 }
 
 function removeCard(zone,index){
+ recordHistory();
  if(zone==='main')mainDeck.splice(index,1);
  else if(zone==='fusion')fusionDeck.splice(index,1);
  else sideDeck.splice(index,1);
  renderAll();
+ markDeckDirty();
 }
 
-function clearDeck(){mainDeck=[];fusionDeck=[];sideDeck=[];renderAll()}
+function clearDeck(){
+ if(!mainDeck.length&&!fusionDeck.length&&!sideDeck.length)return;
+ if(!window.confirm('Clear every card from this Forge deck? You can undo it.'))return;
+ recordHistory();mainDeck=[];fusionDeck=[];sideDeck=[];renderAll();markDeckDirty();
+}
+
+function moveCard(zone,index){
+ if(zone==='fusion'){setImportStatus('Fusion cards stay in the Fusion Deck.','warn');return}
+ const source=zone==='main'?mainDeck:sideDeck;const destination=zone==='main'?sideDeck:mainDeck;
+ const limit=zone==='main'?DECK_CFG.sideMax:DECK_CFG.mainMax;
+ if(destination.length>=limit){setImportStatus(`The ${zone==='main'?'Side':'Main'} Deck is full.`,'warn');return}
+ const id=source[index];if(!id)return;
+ recordHistory();source.splice(index,1);destination.push(id);renderAll();markDeckDirty();
+ setImportStatus(`Moved ${safeCard(id).name} to the ${zone==='main'?'Side':'Main'} Deck.`,'ok');
+}
 
 function sortZone(zone,key){
  const arr=zone==='main'?mainDeck:zone==='fusion'?fusionDeck:sideDeck;
+ recordHistory();
  arr.sort((a,b)=>{
   const ca=safeCard(a),cb=safeCard(b);
   if(key==='name')return ca.name.localeCompare(cb.name);
@@ -674,6 +808,7 @@ function sortZone(zone,key){
   return 0;
  });
  renderAll();
+ markDeckDirty();
 }
 
 // ── DECK RENDERING ──
@@ -687,7 +822,7 @@ function renderDeckZone(arr,gridId,zone){
  for(const[id,{card:c,indices}]of seen){
   const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
   const qty=indices.length;
-  html+=`<div class="dc${c.great?' dc-great':''}" onclick="removeCard('${zone}',${indices[indices.length-1]})" oncontextmenu="event.preventDefault();removeCard('${zone}',${indices[indices.length-1]})" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
+  html+=`<div class="dc${c.great?' dc-great':''}" onclick="removeCard('${zone}',${indices[indices.length-1]})" oncontextmenu="event.preventDefault();moveCard('${zone}',${indices[indices.length-1]})" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
    <div class="dc-bar" style="background:${barColor(c.cardType)}"></div>
    ${imgTag(c,'dc-thumb')}
    <div class="dc-name">${c.name}</div>
@@ -728,11 +863,30 @@ function validate(){
  document.getElementById('side-count').textContent=`${sc} / ${DECK_CFG.sideMax}`;
 }
 
+function renderForgeAnalysis(){
+ const target=document.getElementById('forge-analysis');if(!target)return;
+ const cards=[...mainDeck,...fusionDeck,...sideDeck].map(safeCard);
+ const payments=new Map();
+ for(const card of cards){
+  for(const match of String(card.desc||'').matchAll(/\bpay(?:ing)?\s+([0-9][0-9,]*)\s*chi\b/gi)){
+   const amount=Number(match[1].replace(/,/g,''));if(amount>0)payments.set(amount,(payments.get(amount)||0)+1);
+  }
+ }
+ const order=document.getElementById('chi-order')?.value||'low';
+ const curve=[...payments.entries()].sort((a,b)=>order==='high'?b[0]-a[0]:a[0]-b[0]);
+ const summary=curve.length?`${[...payments.values()].reduce((sum,count)=>sum+count,0)} paid effects · ${curve.slice(0,6).map(([amount,count])=>`${amount.toLocaleString()}×${count}`).join(' · ')}${curve.length>6?` · +${curve.length-6} more`:''}`:'No explicit paid Chi effects in this deck';
+ const catalysts=cards.filter(card=>card.cardType==='Catalyst').length;
+ const tricks=cards.filter(card=>/Trick$/.test(card.cardType)).length;
+ const great=cards.filter(card=>card.great).length;
+ target.innerHTML=`<strong>CHI ACTIVATION CURVE</strong> · ${summary}<br><strong>FORGE BALANCE</strong> · Catalysts ${catalysts} · Tricks ${tricks} · Great ${great}/${GREAT_CFG.maxPerDeck}`;
+}
+
 function renderAll(){
  renderDeckZone(mainDeck,'main-grid','main');
  renderDeckZone(fusionDeck,'fusion-grid','fusion');
  renderDeckZone(sideDeck,'side-grid','side');
  validate();
+ renderForgeAnalysis();
  renderPool(); // Update copy counts in pool
 }
 
@@ -817,7 +971,9 @@ function setImportStatus(message,kind){
 }
 
 function importDeckText(txt,sourceName){
-  mainDeck=[];fusionDeck=[];sideDeck=[];
+ if(tryImportForgeCode(txt))return;
+ recordHistory();
+ mainDeck=[];fusionDeck=[];sideDeck=[];
   let currentZone='main';
   const nameMap=Object.fromEntries(ALL_CARDS.map(c=>[c.name.toLowerCase(),c.id]));
   const normalizeCardName=(window.CTFDeckUtils&&CTFDeckUtils.normalizeCardName)?CTFDeckUtils.normalizeCardName:(v=>v);
@@ -873,6 +1029,7 @@ function importDeckText(txt,sourceName){
  const ruleNote=check.ok?' Deck is legal.':` ${check.errors.length} deck-rule issue${check.errors.length===1?'':'s'} shown below.`;
  setImportStatus(`Imported ${imported} card${imported===1?'':'s'}${source}.${unresolved}${ruleNote}`,rejected.length?'warn':'ok');
  renderAll();
+ markDeckDirty();
 }
 
 function loadStarterDeck(){
@@ -881,28 +1038,30 @@ function loadStarterDeck(){
  if(idx==='')return;
  const starter=STARTER_DECKS[Number(idx)];
  if(!starter)return;
+ recordHistory();
  document.getElementById('deck-name').value=starter.name||'Starter Deck';
  mainDeck=(starter.main||[]).filter(id=>cardMap[id]);
  fusionDeck=(starter.fusion||[]).filter(id=>cardMap[id]);
  sideDeck=(starter.side||[]).filter(id=>cardMap[id]);
  renderAll();
+ markDeckDirty();
 }
 
 // ── LOCAL STORAGE ──
-function currentDeckObject(){
- return {name:document.getElementById('deck-name').value||'My CTF Deck',main:mainDeck,fusion:fusionDeck,side:sideDeck};
-}
 function saveDeckLocal(){
  const data=CTFDeckUtils.saveLocalDeck(currentDeckObject());
+ markDeckDirty(false);
  alert(`Deck saved locally!\n${data.name}\nMain: ${data.main.length} · Fusion: ${data.fusion.length} · Side: ${data.side.length}`);
 }
 function loadDeckLocal(){
  const data=CTFDeckUtils.loadLocalDeck();
  if(!data.main.length&&!data.fusion.length&&!data.side.length){alert('No saved deck found.');return}
+ recordHistory();
  hydrateCTFConfig?.(document);
  document.getElementById('deck-name').value=data.name||'My CTF Deck';
  mainDeck=(data.main||[]).filter(id=>cardMap[id]);fusionDeck=(data.fusion||[]).filter(id=>cardMap[id]);sideDeck=(data.side||[]).filter(id=>cardMap[id]);
  renderAll();
+ markDeckDirty();
 }
 function launchPlayWithDeck(){
  const deck=currentDeckObject();
@@ -912,6 +1071,7 @@ function launchPlayWithDeck(){
   return;
  }
  CTFDeckUtils.saveLocalDeck(deck);
+ markDeckDirty(false);
  CTFDeckUtils.setPlayDeck(deck);
  window.location.href='https://discord.gg/cKj3ayt2Mp';
 }
@@ -919,8 +1079,18 @@ function launchPlayWithDeck(){
 // ── INIT ──
 ['pq','pfpr','pfcp'].forEach(id=>document.getElementById(id).addEventListener('input',filterPool));
 ['pft','pfa','pfs','pfl','pfk','pfsu','pfg','pfsort'].forEach(id=>document.getElementById(id).addEventListener('change',filterPool));
+document.getElementById('deck-name').addEventListener('input',()=>markDeckDirty());
+document.addEventListener('keydown',event=>{
+ if(!event.ctrlKey)return;
+ if(event.key.toLowerCase()==='s'){event.preventDefault();saveDeckVault()}
+ else if(event.key.toLowerCase()==='z'){event.preventDefault();event.shiftKey?redoDeck():undoDeck()}
+ else if(event.key.toLowerCase()==='y'){event.preventDefault();redoDeck()}
+ else if(event.key.toLowerCase()==='f'){event.preventDefault();document.getElementById('pq').focus()}
+});
 filterPool();
 renderAll();
+refreshDeckVault();
+updateHistoryButtons();
 if(window.CTF_ALPHA_SET_AUDIT){
  const audit=window.CTF_ALPHA_SET_AUDIT;
  const typeFix=audit.catalystTypeCorrections?` · ${audit.catalystTypeCorrections} leveled Catalysts restored from Palm Trick classification`:'';
@@ -930,6 +1100,7 @@ if(!poolFiltered.length && ALL_CARDS.length){ poolFiltered=[...ALL_CARDS]; rende
 
 // Load saved deck if exists
 try{const d=CTFDeckUtils.loadLocalDeck();if(d&&(d.main.length||d.fusion.length||d.side.length)){document.getElementById('deck-name').value=d.name||'My CTF Deck';mainDeck=(d.main||[]).filter(id=>cardMap[id]);fusionDeck=(d.fusion||[]).filter(id=>cardMap[id]);sideDeck=(d.side||[]).filter(id=>cardMap[id]);renderAll()}}catch(e){console.warn('Could not load saved deck:',e)}
+markDeckDirty(false);
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script>
 </body>

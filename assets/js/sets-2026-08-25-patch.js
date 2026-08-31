@@ -1,7 +1,7 @@
 /*
  * Card Database 2.0 delta from SETS8-25-26 updated.zip.
  * This follows the 8/24 normalization layer and keeps the full, active
- * 1,613-card collection available to the Collection and Deck Builder pages.
+ * 1,613-card collection available to the Collection and TheForge pages.
  */
 (function(global){
   const cards = (typeof CTF_CARDS !== 'undefined' && Array.isArray(CTF_CARDS))
@@ -51,7 +51,7 @@
 
   // Palm Tricks have no Level, Pressure, or Counter Pressure. Any legacy
   // record carrying a level was parsed from a Catalyst entry and must remain
-  // a Catalyst in the browser database and Deck Builder.
+  // a Catalyst in the browser database and TheForge.
   const catalystTypeCorrections = cards.filter(function(card){
     return card && card.cardType === 'Palm Trick' && Number(card.level) > 0;
   });
