@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="description" content="Carry The Flame Alpha rulings and unresolved card edge cases.">
+  <title>Carry The Flame Alpha - Rulings &amp; Edge Cases</title>
+  <link rel="icon" type="image/png" href="assets/ctf-mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;900&family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#090b12;
+      --panel:#121927;
+      --panel-warm:#211711;
+      --line:#344561;
+      --orange:#ff7617;
+      --orange-soft:#ffbd83;
+      --green:#39d98a;
+      --blue:#91c7ff;
+      --text:#eef4ff;
+      --muted:#b7c5dd;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:radial-gradient(circle at 50% -10%,#27150d 0,#090b12 38%); color:var(--text); font:16px/1.55 "DM Sans",system-ui,sans-serif; }
+    a { color:var(--blue); }
+    .page { max-width:1120px; margin:auto; padding:26px; }
+    .hero { padding:24px; border:1px solid rgba(255,118,23,.55); border-radius:18px; background:linear-gradient(135deg,#2a1109,#12100f 55%,#211509); box-shadow:0 18px 70px rgba(0,0,0,.25); }
+    .brand { display:flex; align-items:center; gap:14px; margin:0 0 14px; }
+    .brand-mark { width:62px; height:62px; object-fit:contain; filter:drop-shadow(0 0 16px rgba(255,106,0,.62)); }
+    .brand-logo { width:min(410px,72vw); height:auto; filter:drop-shadow(0 0 18px rgba(255,88,0,.25)); }
+    .eyebrow { letter-spacing:.14em; text-transform:uppercase; color:var(--orange-soft); font:700 .78rem "Barlow Condensed",sans-serif; }
+    h1,h2,h3 { font-family:"Barlow Condensed",system-ui,sans-serif; line-height:1.1; }
+    h1 { margin:.2rem 0 .45rem; font-family:"Bebas Neue","Barlow Condensed",sans-serif; font-size:clamp(2.1rem,5vw,4rem); letter-spacing:.04em; text-transform:uppercase; }
+    h2 { margin:2rem 0 .65rem; font-size:1.7rem; }
+    h3 { margin:.2rem 0; font-size:1.25rem; }
+    .hero p { max-width:760px; margin:.5rem 0 0; color:#d9e3f3; }
+    .nav { display:flex; flex-wrap:wrap; gap:9px; margin-top:18px; }
+    .button { display:inline-flex; align-items:center; min-height:42px; padding:.55rem .8rem; border:1px solid #526b8d; border-radius:8px; background:#101829; color:#d9ebff; font-weight:700; text-decoration:none; }
+    .button.primary { border-color:var(--orange); background:#35180a; color:#ffd4ae; }
+    .stats { display:flex; gap:10px; flex-wrap:wrap; margin:18px 0; }
+    .stat { min-width:155px; padding:11px 13px; border:1px solid #3a4c68; border-radius:10px; background:#101829; }
+    .stat b { display:block; font:900 1.5rem "Barlow Condensed",sans-serif; color:#fff; }
+    .notice { padding:13px 15px; margin:18px 0; border:1px solid #456888; border-left:5px solid var(--blue); border-radius:10px; background:#101c29; }
+    .notice.warning { border-color:#805543; border-left-color:var(--orange); background:#211711; }
+    .confirmed { padding:20px; border:1px solid rgba(57,217,138,.8); border-radius:15px; background:linear-gradient(145deg,#143026,#0f1c1a); }
+    .status { display:inline-block; padding:.24rem .5rem; border-radius:999px; font:700 .75rem "DM Sans",sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+    .status.locked { background:#143f2d; color:#7af0b5; border:1px solid #39d98a; }
+    .status.pending { background:#342012; color:#ffc18b; border:1px solid #a65e24; }
+    .rule-text { margin:12px 0; padding:14px; border-left:4px solid var(--green); background:#0c1715; font-size:1.05rem; }
+    .examples { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
+    .example { padding:14px; border:1px solid #355468; border-radius:10px; background:#0e1721; }
+    .example.yes { border-color:#2b7c56; }
+    .example.no { border-color:#8b442f; }
+    .example strong { display:block; margin-bottom:4px; color:#fff; }
+    .yes strong { color:#74edaf; }
+    .no strong { color:#ff9b79; }
+    .queue { display:grid; gap:10px; }
+    details { border:1px solid var(--line); border-radius:11px; background:var(--panel); overflow:hidden; }
+    summary { display:flex; align-items:center; gap:9px; padding:14px 16px; cursor:pointer; list-style:none; font-weight:700; }
+    summary::-webkit-details-marker { display:none; }
+    summary::after { content:"+"; margin-left:auto; color:var(--orange-soft); font-size:1.3rem; }
+    details[open] summary::after { content:"-"; }
+    details[open] summary { border-bottom:1px solid var(--line); background:#172033; }
+    .case-id { flex:0 0 auto; color:#9eb0c9; font:700 .74rem "DM Sans",sans-serif; letter-spacing:.05em; text-transform:uppercase; }
+    .case-body { padding:15px 16px 17px; }
+    .case-body p { margin:.3rem 0 .8rem; color:var(--muted); }
+    .prompt { padding:10px 12px; border-left:3px solid var(--orange); background:var(--panel-warm); color:#ffe0c4; }
+    .decision-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .decision-card { padding:14px; border:1px solid var(--line); border-radius:10px; background:#101829; }
+    .decision-card b { color:var(--orange-soft); }
+    footer { margin-top:2.2rem; padding-top:1rem; border-top:1px solid #28374e; color:#aebbd2; font-size:.84rem; }
+    @media (max-width:700px) {
+      .page { padding:12px; }
+      .examples,.decision-grid { grid-template-columns:1fr; }
+      .brand-mark { width:50px; height:50px; }
+      .brand-logo { width:min(260px,calc(100% - 64px)); }
+      summary { align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="eyebrow">Build 17 rules audit - revised 1 September 2026</div>
+      <div class="brand" aria-label="Carry The Flame">
+        <img class="brand-mark" src="assets/ctf-mark.png" alt="">
+        <img class="brand-logo" src="assets/carry-the-flame-horizontal.png" alt="Carry The Flame">
+      </div>
+      <h1>Rulings &amp; Edge Cases</h1>
+      <p>This Alpha desk separates rules you can use now from card questions that still need a final creator decision. Pending ideas below are not playable rulings until their status changes to Confirmed.</p>
+      <nav class="nav" aria-label="Alpha navigation">
+        <a class="button primary" href="index.html">Back to Alpha Hub</a>
+        <a class="button" href="docs/CTF-Game-Design-Document-v1.0.pdf">Game Design PDF</a>
+        <a class="button" href="docs/CTF-Player-Manual-13-Plus-v1.0.pdf">Player Manual PDF</a>
+        <a class="button" href="docs/CTF-Quick-Start-10-Plus-v1.0.pdf">Quick Start PDF</a>
+      </nav>
+    </header>
+
+    <div class="stats" aria-label="Audit totals">
+      <div class="stat"><b>1</b>new confirmed rule</div>
+      <div class="stat"><b>19</b>deferred card cases</div>
+      <div class="stat"><b>1,613</b>records in the effect audit</div>
+      <div class="stat"><b>127</b>gameplay-certified records</div>
+    </div>
+
+    <section aria-labelledby="confirmed-rule">
+      <h2 id="confirmed-rule">Confirmed now</h2>
+      <article class="confirmed">
+        <span class="status locked">Confirmed rule</span>
+        <h3>End Phase payment checks ownership</h3>
+        <p class="rule-text">To pay for Extract, Rescue, or Destroy 1 Trick, use one Catalyst that you own and control. A newly Spawned Catalyst you own may pay. A Catalyst owned by your opponent cannot pay, even while you control it. Taking control never changes ownership. Pass Turn is free.</p>
+        <div class="examples">
+          <div class="example yes"><strong>YES - your new Catalyst can pay</strong>You Spawn a Catalyst from your own deck this turn. At End Phase, you still own and control it, so you may send it to the Void as the payment.</div>
+          <div class="example no"><strong>NO - a borrowed Catalyst cannot pay</strong>You take control of your opponent's Catalyst until End Phase. Your opponent still owns it, so you cannot Tribute or send it as your End Phase payment before it returns.</div>
+        </div>
+      </article>
+    </section>
+
+    <div class="notice"><b>Easy memory rule:</b> New is okay. Borrowed is not. For a paid End action, you must both own the Catalyst and control it.</div>
+
+    <section aria-labelledby="pending-rulings">
+      <h2 id="pending-rulings">Card cases that still need final approval</h2>
+      <p>These are card-specific wording or implementation conflicts from the deferred ANM audit. Later global rulings may answer part of a case, but each card still needs approved final text and an engine sign-off before certification.</p>
+      <div class="notice warning"><b>Not rules yet:</b> The decision prompts describe what must be chosen. They do not approve the legacy card name, artwork, wording, or suggested behavior for public release.</div>
+
+      <div class="queue">
+        <details><summary><span class="case-id">ANM-012</span>Reverse Blade Sword <span class="status pending">Engine confirmation</span></summary><div class="case-body"><p>The text says this Equip is treated as "Sakabato," but the engine needs the exact zones and checks where that alias applies.</p><div class="prompt"><b>Decision needed:</b> Confirm whether the alias is recognized for every Sakabato name requirement without changing the printed name or copying other properties.</div></div></details>
+        <details><summary><span class="case-id">ANM-013</span>Amakakuro Ryo No Herimeki <span class="status pending">Pending</span></summary><div class="case-body"><p>The activation condition says a Himura-named card must be on the field, but it does not say who must control it.</p><div class="prompt"><b>Decision needed:</b> Must the activating player control the face-up Himura card, and should all resulting destruction be recorded as effect destruction with no battle Kills?</div></div></details>
+        <details><summary><span class="case-id">ANM-014</span>Zero Degrees <span class="status pending">Pending</span></summary><div class="case-body"><p>The legacy start-of-Main-Phase window and the duration "for two turns" need one exact online timing rule.</p><div class="prompt"><b>Decision needed:</b> Identify the only legal activation window and the exact two completed player turns covered by the lock.</div></div></details>
+        <details><summary><span class="case-id">ANM-001</span>Serpent <span class="status pending">Pending</span></summary><div class="case-body"><p>The card does not state where it Special Spawns from or how often its five-coin Battle effect can be used.</p><div class="prompt"><b>Decision needed:</b> Confirm the source zone, the exact four-card removal requirement, and whether the coin attempt is once per Battle Phase.</div></div></details>
+        <details><summary><span class="case-id">ANM-002</span>Ultimate Price <span class="status pending">Pending</span></summary><div class="case-body"><p>The player needs a legal deck-selection prompt, plus a deterministic clock for the three-turn attack and effect lock.</p><div class="prompt"><b>Decision needed:</b> Define who chooses the target and exactly when the Spawned Catalyst unlocks.</div></div></details>
+        <details><summary><span class="case-id">ANM-003</span>Nolan-The-Great <span class="status pending">Pending</span></summary><div class="case-body"><p>The offering procedure, Spawn classification, first-turn attack lock, and later direct-Chi permission are mixed together.</p><div class="prompt"><b>Decision needed:</b> Approve each part as a separate procedure so the engine can validate and test it.</div></div></details>
+        <details><summary><span class="case-id">ANM-021</span>Reaper - Master Swordsman <span class="status pending">Pending</span></summary><div class="case-body"><p>"Regardless of requirement" might bypass only a Sword Equip's target restriction, or it might bypass normal Equip rules too.</p><div class="prompt"><b>Decision needed:</b> State exactly which requirements Reaper ignores and whether its printed two-Equip maximum overrides the global capacity rule.</div></div></details>
+        <details><summary><span class="case-id">ANM-022</span>Rapier <span class="status pending">Pending</span></summary><div class="case-body"><p>The card adds piercing Chi damage when Pressure exceeds a defending Catalyst's Counter Pressure.</p><div class="prompt"><b>Decision needed:</b> Confirm the order of normal battle, Capture or destruction, Kill credit, and the positive Pressure difference dealt to Chi.</div></div></details>
+        <details><summary><span class="case-id">ANM-023</span>The Chosen One <span class="status pending">Pending</span></summary><div class="case-body"><p>"Requires no special condition to Spawn" has no database filter, and the selected Catalyst must stay linked to this Trick.</p><div class="prompt"><b>Decision needed:</b> Define the eligible card filter and what happens to the linked Catalyst if this card leaves or changes control.</div></div></details>
+        <details><summary><span class="case-id">ANM-024</span>Blazing Inferno <span class="status pending">Pending</span></summary><div class="case-body"><p>Volcano ownership, the FIRE bonus scope, stacking, and the self-destruction dependency need explicit wording.</p><div class="prompt"><b>Decision needed:</b> Decide whether Volcano must be controlled by this card's controller and whether the +1000 applies to one field or both.</div></div></details>
+        <details><summary><span class="case-id">ANM-025</span>Inferno Dragon <span class="status pending">Pending</span></summary><div class="case-body"><p>The two named support cards may be allowed on either field or may need to be controlled by Inferno Dragon's controller.</p><div class="prompt"><b>Decision needed:</b> Define whose Volcano and Blazing Inferno satisfy the condition and confirm that the bonus updates immediately.</div></div></details>
+        <details><summary><span class="case-id">ANM-026</span>Inferno Takeover <span class="status pending">Pending</span></summary><div class="case-body"><p>The card takes all face-up FIRE Catalysts until End Phase, which creates zone-capacity and return problems.</p><div class="prompt"><b>Decision needed:</b> Define which cards move when zones are limited and what happens if a returning Catalyst has no open original zone.</div></div></details>
+        <details><summary><span class="case-id">ANM-001B</span>Toolbox <span class="status pending">Pending</span></summary><div class="case-body"><p>The eligible hand card, exact payment window, once-per-turn tracking, and missing replacement draw need confirmation.</p><div class="prompt"><b>Decision needed:</b> Decide whether the action only shuffles an Equip Palm Trick or also draws a replacement card.</div></div></details>
+        <details><summary><span class="case-id">ANM-002B</span>Curse of the Flame Ghost <span class="status pending">Pending</span></summary><div class="case-body"><p>"Becomes FIRE" sounds like an Attribute replacement, while "gains Vampire" sounds additive.</p><div class="prompt"><b>Decision needed:</b> Confirm which existing properties are replaced, which are kept, and exactly what is restored when the Equip ends.</div></div></details>
+        <details><summary><span class="case-id">ANM-003B</span>Phoenix Soul <span class="status pending">Pending</span></summary><div class="case-body"><p>The controller chooses one of two modes, and mode 2 must remember which FIRE Catalysts are doubled and later destroyed.</p><div class="prompt"><b>Decision needed:</b> Confirm each mode's cost, selection timing, and whether mode 2 snapshots cards or continuously updates the group.</div></div></details>
+        <details><summary><span class="case-id">ANM-000A</span>Newz The Great Watcher <span class="status pending">Pending</span></summary><div class="case-body"><p>"All Warrior-Type Catalysts" may mean both fields and may include Newz itself.</p><div class="prompt"><b>Decision needed:</b> Choose global versus controller-only scope and confirm whether Newz receives its own +200 Pressure.</div></div></details>
+        <details><summary><span class="case-id">ANM-000B</span>Destin The Great Warlord <span class="status pending">Pending</span></summary><div class="case-body"><p>The Fusion material match, optional hand Spawn, and attack-lock duration need separate engine instructions.</p><div class="prompt"><b>Decision needed:</b> Confirm distinct materials, who chooses the hand Catalyst, and how long that Catalyst cannot attack.</div></div></details>
+        <details><summary><span class="case-id">ANM-000C</span>Ace The Great <span class="status pending">Pending</span></summary><div class="case-body"><p>Copying a Catalyst effect may accidentally copy identity, costs, limits, state, or unsupported engine behavior. The printed text has no frequency limit.</p><div class="prompt"><b>Decision needed:</b> Define exactly what is copied, whether costs and restrictions are included, and whether the effect is once per turn.</div></div></details>
+        <details><summary><span class="case-id">ANM-037</span>Fusion Zone <span class="status pending">Pending</span></summary><div class="case-body"><p>The text mixes player and team limits and needs exact material, ownership, zone, and Fusion Deck checks.</p><div class="prompt"><b>Decision needed:</b> Define who may activate it, the per-team clock, how two distinct materials match, and the legal Fusion destination.</div></div></details>
+      </div>
+    </section>
+
+    <section aria-labelledby="decision-record">
+      <h2 id="decision-record">What a complete ruling must say</h2>
+      <div class="decision-grid">
+        <div class="decision-card"><b>1. Timing</b><br>When the action starts, when it resolves, and how long it lasts.</div>
+        <div class="decision-card"><b>2. Ownership and control</b><br>Who owns, controls, chooses, pays, and receives each affected card.</div>
+        <div class="decision-card"><b>3. Zones and targets</b><br>Where cards may come from, where they go, and what happens when a zone is full.</div>
+        <div class="decision-card"><b>4. Engine result</b><br>Costs, limits, counters, Kills, Capture, Chi damage, and the exact testable outcome.</div>
+      </div>
+    </section>
+
+    <footer>Carry The Flame &copy; 2026 - Alpha rulings desk - confirmed rules override pending prompts.</footer>
+  </main>
+</body>
+</html>

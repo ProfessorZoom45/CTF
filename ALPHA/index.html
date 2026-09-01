@@ -24,6 +24,11 @@
     .set.current { border-color:#62be95; background:#143026; }
     .image-tool { border-color:#805543; background:#211711; }
     .image-tool h3 { color:#ffd5ad; }
+    .rules-tool { border-color:#ff7617; background:linear-gradient(145deg,#2c160c,#17130f); }
+    .rules-tool h3 { color:#ffb36f; }
+    .document-tool { border-color:#456888; background:#101c29; }
+    .document-tool h3 { color:#b9dcff; }
+    .tool-link { display:inline-block; margin-top:.35rem; padding:.52rem .75rem; border:1px solid currentColor; border-radius:7px; font-weight:700; text-decoration:none; }
     .ready { color:#69dca1; }
     .source { font-size:.84rem; color:#aebbd2; }
     .section-note { margin:.2rem 0 0; color:#b7c5dd; }
@@ -32,7 +37,7 @@
     footer { margin-top:2rem; color:#aebbd2; font-size:.84rem; }
     @media (max-width:600px) { .page { padding:12px; } }
   </style>
-<style id="ctf-alpha-brand-style">body{font-family:"DM Sans",system-ui,sans-serif}.ctf-alpha-brand-lockup{display:flex;align-items:center;gap:14px;margin:0 0 14px}.ctf-alpha-brand-lockup__mark{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 0 16px rgba(255,106,0,.62))}.ctf-alpha-brand-lockup__logo{width:min(410px,72vw);height:auto;filter:drop-shadow(0 0 18px rgba(255,88,0,.25))}.hero{border-color:rgba(255,106,0,.52)!important;background:linear-gradient(135deg,#2a1109,#12100f 55%,#211509)!important}.hero h1{font-family:"Bebas Neue","Barlow Condensed",sans-serif!important;letter-spacing:.05em;text-transform:uppercase;color:#f5f0e8;text-shadow:0 0 30px rgba(255,79,0,.36)}@media(max-width:600px){.ctf-alpha-brand-lockup__mark{width:50px;height:50px}.ctf-alpha-brand-lockup__logo{width:min(300px,74vw)}}</style></head>
+<style id="ctf-alpha-brand-style">body{font-family:"DM Sans",system-ui,sans-serif}.ctf-alpha-brand-lockup{display:flex;align-items:center;gap:14px;margin:0 0 14px}.ctf-alpha-brand-lockup__mark{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 0 16px rgba(255,106,0,.62))}.ctf-alpha-brand-lockup__logo{width:min(410px,72vw);height:auto;filter:drop-shadow(0 0 18px rgba(255,88,0,.25))}.hero{border-color:rgba(255,106,0,.52)!important;background:linear-gradient(135deg,#2a1109,#12100f 55%,#211509)!important}.hero h1{font-family:"Bebas Neue","Barlow Condensed",sans-serif!important;letter-spacing:.05em;text-transform:uppercase;color:#f5f0e8;text-shadow:0 0 30px rgba(255,79,0,.36)}@media(max-width:600px){.ctf-alpha-brand-lockup__mark{width:50px;height:50px}.ctf-alpha-brand-lockup__logo{width:min(260px,calc(100% - 64px))}}</style></head>
 <body>
   <main class="page">
     <section class="hero">
@@ -42,10 +47,21 @@
         <img class="ctf-alpha-brand-lockup__logo" src="assets/carry-the-flame-horizontal.png" alt="Carry The Flame">
       </div>
       <h1>Alpha Tester &amp; Decision Hub</h1>
-      <p>Launch a card-text audit or an image-selector workspace from one Alpha location. Nine audit versions let testers work one set at a time.</p>
+      <p>Open current rules, review decisions, launch a card-text audit, or use an image-selector workspace from one Alpha location.</p>
     </section>
 
     <p class="note"><b>Source guard:</b> the card-text audit pages read a hash-pinned local snapshot and save review changes only in the browser. They cannot alter the database, source .ptcg cards, certification ledger, or engine.</p>
+
+    <section aria-labelledby="rules-docs">
+      <h2 id="rules-docs">Rules, rulings &amp; official Alpha PDFs</h2>
+      <p class="section-note">Revision dated 1 September 2026. The End Phase payment rule is updated in every document below.</p>
+      <div class="grid">
+        <article class="set rules-tool"><h3>Rulings &amp; Edge Cases</h3><p>Read the confirmed End Phase ownership rule and review 19 card-specific cases that still need final approval.</p><a class="tool-link" href="rulings-edge-cases.html">Open rulings desk</a></article>
+        <article class="set document-tool"><h3>Game Design Document</h3><p>The controlling Alpha systems, judge checks, scenarios, and digital acceptance rules.</p><a class="tool-link" href="docs/CTF-Game-Design-Document-v1.0.pdf">Open GDD PDF</a></article>
+        <article class="set document-tool"><h3>Player Manual 13+</h3><p>The full standard 1v1 rules in clear player-facing language.</p><a class="tool-link" href="docs/CTF-Player-Manual-13-Plus-v1.0.pdf">Open Manual PDF</a></article>
+        <article class="set document-tool"><h3>Quick Start 10+</h3><p>A short first-game guide with the corrected End Phase choice and payment rule.</p><a class="tool-link" href="docs/CTF-Quick-Start-10-Plus-v1.0.pdf">Open Quick Start PDF</a></article>
+      </div>
+    </section>
 
     <section aria-labelledby="audit-tools">
       <h2 id="audit-tools">Card-text audit tools</h2>
