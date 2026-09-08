@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carry The Flame — Build. Battle. Create.</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="An online trading card game where every turn gives you three ways to win. Build, battle, and help create the game you play.">
+<link rel="icon" type="image/png" href="assets/img/ctf-mark.png">
+<link rel="apple-touch-icon" href="assets/img/ctf-mark.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Carry The Flame">
+<meta property="og:title" content="Carry The Flame — Build. Battle. Create.">
+<meta property="og:description" content="An online trading card game where every turn gives you three ways to win. For players who want to build, battle, and help create the game they play.">
+<meta property="og:image" content="https://professorzoom45.github.io/CTF/assets/img/carry-the-flame-horizontal.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Carry The Flame flaming torch logo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Carry The Flame — Build. Battle. Create.">
+<meta name="twitter:description" content="An online trading card game where every turn gives you three ways to win. For players who want to build, battle, and help create the game they play.">
+<meta name="twitter:image" content="https://professorzoom45.github.io/CTF/assets/img/carry-the-flame-horizontal.png">
+<meta name="twitter:image:alt" content="Carry The Flame flaming torch logo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/ctf-brand-refresh.css">
+<script src="assets/js/ctf-config.js"></script>
+<style>
+:root {
+  --coal:   #000000;
+  --coal2:  #000000;
+  --coal3:  #050505;
+  --flame:  #ff4d00;
+  --flame2: #ff7520;
+  --ember:  #b83000;
+  --amber:  #ffaa00;
+  --gold:   #ffd060;
+  --cream:  #f2e8d5;
+  --white:  #faf5ee;
+  --ash:    #7a7a7a;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--coal);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+#ember-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+#ember-canvas-foreground {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.hero, section, footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
+nav.ctf-unified {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(13, 13, 13, 0.92);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 106, 0, 0.2);
+  font-family: 'Barlow Condensed', sans-serif;
+}
+nav.ctf-unified .nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1.25rem;
+}
+nav.ctf-unified .nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.55rem;
+  letter-spacing: 2px;
+  color: #ff6a00;
+  text-transform: uppercase;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+nav.ctf-unified .nav-brand .nb-text { color: #ff6a00; white-space: nowrap; }
+nav.ctf-unified .nav-brand .nb-text span { color: #f5f0e8; }
+nav.ctf-unified .nav-torch {
+  width: 22px;
+  height: 40px;
+  flex: 0 0 auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 4px rgba(255, 106, 0, 0.35));
+}
+nav.ctf-unified .nav-links {
+  display: flex;
+  gap: 1.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+nav.ctf-unified .nav-links a {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #e8e0d0;
+  text-decoration: none;
+  transition: color 0.2s;
+  padding: 0.25rem 0;
+}
+nav.ctf-unified .nav-links a:hover,
+nav.ctf-unified .nav-links a.active {
+  color: #ff6a00;
+}
+
+nav.ctf-unified .menu-toggle {
+  display: none;
+  background: none;
+  border: 1px solid rgba(255, 106, 0, 0.35);
+  border-radius: 6px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+nav.ctf-unified .burger {
+  width: 22px;
+  height: 16px;
+  position: relative;
+  display: inline-block;
+}
+nav.ctf-unified .burger span {
+  display: block;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2.5px;
+  background: #ff6a00;
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+}
+nav.ctf-unified .burger span:nth-child(1) { top: 0; }
+nav.ctf-unified .burger span:nth-child(2) { top: 7px; }
+nav.ctf-unified .burger span:nth-child(3) { top: 14px; }
+nav.ctf-unified .menu-toggle[aria-expanded="true"] .burger span:nth-child(1) {
+  top: 7px;
+  transform: rotate(45deg);
+}
+nav.ctf-unified .menu-toggle[aria-expanded="true"] .burger span:nth-child(2) {
+  opacity: 0;
+}
+nav.ctf-unified .menu-toggle[aria-expanded="true"] .burger span:nth-child(3) {
+  top: 7px;
+  transform: rotate(-45deg);
+}
+
+@media (max-width: 860px) {
+  nav.ctf-unified .menu-toggle { display: inline-flex; }
+  nav.ctf-unified .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(8, 8, 8, 0.98);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 106, 0, 0.25);
+  }
+  nav.ctf-unified .nav-links.open { display: flex; }
+  nav.ctf-unified .nav-links li {
+    border-bottom: 1px solid rgba(255, 106, 0, 0.08);
+  }
+  nav.ctf-unified .nav-links li:last-child { border-bottom: none; }
+  nav.ctf-unified .nav-links a {
+    padding: 0.95rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+body.ctf-nav-open { overflow: hidden; }
+
+/* ══════════════════════════════════════
+   HERO SECTION (Strict 3-Second Test)
+══════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5.5rem 1.5rem 4rem;
+  position: relative;
+}
+
+.hero-brand {
+  width: min(640px, 86vw);
+  margin: 0 auto 0.5rem;
+  animation: riseUp 0.75s 0.1s ease both;
+  filter: drop-shadow(0 0 35px rgba(255, 77, 0, 0.35));
+}
+.hero-brand img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.2rem, 8vw, 6.2rem);
+  line-height: 0.9;
+  letter-spacing: 4px;
+  color: var(--white);
+  text-transform: uppercase;
+  text-shadow: 0 0 30px rgba(255, 100, 0, 0.6);
+  margin-top: 0.2rem;
+}
+
+.hero-sub-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.4rem, 3.8vw, 2.4rem);
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-top: 0.6rem;
+  animation: riseUp 0.85s 0.25s ease both;
+  text-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+}
+
+.hero-desc {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--white);
+  max-width: 680px;
+  line-height: 1.35;
+  margin: 1.2rem auto 0;
+  animation: riseUp 0.85s 0.35s ease both;
+}
+
+.hero-audience {
+  font-size: clamp(0.98rem, 1.8vw, 1.15rem);
+  color: var(--cream);
+  opacity: 0.88;
+  max-width: 580px;
+  line-height: 1.6;
+  margin: 0.8rem auto 0;
+  animation: riseUp 0.85s 0.45s ease both;
+}
+
+.hero-funnel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1.5rem auto 1.8rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--flame2);
+  animation: riseUp 0.85s 0.55s ease both;
+}
+.hero-funnel span { color: var(--ash); }
+
+.cta-group {
+  display: flex;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  animation: riseUp 0.7s 0.65s ease both;
+}
+
+/* ══════════════════════════════════════
+   BUTTON HIERARCHY
+══════════════════════════════════════ */
+.btn-primary {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ff5500, #c82400);
+  color: var(--white);
+  padding: 1.05rem 2.6rem;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 0 25px rgba(255, 77, 0, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(255, 85, 0, 0.65);
+}
+
+.btn-secondary {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: rgba(255, 170, 0, 0.08);
+  color: var(--amber);
+  border: 2px solid var(--amber);
+  padding: 0.95rem 2.4rem;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: background 0.2s, transform 0.2s, border-color 0.2s;
+}
+.btn-secondary:hover {
+  background: rgba(255, 170, 0, 0.2);
+  transform: translateY(-3px);
+  border-color: var(--gold);
+}
+
+.btn-tertiary {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--cream);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.85rem 2rem;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+.btn-tertiary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  border-color: var(--white);
+  transform: translateY(-2px);
+}
+
+/* ══════════════════════════════════════
+   SHARED SECTION ELEMENTS
+══════════════════════════════════════ */
+.fire-rule {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--flame), transparent);
+}
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 0.8rem;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: var(--amber); text-align: center; margin-bottom: 0.6rem;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  letter-spacing: 3px; text-align: center;
+  color: var(--white); margin-bottom: 2.8rem;
+  line-height: 0.95;
+}
+
+/* ══════════════════════════════════════
+   SECTION 2: THREE WAYS TO WIN
+══════════════════════════════════════ */
+.paths-section {
+  padding: 6rem 1.5rem;
+  background: #000;
+}
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  max-width: 1100px;
+  margin: 0 auto;
+  gap: 1.5rem;
+}
+.path-card {
+  background: linear-gradient(180deg, rgba(255, 77, 0, 0.05), rgba(15, 5, 0, 0.85));
+  border: 1px solid rgba(255, 77, 0, 0.22);
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.path-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--flame);
+}
+.path-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--flame), var(--amber));
+}
+.path-roman {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4.8rem; line-height: 1;
+  color: var(--flame); opacity: 0.14;
+  position: absolute; top: 0.8rem; right: 1.2rem;
+}
+.path-icon { font-size: 2.2rem; margin-bottom: 0.8rem; display: block; }
+.path-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem; letter-spacing: 2px;
+  color: var(--white); margin-bottom: 0.4rem;
+}
+.path-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 0.95rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 0.8rem;
+}
+.path-desc {
+  font-size: 0.95rem; color: var(--cream);
+  opacity: 0.82; line-height: 1.6;
+}
+
+/* ══════════════════════════════════════
+   SECTION 3: BUILD YOUR DECK
+══════════════════════════════════════ */
+.deck-section {
+  padding: 6rem 1.5rem;
+  background: radial-gradient(circle at center, rgba(255, 77, 0, 0.07) 0%, #000 70%);
+  text-align: center;
+}
+.deck-inner {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.deck-pillars {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0 2.5rem;
+  list-style: none;
+}
+.deck-pillars li {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: rgba(255, 77, 0, 0.08);
+  border: 1px solid rgba(255, 117, 32, 0.25);
+  padding: 0.6rem 1.4rem;
+}
+.deck-copy {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--cream);
+  opacity: 0.88;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+
+/* ══════════════════════════════════════
+   SECTION 4: FORGE YOUR CARDS
+══════════════════════════════════════ */
+.forge-spotlight {
+  padding: 6.5rem 1.5rem;
+  background: linear-gradient(180deg, #050201 0%, #150501 50%, #000 100%);
+  border-top: 1px solid rgba(255, 170, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 170, 0, 0.25);
+  text-align: center;
+  position: relative;
+}
+.forge-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.forge-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+  letter-spacing: 3px;
+  line-height: 0.95;
+  color: var(--white);
+  margin-bottom: 1.4rem;
+  text-shadow: 0 0 30px rgba(255, 170, 0, 0.35);
+}
+.forge-headline span {
+  color: var(--amber);
+}
+.forge-copy {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  line-height: 1.7;
+  color: var(--cream);
+  opacity: 0.9;
+  max-width: 620px;
+  margin: 0 auto 2.5rem;
+}
+
+/* ══════════════════════════════════════
+   SECTION 5: JOIN THE COMMUNITY
+══════════════════════════════════════ */
+.community-section {
+  padding: 6.5rem 1.5rem;
+  text-align: center;
+  background: #000;
+}
+.community-inner {
+  max-width: 780px;
+  margin: 0 auto;
+}
+.community-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 7vw, 5.6rem);
+  letter-spacing: 4px;
+  color: var(--white);
+  margin-bottom: 1.2rem;
+  line-height: 0.95;
+  text-shadow: 0 0 45px rgba(255, 77, 0, 0.55);
+}
+.community-copy {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--cream);
+  opacity: 0.85;
+  margin-bottom: 2.5rem;
+}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  background: #000;
+  border-top: 1px solid rgba(255, 77, 0, 0.15);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+footer .footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+  list-style: none;
+}
+footer .footer-nav a {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ash);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+footer .footer-nav a:hover {
+  color: var(--flame2);
+}
+footer .brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 3px;
+  color: var(--flame);
+}
+footer .copy {
+  font-size: 0.75rem;
+  color: var(--ash);
+  margin-top: 0.4rem;
+  letter-spacing: 1.5px;
+}
+
+/* ══════════════════════════════════════
+   ANIMATIONS & MOBILE
+══════════════════════════════════════ */
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.vis {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 650px) {
+  .hero { padding-top: 5.5rem; }
+  .cta-group { flex-direction: column; width: 100%; max-width: 320px; margin-left: auto; margin-right: auto; }
+  .btn-primary, .btn-secondary, .btn-tertiary { width: 100%; justify-content: center; }
+  .hero-funnel { flex-direction: row; font-size: 0.72rem; letter-spacing: 2px; }
+  .paths-grid { grid-template-columns: 1fr; }
+}
+</style>
+<script defer src="assets/js/embers-bg.js"></script>
+</head>
+<body>
+
+<!-- UNIFIED NAVIGATION (Preserving Routes) -->
+<nav class="ctf-unified" role="navigation" aria-label="Primary">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand" aria-label="Carry The Flame — Home">
+      <svg class="nav-torch" viewBox="0 0 24 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="ctfNTH" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#2a2a2a"/>
+            <stop offset="45%" stop-color="#9a9a9a"/>
+            <stop offset="60%" stop-color="#b5b5b5"/>
+            <stop offset="100%" stop-color="#1f1f1f"/>
+          </linearGradient>
+          <radialGradient id="ctfNTF" cx="50%" cy="78%" r="60%">
+            <stop offset="0%" stop-color="#fff5b8"/>
+            <stop offset="22%" stop-color="#ffdc5c"/>
+            <stop offset="52%" stop-color="#ff932a"/>
+            <stop offset="82%" stop-color="#d62200"/>
+            <stop offset="100%" stop-color="#5a0800"/>
+          </radialGradient>
+        </defs>
+        <rect x="9" y="22" width="6" height="18" rx="1.2" fill="url(#ctfNTH)"/>
+        <rect x="8.4" y="26" width="7.2" height="0.9" fill="#141414" opacity="0.75"/>
+        <rect x="8.4" y="31" width="7.2" height="0.9" fill="#141414" opacity="0.75"/>
+        <rect x="8.4" y="36" width="7.2" height="0.9" fill="#141414" opacity="0.75"/>
+        <rect x="8" y="40.5" width="8" height="1.4" rx="0.4" fill="#3a3a3a"/>
+        <path d="M 5 20 Q 5 23 12 23 Q 19 23 19 20 L 17 18 L 7 18 Z" fill="#b0b0b0"/>
+        <rect x="6" y="17" width="12" height="1.5" rx="0.3" fill="#c8c8c8"/>
+        <path fill="url(#ctfNTF)" d="M 12 2 Q 8 8 7 14 Q 6.2 18 9.2 19.5 Q 11 20.2 12 20.2 Q 13 20.2 14.8 19.5 Q 17.8 18 17 14 Q 16 8 12 2 Z"></path>
+      </svg>
+      <span class="nb-text">Carry The <span>Flame</span></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="ctf-nav-list">
+      <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <ul class="nav-links" id="ctf-nav-list">
+      <li><a href="index.html" class="active" aria-current="page">Home</a></li>
+      <li><a href="https://discord.gg/cKj3ayt2Mp">Play</a></li>
+      <li><a href="deckbuilder.html">The Forge</a></li>
+      <li><a href="collections.html">Collections</a></li>
+      <li><a href="rules.html">Rules</a></li>
+      <li><a href="submit.html">Submit Cards</a></li>
+      <li><a href="glossary.html">Glossary</a></li>
+      <li><a href="About_Us.html">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- FIXED full-viewport ember canvases -->
+<canvas id="ember-canvas"></canvas>
+<canvas id="ember-canvas-foreground"></canvas>
+
+<!-- ══════════════════════════════ SECTION 1 — HERO ══════════════════════════════ -->
+<section class="hero">
+  <div class="hero-brand">
+    <img src="assets/img/carry-the-flame-horizontal.png" alt="Carry The Flame Logo">
+  </div>
+  
+  <h1 class="hero-title">CARRY THE FLAME</h1>
+  <p class="hero-sub-title">BUILD. BATTLE. CREATE.</p>
+
+  <p class="hero-desc">
+    An online trading card game where every turn gives you three ways to win.
+  </p>
+  
+  <p class="hero-audience">
+    For players who want to build, battle, and help create the game they play.
+  </p>
+
+  <div class="hero-funnel">
+    DISCOVER <span>→</span> JOIN <span>→</span> FORGE <span>→</span> PLAY
+  </div>
+
+  <div class="cta-group">
+    <a class="btn-primary" href="https://discord.gg/cKj3ayt2Mp" target="_blank" rel="noopener">
+      🔥 JOIN THE DISCORD
+    </a>
+    <a class="btn-secondary" href="submit.html">
+      ⚒️ FORGE YOUR CARDS
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ SECTION 2 — THREE WAYS TO WIN ══════════════════════════════ -->
+<section class="paths-section">
+  <div class="fire-rule"></div>
+  <p class="section-label reveal">Gameplay System</p>
+  <h2 class="section-title reveal">ONE GAME. THREE WAYS TO WIN.</h2>
+  <div class="paths-grid reveal">
+    <div class="path-card">
+      <span class="path-roman">I</span>
+      <span class="path-icon">💥</span>
+      <h3 class="path-name">CHI KO</h3>
+      <p class="path-sub">Direct Assault</p>
+      <p class="path-desc">Drain your opponent’s Chi to 0 through combat damage and unblocked attacks. Rapid and decisive.</p>
+    </div>
+    <div class="path-card">
+      <span class="path-roman">II</span>
+      <span class="path-icon">⚔️</span>
+      <h3 class="path-name">7 KILLS</h3>
+      <p class="path-sub">Battlefield Domination</p>
+      <p class="path-desc">Destroy 7 enemy Catalysts in combat to eliminate their frontline and claim complete battlefield victory.</p>
+    </div>
+    <div class="path-card">
+      <span class="path-roman">III</span>
+      <span class="path-icon">📦</span>
+      <h3 class="path-name">7 EXTRACTIONS</h3>
+      <p class="path-sub">Tactical Control</p>
+      <p class="path-desc">Capture and extract 7 enemy Catalysts. Overpower defensive lines and remove their key assets from the game.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ SECTION 3 — BUILD YOUR DECK ══════════════════════════════ -->
+<section class="deck-section">
+  <div class="fire-rule"></div>
+  <div class="deck-inner reveal">
+    <p class="section-label">Construct Your Strategy</p>
+    <h2 class="section-title">BUILD YOUR DECK.</h2>
+    <p class="deck-copy">
+      Master an expanding card system where your strategy dictates the tempo. Mix archetypes, engineer game-breaking combinations, and tailor your construction toward whichever victory path fits your playstyle.
+    </p>
+    <ul class="deck-pillars">
+      <li>Catalysts</li>
+      <li>Tricks</li>
+      <li>Fusions</li>
+      <li>Three Win Paths</li>
+    </ul>
+    <div>
+      <a class="btn-tertiary" href="deckbuilder.html">
+        🎴 ENTER THE FORGE
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ SECTION 4 — FORGE YOUR CARDS ══════════════════════════════ -->
+<section class="forge-spotlight">
+  <div class="forge-inner reveal">
+    <p class="section-label">Signature Feature</p>
+    <h2 class="forge-headline">YOU DON’T JUST PLAY THE GAME.<br><span>YOU HELP CREATE IT.</span></h2>
+    <p class="forge-copy">
+      Build your own cards and submit your creations to become part of the world of Carry The Flame. Approved submissions enter the official card library for every competitor to battle with.
+    </p>
+    <div>
+      <a class="btn-secondary" href="submit.html">
+        ⚒️ FORGE YOUR CARDS
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ SECTION 5 — JOIN THE COMMUNITY ══════════════════════════════ -->
+<section class="community-section">
+  <div class="fire-rule"></div>
+  <div class="community-inner reveal">
+    <h2 class="community-headline">READY TO CARRY THE FLAME?</h2>
+    <p class="community-copy">
+      Join the Discord, meet other players, test the game, build your cards, and help shape what comes next.
+    </p>
+    <div class="cta-group">
+      <a class="btn-primary" href="https://discord.gg/cKj3ayt2Mp" target="_blank" rel="noopener">
+        🔥 JOIN THE DISCORD
+      </a>
+      <a class="btn-tertiary" href="rules.html">
+        📖 LEARN THE RULES
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
+<footer>
+  <ul class="footer-nav">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="https://discord.gg/cKj3ayt2Mp">Play</a></li>
+    <li><a href="deckbuilder.html">The Forge</a></li>
+    <li><a href="collections.html">Collections</a></li>
+    <li><a href="rules.html">Rules</a></li>
+    <li><a href="submit.html">Submit Cards</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="About_Us.html">About</a></li>
+  </ul>
+  <div class="brand">CARRY THE FLAME</div>
+  <div class="copy">© 2026 Perfect Timing Gaming &nbsp;·&nbsp; Consistency &gt; Hype &nbsp;·&nbsp; Buffalo, NY</div>
+</footer>
+
+<script>
+/* ── Unified Nav Toggle ── */
+(function(){
+  var nav = document.querySelector('nav.ctf-unified');
+  if(!nav) return;
+  var btn = nav.querySelector('.menu-toggle');
+  var list = nav.querySelector('.nav-links');
+  if(!btn || !list) return;
+  function close(){
+    list.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    document.body.classList.remove('ctf-nav-open');
+  }
+  function toggle(){
+    var open = list.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('ctf-nav-open', open);
+  }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+  list.addEventListener('click', function(e){
+    if(e.target.tagName === 'A') close();
+  });
+  document.addEventListener('click', function(e){
+    if(!list.classList.contains('open')) return;
+    if(nav.contains(e.target)) return;
+    close();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') close();
+  });
+  window.addEventListener('resize', function(){
+    if(window.innerWidth > 860) close();
+  });
+})();
+
+/* ── Ember Particle Canvas ── */
+(function () {
+  const canvas = document.getElementById('ember-canvas');
+  const fgCanvas = document.getElementById('ember-canvas-foreground');
+  if (!canvas || !fgCanvas) return;
+  const ctx = canvas.getContext('2d');
+  const fgCtx = fgCanvas.getContext('2d');
+  let VW, VH, FG_MIN_Y;
+
+  function resize() {
+    VW = canvas.width = window.innerWidth;
+    VH = canvas.height = window.innerHeight;
+    fgCanvas.width = VW;
+    fgCanvas.height = VH;
+    FG_MIN_Y = VH * 0.85;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Ember {
+    constructor(scatter) { this.spawn(scatter); }
+    spawn(scatter) {
+      this.x = Math.random() * VW;
+      this.y = scatter ? Math.random() * VH : VH + 8;
+      this.r = Math.random() * 2.6 + 0.4;
+      this.vx = (Math.random() - 0.5) * 0.85;
+      this.vy = -(Math.random() * 1.6 + 0.4);
+      this.life = Math.random() * 280 + 80;
+      this.max = this.life;
+      this.hue = Math.random() * 36 + 6;
+      this.hot = Math.random() < 0.18;
+    }
+    tick() {
+      this.x += this.vx + Math.sin(this.life * 0.021) * 0.42;
+      this.y += this.vy;
+      this.life--;
+      if (this.life <= 0 || this.y < -14) this.spawn(false);
+    }
+    draw() {
+      const t = this.life / this.max;
+      const r = this.r * (0.25 + 0.75 * t);
+      if (this.hot) {
+        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r * 6);
+        g.addColorStop(0, `hsla(${this.hue},100%,75%,${t * 0.65})`);
+        g.addColorStop(0.4, `hsla(${this.hue},100%,55%,${t * 0.3})`);
+        g.addColorStop(1, `hsla(${this.hue},100%,40%,0)`);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, r * 6, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue},100%,64%,${t * 0.78})`;
+      ctx.fill();
+    }
+  }
+
+  const embers = [
+    ...Array.from({ length: 60 }, () => new Ember(true)),
+    ...Array.from({ length: 60 }, () => new Ember(false))
+  ];
+
+  class ForegroundEmber {
+    constructor() { this.spawn(true); }
+    spawn(scatter) {
+      this.x = Math.random() * VW;
+      this.y = scatter ? FG_MIN_Y + Math.random() * (VH - FG_MIN_Y) : VH - Math.random() * (VH * 0.08);
+      this.r = Math.random() * 3.4 + 1.2;
+      this.vx = (Math.random() - 0.5) * 0.8;
+      this.vy = -(Math.random() * 0.16 + 0.05);
+      this.life = Math.random() * 240 + 100;
+      this.max = this.life;
+      this.hue = Math.random() * 18 + 18;
+    }
+    tick() {
+      this.x += this.vx + Math.sin(this.life * 0.021 + this.x * 0.01) * 0.28;
+      this.y += this.vy;
+      this.life--;
+      if (this.life <= 0 || this.y < FG_MIN_Y - 10 || this.x < -20 || this.x > VW + 20) this.spawn(false);
+    }
+    draw() {
+      const t = this.life / this.max;
+      const r = this.r * (0.45 + 0.55 * t);
+      fgCtx.beginPath();
+      fgCtx.arc(this.x, this.y, r, 0, Math.PI * 2);
+      fgCtx.fillStyle = `hsla(${this.hue},100%,66%,${t * 0.75})`;
+      fgCtx.fill();
+    }
+  }
+
+  const foregroundEmbers = Array.from({ length: 15 }, () => new ForegroundEmber());
+
+  function drawFlameBase() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, VW, VH);
+    const pool = ctx.createRadialGradient(VW * 0.5, VH, 0, VW * 0.5, VH, VH * 0.75);
+    pool.addColorStop(0, 'rgba(230,75,0,0.5)');
+    pool.addColorStop(0.2, 'rgba(190,45,0,0.3)');
+    pool.addColorStop(0.5, 'rgba(130,22,0,0.12)');
+    pool.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = pool;
+    ctx.fillRect(0, 0, VW, VH);
+  }
+
+  function frame() {
+    drawFlameBase();
+    embers.forEach(e => { e.tick(); e.draw(); });
+    fgCtx.clearRect(0, 0, VW, VH);
+    foregroundEmbers.forEach(e => { e.tick(); e.draw(); });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ── Scroll Reveal ── */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('vis'), i * 65);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(el => io.observe(el));
+})();
+
+/* ── PWA Support ── */
+(function(){
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){ 
+      navigator.serviceWorker.register('service-worker.js').catch(function(){}); 
+    });
+  }
+})();
+</script>
+</body>
+</html>
