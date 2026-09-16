@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="description" content="Carry The Flame - Duel of the Catalysts: logic gap ruling form.">
+  <title>Carry The Flame — Duel of the Catalysts · Logic Gap Rulings Form</title>
+  <link rel="icon" type="image/png" href="assets/ctf-mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;900&family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#090b12;
+      --panel:#121927;
+      --panel-warm:#211711;
+      --line:#344561;
+      --orange:#ff7617;
+      --orange-soft:#ffbd83;
+      --green:#39d98a;
+      --blue:#91c7ff;
+      --red:#ff6b57;
+      --text:#eef4ff;
+      --muted:#b7c5dd;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:radial-gradient(circle at 50% -10%,#27150d 0,#090b12 38%); color:var(--text); font:16px/1.55 "DM Sans",system-ui,sans-serif; }
+    a { color:var(--blue); }
+    .page { max-width:1120px; margin:auto; padding:26px; }
+    .hero { padding:24px; border:1px solid rgba(255,118,23,.55); border-radius:18px; background:linear-gradient(135deg,#2a1109,#12100f 55%,#211509); box-shadow:0 18px 70px rgba(0,0,0,.25); }
+    .brand { display:flex; align-items:center; gap:14px; margin:0 0 14px; }
+    .brand-mark { width:62px; height:62px; object-fit:contain; filter:drop-shadow(0 0 16px rgba(255,106,0,.62)); }
+    .brand-logo { width:min(410px,72vw); height:auto; filter:drop-shadow(0 0 18px rgba(255,88,0,.25)); }
+    .eyebrow { letter-spacing:.14em; text-transform:uppercase; color:var(--orange-soft); font:700 .78rem "Barlow Condensed",sans-serif; }
+    h1,h2,h3 { font-family:"Barlow Condensed",system-ui,sans-serif; line-height:1.1; }
+    h1 { margin:.2rem 0 .45rem; font-family:"Bebas Neue","Barlow Condensed",sans-serif; font-size:clamp(2.1rem,5vw,4rem); letter-spacing:.04em; text-transform:uppercase; }
+    h2 { margin:2rem 0 .65rem; font-size:1.7rem; }
+    h3 { margin:.2rem 0; font-size:1.25rem; }
+    .hero p { max-width:820px; margin:.5rem 0 0; color:#d9e3f3; }
+    .nav { display:flex; flex-wrap:wrap; gap:9px; margin-top:18px; }
+    .button { display:inline-flex; align-items:center; min-height:42px; padding:.55rem .8rem; border:1px solid #526b8d; border-radius:8px; background:#101829; color:#d9ebff; font-weight:700; text-decoration:none; font:inherit; font-weight:700; cursor:pointer; }
+    .button.primary { border-color:var(--orange); background:#35180a; color:#ffd4ae; }
+    .button.green { border-color:var(--green); background:#0f2b21; color:#b9f5d6; }
+    .button.ghost { background:transparent; }
+    .button:disabled { opacity:.45; cursor:not-allowed; }
+    .stats { display:flex; gap:10px; flex-wrap:wrap; margin:18px 0; }
+    .stat { min-width:155px; padding:11px 13px; border:1px solid #3a4c68; border-radius:10px; background:#101829; }
+    .stat b { display:block; font:900 1.5rem "Barlow Condensed",sans-serif; color:#fff; }
+    .notice { padding:13px 15px; margin:18px 0; border:1px solid #456888; border-left:5px solid var(--blue); border-radius:10px; background:#101c29; }
+    .notice.warning { border-color:#805543; border-left-color:var(--orange); background:#211711; }
+    .notice.danger { border-color:#8b3b30; border-left-color:var(--red); background:#2a1310; }
+    .status { display:inline-block; padding:.24rem .5rem; border-radius:999px; font:700 .75rem "DM Sans",sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+    .status.locked { background:#143f2d; color:#7af0b5; border:1px solid #39d98a; }
+    .status.pending { background:#342012; color:#ffc18b; border:1px solid #a65e24; }
+    .status.open { background:#2c1a1a; color:#ffb3a7; border:1px solid #ff6b57; }
+    .status.done { background:#143f2d; color:#7af0b5; border:1px solid #39d98a; }
+
+    /* ── toolbar ─────────────────────────────────────────────────────── */
+    .toolbar { position:sticky; top:0; z-index:30; margin:18px 0 8px; padding:12px 14px; border:1px solid var(--line); border-radius:12px;
+      background:rgba(16,24,41,.96); backdrop-filter:blur(8px); display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .toolbar .grow { flex:1; }
+    .progress { height:9px; border-radius:99px; background:#0b1220; border:1px solid #2b3c57; overflow:hidden; min-width:170px; flex:1; }
+    .progress i { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--orange),#ffd08a); transition:width .3s; }
+    select, input[type="text"], input[type="email"], textarea { font:inherit; color:var(--text); background:#0d1524; border:1px solid #3a4c68; border-radius:8px; padding:.5rem .6rem; }
+    textarea { width:100%; min-height:64px; resize:vertical; }
+    input[type="text"]:focus, textarea:focus, select:focus { outline:2px solid rgba(255,118,23,.6); }
+
+    /* ── cases ───────────────────────────────────────────────────────── */
+    .queue { display:grid; gap:10px; }
+    details { border:1px solid var(--line); border-radius:11px; background:var(--panel); overflow:hidden; }
+    summary { display:flex; align-items:center; gap:9px; padding:14px 16px; cursor:pointer; list-style:none; font-weight:700; }
+    summary::-webkit-details-marker { display:none; }
+    summary::after { content:"+"; margin-left:auto; color:var(--orange-soft); font-size:1.3rem; }
+    details[open] summary::after { content:"-"; }
+    details[open] summary { border-bottom:1px solid var(--line); background:#172033; }
+    .case-id { flex:0 0 auto; color:#9eb0c9; font:700 .74rem "DM Sans",sans-serif; letter-spacing:.05em; text-transform:uppercase; }
+    .case-body { padding:15px 16px 17px; }
+    .case-body p { margin:.3rem 0 .8rem; color:var(--muted); }
+    .prompt { padding:10px 12px; border-left:3px solid var(--orange); background:var(--panel-warm); color:#ffe0c4; }
+    .current { padding:10px 12px; border-left:3px solid var(--blue); background:#0f1a2a; color:#cfe2ff; margin:10px 0; font-size:.95rem; }
+    .current b { color:#fff; }
+    .ask { margin:12px 0 8px; font-weight:700; color:#fff; }
+    .choices { display:grid; gap:7px; margin:6px 0 10px; }
+    .choice { display:flex; gap:9px; align-items:flex-start; padding:9px 11px; border:1px solid #3a4c68; border-radius:9px; background:#0e1725; cursor:pointer; }
+    .choice:hover { border-color:var(--orange-soft); background:#141f33; }
+    .choice input { margin-top:3px; accent-color:#ff7617; }
+    .choice.selected { border-color:var(--orange); background:#20180f; }
+    .choice span { color:#e7eefb; }
+    .other-wrap { display:flex; gap:8px; align-items:center; margin:2px 0 10px; flex-wrap:wrap; }
+    .other-wrap input { flex:1; min-width:220px; }
+    .notes-label { display:block; margin:8px 0 4px; color:var(--muted); font:700 .8rem "DM Sans"; letter-spacing:.06em; text-transform:uppercase; }
+    .saved-hint { font-size:.8rem; color:var(--green); min-height:1em; }
+
+    .decision-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .decision-card { padding:14px; border:1px solid var(--line); border-radius:10px; background:#101829; }
+    .decision-card b { color:var(--orange-soft); }
+    footer { margin-top:2.2rem; padding-top:1rem; border-top:1px solid #28374e; color:#aebbd2; font-size:.84rem; }
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+    #toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:60; padding:.7rem 1.1rem; border-radius:99px;
+      background:#0f2b21; border:1px solid var(--green); color:#c9ffe4; font-weight:700; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; }
+    #toast.show { opacity:1; transform:translateX(-50%) translateY(-6px); }
+
+    @media (max-width:700px) {
+      .page { padding:12px; }
+      .decision-grid { grid-template-columns:1fr; }
+      .brand-mark { width:50px; height:50px; }
+      .brand-logo { width:min(260px,calc(100% - 64px)); }
+      summary { align-items:flex-start; }
+    }
+    @media print {
+      body { background:#fff; color:#000; }
+      .toolbar, .nav, #toast, .no-print { display:none !important; }
+      details { border-color:#999; background:#fff; break-inside:avoid; }
+      details[open] summary { background:#eee; }
+      summary::after { content:""; }
+      details { page-break-inside:avoid; }
+      .prompt, .current { background:#f4f4f4; color:#000; border-left-color:#666; }
+      .page { max-width:none; padding:0; }
+      .choice { background:#fff; border-color:#bbb; color:#000; }
+      .choice span { color:#000; }
+      details:not([data-print-open]) { }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="eyebrow">Duel of the Catalysts · engine audit · build 2026-09-16</div>
+      <div class="brand" aria-label="Carry The Flame">
+        <img class="brand-mark" src="assets/ctf-mark.png" alt="">
+        <img class="brand-logo" src="assets/carry-the-flame-horizontal.png" alt="Carry The Flame">
+      </div>
+      <h1>Logic Gap Rulings Form</h1>
+      <p>Every question below is a real, verified gap in the shipped <code>duel.html</code> client — canon rules that are ambiguous, parsed flags the engine does not enforce, or engine behaviour that is outright wrong. Pick an answer (or write your own) for each one and the answers become the authoritative rulings sheet used to finish the game.</p>
+      <nav class="nav" aria-label="Navigation">
+        <a class="button primary" href="index.html">Back to Alpha Hub</a>
+        <a class="button" href="../duel.html">Open the Duel Client</a>
+        <a class="button" href="rulings-edge-cases.html">Card Edge Cases</a>
+        <a class="button" href="../rules.html">Canon Rulebook</a>
+      </nav>
+    </header>
+
+    <div class="stats" aria-label="Audit totals">
+      <div class="stat"><b id="stat-total">0</b>open questions</div>
+      <div class="stat"><b id="stat-critical">0</b>blocking / engine bugs</div>
+      <div class="stat"><b id="stat-answered">0</b>answered</div>
+      <div class="stat"><b id="stat-remaining">0</b>still open</div>
+    </div>
+
+    <div class="notice warning"><b>How to use this form:</b> each case shows <i>what the engine does today</i> in blue, then the ruling question in orange. Choose a radio option, or tick <b>Other</b> and type the exact ruling. Notes are optional. Everything autosaves to this browser — then export with any of the buttons in the save bar.</div>
+    <div class="notice danger"><b>Blocking items first:</b> the three engine defects in <b>A · Win &amp; Resolution</b>, <b>G · Chains &amp; Responses</b> and <b>J · Hot-seat &amp; UX</b> (set Concealed never leaving the field, opponent hidden zones being viewable, and hot-seat showing only one hand) are bugs, not design choices — they need a decision so they can be fixed in the right direction.</div>
+
+    <div class="toolbar no-print" role="region" aria-label="Form controls">
+      <div class="progress" aria-label="Completion progress"><i id="bar"></i></div>
+      <select id="filter" aria-label="Filter questions">
+        <option value="all">All questions</option>
+        <option value="open">Unanswered only</option>
+        <option value="answered">Answered only</option>
+        <option value="critical">Blocking / engine bugs only</option>
+      </select>
+      <button class="button ghost" id="btn-expand">Expand all</button>
+      <button class="button ghost" id="btn-collapse">Collapse all</button>
+      <span class="grow"></span>
+      <button class="button green" id="btn-save">💾 Save now</button>
+    </div>
+
+    <section aria-labelledby="save-export">
+      <h2 id="save-export">Save &amp; export</h2>
+      <p>Six independent ways to keep your answers. Autosave runs continuously; the others are on demand.</p>
+      <div class="nav">
+        <button class="button green" id="btn-download-json">⬇ Download JSON</button>
+        <button class="button" id="btn-copy-json">📋 Copy JSON</button>
+        <button class="button" id="btn-download-csv">⬇ Download CSV</button>
+        <button class="button" id="btn-download-md">⬇ Download rulings sheet (.md)</button>
+        <button class="button" id="btn-print">🖨 Print / Save as PDF</button>
+        <button class="button" id="btn-link">🔗 Copy shareable link</button>
+        <button class="button ghost" id="btn-import-file">⬆ Import JSON file…</button>
+        <button class="button ghost" id="btn-reset">✖ Clear all answers</button>
+      </div>
+      <input type="file" id="file-input" accept=".json,application/json" class="sr-only" aria-hidden="true" tabindex="-1">
+      <details style="margin-top:14px">
+        <summary><span class="case-id">Import</span> Paste a previously exported JSON to restore</summary>
+        <div class="case-body">
+          <textarea id="paste-json" placeholder='Paste the exported JSON here, then press "Restore from pasted JSON".'></textarea>
+          <div class="nav"><button class="button" id="btn-restore">↺ Restore from pasted JSON</button></div>
+          <p class="saved-hint" id="restore-hint"></p>
+        </div>
+      </details>
+      <p class="saved-hint" id="save-status"></p>
+    </section>
+
+    <div id="sections"></div>
+
+    <section aria-labelledby="how-to-answer">
+      <h2 id="how-to-answer">What a complete ruling must say</h2>
+      <div class="decision-grid">
+        <div class="decision-card"><b>1. Timing</b><br>When the action starts, when it resolves, and how long it lasts.</div>
+        <div class="decision-card"><b>2. Ownership and control</b><br>Who owns, controls, chooses, pays, and receives each affected card.</div>
+        <div class="decision-card"><b>3. Zones and targets</b><br>Where cards may come from, where they go, and what happens when a zone is full.</div>
+        <div class="decision-card"><b>4. Engine result</b><br>Costs, limits, counters, Kills, Capture, Chi damage, and the exact testable outcome.</div>
+      </div>
+    </section>
+
+    <footer>Carry The Flame &copy; 2026 — Duel of the Catalysts logic-gap desk. Answers recorded here override the engine's current default behaviour.</footer>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Question bank — every entry is a verified gap in duel.html
+   ══════════════════════════════════════════════════════════════════════════ */
+const SECTIONS = [
+  { id:'win', title:'A · Win conditions & resolution' },
+  { id:'turn', title:'B · Turn & phase structure' },
+  { id:'spawn', title:'C · Spawning & Tributes' },
+  { id:'special', title:'D · Special Spawns, Shotgun, Fusion & Libra' },
+  { id:'battle', title:'E · Battle, Capture & Kills' },
+  { id:'box', title:'F · The Box, Extraction & End Phase rights' },
+  { id:'chain', title:'G · Chains, responses & Counter Lock' },
+  { id:'engine', title:'H · Card flags, costs & effect engine' },
+  { id:'zones', title:'I · Zones, ownership & deck rules' },
+  { id:'ux', title:'J · Hot-seat, UX & data' }
+];
+
+const Q = [
+  /* ── A · Win conditions ──────────────────────────────────────────────── */
+  { id:'GAP-A1', sec:'win', prio:'critical',
+    title:'Simultaneous completion of the same win path',
+    current:'If both players reach the same path at the same instant (for example both hit 7 Kills on a mutual destruction tie), the engine declares a <b>draw</b>.',
+    ask:'When both players complete the same win path simultaneously, who wins?',
+    options:['Draw — neither player wins','The active (turn) player wins','The non-active player wins','Fall through to the next path in priority order','Replay the turn from the last legal state'] },
+
+  { id:'GAP-A2', sec:'win', prio:'rules',
+    title:'Chi KO direction and priority',
+    current:'Chi KO is inverted (running out of Chi means you <b>lose</b>) and out-ranks 7 Kills and 7 Extractions. Confirmed against the canon table.',
+    ask:'Confirm the Chi KO resolution and its priority over the other two paths.',
+    options:['Confirmed: 0 Chi = you lose by Chi KO, and Chi KO > 7 Kills > 7 Extractions','0 Chi = you win (the player who reaches 0 first wins)','Chi KO and Kills share priority — first detected wins','Chi KO is lowest priority'] },
+
+  { id:'GAP-A3', sec:'win', prio:'rules',
+    title:'Chi upper bound',
+    current:'Chi is <b>unbounded</b> — gain effects can push a player far above the 10,000 starting value.',
+    ask:'Should Chi have an upper limit when gained by card effects?',
+    options:['No cap — Chi can rise without limit','Cap at the 10,000 starting value','Cap at 99,999 (display limit)','Cap at twice the starting value (20,000)'] },
+
+  { id:'GAP-A4', sec:'win', prio:'rules',
+    title:'Win check timing mid-chain',
+    current:'The engine checks for a winner after every single effect operation, so a duel can end in the middle of an unresolved chain.',
+    ask:'When an effect inside a chain drops a player to 0 Chi, when does the duel end?',
+    options:['Immediately — the duel stops at once, the rest of the chain does not resolve','After the current chain link finishes resolving','After the whole chain resolves (LIFO to empty)','At the next phase boundary only'] },
+
+  { id:'GAP-A5', sec:'win', prio:'rules',
+    title:'What counts toward the 7-Kill path',
+    current:'Kills are awarded for: winning Pressure vs Pressure, the Pressure-vs-Counter-Pressure <b>Great DEF exception</b>, and both players on a tie. <b>Capture</b> and <b>Direct Attacks</b> award none.',
+    ask:'Which events should score a Kill toward the 7-Kill win path?',
+    options:['Current behaviour is correct (P-vs-P win, Great DEF kill, mutual destruction)','Capturing a Catalyst should also score a Kill','Direct Attacks should also score a Kill','Only battle destruction of an opponent Catalyst counts — the Great DEF exception should not'] },
+
+  { id:'GAP-A6', sec:'win', prio:'rules',
+    title:'Effect destruction and Kills',
+    current:'Catalysts destroyed by card effects go to the Void and award <b>no</b> Kill.',
+    ask:'Should destroying an opponent Catalyst with a card effect award a Kill?',
+    options:['No — only battle outcomes score Kills','Yes — any opponent Catalyst leaving the field scores a Kill','Yes, but only for destruction caused by your own Palm Trick','Yes, but only once per turn'] },
+
+  /* ── B · Turn & phase ────────────────────────────────────────────────── */
+  { id:'GAP-B1', sec:'turn', prio:'rules',
+    title:'Who takes the first turn',
+    current:'The human (player 0) <b>always</b> takes turn 1. There is no choice offered.',
+    ask:'How should the first player be decided?',
+    options:['Random','Player who lost the previous duel chooses','Always the challenge/host player','Higher roll / coin flip offered before the duel'] },
+
+  { id:'GAP-B2', sec:'turn', prio:'rules',
+    title:'Does player 2 also skip a Battle Phase?',
+    current:'Only the very first turn of the duel (turn 1) skips the Battle Phase. Player 2’s first turn (turn 2) has a normal Battle Phase.',
+    ask:'Should the Turn 1 Battle Phase skip apply to each player’s first turn, or only to turn 1?',
+    options:['Only turn 1 (current behaviour — correct)','Each player skips the Battle Phase on their own first turn','Both players skip Battle on the first full round','No skip at all — every turn has a Battle Phase'] },
+
+  { id:'GAP-B3', sec:'turn', prio:'polish',
+    title:'Opening hand redraw / mulligan',
+    current:'There is no mulligan. Both players draw a fixed opening hand of 5.',
+    ask:'Should a mulligan rule exist?',
+    options:['No mulligan (current behaviour)','One free redraw of the entire opening hand','Partial redraw — shuffle back any number and redraw that many','Redraw with a penalty (opponent draws 1)'] },
+
+  { id:'GAP-B4', sec:'turn', prio:'rules',
+    title:'End Phase right on turn 1',
+    current:'The End Phase right is available on every turn, including turn 1.',
+    ask:'May the End Phase right be used on turn 1?',
+    options:['Yes — available every turn','No — not on the first turn of the duel','Yes, but only Pass on turn 1','No — not before a player controls 2 Catalysts'] },
+
+  { id:'GAP-B5', sec:'turn', prio:'rules',
+    title:'Responding to an End Phase right',
+    current:'The opponent <b>cannot</b> respond to an End Phase right — it resolves with no response window.',
+    ask:'Should the opponent get a response window when an End Phase right is declared?',
+    options:['No response window (current behaviour)','Yes — Counter Tricks only','Yes — any Concealed or Counter Trick','Yes — and the cost is paid before the window opens'] },
+
+  { id:'GAP-B6', sec:'turn', prio:'rules',
+    title:'Ignition Phase purpose',
+    current:'The Ignition Phase only logs a message and auto-flows into the Action Phase.',
+    ask:'What belongs in the Ignition Phase?',
+    options:['Nothing mandatory — it is a free timing window for ignition effects (current)','Start-of-turn mandatory effects resolve here','Upkeep costs are paid here','Fold it into the Draw Phase and run 6 phases'] },
+
+  /* ── C · Spawning & Tributes ─────────────────────────────────────────── */
+  { id:'GAP-C1', sec:'spawn', prio:'rules',
+    title:'Tributing face-down Catalysts',
+    current:'A face-down (Set) Catalyst <b>can</b> be used as a Tribute today.',
+    ask:'May a face-down Catalyst be Tributed for a Level 5+ Spawn?',
+    options:['Yes — any controlled Catalyst may be Tributed','No — Tributes must be face-up','Yes, but the Tribute is revealed to the opponent first','Only if it was Set on a previous turn'] },
+
+  { id:'GAP-C2', sec:'spawn', prio:'rules',
+    title:'Posture change on the turn it was Spawned',
+    current:'A Catalyst can switch Pressure/Counter Pressure on the same turn it was Spawned or Set (once per turn, not after attacking).',
+    ask:'May a Catalyst change posture on the turn it entered the field?',
+    options:['Yes — current behaviour','No — not on the turn it was Spawned or Set','No for Normal Spawns, yes for Special Spawns','Yes, but only from Counter Pressure to Pressure'] },
+
+  { id:'GAP-C3', sec:'spawn', prio:'rules',
+    title:'Attacking on the turn it was Spawned',
+    current:'A Catalyst <b>may</b> attack on the turn it was Spawned (no summoning sickness).',
+    ask:'Should a freshly Spawned Catalyst be able to attack immediately?',
+    options:['Yes — no summoning sickness (current behaviour)','No — a Catalyst cannot attack the turn it enters the field','No for Normal Spawns, yes for Special Spawns and Fusions'] },
+
+  { id:'GAP-C4', sec:'spawn', prio:'rules',
+    title:'Tributes and on-destroy triggers',
+    current:'Tributed Catalysts go to the Void and <b>do</b> fire their “when this card is sent to the Void / destroyed” effects.',
+    ask:'Should paying a Tribute count as being destroyed by a card effect for trigger purposes?',
+    options:['Yes — Tributes fire on-destroy triggers (current)','No — Tributes are a cost and fire nothing','Only “sent to the Void” triggers fire, not “destroyed” triggers'] },
+
+  { id:'GAP-C5', sec:'spawn', prio:'rules',
+    title:'Cards that cannot be Normal Spawned but have no usable route',
+    current:'62 cards carry the <b>specialOnly</b> flag. When the engine cannot parse their Special procedure, they are simply unplayable and clog the hand.',
+    ask:'What should the engine do with a card that can only be Special Spawned but has no implemented Special route?',
+    options:['Leave it unplayable — the card is dead until its procedure is coded','Allow it as a Normal Spawn as a fallback so the hand is not clogged','Allow it as a Normal Spawn but log a warning','Exclude such cards from the playable pool until certified'] },
+
+  { id:'GAP-C6', sec:'spawn', prio:'polish',
+    title:'Set Catalyst visibility',
+    current:'A Set (face-down) Catalyst is hidden from the opponent — only a card back is drawn.',
+    ask:'Should the opponent be able to inspect a Set card’s identity?',
+    options:['Never — fully hidden (current behaviour)','The opponent may inspect it once, at any time','The opponent sees it only when it is attacked or flipped','The opponent always sees it (open information)'] },
+
+  /* ── D · Special / Shotgun / Fusion / Libra ──────────────────────────── */
+  { id:'GAP-D1', sec:'special', prio:'rules',
+    title:'Does a failed Special Spawn consume the cap?',
+    current:'Only <b>successful</b> Special Spawns count. A procedure that finds no legal target consumes nothing.',
+    ask:'If a Special Spawn procedure is declared but cannot produce a Catalyst, does it still count against the 5-per-turn cap?',
+    options:['No — only completed Special Spawns count (current)','Yes — the attempt is declared, so it counts','Yes, but only if the procedure paid a cost'] },
+
+  { id:'GAP-D2', sec:'special', prio:'rules',
+    title:'Shotgun draw when the Special Spawn is later negated',
+    current:'The opponent draws <b>before</b> on-spawn triggers fire, and the draw is never taken back if the spawn is subsequently negated.',
+    ask:'If a Special Spawn is negated after the Shotgun draw already happened, is the draw returned?',
+    options:['No — the Shotgun draw is permanent (current behaviour)','Yes — shuffle the drawn card back into the Deck','Yes — send the drawn card to the Void'] },
+
+  { id:'GAP-D3', sec:'special', prio:'critical',
+    title:'Fusion material source zones',
+    current:'Materials may currently come from the <b>field or the hand</b>. Nothing may be pulled from the Deck or the Void.',
+    ask:'Which zones may legally supply Fusion materials?',
+    options:['Field and hand (current behaviour)','Field only','Field, hand and Void','Any zone, including face-down cards on the field'] },
+
+  { id:'GAP-D4', sec:'special', prio:'rules',
+    title:'Unparseable Fusion recipes',
+    current:'When a Fusion card’s printed recipe cannot be parsed, the engine falls back to “any 2 Catalysts”.',
+    ask:'What should happen when a Fusion Catalyst’s material line cannot be read?',
+    options:['Allow any 2 Catalysts as a fallback (current)','The Fusion cannot be performed — the card is inert until certified','Require materials whose names contain a word from the Fusion’s own name','Require 2 materials of the same alignment as the Fusion'] },
+
+  { id:'GAP-D5', sec:'special', prio:'critical',
+    title:'Libra Spawn source zone',
+    current:'A Libra Spawn can only pull Catalysts out of the <b>hand</b>.',
+    ask:'Where may Libra Spawn take its Catalysts from?',
+    options:['Hand only (current behaviour)','Hand plus face-up Catalysts in the Fusion Deck (pendulum-style)','Hand and Void','Hand, Void and Deck'] },
+
+  { id:'GAP-D6', sec:'special', prio:'rules',
+    title:'Replacing or moving a Libra Scale',
+    current:'A Scale can never be replaced or moved — the slot must be emptied by destruction.',
+    ask:'Can a player replace one of their own Libra Scales with a new card?',
+    options:['No — only destruction frees the slot (current)','Yes — once per turn, sending the old Scale to the Void','Yes, unlimited during your Action Phase','Yes, but it costs 500 Chi'] },
+
+  { id:'GAP-D7', sec:'special', prio:'rules',
+    title:'Libra Scales as Trick targets',
+    current:'Scales are treated as Tricks for targeting, but <b>Destroy 1 Trick</b> currently cannot hit them — the effect only sees the three Trick Zones and the Field Trick Zone.',
+    ask:'Should “Destroy 1 Trick” effects be able to destroy a card in a Libra Zone?',
+    options:['Yes — Scales are Tricks, so they are legal targets','No — Libra Zones are separate and immune to Trick destruction','Only the opponent’s Scales may be targeted'] },
+
+  { id:'GAP-D8', sec:'special', prio:'rules',
+    title:'Placing both Scales in one turn',
+    current:'Both Libra Scales may be placed during the same Action Phase, and placing a Scale does <b>not</b> consume the Normal Spawn.',
+    ask:'How many Scales may be placed per turn, and does placing one use the Normal Spawn?',
+    options:['Both, and no — placing a Scale is a separate action (current)','One per turn, and it does not use the Normal Spawn','Both, but the first placement uses the Normal Spawn','One per turn, and it uses the Normal Spawn'] },
+
+  /* ── E · Battle ──────────────────────────────────────────────────────── */
+  { id:'GAP-E1', sec:'battle', prio:'critical',
+    title:'Attack replay when a Direct Attack is blocked mid-chain',
+    current:'A Direct Attack is declared while all 5 lanes are empty. If the opponent fills a lane during the response window, the engine tries to use a null target and the attack is <b>consumed with no effect</b>.',
+    ask:'A Direct Attack was declared into an empty field, then a Catalyst appears before resolution. What happens?',
+    options:['Replay — the attacker chooses a new target among the new Catalysts','The attack is cancelled and the attacker may attack again with that Catalyst','The attack is cancelled and consumed (current behaviour)','It resolves as a Direct Attack anyway — the declaration is locked in'] },
+
+  { id:'GAP-E2', sec:'battle', prio:'rules',
+    title:'Target leaves the field mid-chain',
+    current:'If the attack target disappears during the response window, the attack is consumed and nothing happens (“attack replays”).',
+    ask:'When the attack target leaves the field before damage, what should happen?',
+    options:['Replay — choose a new target or convert to a Direct Attack','Attack is cancelled but the Catalyst may attack again','Attack is cancelled and consumed (current)','Convert automatically to a Direct Attack'] },
+
+  { id:'GAP-E3', sec:'battle', prio:'critical',
+    title:'“Can attack directly” cards',
+    current:'The <b>directAttack</b> flag is parsed and shown as a badge on the card, but the engine ignores it — direct attacks are only possible when all 5 enemy Catalyst Zones are empty.',
+    ask:'How should a card whose text says it can attack Chi directly work?',
+    options:['It may attack Chi directly even while the opponent controls Catalysts','It may attack directly only if the opponent controls 1 or fewer Catalysts','It may attack directly only when all 5 lanes are empty (flag is decoration)','It may attack directly only if it did not attack this turn'] },
+
+  { id:'GAP-E4', sec:'battle', prio:'critical',
+    title:'“Cannot be destroyed by battle”',
+    current:'The flag is parsed and badged but never enforced — the Catalyst is destroyed normally.',
+    ask:'What happens when a Catalyst with battle-destruction immunity loses a Pressure comparison?',
+    options:['It survives, and its controller still takes the Logic damage difference','It survives, and no damage is dealt','It survives, damage is dealt, and the attacker still scores a Kill','The flag is decorative — destroy it normally'] },
+
+  { id:'GAP-E5', sec:'battle', prio:'rules',
+    title:'“Cannot be attacked”',
+    current:'The flag is parsed but has no effect — the Catalyst can be attacked normally.',
+    ask:'How should a Catalyst that cannot be attacked behave?',
+    options:['It cannot be chosen as an attack target at all','It can be chosen, but the attack ends with no result','Attacks must go elsewhere; if it is the only Catalyst, Direct Attacks become legal','The flag is decorative — ignore it'] },
+
+  { id:'GAP-E6', sec:'battle', prio:'critical',
+    title:'Piercing damage through Counter Pressure',
+    current:'The <b>pierce</b> flag is parsed but not implemented. Beating a Counter Pressure deals no Logic damage — the defender is simply Captured.',
+    ask:'When Pressure exceeds a defending Catalyst’s Counter Pressure, should the excess be dealt to Chi?',
+    options:['No — Capture or destruction only, 0 Logic damage (current canon)','Yes — always deal the positive difference to Chi','Yes, but only for cards with the pierce flag','Yes, but only half the difference, rounded down'] },
+
+  { id:'GAP-E7', sec:'battle', prio:'rules',
+    title:'Manually flipping your own Set Catalyst',
+    current:'A Set Catalyst is only flipped by being attacked (or by an effect). Its controller cannot flip it manually.',
+    ask:'May a player flip their own face-down Catalyst face-up during their turn?',
+    options:['No — only battle or card effects flip it (current)','Yes — once per turn during the Action Phase','Yes, but only if it was Set on a previous turn','Yes, any time during your own turn'] },
+
+  { id:'GAP-E8', sec:'battle', prio:'rules',
+    title:'Pressure vs Pressure tie',
+    current:'On an exact tie <b>both</b> Catalysts go to the Void, no damage is dealt, and <b>both</b> players score +1 Kill.',
+    ask:'Confirm the outcome of an exact Pressure tie.',
+    options:['Confirmed — both die, no damage, both score a Kill','Both die, no damage, neither scores a Kill','Both die, both take damage equal to 0, neither scores','Nothing happens — the attack simply ends'] },
+
+  { id:'GAP-E9', sec:'battle', prio:'polish',
+    title:'Damage-calculation response window',
+    current:'No cards can be activated “during damage calculation”. Only static calculation boosts apply.',
+    ask:'Should there be a damage-calculation window where specific cards may be activated?',
+    options:['No — keep battle resolution atomic (current)','Yes — allow Counter Tricks only','Yes — allow any fast effect','Yes, but restrict it to cards that modify Pressure/Counter Pressure'] },
+
+  /* ── F · Box & End Phase ─────────────────────────────────────────────── */
+  { id:'GAP-F1', sec:'box', prio:'rules',
+    title:'What can be Captured',
+    current:'Any non-Great Catalyst can be Captured, including Fusion Catalysts and Tokens.',
+    ask:'Which defending cards may be Captured into the Box?',
+    options:['Any non-Great Catalyst, including Fusions and Tokens (current)','Non-Great Catalysts only — not Fusions','Non-Great Catalysts only — not Tokens','Only non-Great, non-Token Catalysts'] },
+
+  { id:'GAP-F2', sec:'box', prio:'rules',
+    title:'Extracting a card Captured this turn',
+    current:'A card Captured during this turn’s Battle Phase can be Extracted in that same turn’s End Phase.',
+    ask:'May a card Captured this turn be Extracted in the same turn?',
+    options:['Yes — no waiting period (current behaviour)','No — a card must sit in the Box until your next turn','No — a card Captured this turn may not be Extracted, but older ones may'] },
+
+  { id:'GAP-F3', sec:'box', prio:'critical',
+    title:'Ownership of Captured cards',
+    current:'Captured cards keep their original owner (Rescue returns them to their owner’s Main Deck), but the engine infers ownership by name matching, which can misfire.',
+    ask:'Who owns a card sitting in an opponent’s Box?',
+    options:['The original owner always — the Box is temporary storage (confirmed in the Alpha rulings)','Ownership transfers to the capturer until Extracted','Ownership transfers permanently','The card has no owner while in the Box'] },
+
+  { id:'GAP-F4', sec:'box', prio:'rules',
+    title:'Face-down Catalyst as the End Phase cost',
+    current:'A face-down Catalyst <b>may</b> be sent to the Void to pay for Extract, Rescue or Destroy Trick.',
+    ask:'May a face-down Catalyst pay the End Phase cost?',
+    options:['Yes — any controlled Catalyst you own may pay','No — the cost must be face-up','Yes, but it is revealed first','No — the cost must be face-up and owned before this turn'] },
+
+  { id:'GAP-F5', sec:'box', prio:'rules',
+    title:'Destroy Trick target scope',
+    current:'The End Phase <b>Destroy Trick</b> right can hit the three Trick Zones and the Field Trick Zone, on either side.',
+    ask:'What exactly can the Destroy Trick right destroy?',
+    options:['Any Trick Zone card or Field Trick, either side (current)','Trick Zone cards only — Field Tricks are immune','Opponent cards only','Any card on the field, including Catalysts'] },
+
+  { id:'GAP-F6', sec:'box', prio:'rules',
+    title:'Rescue destination when the owner’s Deck is empty',
+    current:'Rescue returns the card to its owner’s Main Deck and shuffles. If that Deck is empty the card simply becomes the only card in it.',
+    ask:'What happens to a Rescued card if its owner’s Main Deck is empty?',
+    options:['It is shuffled into the empty Deck as normal (current)','It goes to its owner’s hand instead','The Rescue cannot be performed','It goes to the owner’s Void'] },
+
+  { id:'GAP-F7', sec:'box', prio:'rules',
+    title:'Counting Extractions',
+    current:'Each Extract moves one card from your Box to RFG and scores +1 Extraction. Great cards can never be Extracted.',
+    ask:'Confirm what an Extraction scores and what can be Extracted.',
+    options:['Confirmed — 1 card Box→RFG = +1 Extraction, Great cards excluded','Extracting a Token should not score','Extracting a Fusion should score double','Extracting should also deal 500 Chi damage to the opponent'] },
+
+  { id:'GAP-F8', sec:'box', prio:'polish',
+    title:'Box visibility',
+    current:'Both Boxes are public — either player can open the tray and read the captured cards.',
+    ask:'Should the contents of a player’s Box be public knowledge?',
+    options:['Yes — fully public (current)','Only the owner may inspect their own Box','Public count, hidden identities','Hidden until an Extraction is declared'] },
+
+  /* ── G · Chains ──────────────────────────────────────────────────────── */
+  { id:'GAP-G1', sec:'chain', prio:'critical',
+    title:'Set Concealed Trick never leaves the field (engine defect)',
+    current:'When a face-down Concealed Trick is chained in a response window it flips face-up and resolves — but it is <b>never sent to the Void</b>, so it sits in the Trick Zone forever and can be chained again.',
+    ask:'Where does a Concealed Trick go after it resolves from the Set position?',
+    options:['To the Void immediately after resolution (fix the defect)','It stays face-up on the field as a Continuous card','It stays until the End Phase, then goes to the Void','To the Void only if its effect destroyed something'] },
+
+  { id:'GAP-G2', sec:'chain', prio:'rules',
+    title:'Counter Lock duration',
+    current:'Once a Counter Trick is on the chain, only Counter Tricks may be chained above it, and the lock clears when the chain empties.',
+    ask:'How long does Counter Lock last?',
+    options:['Until the chain fully resolves (current)','Only for the immediately following link','For the rest of the turn','Until the End Phase'] },
+
+  { id:'GAP-G3', sec:'chain', prio:'rules',
+    title:'Holding priority',
+    current:'After a player activates an effect, priority passes <b>straight to the opponent</b>; the activating player cannot chain their own effect first.',
+    ask:'May the activating player hold priority and chain their own effect first?',
+    options:['No — priority always passes to the opponent (current)','Yes — the activating player may chain first','Yes, but only with Counter Tricks'] },
+
+  { id:'GAP-G4', sec:'chain', prio:'critical',
+    title:'Negating a Spawn',
+    current:'There is <b>no summon-negation window</b>. Cards that say “negate the Spawn” currently just negate the top chain link, which is usually nothing.',
+    ask:'Should Spawns be negatable, and how?',
+    options:['No summon-negation window — the text is treated as negating the on-Spawn effect','Yes — add a response window on Normal Spawn; the Spawned card goes to the Void','Yes — add it for Special Spawns only','Yes — add it for both, and the Spawn still consumes the Normal Spawn allowance'] },
+
+  { id:'GAP-G5', sec:'chain', prio:'polish',
+    title:'Response window auto-pass timer',
+    current:'Human response windows auto-pass after <b>4.2 seconds</b> if nothing is clicked.',
+    ask:'How long should the human response window stay open?',
+    options:['4 seconds with a visible countdown (current)','8 seconds','No timer — always require an explicit Pass click','No timer for Counter Tricks, 4 seconds for everything else'] },
+
+  { id:'GAP-G6', sec:'chain', prio:'rules',
+    title:'Chain link whose source leaves the field',
+    current:'If a chain link’s source card is destroyed before that link resolves, the effect <b>still resolves</b>.',
+    ask:'When a chain link’s source leaves the field before resolution, does the effect still apply?',
+    options:['Yes — it resolves unless negated (current)','No — it fizzles','Yes for Tricks, no for Catalysts','No for Continuous and Field cards, yes for everything else'] },
+
+  /* ── H · Engine ──────────────────────────────────────────────────────── */
+  { id:'GAP-H1', sec:'engine', prio:'critical',
+    title:'Activation costs are never paid (engine defect)',
+    current:'“Pay 500 Chi”, “Discard 1 card” and “Tribute 1 Catalyst” are parsed into a cost object, but the engine <b>never charges them</b> — those cards currently resolve for free.',
+    ask:'How should printed activation costs be handled?',
+    options:['Charge them — the effect cannot be activated unless the cost is paid (fix the defect)','Charge them, and auto-pay silently when the player has enough','Ignore costs for now and mark the cards as “casual only”','Charge only Chi costs, ignore discard/tribute costs'] },
+
+  { id:'GAP-H2', sec:'engine', prio:'critical',
+    title:'Inert parsed flags',
+    current:'Five flags are parsed and displayed but do nothing: <b>directAttack, cannotBeDestroyedBattle, cannotBeAttacked, pierce, noAttackAfterEffect</b>.',
+    ask:'Which of these flags should the engine actually enforce?',
+    options:['All five','Only directAttack and cannotBeDestroyedBattle','Only pierce and cannotBeDestroyedBattle','None — keep them as printed-text decoration'] },
+
+  { id:'GAP-H3', sec:'engine', prio:'rules',
+    title:'Cards whose text is not auto-resolved',
+    current:'Of 1,613 cards, 864 have executable scripts. The remaining 749 carry printed text the engine cannot interpret — they play as vanilla bodies.',
+    ask:'How should a card with unresolved printed text behave?',
+    options:['Legal, plays as a vanilla body with its printed stats (current)','Legal, but flagged “casual only” in the UI','Illegal until certified — excluded from the playable pool','Legal, and the controller may trigger its effect manually with a judge prompt'] },
+
+  { id:'GAP-H4', sec:'engine', prio:'rules',
+    title:'Great-card name detection',
+    current:'A card is Great when its name contains the <b>standalone word</b> “Great” — “The Great’s Gundam” and “Nolan-The-Great” count; “Greatest” does not.',
+    ask:'Confirm the exact Great-name test.',
+    options:['Confirmed — standalone word “Great” only','Any substring — “Greatest” also counts','Exact word, and it must be capitalised','Word-boundary match, plus possessive forms such as “Great’s”'] },
+
+  { id:'GAP-H5', sec:'engine', prio:'rules',
+    title:'Once-per-turn tracking granularity',
+    current:'Once-per-turn is tracked <b>per card copy</b>, so two copies of the same Catalyst can each use the effect once.',
+    ask:'Should a once-per-turn limit apply per copy or per card name?',
+    options:['Per copy (current behaviour)','Per card name — only one copy may use it per turn','Per copy, but the limit is shared across the field'] },
+
+  /* ── I · Zones, ownership, decks ─────────────────────────────────────── */
+  { id:'GAP-I1', sec:'zones', prio:'critical',
+    title:'Hidden zones are viewable (engine defect)',
+    current:'Clicking any tray button opens that zone — including the <b>opponent’s Main Deck and Fusion Deck</b>. Deck contents render face-down, but the Fusion Deck and Void/Box/RFG ordering are exposed.',
+    ask:'Which trays should a player be allowed to open?',
+    options:['Public zones only — Void, Box and RFG for both sides; own Deck and Fusion Deck only (fix the defect)','Everything — keep it as a sandbox/playtest tool','Own zones only — the opponent’s Void and Box are private too','Everything except the opponent’s Main Deck'] },
+
+  { id:'GAP-I2', sec:'zones', prio:'rules',
+    title:'Equipped Palm Trick when its Catalyst leaves',
+    current:'An Equip lives in a Trick Zone with a link to its host. When the host leaves the field, the Equip card <b>stays in the Trick Zone</b> with a dead link.',
+    ask:'What happens to an Equip Palm Trick when the equipped Catalyst leaves the field?',
+    options:['It is sent to the Void immediately (fix the defect)','It stays on the field unattached until destroyed','It returns to its owner’s hand','It follows the Catalyst to the Void, Box or RFG'] },
+
+  { id:'GAP-I3', sec:'zones', prio:'rules',
+    title:'Equip capacity per Catalyst',
+    current:'A Catalyst can hold <b>any number</b> of Equips (some printed cards say a maximum of two).',
+    ask:'How many Equip Palm Tricks may be attached to one Catalyst?',
+    options:['Unlimited unless a card says otherwise (current)','One per Catalyst','Two per Catalyst','One per Trick Zone, so three maximum'] },
+
+  { id:'GAP-I4', sec:'zones', prio:'rules',
+    title:'Captured card keeps its attachments',
+    current:'When a Catalyst is Captured into the Box, any Equips attached to it are simply discarded.',
+    ask:'What happens to attachments when a Catalyst is Captured?',
+    options:['They are sent to the Void (current)','They travel with the card into the Box','They return to their owner’s hand','They stay on the field attached to nothing'] },
+
+  { id:'GAP-I5', sec:'zones', prio:'polish',
+    title:'Side Deck',
+    current:'The canon 0–15 Side Deck is <b>not implemented</b> — there is no between-game siding.',
+    ask:'Should the Side Deck be implemented?',
+    options:['Not needed for the single-file client — skip it','Yes — add siding between games in a best-of-three match','Yes — add the Side Deck zone to the Deck Lab, even if matches stay best-of-one'] },
+
+  { id:'GAP-I6', sec:'zones', prio:'polish',
+    title:'Match structure',
+    current:'Every duel is a standalone <b>best-of-one</b>.',
+    ask:'What match structure should the client support?',
+    options:['Best-of-one only (current)','Best-of-three with siding and a record','Best-of-three without siding','Add a “first to 2 wins” ladder against the CPU'] },
+
+  /* ── J · Hot-seat & UX ───────────────────────────────────────────────── */
+  { id:'GAP-J1', sec:'ux', prio:'critical',
+    title:'Hot-seat shows only one hand (engine defect)',
+    current:'Hot-seat mode is selectable, but the hand drawer is hard-coded to player 0 — <b>player 2 never sees or plays their cards</b>.',
+    ask:'How should hot-seat work on a single screen?',
+    options:['Rotate the whole table each turn and show only the active player’s hand (fix the defect)','Show both hands face-down and reveal the active player’s','Pass-and-play with a privacy curtain between turns','Remove hot-seat and keep CPU duels only'] },
+
+  { id:'GAP-J2', sec:'ux', prio:'polish',
+    title:'Undo / confirmation',
+    current:'Every action resolves instantly with no confirmation step.',
+    ask:'Should irreversible actions require confirmation?',
+    options:['No confirmation — keep play fast (current)','Confirm only costly or irreversible actions (Tributes, Fusion, End Phase rights)','Confirm every action','Add a single undo for the most recent action'] },
+
+  { id:'GAP-J3', sec:'ux', prio:'polish',
+    title:'Records export',
+    current:'Records live in localStorage only — they cannot be exported or moved between devices.',
+    ask:'Should records and leaderboards be exportable?',
+    options:['Yes — add JSON export and import','Yes — add CSV export','Not needed','Yes — export and also sync to a downloadable text summary'] },
+
+  { id:'GAP-J4', sec:'ux', prio:'polish',
+    title:'Deck import / export',
+    current:'Custom decks are saved in localStorage and cannot be shared.',
+    ask:'How should decks be shared?',
+    options:['Add JSON and plain-text decklist export plus import','Add a copy-to-clipboard decklist only','Not needed','Add export plus a shareable URL that encodes the deck'] },
+
+  { id:'GAP-J5', sec:'ux', prio:'polish',
+    title:'Turn timer',
+    current:'There is no clock. A turn can take as long as the player likes.',
+    ask:'Should a turn or match clock be added?',
+    options:['No clock (current)','Per-turn countdown with an auto-pass at zero','Chess clock — a total time pool per player','Clock only in ranked CPU difficulties'] },
+
+  { id:'GAP-J6', sec:'ux', prio:'polish',
+    title:'Mobile control priority',
+    current:'Mobile uses the bottom drawer, radial tap menus and drag-to-zone; desktop adds hotkeys.',
+    ask:'Which mobile controls matter most to finish first?',
+    options:['Radial tap menus and the bottom drawer (current priority)','Drag and drop','Large tap targets for posture and attack','Swipe gestures to advance phases'] }
+];
+
+/* ══════════════════════════════════════════════════════════════════════════
+   State
+   ══════════════════════════════════════════════════════════════════════════ */
+const STORE_KEY = 'ctf:duel:logic-gap-rulings:v1';
+let answers = {};
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) answers = JSON.parse(raw) || {};
+  } catch (e) { answers = {}; }
+  /* a share link overrides nothing but fills blanks */
+  try {
+    const h = location.hash.replace(/^#/, '');
+    if (h && h.length > 8) {
+      const obj = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(h)))));
+      if (obj && obj.answers) for (const k in obj.answers) if (!answers[k]) answers[k] = obj.answers[k];
+    }
+  } catch (e) { /* ignore malformed links */ }
+}
+let saveTimer = null;
+function save(now) {
+  clearTimeout(saveTimer);
+  const run = () => {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(answers)); } catch (e) { }
+    const n = countAnswered();
+    setStatus(`Autosaved — ${n} of ${Q.length} answered.`);
+    updateStats();
+  };
+  if (now) run(); else saveTimer = setTimeout(run, 450);
+}
+function setStatus(msg) { const el = $('#save-status'); if (el) el.textContent = msg; }
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+const isAnswered = id => {
+  const a = answers[id];
+  if (!a) return false;
+  return !!(a.choice || (a.other || '').trim() || (a.note || '').trim());
+};
+const countAnswered = () => Q.filter(q => isAnswered(q.id)).length;
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Render
+   ══════════════════════════════════════════════════════════════════════════ */
+function render() {
+  const host = $('#sections');
+  host.innerHTML = SECTIONS.map(sec => {
+    const items = Q.filter(q => q.sec === sec.id);
+    if (!items.length) return '';
+    return `<section aria-labelledby="sec-${sec.id}"><h2 id="sec-${sec.id}">${esc(sec.title)}</h2><div class="queue">${
+      items.map(q => cardHtml(q)).join('')}</div></section>`;
+  }).join('');
+  bind();
+  updateStats();
+  applyFilter();
+}
+
+function cardHtml(q) {
+  const a = answers[q.id] || {};
+  const opts = q.options || [];
+  const prioPill = q.prio === 'critical'
+    ? '<span class="status open">Blocking</span>'
+    : q.prio === 'rules' ? '<span class="status pending">Ruling</span>'
+      : '<span class="status pending">Polish</span>';
+  const answered = isAnswered(q.id);
+  return `
+  <details class="case" data-id="${esc(q.id)}" data-prio="${esc(q.prio)}" data-answered="${answered ? '1' : '0'}">
+    <summary>
+      <span class="case-id">${esc(q.id)}</span>
+      <span style="flex:1">${esc(q.title)}</span>
+      ${prioPill}
+      <span class="status ${answered ? 'done' : 'pending'}" data-role="pill">${answered ? 'Answered' : 'Open'}</span>
+    </summary>
+    <div class="case-body">
+      <div class="current"><b>Engine today:</b> ${q.current}</div>
+      <div class="prompt"><b>Decision needed:</b> ${esc(q.ask)}</div>
+      <div class="ask">Choose a ruling</div>
+      <div class="choices" role="radiogroup" aria-label="${esc(q.title)}">
+        ${opts.map((o, i) => `
+          <label class="choice ${a.choice === o ? 'selected' : ''}">
+            <input type="radio" name="${esc(q.id)}" value="${esc(o)}" ${a.choice === o ? 'checked' : ''}>
+            <span>${esc(o)}</span>
+          </label>`).join('')}
+        <label class="choice ${a.choice === '__other__' ? 'selected' : ''}">
+          <input type="radio" name="${esc(q.id)}" value="__other__" ${a.choice === '__other__' ? 'checked' : ''}>
+          <span>Other — write the exact ruling below</span>
+        </label>
+      </div>
+      <div class="other-wrap">
+        <input type="text" data-role="other" placeholder="Custom ruling (used when “Other” is selected)…" value="${esc(a.other || '')}">
+      </div>
+      <label class="notes-label" for="note-${esc(q.id)}">Notes / examples / wording for the rulebook</label>
+      <textarea id="note-${esc(q.id)}" data-role="note" placeholder="Optional — timing, ownership, zones, exact engine result…">${esc(a.note || '')}</textarea>
+      <p class="saved-hint" data-role="hint"></p>
+    </div>
+  </details>`;
+}
+
+function bind() {
+  $$('.case').forEach(det => {
+    const id = det.dataset.id;
+    det.querySelectorAll('input[type="radio"]').forEach(r => {
+      r.addEventListener('change', () => {
+        answers[id] = Object.assign({}, answers[id], { choice: r.value, ts: new Date().toISOString() });
+        det.querySelectorAll('.choice').forEach(c => c.classList.toggle('selected', c.contains(r)));
+        markAnswered(det);
+        save();
+      });
+    });
+    det.querySelector('[data-role="other"]').addEventListener('input', e => {
+      const v = e.target.value;
+      answers[id] = Object.assign({}, answers[id], { other: v, ts: new Date().toISOString() });
+      if (v.trim()) {
+        const radio = det.querySelector('input[value="__other__"]');
+        if (radio && !radio.checked) {
+          radio.checked = true;
+          answers[id].choice = '__other__';
+          det.querySelectorAll('.choice').forEach(c => c.classList.toggle('selected', c.contains(radio)));
+        }
+      }
+      markAnswered(det);
+      save();
+    });
+    det.querySelector('[data-role="note"]').addEventListener('input', e => {
+      answers[id] = Object.assign({}, answers[id], { note: e.target.value, ts: new Date().toISOString() });
+      markAnswered(det);
+      save();
+    });
+  });
+}
+function markAnswered(det) {
+  const ok = isAnswered(det.dataset.id);
+  det.dataset.answered = ok ? '1' : '0';
+  const pill = det.querySelector('[data-role="pill"]');
+  if (pill) { pill.textContent = ok ? 'Answered' : 'Open'; pill.className = 'status ' + (ok ? 'done' : 'pending'); }
+  updateStats();
+}
+function updateStats() {
+  const n = countAnswered();
+  const critical = Q.filter(q => q.prio === 'critical');
+  const critDone = critical.filter(q => isAnswered(q.id)).length;
+  $('#stat-total').textContent = Q.length;
+  $('#stat-critical').textContent = critical.length;
+  $('#stat-answered').textContent = n;
+  $('#stat-remaining').textContent = Q.length - n;
+  const bar = $('#bar');
+  if (bar) bar.style.width = Math.round(n / Q.length * 100) + '%';
+}
+function applyFilter() {
+  const f = $('#filter').value;
+  $$('.case').forEach(det => {
+    const answered = det.dataset.answered === '1';
+    let show = true;
+    if (f === 'open') show = !answered;
+    else if (f === 'answered') show = answered;
+    else if (f === 'critical') show = det.dataset.prio === 'critical';
+    det.style.display = show ? '' : 'none';
+  });
+  $$('#sections section').forEach(sec => {
+    const any = Array.from(sec.querySelectorAll('.case')).some(d => d.style.display !== 'none');
+    sec.style.display = any ? '' : 'none';
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Export / import
+   ══════════════════════════════════════════════════════════════════════════ */
+function payload() {
+  return {
+    form: 'Carry The Flame — Duel of the Catalysts · Logic Gap Rulings',
+    version: 1,
+    savedAt: new Date().toISOString(),
+    answered: countAnswered(),
+    total: Q.length,
+    answers: answers
+  };
+}
+function labelFor(q) {
+  const a = answers[q.id] || {};
+  if (a.choice === '__other__') return (a.other || '').trim() || '(Other — not filled in)';
+  return a.choice || '';
+}
+function download(name, text, mime) {
+  const blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+const stamp = () => new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+
+function toCSV() {
+  const rows = [['id', 'section', 'priority', 'question', 'ruling', 'notes', 'answered', 'timestamp']];
+  Q.forEach(q => {
+    const a = answers[q.id] || {};
+    rows.push([q.id, q.sec, q.prio, q.title, labelFor(q), (a.note || '').replace(/\n/g, ' '), isAnswered(q.id) ? 'yes' : 'no', a.ts || '']);
+  });
+  return rows.map(r => r.map(c => '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(',')).join('\n');
+}
+function toMarkdown() {
+  const out = ['# Carry The Flame — Duel of the Catalysts', '## Logic Gap Rulings Sheet', '',
+    `_Exported ${new Date().toISOString()} — ${countAnswered()} of ${Q.length} answered._`, ''];
+  SECTIONS.forEach(sec => {
+    const items = Q.filter(q => q.sec === sec.id);
+    if (!items.length) return;
+    out.push('## ' + sec.title, '');
+    items.forEach(q => {
+      const a = answers[q.id] || {};
+      out.push(`### ${q.id} — ${q.title}`);
+      out.push(`**Priority:** ${q.prio === 'critical' ? 'BLOCKING' : q.prio === 'rules' ? 'ruling' : 'polish'}  `);
+      out.push(`**Engine today:** ${String(q.current).replace(/<[^>]+>/g, '')}  `);
+      out.push(`**Question:** ${q.ask}  `);
+      out.push(`**RULING:** ${labelFor(q) || '_unanswered_'}  `);
+      if ((a.note || '').trim()) out.push(`**Notes:** ${a.note.replace(/\n/g, ' ')}  `);
+      out.push('');
+    });
+  });
+  return out.join('\n');
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Wiring
+   ══════════════════════════════════════════════════════════════════════════ */
+function init() {
+  load();
+  render();
+
+  $('#filter').addEventListener('change', applyFilter);
+  $('#btn-expand').addEventListener('click', () => {
+    $$('.case').forEach(d => { d.open = true; d.dataset.printOpen = '1'; });
+  });
+  $('#btn-collapse').addEventListener('click', () => {
+    $$('.case').forEach(d => { d.open = false; delete d.dataset.printOpen; });
+  });
+  $('#btn-save').addEventListener('click', () => { save(true); toast('Saved to this browser.'); });
+
+  $('#btn-download-json').addEventListener('click', () => {
+    download(`ctf-logic-gaps-${stamp()}.json`, JSON.stringify(payload(), null, 2), 'application/json');
+    toast('JSON downloaded.');
+  });
+  $('#btn-copy-json').addEventListener('click', async () => {
+    const text = JSON.stringify(payload(), null, 2);
+    try { await navigator.clipboard.writeText(text); toast('JSON copied to clipboard.'); }
+    catch (e) { fallbackCopy(text); toast('JSON ready — copied via fallback.'); }
+  });
+  $('#btn-download-csv').addEventListener('click', () => {
+    download(`ctf-logic-gaps-${stamp()}.csv`, toCSV(), 'text/csv;charset=utf-8');
+    toast('CSV downloaded.');
+  });
+  $('#btn-download-md').addEventListener('click', () => {
+    download(`ctf-logic-gaps-${stamp()}.md`, toMarkdown(), 'text/markdown;charset=utf-8');
+    toast('Rulings sheet downloaded.');
+  });
+  $('#btn-print').addEventListener('click', () => {
+    $$('.case').forEach(d => { d.open = true; });
+    setTimeout(() => window.print(), 120);
+  });
+  $('#btn-link').addEventListener('click', async () => {
+    const compact = JSON.stringify({ v: 1, answers });
+    const b64 = btoa(unescape(encodeURIComponent(compact)));
+    const url = location.origin && location.origin !== 'null'
+      ? location.origin + location.pathname + '#' + encodeURIComponent(b64)
+      : location.href.split('#')[0] + '#' + encodeURIComponent(b64);
+    try { await navigator.clipboard.writeText(url); toast('Shareable link copied.'); }
+    catch (e) { fallbackCopy(url); toast('Link ready — copied via fallback.'); }
+  });
+  $('#btn-import-file').addEventListener('click', () => $('#file-input').click());
+  $('#file-input').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => applyImport(String(r.result), 'file');
+    r.readAsText(f);
+    e.target.value = '';
+  });
+  $('#btn-restore').addEventListener('click', () => applyImport($('#paste-json').value, 'paste'));
+  $('#btn-reset').addEventListener('click', () => {
+    if (!confirm('Clear every answer in this browser? Export first if you want a copy.')) return;
+    answers = {}; save(true); render();
+    $('#restore-hint').textContent = 'All answers cleared.';
+    toast('Cleared.');
+  });
+
+  setStatus(countAnswered() ? `Restored ${countAnswered()} answered question(s) from this browser.` : 'Nothing saved yet — answers autosave as you type.');
+}
+function applyImport(text, source) {
+  try {
+    const obj = JSON.parse(text);
+    const incoming = obj && obj.answers ? obj.answers : obj;
+    if (!incoming || typeof incoming !== 'object') throw new Error('no answers object');
+    let n = 0;
+    for (const k in incoming) {
+      if (!Q.some(q => q.id === k)) continue;
+      answers[k] = Object.assign({}, answers[k], incoming[k]);
+      n++;
+    }
+    save(true); render();
+    $('#restore-hint').textContent = `Imported ${n} answer(s) from ${source}.`;
+    toast(`Imported ${n} answer(s).`);
+  } catch (e) {
+    $('#restore-hint').textContent = 'Import failed — that does not look like an exported JSON file.';
+    toast('Import failed.');
+  }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch (e) { }
+  ta.remove();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
