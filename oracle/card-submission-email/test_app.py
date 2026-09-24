@@ -1,3 +1,4 @@
+import base64
 import json
 from pathlib import Path
 import tempfile
@@ -33,17 +34,21 @@ class FakeMailer:
 
 
 def payload():
+    image_bytes = b"\x89PNG\r\n\x1a\nCTF test image"
     submission = {
         "submission_id": "ctf-test-submission-1234",
         "submitter": {"name": "Alex Flame", "email": "alex@example.com"},
         "timestamp": "2026-08-21T20:00:00Z",
         "cards": [{"name": f"Card {index}"} for index in range(1, 6)],
+        "images": {"c1": [{"name": "spark.png", "type": "image/png"}]},
+        "totalImages": 1,
     }
     return {
         "submission_id": submission["submission_id"],
         "file_name": "CTF_Cards_Alex.json",
         "turnstile_token": "valid-token",
         "json": json.dumps(submission),
+        "images": [{"slot": "c1", "name": "spark.png", "data_url": "data:image/png;base64," + base64.b64encode(image_bytes).decode("ascii")}],
     }
 
 
@@ -92,9 +97,15 @@ class SubmissionServiceTests(unittest.IsolatedAsyncioTestCase):
         owner, submitter = self.mailer.messages
         self.assertEqual(owner["From"], "CTF.OTCG@outlook.com")
         self.assertEqual(owner["To"], "changethewrld@outlook.com")
-        self.assertEqual(owner["Subject"], "Alex Flame's Custom Cards")
+        self.assertEqual(owner["Subject"], "Alex Flame's FORGE Cards")
         self.assertEqual(owner["Reply-To"], "alex@example.com")
-        self.assertEqual(len(list(owner.iter_attachments())), 1)
+        owner_attachments = list(owner.iter_attachments())
+        self.assertEqual(len(owner_attachments), 2)
+        self.assertEqual(owner_attachments[0].get_filename(), "CTF_Cards_Alex.json")
+        self.assertNotIn("base64", owner_attachments[0].get_content().decode("utf-8"))
+        self.assertEqual(owner_attachments[1].get_filename(), "01_c1_spark.png")
+        self.assertEqual(owner_attachments[1].get_content_type(), "image/png")
+        self.assertEqual(owner_attachments[1].get_content(), b"\x89PNG\r\n\x1a\nCTF test image")
         self.assertEqual(submitter["To"], "alex@example.com")
         self.assertEqual(submitter["From"], "CTF.OTCG@outlook.com")
         self.assertIn("Cards Are Under Review", submitter["Subject"])
@@ -102,6 +113,8 @@ class SubmissionServiceTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn("reviewed for possible inclusion", submitter_text)
         self.assertIn("Perfect Timing Gaming", submitter_text)
         self.assertNotIn("Makairis Holding Group", submitter_text)
+        self.assertNotIn("quoted-printable", submitter.as_bytes().decode("ascii").lower())
+        self.assertNotIn("Carr=\n", submitter.as_bytes().decode("ascii"))
         submitter_attachments = list(submitter.iter_attachments())
         self.assertEqual(len(submitter_attachments), 1)
         self.assertEqual(submitter_attachments[0].get_filename(), "Carry-The-Flame-Logo.png")
@@ -139,6 +152,13 @@ class SubmissionServiceTests(unittest.IsolatedAsyncioTestCase):
         bad["turnstile_token"] = "bad-token"
         response = await self.post(bad)
         self.assertEqual(response.status, 403)
+        self.assertEqual(len(self.mailer.messages), 0)
+
+    async def test_rejects_bad_image_before_sending(self):
+        bad = payload()
+        bad["images"][0]["data_url"] = "data:image/png;base64,not-valid!"
+        response = await self.post(bad)
+        self.assertEqual(response.status, 400)
         self.assertEqual(len(self.mailer.messages), 0)
 
 

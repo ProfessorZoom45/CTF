@@ -6,13 +6,21 @@ CTF GitHub Pages origin, verifies Cloudflare Turnstile, rate-limits callers, and
 sends exactly two emails through the dedicated `CTF.OTCG@outlook.com` mailbox
 using Microsoft Graph delegated `Mail.Send` authorization:
 
-1. `{Submitter Name}'s Custom Cards` to `changethewrld@outlook.com`, with the
-   submitted JSON attached and the submitter set as Reply-To.
+1. `{Submitter Name}'s FORGE Cards` to `changethewrld@outlook.com`, with the
+   submitted JSON and each artwork image attached separately, and the
+   submitter set as Reply-To. The JSON contains image metadata only.
 2. A thank-you/review notice to the submitter, with the official CTF logo PNG
    attached as `Carry-The-Flame-Logo.png`.
 
 SQLite delivery flags make retries idempotent. If the first email succeeds and
 the second fails, a retry sends only the second email.
+The browser sends image data in a separate `images` array to `/submit-card`;
+the service decodes each image into a MIME attachment. Text messages use 7bit
+or base64 transfer encoding to avoid visible quoted-printable `=` line breaks.
+
+Run the local delivery checks before deployment with `python -m unittest
+test_app.py`. The test sends one image through a fake mailer, checks both
+emails, and verifies that the JSON does not contain image data.
 
 ## Required one-time setup
 
