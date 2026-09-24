@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#090b12">
+  <title>CTF Alpha | Forge Name Review V2</title>
+  <link rel="icon" href="assets/ctf-mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;900&family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="forge-name-review-v2.css">
+  <script type="module" src="forge-name-review-v2.js"></script>
+</head>
+<body>
+  <a class="skip" href="#queue">Skip to review queue</a>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand"><img src="assets/ctf-mark.png" alt=""><img src="assets/carry-the-flame-horizontal.png" alt="Carry The Flame"></div>
+      <div class="masthead-copy"><span class="eyebrow">Alpha · alternate review workspace</span><h1>Forge Name Review <em>V2</em></h1><p>Scan a queue, enter name choices in one click, and finish each card in a focused forge editor.</p></div>
+      <nav aria-label="Review navigation"><a href="index.html">Alpha hub</a><a href="forge-name-review.html">Original layout</a><a href="CTF-FORGE-REVIEW-README.txt">Review guide</a><a href="CTF-FORGE-REVIEW-SUGGESTIONS.txt">Suggestions</a></nav>
+    </header>
+
+    <section class="overview" aria-label="Review progress">
+      <div><span>Total archive</span><strong>1,613</strong><small>Seven source sets</small></div>
+      <div><span>Rename queue</span><strong>1,587</strong><small>Five choices per card</small></div>
+      <div class="protected"><span>ZF1 protected</span><strong>26</strong><small>Names remain fixed</small></div>
+      <div><span>Drafts touched</span><strong id="decided-count">0</strong><small id="saved-at">Saved in this browser</small></div>
+    </section>
+
+    <section class="method"><div><span class="eyebrow">Entry method V2</span><h2>Queue → choice → forge details</h2><p>Pick A–E on a row or in the focused card. Use <kbd>1</kbd>–<kbd>5</kbd> for names, <kbd>↑</kbd>/<kbd>↓</kbd> for cards, and <kbd>/</kbd> to search when you are outside a form field. Paste tab-separated decisions for a larger batch.</p></div><ol><li>Alignment</li><li>Race</li><li>Skill</li><li>Effect class</li><li>Pressure</li><li>Counter Pressure</li><li>Rank</li><li>Catalyst resolution</li></ol></section>
+
+    <section class="workbench" id="queue">
+      <div class="workbench-head"><div><span class="eyebrow">Decision workbench</span><h2>Review queue</h2><p>ZF1 names are locked. Tricks keep their effect-focused fields; Token Catalysts show creator links.</p></div><div class="progress-wrap"><strong id="progress-label">0 / 1,587</strong><span>rename cards touched</span><div class="progress"><i id="progress-bar"></i></div></div></div>
+      <div class="filters">
+        <label class="search-field">Find card, source, or mechanic<input id="search" type="search" placeholder="Search ID, name, effect, lineage…"></label>
+        <label>Set<select id="set-filter"><option value="">All sets</option></select></label>
+        <label>Source<select id="source-filter"><option value="">All sources</option></select></label>
+        <label>Effect class<select id="branch-filter"><option value="">All classes</option><option>Normal</option><option>Effect</option><option>Fusion</option><option>Trick</option></select></label>
+        <label>Status<select id="status-filter"><option value="">All cards</option><option value="undecided">Untouched</option><option value="decided">Touched</option><option value="flagged">Flagged</option><option value="selected">Selected</option></select></label>
+      </div>
+      <div class="work-grid">
+        <aside class="queue-panel" aria-label="Card queue"><div class="queue-tools"><span id="match-count">Loading…</span><div><button id="previous-page" type="button" aria-label="Previous page">‹</button><span id="page-label">1 / 1</span><button id="next-page" type="button" aria-label="Next page">›</button></div></div><div class="queue-header"><span>Card</span><span>Quick name entry</span></div><div id="queue-list" class="queue-list" aria-live="polite"></div><div class="queue-foot"><label><input type="checkbox" id="select-page"> Select page</label><button id="select-filtered" type="button">Select all matched</button><button id="clear-selection" type="button">Clear</button><strong id="selected-count">0 selected</strong></div></aside>
+        <main class="editor-panel" id="editor" aria-live="polite"><p class="empty">Loading the card archive…</p></main>
+      </div>
+    </section>
+
+    <section class="lower-grid">
+      <div class="tool-panel"><div class="panel-head"><span class="eyebrow">Fast entry</span><h2>Paste a decision sheet</h2></div><p>One card per line: <code>Card ID [tab] A–E [tab] effect decision</code>. The effect column is optional: <code>keep</code>, <code>rewrite</code>, <code>custom</code>, or <code>none</code>. A header row is allowed. Invalid lines are skipped and reported.</p><textarea id="paste-decisions" spellcheck="false" placeholder="ZNC-25&#9;B&#9;keep&#10;ZEC-12&#9;D&#9;rewrite" aria-label="Paste card decisions"></textarea><div class="button-row"><button id="apply-paste" type="button" class="accent">Apply pasted decisions</button><button id="clear-paste" type="button">Clear text</button></div><p id="paste-report" class="report" role="status"></p></div>
+      <div class="tool-panel"><div class="panel-head"><span class="eyebrow">Selected cards</span><h2>Batch choices</h2></div><p>Use row checkboxes, select the current page, or select every matched card. Name choices skip ZF1.</p><label>Name direction<select id="batch-name"><option value="">Choose A–E…</option><option value="0">A · Mesopotamian</option><option value="1">B · Egyptian</option><option value="2">C · Greek</option><option value="3">D · Mesopotamian alternate</option><option value="4">E · Egyptian alternate</option></select></label><button id="apply-batch-name" type="button" class="accent">Apply name choice</button><label>Effect decision<select id="batch-effect"><option value="">Choose…</option><option value="keep">Keep source wording</option><option value="rewrite">Rewrite references / timing</option><option value="custom">Custom draft</option><option value="none">No effect (Normal)</option></select></label><button id="apply-batch-effect" type="button">Apply effect decision</button></div>
+      <div class="tool-panel export-panel"><div class="panel-head"><span class="eyebrow">Take decisions with you</span><h2>Export &amp; resume</h2></div><p>Both layouts share browser decisions and the same JSON manifest. Exports include validation notes; they do not alter the game database.</p><div class="export-buttons"><button id="export-json" type="button" class="accent">Download JSON</button><button id="export-csv" type="button">Download CSV</button><button id="export-txt" type="button">Download TXT notes</button><button id="copy-tsv" type="button">Copy TSV</button></div><label class="import-label">Import review JSON<input id="import-json" type="file" accept="application/json,.json"></label><button id="reset-decisions" type="button" class="danger">Reset local drafts</button><p id="action-message" class="report" role="status"></p></div>
+    </section>
+    <footer>CTF Alpha · V2 preview · CTF-GENERIC-SETS(9-7-26).zip · Draft editorial workspace</footer>
+  </div>
+</body>
+</html>

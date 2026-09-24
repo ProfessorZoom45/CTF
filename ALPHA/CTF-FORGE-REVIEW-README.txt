@@ -2,7 +2,7 @@ CARRY THE FLAME — ALPHA FORGE NAME & EFFECT REVIEW
 Preview build: 24 September 2026
 
 PURPOSE
-This static page reviews the complete CTF-GENERIC-SETS(9-7-26).zip archive.
+These static pages review the complete CTF-GENERIC-SETS(9-7-26).zip archive.
 It provides draft naming choices, forge classification, batch selection,
 effect review, local saving, and export. It does not change game data.
 
@@ -62,6 +62,14 @@ tradition overview; an overview alone does not verify the individual root.
 No modern retelling or artwork is licensed by the source links.
 
 USING THE PAGE
+Two layouts use the same 1,613-card JSON and share local browser decisions.
+The original page supports grouped, expandable cards. V2 uses a compact
+queue and focused editor at /ALPHA/forge-name-review-v2.html. In V2, choose
+A-E on a queue row, press 1-5 outside form fields, or paste tab-separated
+ID / choice / optional effect-decision rows. Arrow keys move through cards;
+slash focuses search. ZF1 names stay locked in both layouts. Both accept and
+produce the same CTF_FORGE_REVIEW_V1 JSON manifest.
+
 1. From the repository root, run `node ALPHA/serve-forge-review.mjs`, then
    open http://127.0.0.1:8765/forge-name-review.html. GitHub Pages can
    serve the same ALPHA files after publication.
@@ -91,6 +99,9 @@ Files to keep together in /ALPHA/:
   forge-name-review.html
   forge-name-review.css
   forge-name-review.js
+  forge-name-review-v2.html
+  forge-name-review-v2.css
+  forge-name-review-v2.js
   forge-review-data.json
   build-forge-review.mjs
   serve-forge-review.mjs (local preview helper)
