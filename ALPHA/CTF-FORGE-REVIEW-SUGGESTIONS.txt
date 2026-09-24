@@ -1,0 +1,93 @@
+CARRY THE FLAME — FORGE REVIEW SUGGESTIONS
+First-batch decision queue | 24 September 2026
+
+1. KEEP THE EIGHT ALIGNMENTS FIXED
+Hero, Villain, God, Demi-God, Angel, Demon, Djinn, and Spirit are the
+only alignment values. Do not infer a ninth category from legacy GROUP
+tags. Alignment on many records is absent in the ZIP and is only a draft.
+
+2. CHECK LARGE LEGACY CLASSES BEFORE ADDING A RACE OR SKILL
+The following GROUP tags occur on at least eight Catalyst records in
+the 1,613-card snapshot. Counts are tag counts, not proof that a new
+canonical class is needed. Review card mechanics and visual concept first.
+
+  Spellcaster 93 -> usually Mage, Witch, or Warlock; classify individually.
+  Beast-Warrior 43 -> test Beast versus Hybrid; do not auto-add a race.
+  Striker 24 -> candidate skill only if at least eight cards retain a
+                coherent distinct combat role after generic renaming.
+  Pirate 20 -> candidate skill only if eight or more share mechanics.
+  Swordsman 14 -> already allowed on Android; consider adding to Human
+                  only if eight or more Human cards truly need it.
+  Hunter 10 -> compare existing Predator, Warrior, and Ninja skills.
+  Shadow 9 -> likely a motif, not automatically a race or skill.
+  AlterUser 15 -> normalize to existing Alter User where race is Alter.
+  Gundam 10 -> use existing Giant Robot or Machine; replace franchise tag.
+  Saiyan 35 -> franchise-specific tag; recast as an allowed race/skill.
+  Cart00n 12 -> recast as existing allowed race/skill, not a new alignment.
+
+Other frequent existing or mappable tags include Warrior 361, Human 84,
+Machine 83, Fiend 82, Beast 51, Fairy 42, Gunman 29, Zombie 26,
+Ninja 19, Mutant 16, Thunder 14, Pyro 13, Vampire 11, Aqua 11,
+Winged Beast 11, Rock 10, Dragon 9, Reptile 8, and Plant 8.
+These counts are a triage aid and must not decide taxonomy by themselves.
+
+3. PRIORITIZE CARD NAME GROUPS THAT INTERACT
+Review a source family and its lineage/origin tags together. When a
+Catalyst, Palm Trick, Concealed Trick, Fusion, or Token references another
+name, choose names as one family and audit all exact-name references.
+The ZIP's REBUILD_AUDIT reports 955 reference updates and 282 generic
+name-family/series references from its previous rebuild. Those existing
+generic references need a new audit after choices are final.
+
+4. TOKEN RELATIONSHIPS
+13 of 24 Tokens have at least one creator reference detectable by exact
+"Token Catalyst #" in card text. The other 11 need manual discovery from
+effect wording, lineage, or intended token art. Some Tokens are created
+by multiple cards, including ZF1 effects. Approve a shared family name
+that makes sense for every creator; do not simply rename by the first
+found creator if the others disagree. ZTS-12, ZTS-14, ZTS-17, and ZTS-21
+currently have non-ZF1 creators with different proposed myth roots. The
+preview flags these conflicts and checks selected Token/creator options.
+
+5. TRICK NAMES
+Name Tricks after their actual effect and play interaction. Counter
+effects should signal denial; Spawn effects should signal arrival or
+return; protection effects should signal warding. Preserve precise
+timing, target, cost, and duration when rewriting effects. The five
+current choices are machine-assisted first passes, not final editorial
+recommendations. Replace weak or repetitive combinations in the editor.
+
+6. ZF1 FORMAT SUGGESTIONS — NAME LOCKED
+There are 26 ZF1 records: 13 Catalyst cards and 13 Spell/Trap Tricks.
+Do not rename any ZF1 card. Review Catalyst alignment/race/skill against
+the final tree. Examples needing creator attention:
+  ZF1-1 ReEsE The Great: GROUP includes "Gundam"; Giant Robot is an
+         allowed Hero race, while the franchise tag should be retired.
+  ZF1-5 Aearth: GROUP includes Elf, but Elf is allowed for Angel or Demon,
+         not Hero. The correct alignment needs a creator decision.
+  ZF1-7 Serpent: GROUP has Reptile/Snake but no explicit alignment;
+         choose Hero or Villain without changing the name.
+  ZF1-10 Reaper — Master Swordsman: Human/Swordsman is not a current
+         allowed skill combination. Map to Warrior or consider the
+         eight-card threshold before adding Human Swordsman.
+  ZF1-3 Keep It Moving and ZF1-4 Lightning Strike: both make Token #24;
+         decide a shared token identity while preserving ZF1 names.
+  ZF1-13 Blazing Inferno and ZF1-14 Inferno Dragon: cross-reference
+         Palm Trick #438; repair that reference only after its rename.
+All ZF1 tricks need effect/timing review, but the eight Catalyst-only
+numeric/classification fields are absent by design.
+
+7. NAMING AND RIGHTS REVIEW
+Prefer oldest documented myth roots when meaningfully connected to a
+card. Use ancient names and concepts, not a modern franchise's portrayal,
+art, costume, prose, or distinctive character version. A historical root
+does not make a newly combined full title or its market use automatically
+clear. Check selected names for trademark conflicts before public release.
+Source links and copyright context are in CTF-FORGE-REVIEW-README.txt.
+
+8. RELEASE GATE AFTER CREATOR CHOICES
+Export one decision manifest. Resolve missing names and required branch
+fields, approve taxonomy changes only where the eight-card evidence is
+real, rebuild .ptcg/.cnl with a complete cross-reference rewrite, and
+rerun the ZIP's count/uniqueness/reference checks. Keep this preview's
+choices out of playable data until that pass succeeds.

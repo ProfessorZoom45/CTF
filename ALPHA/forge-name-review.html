@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#090b12">
+  <title>CTF Alpha | Forge Name &amp; Effect Review</title>
+  <link rel="icon" href="assets/ctf-mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;900&family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="forge-name-review.css">
+  <script type="module" src="forge-name-review.js"></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to cards</a>
+  <div class="shell">
+    <header class="hero">
+      <div class="eyebrow">Carry The Flame / Alpha decision workspace / preview</div>
+      <div class="brand"><img class="mark" src="assets/ctf-mark.png" alt=""><img class="logo" src="assets/carry-the-flame-horizontal.png" alt="Carry The Flame"></div>
+      <div class="hero-grid"><div><h1>Forge Name &amp; Effect Review</h1><p>Review the complete generic archive, choose ancient-myth naming candidates, and assign each card's forge path. Choices are drafts until you export and approve them.</p></div><div class="hero-seal"><b>8</b><span>Fixed alignments</span><small>No new alignments</small></div></div>
+      <nav class="hero-nav" aria-label="Alpha navigation"><a href="index.html">← Alpha hub</a><a href="rulings-edge-cases.html">Rulings</a><a href="CTF-FORGE-REVIEW-README.txt">Forge &amp; readme</a><a href="CTF-FORGE-REVIEW-SUGGESTIONS.txt">Suggestion notes</a></nav>
+    </header>
+
+    <section class="stats" aria-label="Review totals">
+      <div class="stat"><span>Archive cards</span><strong id="total-count">1,613</strong><small>7 sets</small></div>
+      <div class="stat"><span>Rename review</span><strong id="rename-count">1,587</strong><small>6 generic sets</small></div>
+      <div class="stat locked"><span>ZF1 protected</span><strong>26</strong><small>Name locked; format suggestions only</small></div>
+      <div class="stat"><span>Decided in browser</span><strong id="decided-count">0</strong><small id="saved-at">Saved locally</small></div>
+    </section>
+
+    <section class="principles" aria-label="Forge sequence">
+      <div class="section-head"><div><span class="eyebrow">Canonical path</span><h2>The eight-step forge</h2></div><span class="pill">Catalyst review</span></div>
+      <ol class="forge-steps"><li>Alignment</li><li>Race</li><li>Skill</li><li>Effect class</li><li>Pressure</li><li>Counter Pressure</li><li>Rank</li><li>Catalyst resolution</li></ol>
+      <p><b>Normal</b> → lore. <b>Effect</b> → effect text, optional lore. <b>Fusion</b> → requirements, effect, optional lore. Trick cards are reviewed by effect and interaction; linked Tokens inherit their creator's naming direction.</p>
+    </section>
+
+    <section class="notice"><b>Editorial status:</b> Myth names here are first-pass choices grounded in ancient traditions. Links identify either a named myth root or its broader tradition. The whole proposed title, cultural fit, exact effect wording, and trademark clearance still need human review. The source ZIP has no card art, so this preview uses only CTF brand assets.</section>
+
+    <section class="workspace" id="workspace">
+      <div class="section-head"><div><span class="eyebrow">Batch decisions first</span><h2>Review desk</h2></div><span class="pill" id="visible-count">Loading cards…</span></div>
+      <div class="toolbar">
+        <label class="field search"><span>Find a card or mechanic</span><input id="search" type="search" placeholder="Name, source set, effect, lineage…"></label>
+        <label class="field"><span>Generic set</span><select id="set-filter"><option value="">All sets</option></select></label>
+        <label class="field"><span>Source family</span><select id="source-filter"><option value="">All sources</option></select></label>
+        <label class="field"><span>Forge branch</span><select id="branch-filter"><option value="">All branches</option><option>Normal</option><option>Effect</option><option>Fusion</option><option>Trick</option></select></label>
+        <label class="field"><span>Review status</span><select id="status-filter"><option value="">All</option><option value="undecided">Undecided</option><option value="decided">Decided</option><option value="flagged">Flagged</option><option value="selected">Selected</option></select></label>
+        <label class="field"><span>Group cards by</span><select id="group-by"><option value="sourceSet">Source family</option><option value="set">Generic set</option><option value="lineage">Lineage / origin</option><option value="branch">Forge branch</option></select></label>
+      </div>
+      <div class="batch-bar"><label class="check"><input type="checkbox" id="select-page">Select shown cards</label><button id="select-filtered" type="button">Select all filtered</button><button id="clear-selection" type="button">Clear selection</button><strong id="selected-count">0 selected</strong><label class="batch-select">Apply name choice <select id="batch-name"><option value="">Choose…</option><option value="0">A · Mesopotamian</option><option value="1">B · Egyptian</option><option value="2">C · Greek</option><option value="3">D · Mesopotamian alternate</option><option value="4">E · Egyptian alternate</option></select></label><button id="apply-batch-name" type="button" class="accent">Apply names</button><label class="batch-select">Effect decision <select id="batch-effect"><option value="">Choose…</option><option value="keep">Keep source wording</option><option value="rewrite">Rewrite references / timing</option><option value="custom">Custom draft</option><option value="none">No effect (Normal)</option></select></label><button id="apply-batch-effect" type="button" class="accent">Apply effects</button></div>
+      <div class="desk-layout"><div><div id="cards" class="groups" aria-live="polite"></div><button id="load-more" type="button" class="load-more" hidden>Load more cards</button></div><aside class="sidebar"><div class="side-card"><h3>Decision progress</h3><div class="progress"><span id="progress-bar"></span></div><p id="progress-label">0 of 1,587 rename cards decided</p><p>Work in batches by source family, generic set, lineage, or forge branch. Each card can be refined individually.</p></div><div class="side-card"><h3>Export &amp; resume</h3><p>Exports include card IDs, chosen names, source links, forge fields, effects, and review flags. They do not rewrite the game database.</p><button id="export-json" type="button" class="accent wide">Download decisions · JSON</button><button id="export-csv" type="button" class="wide">Download table · CSV</button><button id="export-txt" type="button" class="wide">Download review notes · TXT</button><button id="copy-tsv" type="button" class="wide">Copy decisions · TSV</button><label class="import-label wide">Import decision JSON<input id="import-json" type="file" accept="application/json,.json"></label><button id="reset-decisions" type="button" class="subtle wide">Reset local decisions</button><small id="action-message" role="status"></small></div><div class="side-card"><h3>Source guard</h3><p>ZF1 names are locked. The preview does not change `.ptcg`, `.cnl`, card images, engine logic, or live rulings.</p><p>Exact name references in effect text are flagged for a separate repair pass after names are approved.</p></div></aside></div>
+    </section>
+    <footer>CTF Alpha · Generated from CTF-GENERIC-SETS(9-7-26).zip · Review snapshot, 24 September 2026</footer>
+  </div>
+</body>
+</html>
