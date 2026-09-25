@@ -413,7 +413,7 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 <div class="pool-row">
 <select id="pfs"><option value="">All Sets</option></select>
-<select id="pfl"><option value="">All Lvl</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8+</option></select>
+<select id="pfl"><option value="">All Ranks</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8+</option></select>
 </div>
 <div class="pool-row">
 <select id="pfk"><option value="">All Kinds</option></select>
@@ -425,7 +425,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <input id="pfcp" type="number" min="0" step="100" placeholder="Min CP">
 </div>
 <div class="pool-row">
-<select id="pfsort"><option value="name">Sort: Name</option><option value="set">Sort: Set</option><option value="type">Sort: Type</option><option value="level">Sort: Level ↓</option><option value="pr">Sort: Pressure ↓</option><option value="cp">Sort: Counter Pressure ↓</option></select>
+<select id="pfsort"><option value="name">Sort: Name</option><option value="set">Sort: Set</option><option value="type">Sort: Type</option><option value="level">Sort: Rank ↓</option><option value="pr">Sort: Pressure ↓</option><option value="cp">Sort: Counter Pressure ↓</option></select>
 <div class="pool-actions"><button class="btn btn-ghost" type="button" onclick="clearPoolFilters()">Reset</button></div>
 </div>
 </div>
@@ -438,7 +438,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="deck-area">
 <div class="alpha-builder-brand">
   <div class="forge-mark" aria-hidden="true">⚒</div>
-  <div><h1>The Forge</h1><p>Build a legal CTF! deck in the firelight. The centered torch mark is forged into the background itself.</p></div>
+  <div><h1>The Forge</h1><p>Forge your Deck of cards for battle.</p></div>
 </div>
 <div class="deck-toolbar">
 <input type="text" class="deck-name" id="deck-name" value="My CTF Deck" placeholder="Deck Name...">
@@ -466,7 +466,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="valid" id="valid"></div>
 <div class="valid" style="margin-top:.8rem">
   <div class="vr"><span class="dot dot-ok"></span><strong>Alpha Collection:</strong>&nbsp; 41 updated sets · 1,599 active cards · artwork fallback checked</div>
-  <div class="vr"><span class="dot dot-ok"></span><strong>Locked rules source:</strong>&nbsp; <span data-ctf="ui.mainDeckRange">40–60</span> main · <span data-ctf="ui.fusionDeckRange">0–15</span> fusion · <span data-ctf="ui.sideDeckRange">0–15</span> side · <span data-ctf="ui.greatCap">5</span> Great Card cap</div>
+  <div class="vr"><span class="dot dot-ok"></span><strong>Locked rules source:</strong>&nbsp; <span data-ctf="ui.mainDeckRange">40–60</span> main · <span data-ctf="ui.fusionDeckRange">0–15</span> fusion · <span data-ctf="ui.sideDeckRange">0–15</span> side · <span data-ctf="ui.greatCap">5</span> Great Main + <span data-ctf="ui.greatFusionCap">5</span> Great Fusion</div>
   <div class="import-status" id="import-status" role="status">Import Reese-style <code>quantity|Set|Card Name</code> files or a versioned <code>CTF-FORGE-1:</code> code. Click removes a card; right-click moves Main ↔ Side.</div>
 </div>
 
@@ -474,7 +474,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="zone">
 <div class="zone-header">
 <span class="zone-title">Main Deck</span>
-<span><button class="zone-sort" onclick="sortZone('main','name')">Name</button> · <button class="zone-sort" onclick="sortZone('main','type')">Type</button> · <button class="zone-sort" onclick="sortZone('main','level')">Level</button> · <button class="zone-sort" onclick="sortZone('main','pr')">Pressure</button></span>
+<span><button class="zone-sort" onclick="sortZone('main','name')">Name</button> · <button class="zone-sort" onclick="sortZone('main','type')">Type</button> · <button class="zone-sort" onclick="sortZone('main','level')">Rank</button> · <button class="zone-sort" onclick="sortZone('main','pr')">Pressure</button></span>
 <span class="zone-count" id="main-count">0 / <span data-ctf="ui.mainDeckRange">40–60</span></span>
 </div>
 <div class="dg" id="main-grid"></div>
@@ -637,7 +637,7 @@ function renderPool(){
   return`<div class="pc${c.great?' pc-great':''}" onclick="addCard('${c.id}')" oncontextmenu="event.preventDefault();addCard('${c.id}','side')" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
    ${imgTag(c,'pc-thumb')}
    <div class="pc-color ${pcClass(c.cardType)}"></div>
-   <div class="pc-info"><div class="pc-name">${c.name}</div><div class="pc-meta">${c.cardType}${c.sub&&c.sub!=='Normal'?' · '+c.sub:''} · ${c.set}${c.level?' · Lv'+c.level:''}</div></div>
+   <div class="pc-info"><div class="pc-name">${c.name}</div><div class="pc-meta">${c.cardType}${c.sub&&c.sub!=='Normal'?' · '+c.sub:''} · ${c.set}${c.level?' · Rank '+c.level:''}</div></div>
    ${isC?`<div class="pc-stats">${c.pr}/${c.cp}</div>`:''}
    <div class="pc-count">${total}/${max}</div>
   </div>`;
@@ -753,6 +753,14 @@ function addCard(id,zone){
  const total=countInAllDecks(id);
  const max=c.great?GREAT_CFG.maxPerName:DECK_CFG.copiesPerCard;
  if(total>=max)return;
+ if(c.great && zone!=='side'){
+  const target=c.cardType==='Fusion'?fusionDeck:mainDeck;
+  const cap=c.cardType==='Fusion'?(GREAT_CFG.maxPerFusionDeck||5):(GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5);
+  if(target.filter(cardId=>cardMap[cardId]?.great).length>=cap){
+   setImportStatus(`${c.cardType==='Fusion'?'Fusion':'Main'} Deck already has ${cap} Great Cards.`,'warn');
+   return;
+  }
+ }
 
  if(zone==='side'){
   if(sideDeck.length>=DECK_CFG.sideMax)return;
@@ -792,6 +800,9 @@ function moveCard(zone,index){
  const limit=zone==='main'?DECK_CFG.sideMax:DECK_CFG.mainMax;
  if(destination.length>=limit){setImportStatus(`The ${zone==='main'?'Side':'Main'} Deck is full.`,'warn');return}
  const id=source[index];if(!id)return;
+ if(zone==='side'&&cardMap[id]?.great&&mainDeck.filter(cardId=>cardMap[cardId]?.great).length>=(GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5)){
+  setImportStatus('Main Deck already has five Great Cards.','warn');return;
+ }
  recordHistory();source.splice(index,1);destination.push(id);renderAll();markDeckDirty();
  setImportStatus(`Moved ${safeCard(id).name} to the ${zone==='main'?'Side':'Main'} Deck.`,'ok');
 }
@@ -826,7 +837,7 @@ function renderDeckZone(arr,gridId,zone){
    <div class="dc-bar" style="background:${barColor(c.cardType)}"></div>
    ${imgTag(c,'dc-thumb')}
    <div class="dc-name">${c.name}</div>
-   <div class="dc-info">${c.cardType==='Catalyst'?c.alignment||'':c.cardType.replace(' Trick','')}${c.level?' Lv'+c.level:''}</div>
+   <div class="dc-info">${c.cardType==='Catalyst'?c.alignment||'':c.cardType.replace(' Trick','')}${c.level?' Rank '+c.level:''}</div>
    ${isC?`<div class="dc-stats">${c.pr}/${c.cp}</div>`:''}
    ${qty>1?`<div class="dc-qty">×${qty}</div>`:''}
   </div>`;
@@ -837,7 +848,8 @@ function renderDeckZone(arr,gridId,zone){
 function validate(){
  const v=document.getElementById('valid');
  const mc=mainDeck.length,fc=fusionDeck.length,sc=sideDeck.length;
- const greatCount=new Set([...mainDeck,...sideDeck].filter(id=>cardMap[id]&&cardMap[id].great&&cardMap[id].cardType==='Catalyst')).size;
+ const greatMain=mainDeck.filter(id=>cardMap[id]?.great).length;
+ const greatFusion=fusionDeck.filter(id=>cardMap[id]?.great).length;
  
  // Check copy limits
  const allIds=[...mainDeck,...fusionDeck,...sideDeck];
@@ -852,7 +864,9 @@ function validate(){
   {ok:mc>=DECK_CFG.mainMin&&mc<=DECK_CFG.mainMax,text:`Main: ${mc}/${DECK_CFG.mainMin}–${DECK_CFG.mainMax}`},
   {ok:fc<=DECK_CFG.fusionMax,text:`Fusion: ${fc}/${DECK_CFG.fusionMax}`},
   {ok:sc>=DECK_CFG.sideMin&&sc<=DECK_CFG.sideMax,text:`Side: ${sc}/${DECK_CFG.sideMin}–${DECK_CFG.sideMax}`},
-  {ok:greatCount<=GREAT_CFG.maxPerDeck,text:`Great Catalysts: ${greatCount}/${GREAT_CFG.maxPerDeck}`},
+  {ok:greatMain<=(GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5),text:`Great Main: ${greatMain}/${GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5}`},
+  {ok:greatFusion<=(GREAT_CFG.maxPerFusionDeck||5),text:`Great Fusion: ${greatFusion}/${GREAT_CFG.maxPerFusionDeck||5}`},
+  {ok:greatMain+greatFusion<=(GREAT_CFG.maxAcrossMainAndFusion||10),text:`Great combined: ${greatMain+greatFusion}/${GREAT_CFG.maxAcrossMainAndFusion||10}`},
   {ok:copyOk,text:copyOk?'Copies: OK':'Copies: OVER LIMIT'},
   {ok:fusionPure,text:fusionPure?'Fusion: Valid':'Fusion: Non-Fusion cards!'},
  ];
@@ -877,8 +891,9 @@ function renderForgeAnalysis(){
  const summary=curve.length?`${[...payments.values()].reduce((sum,count)=>sum+count,0)} paid effects · ${curve.slice(0,6).map(([amount,count])=>`${amount.toLocaleString()}×${count}`).join(' · ')}${curve.length>6?` · +${curve.length-6} more`:''}`:'No explicit paid Chi effects in this deck';
  const catalysts=cards.filter(card=>card.cardType==='Catalyst').length;
  const tricks=cards.filter(card=>/Trick$/.test(card.cardType)).length;
- const great=cards.filter(card=>card.great).length;
- target.innerHTML=`<strong>CHI ACTIVATION CURVE</strong> · ${summary}<br><strong>FORGE BALANCE</strong> · Catalysts ${catalysts} · Tricks ${tricks} · Great ${great}/${GREAT_CFG.maxPerDeck}`;
+ const greatMain=mainDeck.filter(id=>cardMap[id]?.great).length;
+ const greatFusion=fusionDeck.filter(id=>cardMap[id]?.great).length;
+ target.innerHTML=`<strong>CHI ACTIVATION CURVE</strong> · ${summary}<br><strong>FORGE BALANCE</strong> · Catalysts ${catalysts} · Tricks ${tricks} · Great Main ${greatMain}/${GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5} · Great Fusion ${greatFusion}/${GREAT_CFG.maxPerFusionDeck||5}`;
 }
 
 function renderAll(){
@@ -895,7 +910,7 @@ function showTT(event,el,id){
  const c=cardMap[id];if(!c)return;
  const tt=document.getElementById('tooltip');
  document.getElementById('tt-name').textContent=c.name+(c.great?' ★ GREAT':'');
- document.getElementById('tt-type').textContent=`${c.cardType}${c.sub&&c.sub!=='Normal'?' ('+c.sub+')':''} · ${c.set} · ${c.id}${c.alignment?' · '+c.alignment:''}${c.level?' · Lv '+c.level:''}${c.kindsStr?' · '+c.kindsStr:''}`;
+ document.getElementById('tt-type').textContent=`${c.cardType}${c.sub&&c.sub!=='Normal'?' ('+c.sub+')':''} · ${c.set} · ${c.id}${c.alignment?' · '+c.alignment:''}${c.level?' · Rank '+c.level:''}${c.kindsStr?' · '+c.kindsStr:''}`;
  const ttImg=document.getElementById('tt-img');const ttSrc=cardImg(c);ttImg.src=ttSrc;ttImg.dataset.cardId=c.id;ttImg.dataset.imageIndex='0';ttImg.classList.toggle('is-gif', /\.gif$/i.test(ttSrc));ttImg.onerror=()=>advanceCardImage(ttImg);
  const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
  document.getElementById('tt-stats').textContent=isC?`Pressure: ${c.pr}  ·  Counter Pressure: ${c.cp}`:'';

@@ -382,7 +382,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td style="color:var(--flame);font-weight:700">Starting Hand</td><td>5 cards <span class="locked">🔒 LOCKED</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Draw Per Turn</td><td>1 card (Draw Phase). Deck empty = skip draw, NOT a loss <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">First Player</td><td>P1 draws normally on Turn 1 but CANNOT attack. Battle Phase skipped. <span class="locked">🔒</span></td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Normal Spawns</td><td>1 per turn. Free for Lv 1–4. Lv 5–6 = 1 Tribute. Lv 7+ = 2 Tributes.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Normal Spawns</td><td>1 per turn. Free for Rank 1–4. Rank 5–6 = 1 Tribute. Rank 7+ = 2 Tributes.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Special Spawn Cap</td><td><span data-ctf="CTF_CONFIG.game.shotgun.maxSpecialSummonsPerTurn">5</span> per turn (hard cap). Each triggers the Shotgun Rule. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Hand Limit</td><td><span data-ctf="ui.handLimit">7</span> at End Phase — player chooses which to discard <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Mandatory Attack</td><td>REMOVED / INACTIVE. Attacking is always optional. <span class="locked">🔒</span></td></tr>
@@ -399,7 +399,8 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td>Fusion Deck</td><td><span data-ctf="ui.fusionDeckRange">0–15</span> cards <span class="locked">🔒</span></td><td>Fusion Cards ONLY — never in the Main Deck</td></tr>
 <tr><td>Side Deck</td><td><span data-ctf="ui.sideDeckRange">0–15</span> cards</td><td>Used between duels in Best of 3</td></tr>
 <tr><td>Copies per card</td><td>1–3 per card <span class="locked">🔒</span></td><td>Restricted cards = max 1 copy</td></tr>
-<tr><td>Great Card Catalysts</td><td>Max 1 per name, <span data-ctf="ui.greatCap">5</span> total</td><td>Any card with "Great" in its name. See Great Cards section.</td></tr>
+<tr><td>Great Cards in Main Deck</td><td>Max <span data-ctf="ui.greatCap">5</span></td><td>One copy per Great name across all deck sections.</td></tr>
+<tr><td>Great Fusion Catalysts</td><td>Max <span data-ctf="ui.greatFusionCap">5</span></td><td>Fusion Deck only; max <span data-ctf="ui.greatCombinedCap">10</span> Great Cards across Main and Fusion.</td></tr>
 </tbody></table>
 </div>
 
@@ -413,7 +414,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <tbody>
 <tr><td>Catalyst Zones (5)</td><td>Catalysts only</td><td>5 max</td><td>ATK (upright) or DEF (sideways). Front row, facing opponent.</td></tr>
 <tr><td>Trick Card Zones (5)</td><td>Palm / Concealed Tricks</td><td>5 max</td><td>All Tricks may be set face-down. Field Tricks may only be set face-down in the Field Trick location. Outermost 2 back-row slots double as Libra Zones. Face-down Tricks do NOT block direct attacks. <span class="locked">🔒</span></td></tr>
-<tr><td>Libra Zones (2)</td><td>Normal Catalysts ONLY</td><td>Uses outermost Trick slots</td><td>Outermost Trick Zones double as Libra. Normal Catalyst placed here = Level becomes Scale value. Treated as Trick cards for targeting. <span class="locked">🔒</span></td></tr>
+<tr><td>Libra Zones (2)</td><td>Normal Catalysts ONLY</td><td>Uses outermost Trick slots</td><td>Outermost Trick Zones double as Libra. Normal Catalyst placed here = Rank becomes Scale value. Treated as Trick cards for targeting. <span class="locked">🔒</span></td></tr>
 <tr><td>Field Trick Zone</td><td>Field Tricks only</td><td>1 per player</td><td>Stacked above The Box. New Field Trick destroys the old one.</td></tr>
 <tr><td>The Box</td><td>Captured opp. Catalysts</td><td>Unlimited</td><td>Stacked below Field Trick. Great Cards NEVER enter. Visible to both. <span class="locked">🔒</span></td></tr>
 <tr><td>The Void</td><td>Destroyed / discarded / Tributed</td><td>No limit</td><td>Opposite side from Field/Box. Visible to both players.</td></tr>
@@ -434,7 +435,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <table class="rule-table">
 <thead><tr><th>Spawn Type</th><th>Limit</th><th>Shotgun?</th><th>How It Works</th></tr></thead>
 <tbody>
-<tr><td>Normal Spawn</td><td>1 per turn</td><td>No</td><td>Lv 1–4 free. Lv 5–6 = 1 Tribute. Lv 7+ = 2 Tributes.</td></tr>
+<tr><td>Normal Spawn</td><td>1 per turn</td><td>No</td><td>Rank 1–4 free. Rank 5–6 = 1 Tribute. Rank 7+ = 2 Tributes.</td></tr>
 <tr><td>Special Spawn</td><td>Max 5/turn (hard cap)</td><td>YES — every time</td><td>Effect-based. Opponent draws 1 card each SS.</td></tr>
 <tr><td>Libra Spawn</td><td>Counts as 1 SS</td><td>YES — once</td><td>Normal Catalysts in Libra Zones spawn between scales.</td></tr>
 <tr><td>Fusion Spawn</td><td>Counts as 1 SS</td><td>YES — once</td><td>Named materials to Void + Fusion enabler card.</td></tr>
@@ -555,21 +556,24 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td style="color:var(--flame);font-weight:700">Field Tricks</td><td>Environment effects</td><td>1 per player active. In Main Deck. Refresh at Ignition Phase. Type: Field. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Fusion Cards</td><td>Combined Catalysts</td><td>Fusion Deck only. Named materials to Void + enabler. 1 Special Spawn. <span class="locked">🔒</span></td></tr>
 </tbody></table>
+<h3>FORGE choices and effect classes</h3>
+<p>For a new Catalyst, choose one Alignment, then an allowed Race, then an allowed Skill. Choose Normal, Effect, or Fusion as its Effect Class. Normal requires Lore; Effect requires Effect Text and may include Lore; Fusion requires Fusion Rules and Effect Text and may include Lore. Set Pressure, Counter Pressure, Rank, then Catalyst Resolution. Existing collection cards retain their current tags until their approved mapping is complete.</p>
+<h3>Effect families</h3>
+<p><strong>Spawn Effect:</strong> places or responds to a Catalyst Spawn. <strong>Draw Effect:</strong> adds a card to a hand; the Shotgun draw comes from the game rule. <strong>Action Effect:</strong> activates in its legal Action window. <strong>Destroy Effect:</strong> sends a card to the Void by effect; a battle Kill or Capture follows its battle rule. <strong>Void Effect:</strong> sends, uses, or responds to cards in the Void.</p>
 <h3>Speed System <span class="locked">🔒 LOCKED</span></h3>
 <p><strong>Palm Tricks</strong> = proactive (your turn, Link 1 only). <strong>Concealed Tricks</strong> = reactive (either turn, any chain position). <strong>Counter Tricks</strong> = highest priority (once on chain, only another Counter can respond above it). This split is strict — no exceptions.</p>
 </div>
 
 <div class="rule-section" id="kinds">
-<h2>KINDS System <span class="locked">🔒 LOCKED</span></h2>
-<p>A Catalyst may have <strong>multiple KINDS simultaneously</strong> — all count at once. If your card is [Warrior / Saiyan] and two buffs apply (one to Warriors, one to Saiyans), your card gets BOTH bonuses simultaneously.</p>
-<p>21 KINDS: Warrior, Beast-Warrior, Beast, Machine, Fairy, Zombie, Dragon, Human, Ninja, Spellcaster, Fiend, Demon, Aqua, Psychic, Divine/Beast, Gunman, Saiyan, Gundam, Effect, Normal, Fusion.</p>
+<h2>Legacy KINDS and the FORGE tree</h2>
+<p>Existing collection cards may still display legacy KINDS until their approved mapping is complete. New FORGE Catalysts choose one permitted Alignment, Race, and Skill. Normal, Effect, and Fusion are Effect Classes and are separate from those choices.</p>
 </div>
 
 <div class="rule-section" id="libra">
 <h2>Libra Spawn <span class="locked">🔒 LOCKED</span></h2>
-<p><span data-ctf="ui.libraSummary">Place Normal Catalysts in the two outermost Libra Zones. Their Levels become your Scales. You may Libra Spawn up to 5 Catalysts whose Levels are strictly between those Scales. The whole Libra Spawn counts as exactly 1 Special Spawn and causes exactly 1 Shotgun draw total.</span></p>
+<p><span data-ctf="ui.libraSummary">Place Normal Catalysts in the two outermost Libra Zones. Their Ranks become your Scales. You may Libra Spawn up to 5 Catalysts whose Ranks are strictly between those Scales. The whole Libra Spawn counts as exactly 1 Special Spawn and causes exactly 1 Shotgun draw total.</span></p>
 <table class="rule-table">
-<thead><tr><th>Left Scale</th><th>Right Scale</th><th>Valid Levels</th><th>Excluded</th></tr></thead>
+<thead><tr><th>Left Scale</th><th>Right Scale</th><th>Valid Ranks</th><th>Excluded</th></tr></thead>
 <tbody>
 <tr><td>1</td><td>4</td><td>2, 3</td><td>1, 4</td></tr>
 <tr><td>1</td><td>8</td><td>2, 3, 4, 5, 6, 7</td><td>1, 8</td></tr>
@@ -581,10 +585,11 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <div class="rule-section" id="great">
 <h2>Great Cards</h2>
-<p>Any card with <strong>"Great"</strong> in its name is a Great Card — Catalysts, Palm Tricks, Concealed Tricks, any card type. Great Card Catalysts have special restrictions:</p>
+<p>A card marked <strong>Great</strong> in the approved card record is a Great Card. The name alone does not set that status. Great Catalysts have special battle restrictions:</p>
 <table class="rule-table">
 <tr><td style="color:var(--flame);font-weight:700;width:220px">Max 1 copy per name</td><td>Cannot run 2–3 copies of any Great Card.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Max <span data-ctf="ui.greatCap">5</span> Great Catalysts/deck</td><td>Even if you own more, only <span data-ctf="ui.greatCap">5</span> total Great Card Catalysts.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Main Deck: <span data-ctf="ui.greatCap">5</span> Great Cards</td><td>This limit applies to all Great Cards placed in the Standard Main Deck.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Fusion Deck: <span data-ctf="ui.greatFusionCap">5</span> Great Fusion Catalysts</td><td>Main and Fusion together allow at most <span data-ctf="ui.greatCombinedCap">10</span> Great Cards.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">NEVER enter the Box</td><td>Cannot be Captured. ATK beats Great DEF → Void as +1 Kill.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Cannot be Extracted</td><td>Extraction attempt → Void as Kill.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Great Catalyst sacrifice</td><td>Great and non-Great eligible Catalysts may be sacrificed for paid End Phase actions.</td></tr>
@@ -641,9 +646,9 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td>15</td><td>Win Priority</td><td>Chi KO > 7 Kills > 7 Extractions.</td></tr>
 <tr><td>16</td><td>Hand Discard</td><td>Player chooses which to discard to <span data-ctf="ui.handLimit">7</span>.</td></tr>
 <tr><td>17</td><td>2v2 Shared Chi</td><td>0 = entire team loses immediately.</td></tr>
-<tr><td>18</td><td>Normal Spawn</td><td>1/turn. Free Lv 1–4. Lv 5–6 = 1 Tribute. Lv 7+ = 2.</td></tr>
+<tr><td>18</td><td>Normal Spawn</td><td>1/turn. Free Rank 1–4. Rank 5–6 = 1 Tribute. Rank 7+ = 2.</td></tr>
 <tr><td>19</td><td>End Phase</td><td>Choose Extraction / Rescue / Destroy Trick if you want to pay with an eligible Catalyst, or choose END TURN with no cost.</td></tr>
-<tr><td>20</td><td>Libra</td><td>Normal Catalysts only. Outermost. Levels strictly BETWEEN.</td></tr>
+<tr><td>20</td><td>Libra</td><td>Normal Catalysts only. Outermost. Ranks strictly BETWEEN.</td></tr>
 <tr><td>21</td><td>Extracted Cards</td><td>RFG for duel. Return to owner's deck next duel.</td></tr>
 <tr><td>22</td><td>Destroy Trick</td><td>Target EITHER player's Trick — face-up or face-down.</td></tr>
 </tbody></table>
