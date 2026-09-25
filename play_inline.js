@@ -32,6 +32,7 @@ const TUTORIAL_STEPS = [
 ];
 let tutorialActive = false;
 let tutorialStep = 0;
+let tutorialFromForge = false;
 let isSandboxMode = false;
 let isHotSeatMode = false;
 // Patch v3.2: VS-AI mode flags. Coach drives the first 3 turns of lessons.
@@ -254,6 +255,7 @@ function loadTutorialProgress(){
 function saveTutorialProgress(){ localStorage.setItem(TUTORIAL_KEY, String(tutorialStep)); }
 const TUTORIAL_STARTER_DECK = {
   name: "Reese's Trigun",
+  fixedOpeningHand: ['tg1-006-brad','tg1-102-vash','tg1-108-merylstrife','tg1-022-ambush','tg1-023-2ndwind'],
   main: [
     'tg1-006-brad','tg1-006-brad','tg1-006-brad',
     'tg1-113-60000000000bountyonyourhead','tg1-113-60000000000bountyonyourhead','tg1-113-60000000000bountyonyourhead',
@@ -287,7 +289,7 @@ function getTutorialDeck(){
   // Patch v3.2: starter decks keep their own fixed opening hand and play
   // in fixed deck order so the lessons are reproducible turn-to-turn.
   const selected = lobbyDecks[selectedDeckIdx];
-  if (selected && selected.source === 'starter') {
+  if (!tutorialFromForge && selected && selected.source === 'starter') {
     const deck = CTFDeckUtils.normalizeDeck(selected.deck);
     return Object.assign({}, deck, {
       fixedOpeningHand: selected.deck.fixedOpeningHand || selected.fixedOpeningHand || [],
@@ -330,7 +332,7 @@ function renderTutorialPhaseBanner(){
   const phaseKey = GS.phaseName || 'turnStart';
   const displayName = names[GS.phase] || phaseKey;
   const isMyTurn = GS.activePlayer === myPlayer;
-  banner.style.display = '';
+  banner.style.display = 'block';
   banner.innerHTML = (
     '<div class="tpb-head"><span class="tpb-step">Phase ' + ((GS.phase||0)+1) + ' / 7</span>'
     + '<span class="tpb-name">' + displayName + '</span></div>'
@@ -344,7 +346,7 @@ function renderTutorialPanel(){
   if (!panel) return;
   if (!tutorialActive || !GS) { panel.style.display = 'none'; return; }
   const data = getTutorialStepData();
-  panel.style.display = '';
+  panel.style.display = 'block';
   $('tutorial-title').textContent = `${data.title} (${tutorialStep + 1}/${TUTORIAL_STEPS.length})`;
   $('tutorial-copy').textContent = data.copy;
   const prog = $('tutorial-progress');
@@ -357,11 +359,17 @@ function renderTutorialPanel(){
 }
 function startTutorial(reset=false){
   if (reset) localStorage.setItem(TUTORIAL_KEY, '0');
+  tutorialFromForge = new URLSearchParams(location.search).get('onboarding') === '1';
   loadTutorialProgress();
   tutorialActive = true;
   window.tutorialActive = true;
-  isHotSeatMode = true;
+  isHotSeatMode = false;
   isSandboxMode = false;
+  isVsAIMode = true;
+  isVsAITutorialMode = true;
+  if (window.CTF_AI) window.CTF_AI.configure({ difficulty: 'normal', thinkMs: 350, aiPlayerIdx: 1 });
+  if (window.CTF_COACH) window.CTF_COACH.enable({ coachUntilTurn: 3 });
+  myPlayer = 0;
   // Force watch mode OFF for tutorial — guarantees the hand renders normally even if
   // the user had watch mode saved from a previous session.
   try {
@@ -450,7 +458,7 @@ function exitTutorial(){
   renderTutorialPanel();
   renderTutorialPhaseBanner();
   renderP1SkipBattleBanner();
-  showToast('Tutorial exited. You can still use hot-seat or sandbox mode.');
+  showToast('Tutorial exited. Continue this CPU duel or return to the lobby.');
 }
 loadTutorialProgress();
 
@@ -1045,8 +1053,15 @@ function startGame() {
 }
 
 function initGame(p1Deck, p2Deck) {
-  GS = createGameState(CTFDeckUtils.normalizeDeck(p1Deck), CTFDeckUtils.normalizeDeck(p2Deck));
-  GS.deckMeta = { p1: CTFDeckUtils.normalizeDeck(p1Deck), p2: CTFDeckUtils.normalizeDeck(p2Deck) };
+  const prepare = deck => Object.assign(CTFDeckUtils.normalizeDeck(deck), {
+    fixedOpeningHand: Array.isArray(deck?.fixedOpeningHand) ? deck.fixedOpeningHand.slice() : [],
+    fixedOrder: deck?.fixedOrder === true,
+    noShuffle: deck?.noShuffle === true,
+    tutorial: deck?.tutorial === true
+  });
+  const left = prepare(p1Deck), right = prepare(p2Deck);
+  GS = createGameState(left, right);
+  GS.deckMeta = { p1: left, p2: right };
   $('lobby').style.display = 'none';
   $('game').style.display = 'grid';
   $('my-num').textContent = myPlayer + 1;
@@ -2364,7 +2379,7 @@ function renderP1SkipBattleBanner(){
   if (!banner) return;
   const show = !!(GS && GS._p1BattleSkipPending && GS.activePlayer === myPlayer);
   if (!show) { banner.style.display = 'none'; return; }
-  banner.style.display = '';
+  banner.style.display = 'block';
   banner.innerHTML = (
     '<div class="psbb-head">Battle Phase — Skipped</div>'
     + '<div class="psbb-copy">Rule: P1 may not attack on their very first turn, so Battle Phase is skipped automatically this turn. Press Continue to advance to Resolution Phase.</div>'
