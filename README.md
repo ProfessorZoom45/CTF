@@ -33,7 +33,11 @@ A fully original tactical card game by Perfect Timing Gaming / Makairis Holding 
 
 The first-five FORGE page keeps drafts in browser storage and exports JSON. Finalizing
 Lesson 6 completes a private draft package; manual review remains required before
-the cards join shared play. The guided battle uses registered cards.
+the cards join shared play. Lesson examples and the guided battle use only the 26
+cards in the supplied `assets/data/ZF1.ptcg`; their names and printed text are
+preserved. The battle uses a focused teaching deck rather than a standard-size deck.
+Regenerate its browser data with `node tools/build-zf1-tutorial-data.mjs` and check
+it with `node tools/test-zf1-tutorial.cjs`.
 
 ## Card Database
 

@@ -24,11 +24,11 @@ const CLIENT_CFG = (window.CTF_CONFIG && window.CTF_CONFIG.game) ? window.CTF_CO
 const BETA_CFG = window.CTF_CONFIG ? window.CTF_CONFIG.beta : {};
 const TUTORIAL_KEY = 'ctf:tutorial-progress';
 const TUTORIAL_STEPS = [
-  { title: 'Match 1 — First Catalyst', copy: 'Your first low-Rank draft taught the opening move. Use a registered Catalyst to draw, spawn, and see the turn phases.', points: ['Draw one card in Draw Phase.', 'Normal Spawn a Rank 1–4 Catalyst without a Tribute.', 'Follow the phase rail through Action, Battle, Resolution, and End.'] },
-  { title: 'Match 2 — Second Catalyst', copy: 'Your second draft gave you another early play. Practice choosing a field position and reading both battle values.', points: ['Pressure is used to attack; Counter Pressure protects a defending Catalyst.', 'Compare the attacker’s Pressure with the defender’s active value.', 'Use the helper panel to see which actions are currently legal.'] },
-  { title: 'Match 3 — High-Rank Plan', copy: 'Your high-Rank draft needs a Tribute plan. Practice battle decisions and watch how Kills differ from Captures.', points: ['Rank 6 Normal Spawns need one Tribute; Rank 7 needs two.', 'Pressure wins against Pressure for a Kill and Chi damage.', 'Pressure wins against Counter Pressure for a Capture, except against a Great Card.'] },
-  { title: 'Match 4 — Fusion & End Phase', copy: 'Your Great Fusion draft named exact materials. Check requirements, then practice the End Phase choices.', points: ['A Fusion Spawn follows the printed material requirements; a draft cannot be played until approved.', 'Extraction, Rescue, and Destroy Trick each need an eligible Catalyst.', 'End Turn remains available when you do not take another End Phase action.'] },
-  { title: 'Match 5 — Trick & Full Flow', copy: 'Your final draft linked a Trick name to its effect. Play a full turn and look for the right timing window.', points: ['Palm and Concealed Tricks have different timing and placement.', 'Set or activate a registered Trick when the game offers a legal window.', 'Review the result card, then return to your five drafts or continue free play.'] }
+  { title: 'Match 1 — First Catalyst', copy: 'Draw, then Normal Spawn Dr Zoom or Newz The Watcher from ZF1. Both are low-Rank Catalysts.', points: ['Draw one card in Draw Phase.', 'Dr Zoom is Rank 1; Newz The Watcher is Rank 3. Neither needs a Tribute for a Normal Spawn.', 'Follow the phase rail through Action, Battle, Resolution, and End.'] },
+  { title: 'Match 2 — Second Catalyst', copy: 'Use Newz The Watcher and Reaper — Master Swordsman to compare battle values and field positions.', points: ['Newz The Watcher has 1,100 Pressure and 1,800 Counter Pressure.', 'Reaper — Master Swordsman has 2,000 Pressure and 1,100 Counter Pressure.', 'Pressure attacks; Counter Pressure protects a defending Catalyst.'] },
+  { title: 'Match 3 — High-Rank Plan', copy: 'Ace The Goat is a Rank 6 ZF1 Catalyst. First establish a lower-Rank Catalyst you can Tribute.', points: ['Ace The Goat needs one Tribute for a Normal Spawn.', 'Compare Pressure against the opposing Catalyst’s active value.', 'Watch how a Kill differs from a Capture.'] },
+  { title: 'Match 4 — Fusion & End Phase', copy: 'Fusion Zone and Destin The Great Warlord show printed requirements for a Fusion Spawn.', points: ['Destin The Great Warlord requires Newz The Great Watcher plus a distinct Rank 5 or higher Warrior.', 'Ace The Great is a ZF1 example of that second material.', 'Check Fusion Zone’s printed effect and the available End Phase choices.'] },
+  { title: 'Match 5 — Trick & Full Flow', copy: 'Rapier and The Great One show how ZF1 Tricks use different timing, costs, and conditions.', points: ['Rapier is an Equip Palm Trick that grants 800 Pressure to its equipped Catalyst.', 'The Great One is a Concealed Trick; read its Chi cost and empty-field requirement before activation.', 'Review your five private FORGE drafts after the battle.'] }
 ];
 let tutorialActive = false;
 let tutorialStep = 0;
@@ -254,54 +254,28 @@ function loadTutorialProgress(){
 }
 function saveTutorialProgress(){ localStorage.setItem(TUTORIAL_KEY, String(tutorialStep)); }
 const TUTORIAL_STARTER_DECK = {
-  name: "Reese's Trigun",
-  fixedOpeningHand: ['tg1-006-brad','tg1-102-vash','tg1-108-merylstrife','tg1-022-ambush','tg1-023-2ndwind'],
+  name: 'ZF1 Learn to Play',
   main: [
-    'tg1-006-brad','tg1-006-brad','tg1-006-brad',
-    'tg1-113-60000000000bountyonyourhead','tg1-113-60000000000bountyonyourhead','tg1-113-60000000000bountyonyourhead',
-    'tg1-023-2ndwind','tg1-023-2ndwind','tg1-023-2ndwind',
-    'tg1-022-ambush','tg1-022-ambush','tg1-022-ambush',
-    'tg1-001-claimyourbounty',
-    'tg1-007-ericks','tg1-007-ericks',
-    'tg1-023-fighterofpeace','tg1-023-fighterofpeace',
-    'tg1-004-frankmarlon','tg1-004-frankmarlon',
-    'tg1-017-jessicaslove','tg1-017-jessicaslove','tg1-017-jessicaslove',
-    'tg1-107-kuroneko','tg1-107-kuroneko','tg1-107-kuroneko',
-    'tg1-101-legatobluesummers',
-    'tg1-005-legendarygun',
-    'tg1-108-merylstrife','tg1-108-merylstrife',
-    'tg1-109-millythompson','tg1-109-millythompson',
-    'tg1-007-minesweeper','tg1-007-minesweeper',
-    'tg1-018-morgansgreed','tg1-018-morgansgreed',
-    'tg1-102-vash','tg1-102-vash','tg1-102-vash',
-    'anm-000-reesethegreatsgundam',
-    'anm-002-roadtogreatness','anm-002-roadtogreatness',
-    'db1-054-kamehamehacounterattack',
-    'ss1-000-reesebuck',
-    'tg1-202-lightseeker',
-    'tg1-024-vashfighterofpeace',
-    'tg1-104-vashthestampede',
+    'zf1-025','zf1-025','zf1-025', 'zf1-019','zf1-019','zf1-019',
+    'zf1-010','zf1-010','zf1-010', 'zf1-005','zf1-005',
+    'zf1-022','zf1-022', 'zf1-020','zf1-023',
+    'zf1-011','zf1-011','zf1-011', 'zf1-026','zf1-026',
+    'zf1-002','zf1-012','zf1-018','zf1-001'
   ],
-  fusion: [],
+  fusion: ['zf1-021'],
   side: []
 };
+const TUTORIAL_OPENING_HANDS = [
+  ['zf1-025','zf1-019','zf1-010','zf1-011','zf1-026'],
+  ['zf1-019','zf1-010','zf1-025','zf1-011','zf1-002'],
+  ['zf1-022','zf1-025','zf1-019','zf1-010','zf1-011'],
+  ['zf1-020','zf1-023','zf1-026','zf1-025','zf1-019'],
+  ['zf1-010','zf1-011','zf1-012','zf1-025','zf1-019']
+];
 function getTutorialDeck(){
-  // Patch v3.2: starter decks keep their own fixed opening hand and play
-  // in fixed deck order so the lessons are reproducible turn-to-turn.
-  const selected = lobbyDecks[selectedDeckIdx];
-  if (!tutorialFromForge && selected && selected.source === 'starter') {
-    const deck = CTFDeckUtils.normalizeDeck(selected.deck);
-    return Object.assign({}, deck, {
-      fixedOpeningHand: selected.deck.fixedOpeningHand || selected.fixedOpeningHand || [],
-      fixedOrder: true,
-      noShuffle: true,
-      tutorial: true
-    });
-  }
-  // Fallback: built-in scripted tutorial deck.
-  const fallback = CTFDeckUtils.normalizeDeck(TUTORIAL_STARTER_DECK);
-  return Object.assign({}, fallback, {
-    fixedOpeningHand: TUTORIAL_STARTER_DECK.fixedOpeningHand || [],
+  const deck = CTFDeckUtils.normalizeDeck(TUTORIAL_STARTER_DECK);
+  return Object.assign({}, deck, {
+    fixedOpeningHand: TUTORIAL_OPENING_HANDS[tutorialStep] || TUTORIAL_OPENING_HANDS[0],
     fixedOrder: true,
     noShuffle: true,
     tutorial: true

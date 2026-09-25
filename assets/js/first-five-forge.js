@@ -7,6 +7,14 @@ const SLOTS = [
   {title:'Great Fusion Catalyst',kind:'fusion',rank:[1,12],maxPressure:3200,maxCounter:3200,intro:'Combine exactly two of your first three Catalysts.',points:['The Fusion lives in the Fusion Deck.','Choose two distinct, exact material cards and write their requirements.','Its Pressure and Counter Pressure cannot exceed the chosen materials combined.']},
   {title:'Palm or Concealed Trick',kind:'trick',intro:'Finish with one effect that interacts with a Catalyst.',points:['Palm and Concealed Tricks have different timing and placement.','Name the Trick for what its effect actually does.','Save this fifth card, then review all five in Lesson 6.']}
 ];
+const ZF1_REFERENCES = [
+  {numbers:[25],note:'Dr Zoom is a Rank 1 Normal Catalyst. Its printed Pressure and Counter Pressure show the two battle values you will set for your own first card.'},
+  {numbers:[19,10],note:'Newz The Watcher can defend with 1,800 Counter Pressure. Reaper — Master Swordsman shows how another low-Rank Catalyst can favor attacking Pressure.'},
+  {numbers:[22,20],note:'Ace The Goat and Newz The Great Watcher are Rank 6 ZF1 Catalysts. Each needs a Tribute for a Normal Spawn.'},
+  {numbers:[21,20,23],note:'Destin The Great Warlord prints its Fusion materials. Newz The Great Watcher and Ace The Great show a valid pair named by those requirements.'},
+  {numbers:[11,12],note:'Rapier is an Equip Palm Trick that changes battle math. The Great One is a Concealed Trick with a Chi cost and an activation condition.'},
+  {numbers:[25,19,22,21,11],note:'Review one ZF1 example for each of your five card roles. Your new drafts still follow the final forge tree; these ZF1 names and printed card text stay as supplied.'}
+];
 const $ = id => document.getElementById(id);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const blank = index => ({name:'',alignment:'Hero',race:'Android',skill:'Normal',effectClass:index===3?'Fusion':'Normal',rank:[1,1,6,8,0][index],pressure:0,counterPressure:0,lore:'',effectText:'',fusionRules:'',resolution:'',materialOne:'0',materialTwo:'1',trickType:'Concealed Trick'});
@@ -35,6 +43,17 @@ function area(label,key,value,help='',className='full'){return `<label class="${
 function numberField(label,key,value,min,max){return `<label>${esc(label)}<input type="number" data-field="${key}" min="${min}" max="${max}" step="50" value="${esc(value)}"><small>Range ${min}–${max}</small></label>`;}
 function validRaces(card){return tree.allowedRaces[card.alignment]||[];}
 function validSkills(card){return card.race==='Aquatic'?(card.alignment==='Demi-God'?['Normal','Pelagic','Warrior','Ninja','Mage']:['Normal','Torrential','Tideshifter','Ninja','Mage']):(tree.skills[card.race]||'Normal').split('|');}
+function renderZf1References(){
+  const reference=ZF1_REFERENCES[step];
+  const source=window.CTF_ZF1_TUTORIAL_CARDS||[];
+  $('zf1-reference-note').textContent=reference.note;
+  $('zf1-reference-cards').innerHTML=reference.numbers.map(number=>{
+    const card=source.find(item=>item.sourceCardNo===number);
+    if(!card)return `<p class="form-error">ZF1 card ${number} is unavailable.</p>`;
+    const stats=card.cardType==='Catalyst'||card.cardType==='Fusion'?`<span>Rank ${card.level} · ${card.pr.toLocaleString()} Pressure · ${card.cp.toLocaleString()} Counter Pressure</span>`:'';
+    return `<article class="zf1-card"><div class="zf1-card-top"><span>ZF1 · ${String(number).padStart(2,'0')}</span><span>${esc(card.cardType)}</span></div><h4>${esc(card.name)}</h4><div class="zf1-card-stats">${stats}</div><p>${esc(card.desc)}</p></article>`;
+  }).join('');
+}
 
 function renderForm(){
   if(step===5){renderReview();return;}
@@ -44,6 +63,7 @@ function renderForm(){
   $('step-intro').textContent=slot.intro;
   $('class-badge').textContent=trick?'Trick · effect entry':slot.kind==='fusion'?'Fusion branch':'Normal or Effect branch';
   $('lesson-points').innerHTML=slot.points.map(point=>`<li>${esc(point)}</li>`).join('');
+  renderZf1References();
   let html=field('Card name','name',card.name,'maxlength="128" placeholder="Give this card an original name"',trick?'full':'');
   if(trick){
     html+=select('Trick type','trickType',['Concealed Trick','Palm Trick'],card.trickType);
@@ -82,6 +102,7 @@ function renderReview(){
   $('step-intro').textContent='Check the five cards you saved in Lessons 1–5. Edit any card before finalizing the package.';
   $('class-badge').textContent='Five-card package';
   $('lesson-points').innerHTML=['Confirm each card name and its game role.','Check the Catalyst stats, Fusion materials, and Trick effect together.','Finalize the private draft package before opening the guided battle.'].map(point=>`<li>${esc(point)}</li>`).join('');
+  renderZf1References();
   $('form-fields').classList.add('review-grid');
   $('form-fields').innerHTML=cards.map((card,i)=>{
     const slot=SLOTS[i],saved=savedLessons[i]&&validateCard(i).length===0;

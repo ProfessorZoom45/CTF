@@ -1,0 +1,230 @@
+[ReEsE The Great]
+CARDNO=1
+NAME=ReEsE The Great
+GROUP=Hero/Gundam/Effect/Lineage-023/Lineage-025
+TYPE=Fire
+LEVEL=5
+ATK=2200
+DEF=2000
+FUSION=0
+DESC=When this card is Spawned, add 1 "Road To Greatness" from your deck to your hand. [Reese]
+[Road To Greatness]
+CARDNO=2
+NAME=Road To Greatness
+GROUP=Spell Card/Lineage-023
+TYPE=Spell
+ICON=Field
+FUSION=0
+DESC=Increase the Pressure of every Catalyst with "Lineage-023" among its GROUP tags by 400. Whenever a "Lineage-023" Catalyst you control destroys an opponent's Catalyst in battle, place 1 counter on this card. Remove 2 counters from this card to add 1 Catalyst with "Lineage-023" among its GROUP tags from your deck or Void to your hand. [Reese]
+[Keep It Moving]
+CARDNO=3
+NAME=Keep It Moving
+GROUP=Spell Card
+TYPE=Spell
+FUSION=0
+DESC=Special Spawn up to 3 "Token Catalyst #24" Tokens in face-up Attack position (Gunman-Type/Fire/3 Star/Pressure 1000/Counter Pressure 1000). This counts as 1 Special Spawn. Tokens cannot be used as Tributes. [Reese]
+[Lightning Strike]
+CARDNO=4
+NAME=Lightning Strike
+GROUP=Spell Card
+TYPE=Spell
+ICON=Quick-Play
+FUSION=0
+DESC=Special Spawn up to 3 "Token Catalyst #24" Tokens in face-up Attack position (Gunman-Type/Fire/3 Star/Pressure 1500/Counter Pressure 1000). This counts as 1 Special Spawn. Tokens cannot be used as Tributes. [Kakashi]
+[Aearth]
+CARDNO=5
+NAME=Aearth
+GROUP=Elf/Effect
+TYPE=Wind
+LEVEL=5
+ATK=1900
+DEF=950
+FUSION=0
+DESC=When this card deals direct Chi damage to your opponent, search your deck for 1 Palm Trick and add it to your hand.
+[Zero Degrees]
+CARDNO=6
+NAME=Zero Degrees
+GROUP=Spell Card
+TYPE=Spell
+FUSION=0
+DESC=At the start of your Action Phase before playing any other card, this card must be activated: For the next 2 completed player turns, neither player can play or Set any Palm or Concealed Tricks. [Zer0]
+[Serpent]
+CARDNO=7
+NAME=Serpent
+GROUP=Reptile/Snake/Effect
+TYPE=Dark
+LEVEL=8
+ATK=2600
+DEF=2000
+FUSION=0
+DESC=This Catalyst can only be Special Spawned from your hand by removing from play exactly 2 EARTH and 2 WIND Catalysts from your Void. Once during each of your Battle Phases, flip 5 coins; if 4 or more are heads, inflict 3000 damage to your opponent's Chi. [Serpent]
+[Ultimate Price]
+CARDNO=8
+NAME=Ultimate Price
+GROUP=Spell Card
+TYPE=Spell
+ICON=Continuous
+FUSION=0
+DESC=Pay 2500 Chi to choose 1 Catalyst in your deck with 2000 Counter Pressure or less and Special Spawn it. That Catalyst cannot attack or activate its effects until 3 player turns have been completed after it was spawned. After those 3 turns, send this card to the Void. [Serpent]
+[Nolan The Great]
+CARDNO=9
+NAME=Nolan The Great
+GROUP=Warrior/Ultimate Monster/Effect/Lineage-023
+TYPE=Fire
+LEVEL=8
+ATK=2000
+DEF=0
+FUSION=0
+DESC=This Catalyst can only be special spawned from the hand by offering Catalysts whose total Levels equal 8 or more from the field. When spawned, this Catalyst cannot attack for the rest of that turn. After the first turn this card is spawned, this Catalyst may attack your opponent's Chi directly. [Serpent]
+[Reaper — Master Swordsman]
+CARDNO=10
+NAME=Reaper — Master Swordsman
+GROUP=Warrior/Swordsman/Effect
+TYPE=Light
+LEVEL=4
+ATK=2000
+DEF=1100
+FUSION=0
+DESC=This card may be equipped with any Sword-Type or sword-themed Equip Palm Trick, ignoring that Equip Palm Trick's target requirements. This card can have a maximum of 2 Equip Cards attached to it. This card gains 200 Pressure for each Equip Card attached to it. [Reaper]
+[Rapier]
+CARDNO=11
+NAME=Rapier
+GROUP=Spell Card
+TYPE=Spell
+ICON=Equip
+FUSION=0
+DESC=The equipped Catalyst gains 800 Pressure. When the equipped Catalyst attacks a Defense Position Catalyst and its Pressure exceeds that Catalyst's Counter Pressure, inflict the difference as Battle Damage to your opponent. [Reaper]
+[The Great One]
+CARDNO=12
+NAME=The Great One
+GROUP=Trap Card/Lineage-023
+TYPE=Trap
+ICON=Continuous
+FUSION=0
+DESC=Pay 1500 Chi to activate this card. This card can only be activated if you have no Catalysts in your hand or on your field. Choose 1 Catalyst in your deck without a printed conditional-spawn restriction and Special Spawn it. Link that Catalyst to this card. When this card is destroyed, remove that linked Catalyst from play.
+[Blazing Inferno]
+CARDNO=13
+NAME=Blazing Inferno
+GROUP=Spell Card
+TYPE=Spell
+ICON=Continuous
+FUSION=0
+DESC=This card can only be played while "Palm Trick #438" is face-up on either player's field. If "Palm Trick #438" is no longer face-up on the field, destroy this card. Increase the Pressure of all face-up FIRE-Type Catalysts by 1000. [kasaki]
+[Inferno Dragon]
+CARDNO=14
+NAME=Inferno Dragon
+GROUP=Dragon/Effect
+TYPE=Fire
+LEVEL=4
+ATK=1200
+DEF=1200
+FUSION=0
+DESC=While "Palm Trick #438" and "Blazing Inferno" are both face-up on the field, this card gains 300 Pressure and 200 Counter Pressure. [kasaki]
+[Inferno Takeover]
+CARDNO=15
+NAME=Inferno Takeover
+GROUP=Spell Card
+TYPE=Spell
+FUSION=0
+DESC=Pay 1000 Chi. Take control of all face-up FIRE-Type Catalysts until the End Phase. [kasaki]
+[Toolbox]
+CARDNO=16
+NAME=Toolbox
+GROUP=Spell Card
+TYPE=Spell
+ICON=Continuous
+FUSION=0
+DESC=Once per turn during your Ignition Phase, you may pay 1000 Chi and shuffle 1 Equip Palm Trick from your hand into your deck; then draw 1 card. [Henry1245]
+[Curse of the Flame Ghost]
+CARDNO=17
+NAME=Curse of the Flame Ghost
+GROUP=Spell Card
+TYPE=Spell
+ICON=Equip
+FUSION=0
+DESC=The Catalyst equipped with this card becomes a FIRE-Attribute Catalyst and gains the Vampire sub-type. [Henry1245]
+[A Phoenix’s Soul]
+CARDNO=18
+NAME=A Phoenix’s Soul
+GROUP=Spell Card
+TYPE=Spell
+FUSION=0
+DESC=Once per turn, choose and activate only 1 of the following effects: (1) Pay 1000 Chi; choose 1 FIRE-Type Catalyst in your Void and Special Spawn it. (2) Pay 2000 Chi; double the Pressure of all FIRE-Type Catalysts you currently control until the End Phase, then destroy the surviving affected Catalysts before resolving any Tribute effects. [Henry1245]
+[Newz The Watcher]
+CARDNO=19
+NAME=Newz The Watcher
+GROUP=Warrior/Hero/Normal
+TYPE=Light
+LEVEL=3
+ATK=1100
+DEF=1800
+FUSION=0
+DESC=A silent observer who studies every move before stepping forward. He stands beside Dr. Zoom as both witness and protector. [Newz]
+[Newz The Great Watcher]
+CARDNO=20
+NAME=Newz The Great Watcher
+GROUP=Warrior/Hero/Effect/Lineage-023
+TYPE=Light
+LEVEL=6
+ATK=2200
+DEF=1800
+FUSION=0
+DESC=While this card is face-up on the field, all face-up Warrior-Type Catalysts on both fields, including this card, gain 200 Pressure. [Newz]
+[Destin The Great Warlord]
+CARDNO=21
+NAME=Destin The Great Warlord
+GROUP=Warrior/Hero/Fusion/Effect/Lineage-023
+TYPE=Light
+LEVEL=8
+ATK=2400
+DEF=1800
+FUSION=1
+DESC=Fusion Materials: "Newz The Great Watcher" + 1 distinct Level 5 or higher Warrior-Type Catalyst. When this card is Fusion Spawned, you may choose 1 Warrior-Type Catalyst with 1000 Pressure or less from your hand and Special Spawn it; it cannot attack for the rest of that turn. [Newz]
+[Ace The Goat]
+CARDNO=22
+NAME=Ace The Goat
+GROUP=Warrior/Hero/Normal
+TYPE=Earth
+LEVEL=6
+ATK=2500
+DEF=2000
+FUSION=0
+DESC=One of Dr. Zoom's fiercest allies, powered by pure confidence. Every day he charges up by declaring he is the Greatest Of All Time. His belief turns pressure into momentum for the whole team. [Ace]
+[Ace The Great]
+CARDNO=23
+NAME=Ace The Great
+GROUP=Warrior/Hero/Effect/Lineage-023
+TYPE=Earth
+LEVEL=5
+ATK=1500
+DEF=1700
+FUSION=0
+DESC=Once per turn: Pay 1500 Chi to activate the following effect. Target 1 face-up Catalyst on the field and copy only its effect ability until the End Phase; do not copy its name, stats, types, materials, or existing state. You may only activate this effect during your Action Phase or Resolution Phase. [Ace]
+[Stro Donari — The Great]
+CARDNO=24
+NAME=Stro Donari — The Great
+GROUP=Warrior/Spellcaster/Hero/Normal/Lineage-023
+TYPE=Fire
+LEVEL=6
+ATK=2500
+DEF=2500
+FUSION=0
+DESC=A musician from the future who awakens warrior spirits with his voice. His melodies ignite courage and sharpen resolve in all who hear them. [Stro]
+[Dr Zoom]
+CARDNO=25
+NAME=Dr Zoom
+GROUP=Angel/Warlock/Spellcaster/Hero/Normal
+TYPE=Light
+LEVEL=1
+ATK=700
+DEF=1400
+FUSION=0
+DESC=A visionary strategist who carries the flame of disciplined ambition. Though small in stature, his insight shapes the course of battles. Those who follow him move with purpose and clarity. [Dr Zoom].
+[Fusion Zone]
+CARDNO=26
+NAME=Fusion Zone
+GROUP=Spell Card
+TYPE=Spell
+ICON=Field
+FUSION=0
+DESC=Once per turn, the active player may choose 1 card they control on the field and 1 card in their hand that match two distinct required materials of a Fusion Catalyst, remove both cards from play, then Fusion Spawn that Catalyst from the Fusion Deck. [Dr Zoom].
