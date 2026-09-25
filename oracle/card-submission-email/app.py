@@ -4,6 +4,7 @@
 import asyncio
 import base64
 from collections import defaultdict, deque
+from contextlib import closing
 from dataclasses import dataclass
 from email.message import EmailMessage
 import json
@@ -12,6 +13,7 @@ from pathlib import Path
 import re
 import sqlite3
 import time
+import textwrap
 from typing import Deque, Dict, Optional, Tuple
 import urllib.error
 import urllib.request
@@ -22,6 +24,9 @@ import msal
 
 MAX_JSON_BYTES = 14 * 1024 * 1024
 MAX_REQUEST_BYTES = MAX_JSON_BYTES + 1024 * 1024
+MAX_IMAGE_BYTES = 5 * 1024 * 1024
+MAX_IMAGES = 20
+IMAGE_TYPES = {"image/jpeg": "jpeg", "image/png": "png", "image/gif": "gif", "image/webp": "webp", "image/bmp": "bmp"}
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 ID_RE = re.compile(r"^[A-Za-z0-9_-]{12,80}$")
 
@@ -97,7 +102,7 @@ class SubmissionStore:
         self.path = path
         self.lock = asyncio.Lock()
         path.parent.mkdir(parents=True, exist_ok=True)
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db:
             db.execute(
                 """CREATE TABLE IF NOT EXISTS deliveries (
                 submission_id TEXT PRIMARY KEY,
@@ -110,7 +115,7 @@ class SubmissionStore:
 
     async def status(self, submission_id: str) -> Tuple[bool, bool]:
         async with self.lock:
-            with sqlite3.connect(self.path) as db:
+            with closing(sqlite3.connect(self.path)) as db:
                 row = db.execute(
                     "SELECT owner_sent, submitter_sent FROM deliveries WHERE submission_id=?",
                     (submission_id,),
@@ -121,12 +126,13 @@ class SubmissionStore:
         if column not in {"owner_sent", "submitter_sent"}:
             raise ValueError("Invalid delivery column")
         async with self.lock:
-            with sqlite3.connect(self.path) as db:
+            with closing(sqlite3.connect(self.path)) as db:
                 db.execute("INSERT OR IGNORE INTO deliveries(submission_id) VALUES (?)", (submission_id,))
                 db.execute(
                     f"UPDATE deliveries SET {column}=1, updated_at=CURRENT_TIMESTAMP WHERE submission_id=?",
                     (submission_id,),
                 )
+                db.commit()
 
 
 class OutlookGraphMailer:
@@ -216,18 +222,50 @@ def clean_file_name(value: object) -> str:
     return cleaned if cleaned.lower().endswith(".json") else ""
 
 
-def build_owner_message(config: Config, submission: dict, file_name: str, json_bytes: bytes) -> EmailMessage:
+def set_readable_content(message: EmailMessage, content: str) -> None:
+    """Avoid quoted-printable soft breaks that show up as stray '=' in some mail clients."""
+    paragraphs = content.strip().splitlines()
+    wrapped = "\n".join(textwrap.fill(line, width=72, break_long_words=False) if line else "" for line in paragraphs)
+    message.set_content(wrapped + "\n", cte="7bit" if wrapped.isascii() else "base64")
+
+
+def parse_images(body: dict) -> Tuple[list, Optional[str]]:
+    supplied = body.get("images", [])
+    if not isinstance(supplied, list) or len(supplied) > MAX_IMAGES:
+        return [], "invalid_images"
+    images = []
+    for index, item in enumerate(supplied, 1):
+        if not isinstance(item, dict) or not isinstance(item.get("data_url"), str):
+            return [], "invalid_images"
+        match = re.fullmatch(r"data:(image/[a-z]+);base64,([A-Za-z0-9+/]+={0,2})", item["data_url"])
+        if not match or match.group(1) not in IMAGE_TYPES:
+            return [], "invalid_images"
+        try:
+            data = base64.b64decode(match.group(2), validate=True)
+        except ValueError:
+            return [], "invalid_images"
+        if not data or len(data) > MAX_IMAGE_BYTES:
+            return [], "image_too_large"
+        slot = re.sub(r"[^A-Za-z0-9_-]", "_", str(item.get("slot", "card")))[:24] or "card"
+        stem = re.sub(r"[^A-Za-z0-9_-]", "_", Path(str(item.get("name", "image"))).stem)[:48] or "image"
+        subtype = IMAGE_TYPES[match.group(1)]
+        extension = "jpg" if subtype == "jpeg" else subtype
+        images.append((f"{index:02d}_{slot}_{stem}.{extension}", subtype, data))
+    return images, None
+
+
+def build_owner_message(config: Config, submission: dict, file_name: str, json_bytes: bytes, images: list = None) -> EmailMessage:
     submitter = submission["submitter"]
     name = safe_header(submitter["name"])
     message = EmailMessage()
     message["From"] = config.sender_email
     message["To"] = config.owner_email
     message["Reply-To"] = submitter["email"]
-    message["Subject"] = f"{name}'s Custom Cards"
-    message.set_content(
+    message["Subject"] = f"{name}'s FORGE Cards"
+    set_readable_content(message,
         "\n".join(
             [
-                "A new Carry The Flame! custom-card set was submitted.",
+                "A new Carry The Flame! FORGE card set was submitted.",
                 "",
                 f"Submission ID: {submission['submission_id']}",
                 f"Submitter: {name}",
@@ -235,11 +273,14 @@ def build_owner_message(config: Config, submission: dict, file_name: str, json_b
                 f"Submitted: {submission['timestamp']}",
                 f"Cards: {len(submission['cards'])}",
                 "",
-                f"The complete submission is attached as {file_name}.",
+                f"The card details are attached as {file_name}.",
+                f"Artwork files attached separately: {len(images or [])}.",
             ]
         )
     )
     message.add_attachment(json_bytes, maintype="application", subtype="json", filename=file_name)
+    for image_name, subtype, data in images or []:
+        message.add_attachment(data, maintype="image", subtype=subtype, filename=image_name)
     return message
 
 
@@ -251,12 +292,12 @@ def build_submitter_message(config: Config, submission: dict) -> EmailMessage:
     message["To"] = submitter["email"]
     message["Reply-To"] = config.owner_email
     message["Subject"] = f"Thank You, {name} — Your Carry The Flame! Cards Are Under Review"
-    message.set_content(
+    set_readable_content(message,
         f"""Hi {name},
 
 Thank you from the bottom of our hearts for sharing your creativity with Carry The Flame! Every card you create adds another spark to the world we're building, and we truly appreciate the time, imagination, and care you put into your submission.
 
-Your custom cards have been received and are now being thoughtfully reviewed for possible inclusion in the Carry The Flame! game. Our review will consider gameplay balance, clarity, originality, lore, and how each card fits the overall experience.
+Your FORGE cards have been received and are now being thoughtfully reviewed for possible inclusion in the Carry The Flame! game. Our review will consider gameplay balance, clarity, originality, lore, and how each card fits the overall experience.
 
 Thank you for helping us carry the flame forward. We're grateful to have you as part of this journey.
 
@@ -375,13 +416,16 @@ async def submit_card(request: web.Request) -> web.Response:
     if error:
         status = 413 if error == "attachment_too_large" else 400
         return web.json_response({"ok": False, "error": error}, status=status, headers=headers)
+    images, image_error = parse_images(body)
+    if image_error:
+        return web.json_response({"ok": False, "error": image_error}, status=413 if image_error == "image_too_large" else 400, headers=headers)
 
     submission_id = submission["submission_id"]
     async with request.app["delivery_locks"][submission_id]:
         owner_sent, submitter_sent = await request.app["store"].status(submission_id)
         try:
             if not owner_sent:
-                await request.app["mailer"].send(build_owner_message(config, submission, file_name, json_bytes))
+                await request.app["mailer"].send(build_owner_message(config, submission, file_name, json_bytes, images))
                 await request.app["store"].mark(submission_id, "owner_sent")
                 owner_sent = True
             if not submitter_sent:

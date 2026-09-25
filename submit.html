@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Submit Custom Cards — Carry The Flame</title>
+<title>Create FORGE Cards — Carry The Flame</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
 <meta name="description" content="Submit custom card concepts for Carry The Flame.">
@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/img/ctf-mark.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Carry The Flame">
-<meta property="og:title" content="Submit Custom Cards — Carry The Flame">
+<meta property="og:title" content="Create FORGE Cards — Carry The Flame">
 <meta property="og:description" content="Submit custom card concepts for Carry The Flame.">
 <meta property="og:image" content="https://professorzoom45.github.io/CTF/assets/img/carry-the-flame-horizontal.png">
 <meta property="og:image:type" content="image/png">
@@ -19,7 +19,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Carry The Flame flaming torch logo">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Submit Custom Cards — Carry The Flame">
+<meta name="twitter:title" content="Create FORGE Cards — Carry The Flame">
 <meta name="twitter:description" content="Submit custom card concepts for Carry The Flame.">
 <meta name="twitter:image" content="https://professorzoom45.github.io/CTF/assets/img/carry-the-flame-horizontal.png">
 <meta name="twitter:image:alt" content="Carry The Flame flaming torch logo">
@@ -80,19 +80,20 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .badge-normal{background:var(--ash);color:var(--coal)}.badge-effect{background:var(--flame);color:#fff}
 .badge-great{background:var(--gold);color:#000}.badge-trick{background:var(--purple);color:#fff}
 
-.cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.cb-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
 .cb-field{display:flex;flex-direction:column;gap:.2rem}.cb-field.full{grid-column:1/-1}
+.cb-field,.card-builder,.p-card{min-width:0}
 .cb-lbl{font-family:var(--font-label);font-weight:700;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash)}
 .cb-lbl .cap-hint{font-weight:400;color:var(--flame)}
-.cb-input{font-family:var(--font-body);background:var(--coal-mid);border:1px solid rgba(255,106,0,.12);color:var(--white);padding:.45rem .6rem;font-size:.85rem;outline:none;transition:border-color .2s}
+.cb-input{font-family:var(--font-body);background:var(--coal-mid);border:1px solid rgba(255,106,0,.12);color:var(--white);padding:.45rem .6rem;font-size:.85rem;outline:none;transition:border-color .2s;width:100%;min-width:0}
 .cb-input:focus{border-color:var(--flame)}
 .cb-input.input-error{border-color:var(--red) !important}
 select.cb-input{cursor:pointer}select.cb-input option{background:var(--coal-mid)}
 textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);line-height:1.5}
 
 /* ── STAT SLIDERS ── */
-.stat-row{display:flex;align-items:center;gap:.6rem}
-.stat-slider{flex:1;-webkit-appearance:none;appearance:none;height:8px;background:var(--coal-mid);outline:none;border-radius:4px;cursor:pointer}
+.stat-row{display:flex;align-items:center;gap:.6rem;min-width:0}
+.stat-slider{flex:1;min-width:0;-webkit-appearance:none;appearance:none;height:8px;background:var(--coal-mid);outline:none;border-radius:4px;cursor:pointer}
 .stat-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--coal);cursor:grab}
 .stat-slider:active::-webkit-slider-thumb{cursor:grabbing}
 .stat-slider.pr-slider::-webkit-slider-thumb{background:var(--flame)}
@@ -132,7 +133,7 @@ textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);l
 .p-card.great-card{border-color:var(--gold);box-shadow:0 0 8px rgba(255,215,0,.12)}
 .p-card.trick-card{border-color:var(--purple)}
 .p-bar{height:3px;margin-bottom:.4rem;border-radius:1px}
-.p-name{font-family:var(--font-display);font-size:.85rem;letter-spacing:.5px;text-transform:uppercase;color:var(--white);line-height:1.2}
+.p-name{font-family:var(--font-display);font-size:.85rem;letter-spacing:.5px;text-transform:uppercase;color:var(--white);line-height:1.2;overflow-wrap:anywhere}
 .p-type{font-family:var(--font-mono);font-size:.58rem;color:var(--ash);margin:.2rem 0}
 .p-stats{font-family:var(--font-mono);font-size:.72rem;color:var(--flame);margin:.2rem 0}
 .p-desc{font-size:.65rem;color:var(--cream);line-height:1.4;margin-top:.2rem;padding-top:.2rem;border-top:1px solid rgba(255,106,0,.06);max-height:3.6em;overflow:hidden}
@@ -145,6 +146,12 @@ textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);l
 .btn-submit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,106,0,.3)}
 .btn-submit:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
 .submit-status{font-family:var(--font-mono);font-size:.8rem;text-align:center;margin-top:.8rem;padding:.6rem;min-height:2rem}
+.discovery-path{border:1px solid rgba(255,106,0,.22);background:linear-gradient(120deg,rgba(255,106,0,.11),rgba(13,13,13,.6));padding:1rem 1.2rem;margin-bottom:1.5rem}
+.discovery-path h2{font-family:var(--font-display);font-size:1.35rem;letter-spacing:1.5px;color:var(--amber);margin-bottom:.35rem}
+.discovery-path p{color:var(--cream);font-size:.86rem;margin-bottom:.5rem}
+.discovery-path ul{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.5rem;list-style:none}
+.discovery-path li{min-width:0;padding:.55rem;border-left:2px solid var(--flame);background:rgba(0,0,0,.22);font-size:.74rem;color:var(--cream);overflow-wrap:anywhere}
+.discovery-path li strong{display:block;color:var(--amber);font-family:var(--font-label);font-size:.88rem;letter-spacing:.7px}
 .status-ok{color:var(--green);background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.2)}
 .status-err{color:var(--red);background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2)}
 .delivery-verification{display:flex;justify-content:center;margin:0 0 1rem;min-height:66px;align-items:center;font-family:var(--font-mono);font-size:.72rem;color:var(--ash);text-align:center}
@@ -152,7 +159,7 @@ textarea.cb-input{resize:vertical;min-height:55px;font-family:var(--font-body);l
 .backup-download:hover{border-color:var(--amber)}
 .submission-modal{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(5,4,3,.88);backdrop-filter:blur(5px)}
 .submission-modal[hidden]{display:none}
-.submission-modal-card{width:min(100%,520px);padding:2rem;background:linear-gradient(145deg,var(--coal-light),var(--coal));border:1px solid rgba(255,106,0,.45);box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 35px rgba(255,106,0,.12);text-align:center}
+.submission-modal-card{width:min(100%,520px);max-height:calc(100dvh - 1rem);overflow-y:auto;padding:2rem;background:linear-gradient(145deg,var(--coal-light),var(--coal));border:1px solid rgba(255,106,0,.45);box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 35px rgba(255,106,0,.12);text-align:center}
 .submission-modal-icon{display:grid;place-items:center;width:58px;height:58px;margin:0 auto 1rem;border:1px solid rgba(76,175,80,.45);border-radius:50%;background:rgba(76,175,80,.1);color:var(--green);font-family:var(--font-display);font-size:1.8rem}
 .submission-modal-card.failure{border-color:rgba(231,76,60,.55);box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 35px rgba(231,76,60,.1)}
 .submission-modal-icon.failure{border-color:rgba(231,76,60,.5);background:rgba(231,76,60,.1);color:var(--red)}
@@ -199,7 +206,17 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 @media(max-width:768px){
 .nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1.5rem;gap:1.2rem;border-bottom:1px solid rgba(255,106,0,.15)}.nav-links.open{display:flex}.menu-toggle{display:block}
 .cb-grid{grid-template-columns:1fr}.pool-tracker{grid-template-columns:1fr}.submit-row{grid-template-columns:1fr}
-.preview-grid{grid-template-columns:repeat(2,1fr)}}
+.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.discovery-path ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.discovery-path ul{grid-template-columns:1fr}.stat-max{min-width:0}.cb-header{flex-wrap:wrap}.p-card{padding:.5rem}}
+@media(orientation:landscape) and (max-height:550px) and (max-width:1000px){
+ .page-header{padding:4.8rem 1rem 1.25rem}.container{padding:1rem 1rem 2rem}
+ .discovery-path ul{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .preview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .kind-menu{position:static;max-height:min(220px,45dvh)}
+ .submission-modal{align-items:flex-start;padding:.5rem}
+ nav.ctf-unified .nav-links{display:none}nav.ctf-unified .nav-links.open{display:flex}
+ nav.ctf-unified .menu-toggle{display:inline-flex}
+}
 
 /* ── torch icon in nav brand ── */
 .nav-brand,nav .brand{display:inline-flex;align-items:center;gap:.55rem;text-decoration:none}
@@ -395,6 +412,13 @@ nav.ctf-unified .menu-toggle[aria-expanded="true"] .burger span:nth-child(3) {
 @media (max-width: 380px) {
   nav.ctf-unified .nav-brand .nb-text { font-size: 0.92em; }
 }
+@media (orientation: landscape) and (max-height: 550px) and (max-width: 1000px) {
+  nav.ctf-unified .menu-toggle { display: inline-flex; }
+  nav.ctf-unified .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(8,8,8,.98); flex-direction: column; align-items: stretch; gap: 0; max-height: calc(100dvh - 64px); overflow-y: auto; }
+  nav.ctf-unified .nav-links.open { display: flex; }
+  nav.ctf-unified .nav-links li { width: 100%; }
+  nav.ctf-unified .nav-links a { display: block; padding: .75rem 1.5rem; }
+}
 @media (prefers-reduced-motion: reduce) {
   nav.ctf-unified .nav-torch animate,
   nav.ctf-unified .nav-torch animate { display: none; }
@@ -469,19 +493,31 @@ body.ctf-nav-pad { padding-top: 0; }
 })();
 </script>
 <div class="page-header">
-<h1>Submit Custom Cards</h1>
+<h1>Create Your First 5 FORGE Cards</h1>
 <p>Design your own 5-card set — 3 Normal Catalysts, 1 Great Fusion Catalyst, and 1 Trick Card. All cards are reviewed before entering the game.</p>
 </div>
 
 <div class="container">
 
 <div class="info-box">
-<strong>Custom Card Rules:</strong> You receive a stat pool of <strong>4,500 Pressure</strong> and <strong>4,500 Counter Pressure</strong> to distribute across your 3 non-Fusion Catalysts. Two Catalysts are Level 1–4 (max 1,800 PR / 2,000 CP each). One is Level 6–7 (max 2,500 PR / 2,500 CP). Your Fusion Catalyst is a Great Card combining two of your three — stats cannot exceed materials combined, capped at 3,200 PR, 3,200 CP, or 4,000 total. Your Trick Card targets a single Catalyst — no double effects, max +300 stat boost.
+<strong>FORGE = Fan-Originated Releases &amp; Game Expansions.</strong> These five cards are unique to your deck in Carry The Flame. Share <strong>4,500 Pressure</strong> and <strong>4,500 Counter Pressure</strong> across 3 non-Fusion Catalysts. Two are Rank 1–4 (max 1,800 PR / 2,000 CP each); one is Rank 6–7 (max 2,500 PR / 2,500 CP). Your Great Fusion combines two of your three, with no more than 3,200 of either stat or 4,000 total. Your Trick targets one Catalyst, with no double effects and at most a +300 stat boost.
 </div>
+
+<section class="discovery-path" aria-labelledby="discovery-title">
+<h2 id="discovery-title">Forge something worth discovering</h2>
+<p>Create your first five FORGE cards, then see what they can do in battle.</p>
+<ul>
+<li><strong>1 · FORGE</strong>Name your Catalyst and choose its strengths.</li>
+<li><strong>2 · TEST</strong>Try it in a practice battle.</li>
+<li><strong>3 · DISCOVER</strong>Notice an effect or matchup you did not expect.</li>
+<li><strong>4 · REFINE</strong>Adjust your plan and build a history.</li>
+<li><strong>5 · FORGE AGAIN</strong>Bring what you learned into your next creation.</li>
+</ul>
+</section>
 
 <div style="background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);border-left:3px solid var(--ember);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.82rem;color:var(--cream);line-height:1.7">
 <strong style="color:var(--ember);font-family:var(--font-display);font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:.4rem">⚠ Important — Please Read Before Submitting</strong>
-<strong style="color:var(--flame)">Intellectual Property &amp; Ownership:</strong> By submitting custom cards, you acknowledge and agree that all approved cards become the intellectual property of Perfect Timing Gaming and Makairis Holding Group (MHG). The final published version of any approved card — including name, stats, effect text, and artwork — is owned exclusively by PTG/MHG and becomes part of the official Carry The Flame canon.<br><br>
+<strong style="color:var(--flame)">Intellectual Property &amp; Ownership:</strong> By submitting FORGE Cards, you acknowledge and agree that all approved cards become the intellectual property of Perfect Timing Gaming and Makairis Holding Group (MHG). The final published version of any approved card — including name, stats, effect text, and artwork — is owned exclusively by PTG/MHG and becomes part of the official Carry The Flame canon.<br><br>
 <strong style="color:var(--flame)">Original Names Required:</strong> All card names must be <strong>completely original</strong> creations. Do not submit names that reference, copy, or are derived from any existing intellectual property — including but not limited to characters, brands, franchises, trademarks, or copyrighted works from anime, video games, movies, TV shows, comics, or any other media. Submissions containing third-party IP names will be rejected.<br><br>
 <strong style="color:var(--flame)">Subject to Change:</strong> All submitted cards are subject to review, modification, rebalancing, renaming, or rejection at the sole discretion of Perfect Timing Gaming. Approved cards may be altered at any time for game balance, legal compliance, or creative direction. Submitting a card does not guarantee it will appear in the game, and PTG reserves the right to modify any aspect of the card before or after publication.<br><br>
 <strong style="color:var(--flame)">Credit:</strong> Approved card creators will be credited by their submitted gamertag in the card's metadata where applicable, but this credit does not convey any ownership rights over the card or its use within the CTF ecosystem.
@@ -507,14 +543,15 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="cb-field"><label class="cb-lbl">Email</label><input class="cb-input" id="sub-email" type="email" placeholder="you@example.com" oninput="U()"></div>
 </div></div>
 
-<!-- CATALYST 1 (Lv 1-4) -->
+<!-- CATALYST 1 (Rank 1-4) -->
 <div class="card-builder" id="b-c1">
-<div class="cb-header"><span class="cb-num">1</span><span class="cb-title">Catalyst #1</span><span class="cb-badge badge-normal">Normal · Lv 1–4</span></div>
+<div class="cb-header"><span class="cb-num">1</span><span class="cb-title">Catalyst #1</span><span class="cb-badge badge-normal">Normal · Rank 1–4</span></div>
 <div class="cb-grid">
 <div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c1-name" placeholder="e.g. Storm Sentinel" oninput="U()"></div>
-<div class="cb-field"><label class="cb-lbl">Level (1–4)</label><select class="cb-input" id="c1-level" onchange="U()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option></select></div>
-<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c1-align" onchange="U()"><option>Dark</option><option>Light</option><option selected>Fire</option><option>Earth</option><option>Water</option><option>Wind</option><option>Thunder</option><option>Divine</option></select></div>
-<div class="cb-field"><label class="cb-lbl">KINDS (comma-separated)</label><input class="cb-input" id="c1-kinds" placeholder="Warrior, Human" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Rank (1–4)</label><select class="cb-input" id="c1-level" onchange="U()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option></select></div>
+<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c1-align" onchange="forgeAlignmentChanged('c1')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c1-race">Race</label><select class="cb-input" id="c1-race" onchange="forgeRaceChanged('c1')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c1-skill">Skill</label><select class="cb-input" id="c1-skill" onchange="U()"></select></div>
 <div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c1-pr-hint">(max 1,800)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c1-pr" min="0" max="1800" value="1800" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c1-pr-v">1800</span><span class="stat-max" id="c1-pr-m">/ 1800</span></div></div>
 <div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c1-cp-hint">(max 2,000)</span></label>
@@ -533,14 +570,15 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 </div>
 
-<!-- CATALYST 2 (Lv 1-4) -->
+<!-- CATALYST 2 (Rank 1-4) -->
 <div class="card-builder" id="b-c2">
-<div class="cb-header"><span class="cb-num">2</span><span class="cb-title">Catalyst #2</span><span class="cb-badge badge-normal">Normal · Lv 1–4</span></div>
+<div class="cb-header"><span class="cb-num">2</span><span class="cb-title">Catalyst #2</span><span class="cb-badge badge-normal">Normal · Rank 1–4</span></div>
 <div class="cb-grid">
 <div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c2-name" placeholder="e.g. Iron Fang" oninput="U()"></div>
-<div class="cb-field"><label class="cb-lbl">Level (1–4)</label><select class="cb-input" id="c2-level" onchange="U()"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
-<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c2-align" onchange="U()"><option>Dark</option><option>Light</option><option>Fire</option><option selected>Earth</option><option>Water</option><option>Wind</option><option>Thunder</option><option>Divine</option></select></div>
-<div class="cb-field"><label class="cb-lbl">KINDS</label><input class="cb-input" id="c2-kinds" placeholder="Beast" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Rank (1–4)</label><select class="cb-input" id="c2-level" onchange="U()"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c2-align" onchange="forgeAlignmentChanged('c2')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c2-race">Race</label><select class="cb-input" id="c2-race" onchange="forgeRaceChanged('c2')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c2-skill">Skill</label><select class="cb-input" id="c2-skill" onchange="U()"></select></div>
 <div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c2-pr-hint">(max 1,800)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c2-pr" min="0" max="1800" value="300" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c2-pr-v">300</span><span class="stat-max" id="c2-pr-m">/ 1800</span></div></div>
 <div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c2-cp-hint">(max 2,000)</span></label>
@@ -559,14 +597,15 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 </div>
 
-<!-- CATALYST 3 (Lv 6-7) -->
+<!-- CATALYST 3 (Rank 6-7) -->
 <div class="card-builder" id="b-c3">
-<div class="cb-header"><span class="cb-num">3</span><span class="cb-title">Catalyst #3</span><span class="cb-badge badge-normal">Normal · Lv 6–7</span></div>
+<div class="cb-header"><span class="cb-num">3</span><span class="cb-title">Catalyst #3</span><span class="cb-badge badge-normal">Normal · Rank 6–7</span></div>
 <div class="cb-grid">
 <div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c3-name" placeholder="e.g. Crimson Warden" oninput="U()"></div>
-<div class="cb-field"><label class="cb-lbl">Level (6–7)</label><select class="cb-input" id="c3-level" onchange="U()"><option value="6">6</option><option value="7" selected>7</option></select></div>
-<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c3-align" onchange="U()"><option>Dark</option><option>Light</option><option selected>Fire</option><option>Earth</option><option>Water</option><option>Wind</option><option>Thunder</option><option>Divine</option></select></div>
-<div class="cb-field"><label class="cb-lbl">KINDS</label><input class="cb-input" id="c3-kinds" placeholder="Warrior, Dragon" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Rank (6–7)</label><select class="cb-input" id="c3-level" onchange="U()"><option value="6">6</option><option value="7" selected>7</option></select></div>
+<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c3-align" onchange="forgeAlignmentChanged('c3')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c3-race">Race</label><select class="cb-input" id="c3-race" onchange="forgeRaceChanged('c3')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c3-skill">Skill</label><select class="cb-input" id="c3-skill" onchange="U()"></select></div>
 <div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c3-pr-hint">(max 2,500)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c3-pr" min="0" max="2500" value="2400" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c3-pr-v">2400</span><span class="stat-max" id="c3-pr-m">/ 2500</span></div></div>
 <div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c3-cp-hint">(max 2,500)</span></label>
@@ -593,9 +632,10 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="mat-select"><button class="mat-btn" id="mat-c1" type="button" onclick="toggleMat('c1')">Catalyst #1</button><button class="mat-btn" id="mat-c2" type="button" onclick="toggleMat('c2')">Catalyst #2</button><button class="mat-btn" id="mat-c3" type="button" onclick="toggleMat('c3')">Catalyst #3</button></div>
 </div>
 <div class="cb-field"><label class="cb-lbl">Card Name <span class="cap-hint">(must include "Great")</span></label><input class="cb-input" id="f-name" placeholder="e.g. Storm Warden The Great" oninput="U()"></div>
-<div class="cb-field"><label class="cb-lbl">Level <span class="cap-hint">(auto = sum of materials)</span></label><input class="cb-input" id="f-level" readonly style="color:var(--amber)"></div>
-<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="f-align" onchange="U()"><option>Dark</option><option>Light</option><option selected>Fire</option><option>Earth</option><option>Water</option><option>Wind</option><option>Thunder</option><option>Divine</option></select></div>
-<div class="cb-field"><label class="cb-lbl">KINDS</label><input class="cb-input" id="f-kinds" placeholder="Warrior, Dragon, Fusion" oninput="U()"></div>
+<div class="cb-field"><label class="cb-lbl">Rank <span class="cap-hint">(auto = sum of materials)</span></label><input class="cb-input" id="f-level" readonly style="color:var(--amber)"></div>
+<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="f-align" onchange="forgeAlignmentChanged('f')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="f-race">Race</label><select class="cb-input" id="f-race" onchange="forgeRaceChanged('f')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="f-skill">Skill</label><select class="cb-input" id="f-skill" onchange="U()"></select></div>
 <div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="f-pr-hint">(max: select materials)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider pr-slider" id="f-pr" min="0" max="3200" value="3200" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="f-pr-v">3200</span><span class="stat-max" id="f-pr-m">/ 3200</span></div></div>
 <div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="f-cp-hint">(max: select materials)</span></label>
@@ -680,7 +720,7 @@ body.ctf-nav-pad { padding-top: 0; }
   <div class="submission-modal-card">
     <div class="submission-modal-icon" aria-hidden="true">✓</div>
     <h2 class="submission-modal-title" id="submission-success-title">Cards Submitted</h2>
-    <p class="submission-modal-copy" id="submission-success-copy">Your cards were submitted to OperatorStack, the JSON was emailed securely for review, and a confirmation email was sent to you. Your first backup download already started; keep a copy so you can edit it later.</p>
+    <p class="submission-modal-copy" id="submission-success-copy">Your FORGE cards were submitted for review. The reviewer email includes your card details and separate artwork attachments, and a confirmation email was sent to you. Your JSON backup contains card details and image names; keep your original artwork files too.</p>
     <code class="submission-modal-file" id="submission-backup-filename"></code>
     <div class="submission-modal-actions">
       <a class="modal-continue" id="submission-modal-continue" href="thanks.html">Continue</a>
@@ -694,7 +734,7 @@ body.ctf-nav-pad { padding-top: 0; }
   <div class="submission-modal-card failure">
     <div class="submission-modal-icon failure" aria-hidden="true">!</div>
     <h2 class="submission-modal-title" id="submission-failure-title">Submission Failed</h2>
-    <p class="submission-modal-copy" id="submission-failure-copy">The automatic submission could not be completed. Please email the downloaded JSON to <strong>changethewrld@outlook.com</strong> with the subject <strong>Submit Cards</strong>.</p>
+    <p class="submission-modal-copy" id="submission-failure-copy">The automatic submission could not be completed. Please email the downloaded JSON and your artwork files to <strong>changethewrld@outlook.com</strong> with the subject <strong>Submit Cards</strong>.</p>
     <p class="submission-modal-copy" id="submission-failure-reason"></p>
     <code class="submission-modal-file" id="submission-failure-filename"></code>
     <div class="submission-modal-actions">
@@ -714,6 +754,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <p class="footer-copy">© 2026 Perfect Timing Gaming · Makairis Holding Group · Dr. Zoom & Newz · Buffalo, NY · Consistency > Hype</p>
 </footer>
 
+<script src="assets/js/ctf-forge-tree.js"></script>
 <script>
 // ═══════ CONSTANTS ═══════
 const PR_POOL=4500, CP_POOL=4500;
@@ -733,6 +774,32 @@ let operatorStackAcceptedId='';
 const $=id=>document.getElementById(id);
 const V=id=>$(id).value;
 const N=id=>parseInt($(id).value)||0;
+
+function forgeOptions(select, values, previous){
+ select.replaceChildren(...values.map(value=>{
+  const option=document.createElement('option');
+  option.value=value; option.textContent=value;
+  return option;
+ }));
+ if(values.includes(previous))select.value=previous;
+}
+function forgeAlignmentChanged(id){
+ const race=$(id+'-race');
+ forgeOptions(race,CTF_FORGE_TREE.racesFor(V(id+'-align')),race.value);
+ forgeRaceChanged(id);
+}
+function forgeRaceChanged(id){
+ const skill=$(id+'-skill');
+ forgeOptions(skill,CTF_FORGE_TREE.skillsFor(V(id+'-align'),V(id+'-race')),skill.value);
+ U();
+}
+function forgeKinds(id){return [V(id+'-race'),V(id+'-skill')].filter(Boolean).join(', ');}
+function initForgeTree(){
+ for(const id of ['c1','c2','c3','f']){
+  forgeOptions($(id+'-align'),CTF_FORGE_TREE.alignments,'Hero');
+  forgeAlignmentChanged(id);
+ }
+}
 
 function createSubmissionId(){
  if(window.crypto&&typeof window.crypto.randomUUID==='function')return window.crypto.randomUUID();
@@ -776,7 +843,7 @@ function initDeliveryVerification(){
  document.head.appendChild(script);
 }
 
-async function deliverSubmissionEmails(jsonText,fileName,stableSubmissionId){
+async function deliverSubmissionEmails(jsonText,fileName,stableSubmissionId,images){
  const cfg=getDeliveryConfig();
  if(!deliveryConfigured())throw new Error('automatic email delivery is not configured');
  if(!turnstileToken)throw new Error('complete the secure email verification');
@@ -791,7 +858,8 @@ async function deliverSubmissionEmails(jsonText,fileName,stableSubmissionId){
     submission_id:stableSubmissionId,
     file_name:fileName,
     turnstile_token:turnstileToken,
-    json:jsonText
+    json:jsonText,
+    images
    }),
    signal:controller.signal
   });
@@ -921,7 +989,7 @@ function U(){
  // Update material button labels
  ids.forEach(m=>{
   const nm=V(m+'-name')||('Catalyst #'+(m==='c1'?'1':m==='c2'?'2':'3'));
-  $('mat-'+m).textContent=nm+' (Lv'+N(m+'-level')+')';
+  $('mat-'+m).textContent=nm+' (Rank '+N(m+'-level')+')';
  });
 
  validate();
@@ -978,10 +1046,11 @@ function validate(){
  errs.push({ok:!!V('f-effect').trim(),text:V('f-effect').trim()?'Fusion: Effect set':'Fusion: Effect required'});
  errs.push({ok:!!V('t-effect').trim(),text:V('t-effect').trim()?'Trick: Effect set':'Trick: Effect required'});
 
- // KINDS
+ // Canonical Alignment -> Race -> Skill path
  ['c1','c2','c3','f'].forEach(m=>{
   const label=m==='f'?'Fusion':'C'+(m==='c1'?'1':m==='c2'?'2':'3');
-  errs.push({ok:!!V(m+'-kinds').trim(),text:`${label}: ${V(m+'-kinds').trim()?'KINDS set':'KINDS required'}`});
+  const alignment=V(m+'-align'),race=V(m+'-race'),skill=V(m+'-skill');
+  errs.push({ok:CTF_FORGE_TREE.validPath(alignment,race,skill),text:`${label}: ${alignment} / ${race} / ${skill} ${CTF_FORGE_TREE.validPath(alignment,race,skill)?'valid':'invalid'}`});
  });
 
  // Submitter
@@ -1010,12 +1079,12 @@ function validate(){
 function renderPreview(){
  const cards=[];
  ['c1','c2','c3'].forEach((m,i)=>{
-  cards.push({name:V(m+'-name')||`Catalyst #${i+1}`,type:`Normal Catalyst · ${V(m+'-align')} · Lv ${N(m+'-level')}`,
-   kinds:V(m+'-kinds'),pr:N(m+'-pr'),cp:N(m+'-cp'),desc:V(m+'-lore'),cls:'',bar:'var(--flame)'});
+  cards.push({name:V(m+'-name')||`Catalyst #${i+1}`,type:`Normal Catalyst · ${V(m+'-align')} · Rank ${N(m+'-level')}`,
+   kinds:forgeKinds(m),pr:N(m+'-pr'),cp:N(m+'-cp'),desc:V(m+'-lore'),cls:'',bar:'var(--flame)'});
  });
  const matNames=[...mats].map(m=>V(m+'-name')||'?');
- cards.push({name:V('f-name')||'Fusion The Great',type:`Great Fusion · ${V('f-align')} · Lv ${V('f-level')}`,
-  kinds:V('f-kinds'),pr:N('f-pr'),cp:N('f-cp'),desc:(V('f-effect')||'...')+`\n[${matNames.join(' + ')}]`,cls:'great-card',bar:'var(--gold)'});
+ cards.push({name:V('f-name')||'Fusion The Great',type:`Great Fusion · ${V('f-align')} · Rank ${V('f-level')}`,
+  kinds:forgeKinds('f'),pr:N('f-pr'),cp:N('f-cp'),desc:(V('f-effect')||'...')+`\n[${matNames.join(' + ')}]`,cls:'great-card',bar:'var(--gold)'});
  cards.push({name:V('t-name')||'Trick Card',type:trickType,kinds:'—',pr:null,cp:null,desc:V('t-effect')||'...',cls:'trick-card',bar:'var(--purple)'});
 
  $('preview-grid').innerHTML=cards.map(c=>`<div class="p-card ${c.cls}">
@@ -1074,24 +1143,24 @@ async function submitCards(){
  const sub={submission_id:stableSubmissionId,submitter:{name:V('sub-name'),email:V('sub-email')},timestamp:new Date().toISOString(),cards:[]};
 
  ['c1','c2','c3'].forEach((m,i)=>{
-  sub.cards.push({slot:`Catalyst ${i+1}`,type:'Normal Catalyst',name:V(m+'-name'),level:N(m+'-level'),alignment:V(m+'-align'),kinds:V(m+'-kinds'),pressure:N(m+'-pr'),counterPressure:N(m+'-cp'),text:V(m+'-lore')});
+  sub.cards.push({slot:`Catalyst ${i+1}`,type:'Normal Catalyst',effectClass:'Normal',name:V(m+'-name'),rank:N(m+'-level'),alignment:V(m+'-align'),race:V(m+'-race'),skill:V(m+'-skill'),kinds:forgeKinds(m),pressure:N(m+'-pr'),counterPressure:N(m+'-cp'),lore:V(m+'-lore'),text:V(m+'-lore')});
  });
 
  const matNames=[...mats].map(m=>V(m+'-name'));
- sub.cards.push({slot:'Fusion (Great)',type:'Great Effect Fusion Catalyst',name:V('f-name'),level:V('f-level'),alignment:V('f-align'),kinds:V('f-kinds'),pressure:N('f-pr'),counterPressure:N('f-cp'),text:V('f-effect'),materials:matNames});
+ sub.cards.push({slot:'Fusion (Great)',type:'Great Effect Fusion Catalyst',effectClass:'Fusion',name:V('f-name'),rank:N('f-level'),alignment:V('f-align'),race:V('f-race'),skill:V('f-skill'),kinds:forgeKinds('f'),pressure:N('f-pr'),counterPressure:N('f-cp'),effectText:V('f-effect'),text:V('f-effect'),materials:matNames});
  sub.cards.push({slot:'Trick Card',type:trickType,name:V('t-name'),text:V('t-effect')});
  sub.poolUsed={pressure:N('c1-pr')+N('c2-pr')+N('c3-pr'),counterPressure:N('c1-cp')+N('c2-cp')+N('c3-cp')};
 
  // ── Build mailto URL BEFORE any async ops (user-gesture context required) ──
- const emailBody=sub.cards.map(c=>`--- ${c.slot} ---\nName: ${c.name}\nType: ${c.type}\n${c.level?'Level: '+c.level+'\n':''}${c.alignment?'Alignment: '+c.alignment+'\n':''}${c.kinds?'KINDS: '+c.kinds+'\n':''}${c.pressure!==undefined?'Pressure: '+c.pressure+'\nCounter Pressure: '+c.counterPressure+'\n':''}${c.materials?'Materials: '+c.materials.join(' + ')+'\n':''}Text: ${c.text}`).join('\n\n');
+ const emailBody=sub.cards.map(c=>`--- ${c.slot} ---\nName: ${c.name}\nType: ${c.type}\n${c.rank?'Rank: '+c.rank+'\n':''}${c.alignment?'Alignment: '+c.alignment+'\n':''}${c.race?'Race: '+c.race+'\nSkill: '+c.skill+'\n':''}${c.pressure!==undefined?'Pressure: '+c.pressure+'\nCounter Pressure: '+c.counterPressure+'\n':''}${c.materials?'Materials: '+c.materials.join(' + ')+'\n':''}Text: ${c.text}`).join('\n\n');
  const subject=encodeURIComponent('Submit Cards');
- const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — Custom Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
+ const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — FORGE Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
  const mailtoUrl=`mailto:changethewrld@outlook.com?subject=${subject}&body=${emailBodyEncoded}`;
 
  // ── Prepare the exact JSON used for the local backup and both email steps ──
- sub.images=getImageSummary();         // metadata for readability
- sub.imagesFull=getImageDataFull();    // full base64 for backup + email attachment
+ sub.images=getImageSummary();         // readable metadata in the JSON backup
  sub.totalImages=getTotalImageCount();
+ const emailImages=getImageDataFull(); // image bytes travel separately to the mailer
  const jsonText=JSON.stringify(sub,null,2);
  const blob=new Blob([jsonText],{type:'application/json'});
  const fileName=`CTF_Cards_${V('sub-name').replace(/[^a-zA-Z0-9_-]+/g,'_')||'Creator'}_${stableSubmissionId.slice(0,8)}.json`;
@@ -1121,20 +1190,20 @@ async function submitCards(){
  const osPayload={
   name:V('sub-name'), email:V('sub-email'), submission_timestamp:sub.timestamp,
   // Catalyst 1
-  catalyst_1_name:V('c1-name'), catalyst_1_level:N('c1-level'),
-  catalyst_1_alignment:V('c1-align'), catalyst_1_kinds:V('c1-kinds'),
+  catalyst_1_name:V('c1-name'), catalyst_1_rank:N('c1-level'), catalyst_1_level:N('c1-level'),
+  catalyst_1_alignment:V('c1-align'), catalyst_1_kinds:forgeKinds('c1'), catalyst_1_race:V('c1-race'), catalyst_1_skill:V('c1-skill'),
   catalyst_1_pressure:N('c1-pr'), catalyst_1_cp:N('c1-cp'), catalyst_1_lore:V('c1-lore'),
   // Catalyst 2
-  catalyst_2_name:V('c2-name'), catalyst_2_level:N('c2-level'),
-  catalyst_2_alignment:V('c2-align'), catalyst_2_kinds:V('c2-kinds'),
+  catalyst_2_name:V('c2-name'), catalyst_2_rank:N('c2-level'), catalyst_2_level:N('c2-level'),
+  catalyst_2_alignment:V('c2-align'), catalyst_2_kinds:forgeKinds('c2'), catalyst_2_race:V('c2-race'), catalyst_2_skill:V('c2-skill'),
   catalyst_2_pressure:N('c2-pr'), catalyst_2_cp:N('c2-cp'), catalyst_2_lore:V('c2-lore'),
   // Catalyst 3
-  catalyst_3_name:V('c3-name'), catalyst_3_level:N('c3-level'),
-  catalyst_3_alignment:V('c3-align'), catalyst_3_kinds:V('c3-kinds'),
+  catalyst_3_name:V('c3-name'), catalyst_3_rank:N('c3-level'), catalyst_3_level:N('c3-level'),
+  catalyst_3_alignment:V('c3-align'), catalyst_3_kinds:forgeKinds('c3'), catalyst_3_race:V('c3-race'), catalyst_3_skill:V('c3-skill'),
   catalyst_3_pressure:N('c3-pr'), catalyst_3_cp:N('c3-cp'), catalyst_3_lore:V('c3-lore'),
   // Fusion
-  fusion_name:V('f-name'), fusion_level:V('f-level'),
-  fusion_alignment:V('f-align'), fusion_kinds:V('f-kinds'),
+  fusion_name:V('f-name'), fusion_rank:N('f-level'), fusion_level:V('f-level'),
+  fusion_alignment:V('f-align'), fusion_kinds:forgeKinds('f'), fusion_race:V('f-race'), fusion_skill:V('f-skill'),
   fusion_pressure:N('f-pr'), fusion_cp:N('f-cp'),
   fusion_effect:V('f-effect'), fusion_materials:matNames.join(' + '),
   // Trick
@@ -1179,7 +1248,7 @@ async function submitCards(){
   // ── STEP 3: Oracle sends the owner attachment and submitter thank-you ──
   st.textContent='[3/3] Sending two emails securely...'; st.className='submit-status';
   if(blob.size>14*1024*1024)throw new Error('JSON backup exceeds the 14 MB automatic-email limit');
-  const delivery=await deliverSubmissionEmails(jsonText,fileName,stableSubmissionId);
+  const delivery=await deliverSubmissionEmails(jsonText,fileName,stableSubmissionId,emailImages);
   trackReviewQueueEvent('succeeded',{
    ...eventMetadata,
    email_delivery:'succeeded',
@@ -1208,7 +1277,7 @@ async function submitCards(){
   const errorType=!window.OperatorStack?'sdk_unavailable':
    /load failed|failed to fetch|network/i.test(errMsg)?'network_error':'service_error';
   trackReviewQueueEvent('failed',{...eventMetadata,error_type:errorType,email_delivery:'failed'});
-  st.innerHTML=`<strong style="color:var(--ember)">⚠ Submission delivery incomplete (${errMsg})</strong><br>Your JSON backup was saved locally. You can retry, or <a href="${mailtoUrl}" style="color:var(--flame)">open a manual email</a> and attach the downloaded JSON.`;
+  st.innerHTML=`<strong style="color:var(--ember)">⚠ Submission delivery incomplete (${errMsg})</strong><br>Your JSON backup was saved locally. You can retry, or <a href="${mailtoUrl}" style="color:var(--flame)">open a manual email</a> and attach the downloaded JSON plus your artwork files.`;
   st.className='submit-status status-err';
   const failureModal=$('submission-failure-modal');
   const failureDownload=$('submission-failure-download');
@@ -1372,12 +1441,14 @@ function renderThumbs(id){
   const container=document.getElementById('thumbs-'+id);
   const countEl=document.getElementById('imgcount-'+id);
   if(!container)return;
-  container.innerHTML=store.map((img,i)=>`
-    <div class="img-thumb">
-      <img src="${img.dataUrl}" alt="${img.name}">
-      <button class="img-thumb-remove" onclick="removeImg('${id}',${i})" title="Remove">✕</button>
-      <div class="img-thumb-name">${img.name}</div>
-    </div>`).join('');
+  container.replaceChildren();
+  store.forEach((img,i)=>{
+    const thumb=document.createElement('div');thumb.className='img-thumb';
+    const picture=document.createElement('img');picture.src=img.dataUrl;picture.alt=img.name;
+    const remove=document.createElement('button');remove.className='img-thumb-remove';remove.title='Remove';remove.textContent='✕';remove.addEventListener('click',()=>removeImg(id,i));
+    const name=document.createElement('div');name.className='img-thumb-name';name.textContent=img.name;
+    thumb.append(picture,remove,name);container.append(thumb);
+  });
   const cls=store.length>=limit?'img-warn':'img-ok';
   const pending=IMG_PENDING[id]||0;
   countEl.innerHTML=pending
@@ -1387,7 +1458,7 @@ function renderThumbs(id){
 
 function showImgWarn(id,msg){
   const el=document.getElementById('imgcount-'+id);
-  if(el){el.innerHTML=`<span class="img-warn">⚠ ${msg}</span>`;setTimeout(()=>renderThumbs(id),2500);}
+  if(el){const warning=document.createElement('span');warning.className='img-warn';warning.textContent=`⚠ ${msg}`;el.replaceChildren(warning);setTimeout(()=>renderThumbs(id),2500);}
 }
 
 function getImageSummary(){
@@ -1397,12 +1468,12 @@ function getImageSummary(){
   return summary;
 }
 
-// Full image data (base64 included) — used by the local backup and email attachment
+// Full image data travels only in the delivery request; the JSON backup holds metadata.
 function getImageDataFull(){
   const keys=['c1','c2','c3','fusion','trick','concept'];
   const full={};
-  keys.forEach(k=>{const s=getStore(k);if(s.length)full[k]=s.map(i=>({name:i.name,size:i.size,type:i.type,dataUrl:i.dataUrl}));});
-  return full;
+  keys.forEach(k=>{const s=getStore(k);if(s.length)full[k]=s.map(i=>({slot:k,name:i.name,data_url:i.dataUrl}));});
+  return Object.values(full).flat();
 }
 
 function getTotalImageCount(){
@@ -1413,6 +1484,7 @@ function getTotalImageCount(){
 document.addEventListener('input',event=>{
  if(event.target&&event.target.name!=='cf-turnstile-response')resetSubmissionIdentity();
 });
+initForgeTree();
 initDeliveryVerification();
 U();
 </script>
