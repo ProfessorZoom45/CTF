@@ -24,11 +24,11 @@ const CLIENT_CFG = (window.CTF_CONFIG && window.CTF_CONFIG.game) ? window.CTF_CO
 const BETA_CFG = window.CTF_CONFIG ? window.CTF_CONFIG.beta : {};
 const TUTORIAL_KEY = 'ctf:tutorial-progress';
 const TUTORIAL_STEPS = [
-  { title: 'Match 1 — Core Loop', copy: "Get familiar with the board using Reese's Trigun. Draw, spawn Vash or Brad, and pressure the opponent toward a Chi KO.", points: ["Use the phase rail to move through your turn — Draw, Standby, Main, Battle, End.", 'Focus on spawning Level 4 or lower Catalysts like Vash, Brad, Meryl, and Milly without tributing.', 'Winning is less important than completing the full turn loop at least once.'] },
-  { title: 'Match 2 — Trick Timing', copy: "Start setting and using the deck's Palm and Concealed Tricks — Ambush, Jessica's Love, and 2nd Wind are your tools.", points: ["Set at least one Concealed Trick face-down during Main Phase.", "Use the helper panel when the chain opens to see what actions are legal.", "Check the result card after the match to see how many chains opened."] },
-  { title: 'Match 3 — Battle & Kills', copy: 'Practice attack declarations with Vash and the gunman crew. Learn how a Kill differs from a Capture.', points: ['Compare Pressure and Counter Pressure before each attack.', 'P beats P = Kill + Chi damage. P beats CP = Capture unless the defender is a Great Card.', 'P loses to CP = no Kill or Capture; the attacking controller takes Chi damage equal to the difference.'] },
-  { title: 'Match 4 — End Phase Control', copy: "Use Extraction, Rescue, and Destroy Trick from the End Phase. Kuroneko and Claim Your Bounty reward you for cycling the Void.", points: ['You need an eligible Catalyst to pay the cost for Extraction, Rescue, or Destroy Trick.', 'Extraction uses YOUR Box. Rescue pulls YOUR card from the opponent Box.', 'END TURN is always legal and costs nothing.'] },
-  { title: 'Match 5 — Full Beta Flow', copy: "Play a full duel with the whole toolkit — Fighter of Peace, the Great cards, and the result card all in play.", points: ["Open the result card before ending the match to review your battle stats.", "Try the deckbuilder after this match to build your own list.", "Then join the Discord beta hub and report what felt unclear."] }
+  { title: 'Match 1 — First Catalyst', copy: 'Your first low-Rank draft taught the opening move. Use a registered Catalyst to draw, spawn, and see the turn phases.', points: ['Draw one card in Draw Phase.', 'Normal Spawn a Rank 1–4 Catalyst without a Tribute.', 'Follow the phase rail through Action, Battle, Resolution, and End.'] },
+  { title: 'Match 2 — Second Catalyst', copy: 'Your second draft gave you another early play. Practice choosing a field position and reading both battle values.', points: ['Pressure is used to attack; Counter Pressure protects a defending Catalyst.', 'Compare the attacker’s Pressure with the defender’s active value.', 'Use the helper panel to see which actions are currently legal.'] },
+  { title: 'Match 3 — High-Rank Plan', copy: 'Your high-Rank draft needs a Tribute plan. Practice battle decisions and watch how Kills differ from Captures.', points: ['Rank 6 Normal Spawns need one Tribute; Rank 7 needs two.', 'Pressure wins against Pressure for a Kill and Chi damage.', 'Pressure wins against Counter Pressure for a Capture, except against a Great Card.'] },
+  { title: 'Match 4 — Fusion & End Phase', copy: 'Your Great Fusion draft named exact materials. Check requirements, then practice the End Phase choices.', points: ['A Fusion Spawn follows the printed material requirements; a draft cannot be played until approved.', 'Extraction, Rescue, and Destroy Trick each need an eligible Catalyst.', 'End Turn remains available when you do not take another End Phase action.'] },
+  { title: 'Match 5 — Trick & Full Flow', copy: 'Your final draft linked a Trick name to its effect. Play a full turn and look for the right timing window.', points: ['Palm and Concealed Tricks have different timing and placement.', 'Set or activate a registered Trick when the game offers a legal window.', 'Review the result card, then return to your five drafts or continue free play.'] }
 ];
 let tutorialActive = false;
 let tutorialStep = 0;
@@ -428,7 +428,7 @@ function advanceTutorialStep(){
   renderTutorialPhaseBanner();
   renderP1SkipBattleBanner();
     $('game-over')?.classList.remove('show');
-    showToast('Tutorial complete! Explore the The Forge or join the Discord next.');
+    showToast('Tutorial complete! Review your first five FORGE drafts or continue free play.');
     return;
   }
   tutorialStep += 1;
@@ -2887,3 +2887,4 @@ loadSettings();
 updateWatchModeButton();
 renderDeckSelect();
 if (lastRoomCode && $('join-input')) $('join-input').value = lastRoomCode;
+if (new URLSearchParams(location.search).get('onboarding') === '1') startTutorial(true);
