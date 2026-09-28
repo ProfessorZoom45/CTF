@@ -4,36 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#0d0d0d">
-  <meta name="description" content="Create one Carry The Flame FORGE card per lesson, review all five in Lesson 6, then enter the guided battle.">
-  <title>First Five FORGE Cards | Carry The Flame</title>
+  <meta name="description" content="Learn Carry The Flame in six short lessons using ZF1 cards, then enter a guided battle.">
+  <title>Learn to Play with ZF1 | Carry The Flame</title>
   <link rel="canonical" href="https://professorzoom45.github.io/CTF/first-five-forge.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Carry The Flame">
   <meta property="og:url" content="https://professorzoom45.github.io/CTF/first-five-forge.html">
-  <meta property="og:title" content="Forge Your First Five Cards | Carry The Flame">
-  <meta property="og:description" content="Create one card in each of five lessons. Review and finalize all five in Lesson 6, then enter a guided battle.">
+  <meta property="og:title" content="Learn to Play with ZF1 | Carry The Flame">
+  <meta property="og:description" content="Six short lessons use real ZF1 cards to teach CTF before a guided battle.">
   <meta property="og:image" content="https://professorzoom45.github.io/CTF/assets/img/ctf-social-preview.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Carry The Flame torch and CTF logo on a dark background">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Forge Your First Five Cards | Carry The Flame">
-  <meta name="twitter:description" content="Five card lessons, one final review, then a guided battle.">
+  <meta name="twitter:title" content="Learn to Play with ZF1 | Carry The Flame">
+  <meta name="twitter:description" content="Six ZF1 card lessons, then a guided battle.">
   <meta name="twitter:image" content="https://professorzoom45.github.io/CTF/assets/img/ctf-social-preview.png">
   <meta name="twitter:image:alt" content="Carry The Flame torch and CTF logo on a dark background">
   <link rel="icon" href="assets/img/ctf-mark.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@600;700;900&family=DM+Sans:wght@400;500;700&display=swap">
-  <link rel="stylesheet" href="assets/css/first-five-forge.css?v=zf1-lessons-2026-09-25">
+  <link rel="stylesheet" href="assets/css/first-five-forge.css?v=zf1-read-only-2026-09-28">
   <link rel="stylesheet" href="assets/css/ctf-unified-nav.css?v=index-menu-2026-09-25">
   <script src="assets/js/ctf-unified-nav.js?v=index-menu-2026-09-25" defer></script>
   <script src="assets/js/zf1-tutorial-data.js?v=zf1-lessons-2026-09-25"></script>
-  <script type="module" src="assets/js/first-five-forge.js?v=zf1-lessons-2026-09-25"></script>
+  <script type="module" src="assets/js/first-five-forge.js?v=zf1-read-only-2026-09-28"></script>
 </head>
 <body>
-  <a class="skip" href="#forge-form">Skip to card creator</a>
+  <a class="skip" href="#lesson-main">Skip to lessons</a>
   <!-- CTF unified nav -->
 <nav class="ctf-unified" role="navigation" aria-label="Primary">
   <div class="nav-inner">
@@ -57,14 +57,14 @@
 </nav>
   <div class="shell">
 
-    <section class="hero"><div><span class="eyebrow">New player path · six lessons + first battle</span><h1>Forge your first five.<br><em>Learn as you create.</em></h1><p>Create and save one card in each of Lessons 1–5: two low-Rank Catalysts, one high-Rank Catalyst, a Great Fusion, and a Trick. In Lesson 6, review and finalize all five together before the guided battle.</p><ul><li>One card saved per creation lesson</li><li>Final review of all five in Lesson 6</li><li>Private browser drafts you can download and resume</li></ul></div><div class="hero-badge"><strong>5</strong><span>FORGE cards</span><small>6 lessons → battle</small></div></section>
-    <div class="notice"><b>Draft mode:</b> Your five cards save in this browser and can be downloaded as JSON. They do not enter the playable database or become approved cards. Every reference card in these lessons and the guided battle comes from the supplied ZF1 set; ZF1 names are preserved.</div>
+    <section class="hero"><div><span class="eyebrow">New player path · six lessons + guided battle</span><h1>Learn the game.<br><em>Play with ZF1.</em></h1><p>Follow six short lessons with real ZF1 cards. Learn the turn, battle values, Tributes, Fusions, Tricks, and win paths before entering a guided battle.</p><ul><li>Printed ZF1 cards in every lesson</li><li>One quick check per lesson</li><li>A ZF1-only guided battle at the end</li></ul><a class="primary link-button" href="#lesson-main">Start Lesson 1 →</a></div><div class="hero-badge"><strong>6</strong><span>lessons</span><small>ZF1 cards → battle</small></div></section>
+    <div class="notice"><b>ZF1 learning path:</b> The card names and printed text below come from the supplied ZF1 set. To make and submit your own cards, use the <a href="submit.html">Submit Cards</a> page.</div>
     <div class="layout">
-      <aside class="rail"><h2>Your path</h2><ol id="step-rail"></ol><div class="pool"><b>Shared Catalyst pools</b><p id="pool-pressure">Pressure 0 / 4,500</p><div class="meter"><span id="pressure-meter"></span></div><p id="pool-counter">Counter Pressure 0 / 4,500</p><div class="meter"><span id="counter-meter"></span></div></div><div class="rail-actions"><button id="download-draft" type="button">Download draft JSON</button><button id="reset-draft" type="button" class="quiet">Start a new draft</button><p id="save-status" role="status">Loading your draft…</p></div></aside>
-      <main class="creator" id="forge-form"><div class="creator-head"><div><span class="eyebrow" id="step-count">Lesson 1 of 6</span><h2 id="step-title">Foundation Catalyst 1</h2><p id="step-intro"></p></div><span class="class-badge" id="class-badge">Normal or Effect</span></div><div class="play-lesson"><span class="eyebrow">Play lesson</span><ul id="lesson-points"></ul></div><section class="zf1-reference" aria-labelledby="zf1-reference-title"><div class="zf1-reference-head"><div><span class="eyebrow">Cards from the supplied ZF1 set</span><h3 id="zf1-reference-title">See the lesson in a card</h3></div><p id="zf1-reference-note"></p></div><div id="zf1-reference-cards" class="zf1-reference-grid"></div></section><div id="form-fields" class="form-fields"></div><div id="form-error" class="form-error" role="alert"></div><div class="form-actions"><button id="back-step" type="button">← Previous lesson</button><button id="next-step" type="button" class="primary">Save card &amp; continue →</button></div><section id="complete-panel" class="complete-panel" hidden><h3>Five drafts finalized</h3><ul><li>Your finalized package remains private and editable here.</li><li>The guided battle uses ZF1 cards while these drafts await manual review.</li><li>You will practice Draw, Spawn, Pressure, Counter Pressure, Fusion, and Trick timing.</li></ul><a class="primary link-button" href="play.html?onboarding=1">Start guided battle →</a><a href="ALPHA/alphasubmit.html">Open official submission portal</a></section></main>
+      <aside class="rail"><h2>Your path</h2><ol id="step-rail"></ol><div class="rail-actions"><p id="progress-status" role="status">Loading lessons…</p><a href="submit.html">Submit your own cards →</a></div></aside>
+      <main class="lesson-main" id="lesson-main"><div class="creator-head"><div><span class="eyebrow" id="step-count">Lesson 1 of 6</span><h2 id="step-title">Begin a turn</h2><p id="step-intro"></p></div><span class="class-badge" id="class-badge">Draw &amp; Spawn</span></div><div class="play-lesson"><span class="eyebrow">What to learn</span><ul id="lesson-points"></ul></div><section class="zf1-reference" aria-labelledby="zf1-reference-title"><div class="zf1-reference-head"><div><span class="eyebrow">Cards from the supplied ZF1 set</span><h3 id="zf1-reference-title">Read the cards</h3></div><p id="zf1-reference-note"></p></div><div id="zf1-reference-cards" class="zf1-reference-grid"></div></section><section class="checkpoint" aria-labelledby="checkpoint-question"><span class="eyebrow">Quick check</span><h3 id="checkpoint-question"></h3><div id="checkpoint-choices" class="checkpoint-choices"></div><p id="checkpoint-feedback" class="checkpoint-feedback" role="status"></p></section><div class="form-actions"><button id="back-step" type="button">← Previous lesson</button><button id="next-step" type="button" class="primary" disabled>Next lesson →</button></div><section id="complete-panel" class="complete-panel" hidden><h3>Ready for battle</h3><p>You have finished all six ZF1 lessons. The guided battle uses a focused deck drawn only from the supplied ZF1 set. Use the button above to begin.</p><a href="submit.html">Submit your own cards</a></section></main>
     </div>
     <section class="quick-reference"><span class="eyebrow">What matters first</span><h2>A small rules map</h2><div class="reference-grid"><article><b>Draw &amp; Spawn</b><p>Draw one card in Draw Phase. Rank 1–4 Normal Spawns need no Tribute; Rank 6 needs one and Rank 7 needs two.</p></article><article><b>Pressure &amp; Counter Pressure</b><p>Pressure attacks. Counter Pressure protects a defending Catalyst. Compare the right numbers before declaring a battle.</p></article><article><b>Fusion &amp; Tricks</b><p>Fusion follows exact printed material requirements. Palm and Concealed Tricks have different timing and placement.</p></article><article><b>Three win paths</b><p>Reduce opposing Chi to zero, reach seven Kills, or reach seven Extractions. The tutorial starts with the core turn loop.</p></article></div></section>
-    <footer>Carry The Flame · Six-lesson FORGE onboarding · Local draft tutorial</footer>
+    <footer>Carry The Flame · Six ZF1 lessons · Guided battle</footer>
   </div>
 </body>
 </html>

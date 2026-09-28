@@ -28,7 +28,7 @@ const TUTORIAL_STEPS = [
   { title: 'Match 2 — Second Catalyst', copy: 'Use Newz The Watcher and Reaper — Master Swordsman to compare battle values and field positions.', points: ['Newz The Watcher has 1,100 Pressure and 1,800 Counter Pressure.', 'Reaper — Master Swordsman has 2,000 Pressure and 1,100 Counter Pressure.', 'Pressure attacks; Counter Pressure protects a defending Catalyst.'] },
   { title: 'Match 3 — High-Rank Plan', copy: 'Ace The Goat is a Rank 6 ZF1 Catalyst. First establish a lower-Rank Catalyst you can Tribute.', points: ['Ace The Goat needs one Tribute for a Normal Spawn.', 'Compare Pressure against the opposing Catalyst’s active value.', 'Watch how a Kill differs from a Capture.'] },
   { title: 'Match 4 — Fusion & End Phase', copy: 'Fusion Zone and Destin The Great Warlord show printed requirements for a Fusion Spawn.', points: ['Destin The Great Warlord requires Newz The Great Watcher plus a distinct Rank 5 or higher Warrior.', 'Ace The Great is a ZF1 example of that second material.', 'Check Fusion Zone’s printed effect and the available End Phase choices.'] },
-  { title: 'Match 5 — Trick & Full Flow', copy: 'Rapier and The Great One show how ZF1 Tricks use different timing, costs, and conditions.', points: ['Rapier is an Equip Palm Trick that grants 800 Pressure to its equipped Catalyst.', 'The Great One is a Concealed Trick; read its Chi cost and empty-field requirement before activation.', 'Review your five private FORGE drafts after the battle.'] }
+  { title: 'Match 5 — Trick & Full Flow', copy: 'Rapier and The Great One show how ZF1 Tricks use different timing, costs, and conditions.', points: ['Rapier is an Equip Palm Trick that grants 800 Pressure to its equipped Catalyst.', 'The Great One is a Concealed Trick; read its Chi cost and empty-field requirement before activation.', 'Review the ZF1 lessons after the battle or continue free play.'] }
 ];
 let tutorialActive = false;
 let tutorialStep = 0;
@@ -410,7 +410,7 @@ function advanceTutorialStep(){
   renderTutorialPhaseBanner();
   renderP1SkipBattleBanner();
     $('game-over')?.classList.remove('show');
-    showToast('Tutorial complete! Review your first five FORGE drafts or continue free play.');
+    showToast('Tutorial complete! Review the ZF1 lessons or continue free play.');
     return;
   }
   tutorialStep += 1;

@@ -27,15 +27,14 @@ A fully original tactical card game by Perfect Timing Gaming / Makairis Holding 
 | `cards.html` | Card database browser — search, filter, sort 1,610 cards |
 | `deckbuilder.html` | Deck builder — build, save, load 40–60 card decks |
 | `play.html` | Online play client — WebRTC P2P with room codes |
-| `first-five-forge.html` | Six-lesson new-player path: save one card in each of Lessons 1–5, review and finalize all five in Lesson 6, then enter the guided battle |
+| `first-five-forge.html` | Six ZF1-only lessons with quick checks, followed by a guided battle |
 | `glossary.html` | CTF-native terminology reference |
 | `submit.html` | Custom card submission — 5-card sets with stat pool system |
 
-The first-five FORGE page keeps drafts in browser storage and exports JSON. Finalizing
-Lesson 6 completes a private draft package; manual review remains required before
-the cards join shared play. Lesson examples and the guided battle use only the 26
-cards in the supplied `assets/data/ZF1.ptcg`; their names and printed text are
-preserved. The battle uses a focused teaching deck rather than a standard-size deck.
+The Learn to Play page keeps lesson progress in browser storage. Card creation and
+submission are handled on `submit.html`. Lesson examples and the guided battle use
+only the 26 cards in the supplied `assets/data/ZF1.ptcg`; their names and printed
+text are preserved. The battle uses a focused teaching deck rather than a standard-size deck.
 Regenerate its browser data with `node tools/build-zf1-tutorial-data.mjs` and check
 it with `node tools/test-zf1-tutorial.cjs`.
 
