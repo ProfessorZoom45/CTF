@@ -47,7 +47,8 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 
 /* ── PAGE HEADER (matches rules/play/cards/glossary) ── */
 .page-header{padding:8rem 1.5rem 2.5rem;text-align:center;background:radial-gradient(ellipse at 50% 100%,rgba(255,106,0,.08),transparent 60%),var(--coal)}
-.page-header h1{font-family:var(--font-display);font-size:clamp(2.5rem,6vw,4.5rem);letter-spacing:3px;text-transform:uppercase;background:linear-gradient(180deg,var(--white) 40%,var(--flame));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-header h1{font-family:var(--font-display);font-size:clamp(2.5rem,6vw,4.5rem);letter-spacing:3px;text-transform:uppercase;color:var(--white);line-height:1.05}
+.page-header .title-lead,.page-header .title-flame{display:block}.page-header .title-flame{margin-top:.18em;color:var(--flame);white-space:nowrap;text-shadow:0 0 22px rgba(255,106,0,.3)}
 .page-header p{color:var(--cream);max-width:650px;margin:.5rem auto 0;font-size:.95rem}
 
 .container{max-width:960px;margin:0 auto;padding:1rem 1.5rem 3rem}
@@ -55,6 +56,17 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 /* ── INFO BOX ── */
 .info-box{background:var(--coal-mid);border-left:3px solid var(--flame);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--cream);line-height:1.7}
 .info-box strong{color:var(--flame)}
+
+/* ── CANONICAL FORGE TREE ── */
+.forge-tree{margin:0 0 1.5rem;background:linear-gradient(145deg,rgba(255,106,0,.09),rgba(33,150,243,.035));border:1px solid rgba(255,106,0,.18);padding:1rem}
+.forge-tree-title{font-family:var(--font-display);font-size:1.15rem;letter-spacing:2px;text-transform:uppercase;color:var(--flame);margin-bottom:.7rem}
+.forge-steps{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));border:1px solid rgba(255,255,255,.06)}
+.forge-step{position:relative;min-height:72px;padding:.65rem .5rem;background:rgba(13,13,13,.55);border-right:1px solid rgba(255,255,255,.06)}
+.forge-step:last-child{border-right:0}.forge-step::after{content:'›';position:absolute;right:-6px;top:21px;z-index:1;color:var(--flame);font-size:1.25rem}.forge-step:last-child::after{display:none}
+.forge-step-no{display:block;font-family:var(--font-mono);font-size:.6rem;color:var(--flame)}
+.forge-step-name{display:block;margin-top:.2rem;font-family:var(--font-label);font-weight:700;font-size:.77rem;line-height:1.1;letter-spacing:.7px;text-transform:uppercase;color:var(--cream)}
+.forge-branches{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.7rem}.forge-branch{padding:.55rem .65rem;background:var(--coal-mid);border-left:2px solid var(--ash);font-size:.72rem;color:var(--cream)}.forge-branch b{font-family:var(--font-label);letter-spacing:1px;text-transform:uppercase;color:var(--white)}.forge-branch.effect{border-color:var(--flame)}.forge-branch.fusion{border-color:var(--gold)}
+.branch-field[hidden]{display:none!important}.canonical-note{font-family:var(--font-mono);font-size:.65rem;color:var(--ash);margin-top:.2rem}.resolution-field{border-left:2px solid rgba(255,106,0,.45);padding-left:.7rem}
 
 /* ── POOL TRACKER ── */
 .pool-tracker{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;padding:1rem;background:var(--coal-light);border:1px solid rgba(255,106,0,.1)}
@@ -206,7 +218,7 @@ footer{background:var(--coal);border-top:1px solid rgba(255,106,0,.1);padding:3r
 @media(max-width:768px){
 .nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(13,13,13,.98);flex-direction:column;padding:1.5rem;gap:1.2rem;border-bottom:1px solid rgba(255,106,0,.15)}.nav-links.open{display:flex}.menu-toggle{display:block}
 .cb-grid{grid-template-columns:1fr}.pool-tracker{grid-template-columns:1fr}.submit-row{grid-template-columns:1fr}
-.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.discovery-path ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.discovery-path ul{grid-template-columns:repeat(2,minmax(0,1fr))}.forge-steps{grid-template-columns:repeat(2,1fr)}.forge-step{min-height:58px;border-bottom:1px solid rgba(255,255,255,.06)}.forge-step:nth-child(2n){border-right:0}.forge-step::after{display:none}.forge-branches{grid-template-columns:1fr}}
 @media(max-width:420px){.discovery-path ul{grid-template-columns:1fr}.stat-max{min-width:0}.cb-header{flex-wrap:wrap}.p-card{padding:.5rem}}
 @media(orientation:landscape) and (max-height:550px) and (max-width:1000px){
  .page-header{padding:4.8rem 1rem 1.25rem}.container{padding:1rem 1rem 2rem}
@@ -492,14 +504,14 @@ body.ctf-nav-pad { padding-top: 0; }
 })();
 </script>
 <div class="page-header">
-<h1>Create Your First 5 FORGE Cards</h1>
-<p>Design your own 5-card set — 3 Normal Catalysts, 1 Great Fusion Catalyst, and 1 Trick Card. All cards are reviewed before entering the game.</p>
+<h1><span class="title-lead">Create Your First 5</span><span class="title-flame">FORGE Cards</span></h1>
+<p>Design your own 5-card set — 3 Catalysts, 1 Great Fusion Catalyst, and 1 Trick Card. All cards are reviewed before entering the game.</p>
 </div>
 
 <div class="container">
 
 <div class="info-box">
-<strong>FORGE = Fan-Originated Releases &amp; Game Expansions.</strong> These five cards are unique to your deck in Carry The Flame. Share <strong>4,500 Pressure</strong> and <strong>4,500 Counter Pressure</strong> across 3 non-Fusion Catalysts. Two are Rank 1–4 (max 1,800 PR / 2,000 CP each); one is Rank 6–7 (max 2,500 PR / 2,500 CP). Your Great Fusion combines two of your three, with no more than 3,200 of either stat or 4,000 total. Your Trick targets one Catalyst, with no double effects and at most a +300 stat boost.
+<strong>FORGE = Fan-Originated Releases &amp; Game Expansions.</strong> Every Catalyst follows the canonical creation order below. These five cards are unique to your deck in Carry The Flame. Share <strong>4,500 Pressure</strong> and <strong>4,500 Counter Pressure</strong> across 3 non-Fusion Catalysts. Two are Rank 1–4 (max 1,800 PR / 2,000 CP each); one is Rank 6–7 (max 2,500 PR / 2,500 CP). Your Great Fusion combines two of your three, with no more than 3,200 of either stat or 4,000 total. Your Trick targets one Catalyst, with no double effects and at most a +300 stat boost.
 </div>
 
 <section class="discovery-path" aria-labelledby="discovery-title">
@@ -512,6 +524,25 @@ body.ctf-nav-pad { padding-top: 0; }
 <li><strong>4 · REFINE</strong>Adjust your plan and build a history.</li>
 <li><strong>5 · FORGE AGAIN</strong>Bring what you learned into your next creation.</li>
 </ul>
+</section>
+
+<section class="forge-tree" aria-labelledby="forge-tree-title">
+<h2 class="forge-tree-title" id="forge-tree-title">Canonical Complete CTF Forge Tree</h2>
+<div class="forge-steps">
+<div class="forge-step"><span class="forge-step-no">01</span><span class="forge-step-name">Alignment</span></div>
+<div class="forge-step"><span class="forge-step-no">02</span><span class="forge-step-name">Race</span></div>
+<div class="forge-step"><span class="forge-step-no">03</span><span class="forge-step-name">Skill</span></div>
+<div class="forge-step"><span class="forge-step-no">04</span><span class="forge-step-name">Effect Class</span></div>
+<div class="forge-step"><span class="forge-step-no">05</span><span class="forge-step-name">Pressure</span></div>
+<div class="forge-step"><span class="forge-step-no">06</span><span class="forge-step-name">Counter Pressure</span></div>
+<div class="forge-step"><span class="forge-step-no">07</span><span class="forge-step-name">Rank</span></div>
+<div class="forge-step"><span class="forge-step-no">08</span><span class="forge-step-name">Catalyst Resolution</span></div>
+</div>
+<div class="forge-branches">
+<div class="forge-branch"><b>Normal</b><br>Lore → Step 5</div>
+<div class="forge-branch effect"><b>Effect</b><br>Effect Text → Optional Lore → Step 5</div>
+<div class="forge-branch fusion"><b>Fusion</b><br>Fusion Rules → Effect → Optional Lore → Step 5</div>
+</div>
 </section>
 
 <div style="background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);border-left:3px solid var(--ember);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.82rem;color:var(--cream);line-height:1.7">
@@ -544,18 +575,21 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <!-- CATALYST 1 (Rank 1-4) -->
 <div class="card-builder" id="b-c1">
-<div class="cb-header"><span class="cb-num">1</span><span class="cb-title">Catalyst #1</span><span class="cb-badge badge-normal">Normal · Rank 1–4</span></div>
+<div class="cb-header"><span class="cb-num">1</span><span class="cb-title">Catalyst #1</span><span class="cb-badge badge-normal" id="c1-class-badge">Normal · Rank 1–4</span></div>
 <div class="cb-grid">
 <div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c1-name" placeholder="e.g. Storm Sentinel" oninput="U()"></div>
-<div class="cb-field"><label class="cb-lbl">Rank (1–4)</label><select class="cb-input" id="c1-level" onchange="U()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option></select></div>
-<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c1-align" onchange="forgeAlignmentChanged('c1')"></select></div>
-<div class="cb-field"><label class="cb-lbl" for="c1-race">Race</label><select class="cb-input" id="c1-race" onchange="forgeRaceChanged('c1')"></select></div>
-<div class="cb-field"><label class="cb-lbl" for="c1-skill">Skill</label><select class="cb-input" id="c1-skill" onchange="U()"></select></div>
-<div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c1-pr-hint">(max 1,800)</span></label>
+<div class="cb-field"><label class="cb-lbl">1. Alignment</label><select class="cb-input" id="c1-align" onchange="forgeAlignmentChanged('c1')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c1-race">2. Race</label><select class="cb-input" id="c1-race" onchange="forgeRaceChanged('c1')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c1-skill">3. Skill</label><select class="cb-input" id="c1-skill" onchange="U()"></select></div>
+<div class="cb-field"><label class="cb-lbl">4. Effect Class</label><select class="cb-input" id="c1-class" onchange="setCatalystBranch('c1');U()"><option value="Normal">Normal</option><option value="Effect">Effect</option></select><div class="canonical-note">This non-Fusion slot uses the Normal or Effect branch.</div></div>
+<div class="cb-field full branch-field" id="c1-effect-field" hidden><label class="cb-lbl">Effect Text</label><textarea class="cb-input" id="c1-effect" placeholder="Describe when and how this Catalyst's effect resolves." oninput="U()"></textarea></div>
+<div class="cb-field full branch-field" id="c1-lore-field"><label class="cb-lbl" id="c1-lore-label">Lore <span class="cap-hint">(required for Normal)</span></label><textarea class="cb-input" id="c1-lore" placeholder="A sentinel born from the eternal storm." oninput="U()"></textarea></div>
+<div class="cb-field"><label class="cb-lbl">5. Pressure <span class="cap-hint" id="c1-pr-hint">(max 1,800)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c1-pr" min="0" max="1800" value="1800" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c1-pr-v">1800</span><span class="stat-max" id="c1-pr-m">/ 1800</span></div></div>
-<div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c1-cp-hint">(max 2,000)</span></label>
+<div class="cb-field"><label class="cb-lbl">6. Counter Pressure <span class="cap-hint" id="c1-cp-hint">(max 2,000)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c1-cp" min="0" max="2000" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c1-cp-v">1500</span><span class="stat-max" id="c1-cp-m">/ 2000</span></div></div>
-<div class="cb-field full"><label class="cb-lbl">Lore Text (Normal Catalysts have no effect — flavor only)</label><textarea class="cb-input" id="c1-lore" placeholder="A sentinel born from the eternal storm." oninput="U()"></textarea></div>
+<div class="cb-field"><label class="cb-lbl">7. Rank (1–4)</label><select class="cb-input" id="c1-level" onchange="U()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option></select></div>
+<div class="cb-field full resolution-field"><label class="cb-lbl">8. Catalyst Resolution</label><textarea class="cb-input" id="c1-resolution" placeholder="State the card's final timing, targets, conditions, and resolved outcome." oninput="U()"></textarea></div>
 </div>
 <!-- IMAGE UPLOAD: Catalyst 1 -->
 <div class="img-upload-section">
@@ -571,18 +605,21 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <!-- CATALYST 2 (Rank 1-4) -->
 <div class="card-builder" id="b-c2">
-<div class="cb-header"><span class="cb-num">2</span><span class="cb-title">Catalyst #2</span><span class="cb-badge badge-normal">Normal · Rank 1–4</span></div>
+<div class="cb-header"><span class="cb-num">2</span><span class="cb-title">Catalyst #2</span><span class="cb-badge badge-normal" id="c2-class-badge">Normal · Rank 1–4</span></div>
 <div class="cb-grid">
 <div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c2-name" placeholder="e.g. Iron Fang" oninput="U()"></div>
-<div class="cb-field"><label class="cb-lbl">Rank (1–4)</label><select class="cb-input" id="c2-level" onchange="U()"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
-<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c2-align" onchange="forgeAlignmentChanged('c2')"></select></div>
-<div class="cb-field"><label class="cb-lbl" for="c2-race">Race</label><select class="cb-input" id="c2-race" onchange="forgeRaceChanged('c2')"></select></div>
-<div class="cb-field"><label class="cb-lbl" for="c2-skill">Skill</label><select class="cb-input" id="c2-skill" onchange="U()"></select></div>
-<div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c2-pr-hint">(max 1,800)</span></label>
+<div class="cb-field"><label class="cb-lbl">1. Alignment</label><select class="cb-input" id="c2-align" onchange="forgeAlignmentChanged('c2')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c2-race">2. Race</label><select class="cb-input" id="c2-race" onchange="forgeRaceChanged('c2')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c2-skill">3. Skill</label><select class="cb-input" id="c2-skill" onchange="U()"></select></div>
+<div class="cb-field"><label class="cb-lbl">4. Effect Class</label><select class="cb-input" id="c2-class" onchange="setCatalystBranch('c2');U()"><option value="Normal">Normal</option><option value="Effect">Effect</option></select><div class="canonical-note">This non-Fusion slot uses the Normal or Effect branch.</div></div>
+<div class="cb-field full branch-field" id="c2-effect-field" hidden><label class="cb-lbl">Effect Text</label><textarea class="cb-input" id="c2-effect" placeholder="Describe when and how this Catalyst's effect resolves." oninput="U()"></textarea></div>
+<div class="cb-field full branch-field" id="c2-lore-field"><label class="cb-lbl" id="c2-lore-label">Lore <span class="cap-hint">(required for Normal)</span></label><textarea class="cb-input" id="c2-lore" placeholder="A loyal beast with fangs of cold iron." oninput="U()"></textarea></div>
+<div class="cb-field"><label class="cb-lbl">5. Pressure <span class="cap-hint" id="c2-pr-hint">(max 1,800)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c2-pr" min="0" max="1800" value="300" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c2-pr-v">300</span><span class="stat-max" id="c2-pr-m">/ 1800</span></div></div>
-<div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c2-cp-hint">(max 2,000)</span></label>
+<div class="cb-field"><label class="cb-lbl">6. Counter Pressure <span class="cap-hint" id="c2-cp-hint">(max 2,000)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c2-cp" min="0" max="2000" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c2-cp-v">1500</span><span class="stat-max" id="c2-cp-m">/ 2000</span></div></div>
-<div class="cb-field full"><label class="cb-lbl">Lore Text</label><textarea class="cb-input" id="c2-lore" placeholder="A loyal beast with fangs of cold iron." oninput="U()"></textarea></div>
+<div class="cb-field"><label class="cb-lbl">7. Rank (1–4)</label><select class="cb-input" id="c2-level" onchange="U()"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+<div class="cb-field full resolution-field"><label class="cb-lbl">8. Catalyst Resolution</label><textarea class="cb-input" id="c2-resolution" placeholder="State the card's final timing, targets, conditions, and resolved outcome." oninput="U()"></textarea></div>
 </div>
 <!-- IMAGE UPLOAD: Catalyst 2 -->
 <div class="img-upload-section">
@@ -598,18 +635,21 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <!-- CATALYST 3 (Rank 6-7) -->
 <div class="card-builder" id="b-c3">
-<div class="cb-header"><span class="cb-num">3</span><span class="cb-title">Catalyst #3</span><span class="cb-badge badge-normal">Normal · Rank 6–7</span></div>
+<div class="cb-header"><span class="cb-num">3</span><span class="cb-title">Catalyst #3</span><span class="cb-badge badge-normal" id="c3-class-badge">Normal · Rank 6–7</span></div>
 <div class="cb-grid">
 <div class="cb-field"><label class="cb-lbl">Card Name</label><input class="cb-input" id="c3-name" placeholder="e.g. Crimson Warden" oninput="U()"></div>
-<div class="cb-field"><label class="cb-lbl">Rank (6–7)</label><select class="cb-input" id="c3-level" onchange="U()"><option value="6">6</option><option value="7" selected>7</option></select></div>
-<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="c3-align" onchange="forgeAlignmentChanged('c3')"></select></div>
-<div class="cb-field"><label class="cb-lbl" for="c3-race">Race</label><select class="cb-input" id="c3-race" onchange="forgeRaceChanged('c3')"></select></div>
-<div class="cb-field"><label class="cb-lbl" for="c3-skill">Skill</label><select class="cb-input" id="c3-skill" onchange="U()"></select></div>
-<div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="c3-pr-hint">(max 2,500)</span></label>
+<div class="cb-field"><label class="cb-lbl">1. Alignment</label><select class="cb-input" id="c3-align" onchange="forgeAlignmentChanged('c3')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c3-race">2. Race</label><select class="cb-input" id="c3-race" onchange="forgeRaceChanged('c3')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="c3-skill">3. Skill</label><select class="cb-input" id="c3-skill" onchange="U()"></select></div>
+<div class="cb-field"><label class="cb-lbl">4. Effect Class</label><select class="cb-input" id="c3-class" onchange="setCatalystBranch('c3');U()"><option value="Normal">Normal</option><option value="Effect">Effect</option></select><div class="canonical-note">This non-Fusion slot uses the Normal or Effect branch.</div></div>
+<div class="cb-field full branch-field" id="c3-effect-field" hidden><label class="cb-lbl">Effect Text</label><textarea class="cb-input" id="c3-effect" placeholder="Describe when and how this Catalyst's effect resolves." oninput="U()"></textarea></div>
+<div class="cb-field full branch-field" id="c3-lore-field"><label class="cb-lbl" id="c3-lore-label">Lore <span class="cap-hint">(required for Normal)</span></label><textarea class="cb-input" id="c3-lore" placeholder="The Crimson Warden waits for the flame to call." oninput="U()"></textarea></div>
+<div class="cb-field"><label class="cb-lbl">5. Pressure <span class="cap-hint" id="c3-pr-hint">(max 2,500)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider pr-slider" id="c3-pr" min="0" max="2500" value="2400" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="c3-pr-v">2400</span><span class="stat-max" id="c3-pr-m">/ 2500</span></div></div>
-<div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="c3-cp-hint">(max 2,500)</span></label>
+<div class="cb-field"><label class="cb-lbl">6. Counter Pressure <span class="cap-hint" id="c3-cp-hint">(max 2,500)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider cp-slider" id="c3-cp" min="0" max="2500" value="1500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="c3-cp-v">1500</span><span class="stat-max" id="c3-cp-m">/ 2500</span></div></div>
-<div class="cb-field full"><label class="cb-lbl">Lore Text</label><textarea class="cb-input" id="c3-lore" placeholder="The Crimson Warden waits for the flame to call." oninput="U()"></textarea></div>
+<div class="cb-field"><label class="cb-lbl">7. Rank (6–7)</label><select class="cb-input" id="c3-level" onchange="U()"><option value="6">6</option><option value="7" selected>7</option></select></div>
+<div class="cb-field full resolution-field"><label class="cb-lbl">8. Catalyst Resolution</label><textarea class="cb-input" id="c3-resolution" placeholder="State the card's final timing, targets, conditions, and resolved outcome." oninput="U()"></textarea></div>
 </div>
 <!-- IMAGE UPLOAD: Catalyst 3 -->
 <div class="img-upload-section">
@@ -625,21 +665,25 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <!-- FUSION (Great) -->
 <div class="card-builder" id="b-f" style="border-color:rgba(255,215,0,.3)">
-<div class="cb-header"><span class="cb-num">★</span><span class="cb-title">Fusion Catalyst</span><span class="cb-badge badge-great">★ GREAT · Effect · Fusion</span></div>
+<div class="cb-header"><span class="cb-num">★</span><span class="cb-title">Fusion Catalyst</span><span class="cb-badge badge-great">★ GREAT · FUSION BRANCH</span></div>
 <div class="cb-grid">
 <div class="cb-field full"><label class="cb-lbl">Fusion Materials (select exactly 2 of your 3 Catalysts)</label>
 <div class="mat-select"><button class="mat-btn" id="mat-c1" type="button" onclick="toggleMat('c1')">Catalyst #1</button><button class="mat-btn" id="mat-c2" type="button" onclick="toggleMat('c2')">Catalyst #2</button><button class="mat-btn" id="mat-c3" type="button" onclick="toggleMat('c3')">Catalyst #3</button></div>
 </div>
 <div class="cb-field"><label class="cb-lbl">Card Name <span class="cap-hint">(must include "Great")</span></label><input class="cb-input" id="f-name" placeholder="e.g. Storm Warden The Great" oninput="U()"></div>
-<div class="cb-field"><label class="cb-lbl">Rank <span class="cap-hint">(auto = sum of materials)</span></label><input class="cb-input" id="f-level" readonly style="color:var(--amber)"></div>
-<div class="cb-field"><label class="cb-lbl">Alignment</label><select class="cb-input" id="f-align" onchange="forgeAlignmentChanged('f')"></select></div>
-<div class="cb-field"><label class="cb-lbl" for="f-race">Race</label><select class="cb-input" id="f-race" onchange="forgeRaceChanged('f')"></select></div>
-<div class="cb-field"><label class="cb-lbl" for="f-skill">Skill</label><select class="cb-input" id="f-skill" onchange="U()"></select></div>
-<div class="cb-field"><label class="cb-lbl">Pressure <span class="cap-hint" id="f-pr-hint">(max: select materials)</span></label>
+<div class="cb-field"><label class="cb-lbl">1. Alignment</label><select class="cb-input" id="f-align" onchange="forgeAlignmentChanged('f')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="f-race">2. Race</label><select class="cb-input" id="f-race" onchange="forgeRaceChanged('f')"></select></div>
+<div class="cb-field"><label class="cb-lbl" for="f-skill">3. Skill</label><select class="cb-input" id="f-skill" onchange="U()"></select></div>
+<div class="cb-field"><label class="cb-lbl">4. Effect Class</label><input class="cb-input" id="f-class" value="Fusion" readonly style="color:var(--gold)"><div class="canonical-note">This Great Catalyst follows the Fusion branch.</div></div>
+<div class="cb-field full"><label class="cb-lbl">Fusion Rules / Requirements</label><textarea class="cb-input" id="f-rules" placeholder="Name the two materials and any additional Fusion requirements or restrictions." oninput="U()"></textarea></div>
+<div class="cb-field full"><label class="cb-lbl">Effect Text</label><textarea class="cb-input" id="f-effect" placeholder="When this card is Fusion Spawned: destroy 1 Catalyst your opponent controls." oninput="U()"></textarea></div>
+<div class="cb-field full"><label class="cb-lbl">Lore <span class="cap-hint">(optional)</span></label><textarea class="cb-input" id="f-lore" placeholder="Add optional story or flavor text." oninput="U()"></textarea></div>
+<div class="cb-field"><label class="cb-lbl">5. Pressure <span class="cap-hint" id="f-pr-hint">(max: select materials)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider pr-slider" id="f-pr" min="0" max="3200" value="3200" step="50" oninput="U()"><span class="stat-val stat-val-pr" id="f-pr-v">3200</span><span class="stat-max" id="f-pr-m">/ 3200</span></div></div>
-<div class="cb-field"><label class="cb-lbl">Counter Pressure <span class="cap-hint" id="f-cp-hint">(max: select materials)</span></label>
+<div class="cb-field"><label class="cb-lbl">6. Counter Pressure <span class="cap-hint" id="f-cp-hint">(max: select materials)</span></label>
 <div class="stat-row"><input type="range" class="stat-slider cp-slider" id="f-cp" min="0" max="3200" value="2500" step="50" oninput="U()"><span class="stat-val stat-val-cp" id="f-cp-v">2500</span><span class="stat-max" id="f-cp-m">/ 3200</span></div></div>
-<div class="cb-field full"><label class="cb-lbl">Effect Text <span class="cap-hint">(this is an Effect Catalyst)</span></label><textarea class="cb-input" id="f-effect" placeholder="When this card is Fusion Spawned: destroy 1 Catalyst your opponent controls." oninput="U()"></textarea></div>
+<div class="cb-field"><label class="cb-lbl">7. Rank <span class="cap-hint">(auto = sum of materials)</span></label><input class="cb-input" id="f-level" readonly style="color:var(--amber)"></div>
+<div class="cb-field full resolution-field"><label class="cb-lbl">8. Catalyst Resolution</label><textarea class="cb-input" id="f-resolution" placeholder="State the Fusion's final timing, targets, conditions, and resolved outcome." oninput="U()"></textarea></div>
 </div>
 <div class="fusion-info">
 <span><span class="fi-label">Material PR cap:</span> <span class="fi-val" id="fi-pr" style="color:var(--flame)">—</span></span>
@@ -793,10 +837,19 @@ function forgeRaceChanged(id){
  U();
 }
 function forgeKinds(id){return [V(id+'-race'),V(id+'-skill')].filter(Boolean).join(', ');}
+function setCatalystBranch(id){
+ const effectClass=V(id+'-class'),isEffect=effectClass==='Effect';
+ $(id+'-effect-field').hidden=!isEffect;
+ $(id+'-lore-label').innerHTML=isEffect?'Lore <span class="cap-hint">(optional)</span>':'Lore <span class="cap-hint">(required for Normal)</span>';
+ const badge=$(id+'-class-badge'),rank=id==='c3'?'Rank 6–7':'Rank 1–4';
+ badge.textContent=`${effectClass} · ${rank}`;
+ badge.className=`cb-badge ${isEffect?'badge-effect':'badge-normal'}`;
+}
 function initForgeTree(){
  for(const id of ['c1','c2','c3','f']){
   forgeOptions($(id+'-align'),CTF_FORGE_TREE.alignments,'Hero');
   forgeAlignmentChanged(id);
+  if(id!=='f')setCatalystBranch(id);
  }
 }
 
@@ -1040,17 +1093,23 @@ function validate(){
   errs.push({ok:(fpr+fcp)<=4000,text:`Fusion Total: ${fpr+fcp} / 4,000`});
  }
 
- // Text fields
- ['c1','c2','c3'].forEach((m,i)=>errs.push({ok:!!V(m+'-lore').trim(),text:`C${i+1}: ${V(m+'-lore').trim()?'Lore set':'Lore required'}`}));
- errs.push({ok:!!V('f-effect').trim(),text:V('f-effect').trim()?'Fusion: Effect set':'Fusion: Effect required'});
- errs.push({ok:!!V('t-effect').trim(),text:V('t-effect').trim()?'Trick: Effect set':'Trick: Effect required'});
-
- // Canonical Alignment -> Race -> Skill path
- ['c1','c2','c3','f'].forEach(m=>{
-  const label=m==='f'?'Fusion':'C'+(m==='c1'?'1':m==='c2'?'2':'3');
+ // Canonical Alignment → Race → Skill → Effect Class branches
+ ['c1','c2','c3'].forEach((m,i)=>{
+  const label=`C${i+1}`,effectClass=V(m+'-class');
   const alignment=V(m+'-align'),race=V(m+'-race'),skill=V(m+'-skill');
   errs.push({ok:CTF_FORGE_TREE.validPath(alignment,race,skill),text:`${label}: ${alignment} / ${race} / ${skill} ${CTF_FORGE_TREE.validPath(alignment,race,skill)?'valid':'invalid'}`});
+  errs.push({ok:effectClass==='Normal'||effectClass==='Effect',text:`${label}: Effect Class ${effectClass||'required'}`});
+  if(effectClass==='Normal')errs.push({ok:!!V(m+'-lore').trim(),text:`${label}: ${V(m+'-lore').trim()?'Normal lore set':'Normal lore required'}`});
+  if(effectClass==='Effect')errs.push({ok:!!V(m+'-effect').trim(),text:`${label}: ${V(m+'-effect').trim()?'Effect Text set':'Effect Text required'}`});
+  errs.push({ok:!!V(m+'-resolution').trim(),text:`${label}: ${V(m+'-resolution').trim()?'Catalyst Resolution set':'Catalyst Resolution required'}`});
  });
+ const fusionPath=CTF_FORGE_TREE.validPath(V('f-align'),V('f-race'),V('f-skill'));
+ errs.push({ok:fusionPath,text:`Fusion: ${V('f-align')} / ${V('f-race')} / ${V('f-skill')} ${fusionPath?'valid':'invalid'}`});
+ errs.push({ok:V('f-class')==='Fusion',text:'Fusion: Effect Class locked to Fusion'});
+ errs.push({ok:!!V('f-rules').trim(),text:V('f-rules').trim()?'Fusion: Rules / Requirements set':'Fusion: Rules / Requirements required'});
+ errs.push({ok:!!V('f-effect').trim(),text:V('f-effect').trim()?'Fusion: Effect set':'Fusion: Effect required'});
+ errs.push({ok:!!V('f-resolution').trim(),text:V('f-resolution').trim()?'Fusion: Catalyst Resolution set':'Fusion: Catalyst Resolution required'});
+ errs.push({ok:!!V('t-effect').trim(),text:V('t-effect').trim()?'Trick: Effect set':'Trick: Effect required'});
 
  // Submitter
  errs.push({ok:!!V('sub-name').trim(),text:V('sub-name').trim()?'Name provided':'Name required'});
@@ -1078,8 +1137,9 @@ function validate(){
 function renderPreview(){
  const cards=[];
  ['c1','c2','c3'].forEach((m,i)=>{
-  cards.push({name:V(m+'-name')||`Catalyst #${i+1}`,type:`Normal Catalyst · ${V(m+'-align')} · Rank ${N(m+'-level')}`,
-   kinds:forgeKinds(m),pr:N(m+'-pr'),cp:N(m+'-cp'),desc:V(m+'-lore'),cls:'',bar:'var(--flame)'});
+  const effectClass=V(m+'-class'),details=effectClass==='Effect'?V(m+'-effect'):V(m+'-lore');
+  cards.push({name:V(m+'-name')||`Catalyst #${i+1}`,type:`${effectClass} Catalyst · ${V(m+'-align')} · Rank ${N(m+'-level')}`,
+   kinds:forgeKinds(m),pr:N(m+'-pr'),cp:N(m+'-cp'),desc:details,cls:effectClass==='Effect'?'effect-card':'',bar:effectClass==='Effect'?'var(--ember)':'var(--flame)'});
  });
  const matNames=[...mats].map(m=>V(m+'-name')||'?');
  cards.push({name:V('f-name')||'Fusion The Great',type:`Great Fusion · ${V('f-align')} · Rank ${V('f-level')}`,
@@ -1142,16 +1202,35 @@ async function submitCards(){
  const sub={submission_id:stableSubmissionId,submitter:{name:V('sub-name'),email:V('sub-email')},timestamp:new Date().toISOString(),cards:[]};
 
  ['c1','c2','c3'].forEach((m,i)=>{
-  sub.cards.push({slot:`Catalyst ${i+1}`,type:'Normal Catalyst',effectClass:'Normal',name:V(m+'-name'),rank:N(m+'-level'),alignment:V(m+'-align'),race:V(m+'-race'),skill:V(m+'-skill'),kinds:forgeKinds(m),pressure:N(m+'-pr'),counterPressure:N(m+'-cp'),lore:V(m+'-lore'),text:V(m+'-lore')});
+  const effectClass=V(m+'-class');
+  sub.cards.push({slot:`Catalyst ${i+1}`,type:`${effectClass} Catalyst`,effectClass,name:V(m+'-name'),alignment:V(m+'-align'),race:V(m+'-race'),skill:V(m+'-skill'),kinds:forgeKinds(m),
+   effectText:effectClass==='Effect'?V(m+'-effect'):null,lore:V(m+'-lore')||null,pressure:N(m+'-pr'),counterPressure:N(m+'-cp'),rank:N(m+'-level'),resolution:V(m+'-resolution'),
+   text:effectClass==='Effect'?V(m+'-effect'):V(m+'-lore')});
  });
 
  const matNames=[...mats].map(m=>V(m+'-name'));
- sub.cards.push({slot:'Fusion (Great)',type:'Great Effect Fusion Catalyst',effectClass:'Fusion',name:V('f-name'),rank:N('f-level'),alignment:V('f-align'),race:V('f-race'),skill:V('f-skill'),kinds:forgeKinds('f'),pressure:N('f-pr'),counterPressure:N('f-cp'),effectText:V('f-effect'),text:V('f-effect'),materials:matNames});
+ sub.cards.push({slot:'Fusion (Great)',type:'Great Fusion Catalyst',effectClass:'Fusion',name:V('f-name'),alignment:V('f-align'),race:V('f-race'),skill:V('f-skill'),kinds:forgeKinds('f'),
+  fusionRules:V('f-rules'),effectText:V('f-effect'),lore:V('f-lore')||null,pressure:N('f-pr'),counterPressure:N('f-cp'),rank:N('f-level'),resolution:V('f-resolution'),text:V('f-effect'),materials:matNames});
  sub.cards.push({slot:'Trick Card',type:trickType,name:V('t-name'),text:V('t-effect')});
  sub.poolUsed={pressure:N('c1-pr')+N('c2-pr')+N('c3-pr'),counterPressure:N('c1-cp')+N('c2-cp')+N('c3-cp')};
 
  // ── Build mailto URL BEFORE any async ops (user-gesture context required) ──
- const emailBody=sub.cards.map(c=>`--- ${c.slot} ---\nName: ${c.name}\nType: ${c.type}\n${c.rank?'Rank: '+c.rank+'\n':''}${c.alignment?'Alignment: '+c.alignment+'\n':''}${c.race?'Race: '+c.race+'\nSkill: '+c.skill+'\n':''}${c.pressure!==undefined?'Pressure: '+c.pressure+'\nCounter Pressure: '+c.counterPressure+'\n':''}${c.materials?'Materials: '+c.materials.join(' + ')+'\n':''}Text: ${c.text}`).join('\n\n');
+ const emailBody=sub.cards.map(c=>{
+  const lines=[`--- ${c.slot} ---`,`Name: ${c.name}`,`Type: ${c.type}`];
+  if(c.alignment)lines.push(`Alignment: ${c.alignment}`);
+  if(c.race)lines.push(`Race: ${c.race}`);
+  if(c.skill)lines.push(`Skill: ${c.skill}`);
+  if(c.effectClass)lines.push(`Effect Class: ${c.effectClass}`);
+  if(c.fusionRules)lines.push(`Fusion Rules / Requirements: ${c.fusionRules}`);
+  if(c.effectText)lines.push(`Effect Text: ${c.effectText}`);
+  if(c.lore)lines.push(`Lore: ${c.lore}`);
+  if(c.pressure!==undefined)lines.push(`Pressure: ${c.pressure}`,`Counter Pressure: ${c.counterPressure}`);
+  if(c.rank)lines.push(`Rank: ${c.rank}`);
+  if(c.resolution)lines.push(`Catalyst Resolution: ${c.resolution}`);
+  if(c.materials)lines.push(`Materials: ${c.materials.join(' + ')}`);
+  if(!c.effectClass)lines.push(`Text: ${c.text}`);
+  return lines.join('\n');
+ }).join('\n\n');
  const subject=encodeURIComponent('Submit Cards');
  const emailBodyEncoded=encodeURIComponent(`CARRY THE FLAME — FORGE Card Submission\nBy: ${V('sub-name')} (${V('sub-email')})\nDate: ${sub.timestamp}\nPool: ${sub.poolUsed.pressure}/4500 PR · ${sub.poolUsed.counterPressure}/4500 CP\n\n${emailBody}\n\n--- END ---`);
  const mailtoUrl=`mailto:changethewrld@outlook.com?subject=${subject}&body=${emailBodyEncoded}`;
@@ -1192,19 +1271,23 @@ async function submitCards(){
   catalyst_1_name:V('c1-name'), catalyst_1_rank:N('c1-level'), catalyst_1_level:N('c1-level'),
   catalyst_1_alignment:V('c1-align'), catalyst_1_kinds:forgeKinds('c1'), catalyst_1_race:V('c1-race'), catalyst_1_skill:V('c1-skill'),
   catalyst_1_pressure:N('c1-pr'), catalyst_1_cp:N('c1-cp'), catalyst_1_lore:V('c1-lore'),
+  catalyst_1_effect_class:V('c1-class'), catalyst_1_effect:V('c1-effect'), catalyst_1_resolution:V('c1-resolution'),
   // Catalyst 2
   catalyst_2_name:V('c2-name'), catalyst_2_rank:N('c2-level'), catalyst_2_level:N('c2-level'),
   catalyst_2_alignment:V('c2-align'), catalyst_2_kinds:forgeKinds('c2'), catalyst_2_race:V('c2-race'), catalyst_2_skill:V('c2-skill'),
   catalyst_2_pressure:N('c2-pr'), catalyst_2_cp:N('c2-cp'), catalyst_2_lore:V('c2-lore'),
+  catalyst_2_effect_class:V('c2-class'), catalyst_2_effect:V('c2-effect'), catalyst_2_resolution:V('c2-resolution'),
   // Catalyst 3
   catalyst_3_name:V('c3-name'), catalyst_3_rank:N('c3-level'), catalyst_3_level:N('c3-level'),
   catalyst_3_alignment:V('c3-align'), catalyst_3_kinds:forgeKinds('c3'), catalyst_3_race:V('c3-race'), catalyst_3_skill:V('c3-skill'),
   catalyst_3_pressure:N('c3-pr'), catalyst_3_cp:N('c3-cp'), catalyst_3_lore:V('c3-lore'),
+  catalyst_3_effect_class:V('c3-class'), catalyst_3_effect:V('c3-effect'), catalyst_3_resolution:V('c3-resolution'),
   // Fusion
   fusion_name:V('f-name'), fusion_rank:N('f-level'), fusion_level:V('f-level'),
   fusion_alignment:V('f-align'), fusion_kinds:forgeKinds('f'), fusion_race:V('f-race'), fusion_skill:V('f-skill'),
   fusion_pressure:N('f-pr'), fusion_cp:N('f-cp'),
   fusion_effect:V('f-effect'), fusion_materials:matNames.join(' + '),
+  fusion_effect_class:'Fusion', fusion_rules:V('f-rules'), fusion_lore:V('f-lore'), fusion_resolution:V('f-resolution'),
   // Trick
   trick_name:V('t-name'), trick_type:trickType, trick_effect:V('t-effect'),
   // Pool totals
