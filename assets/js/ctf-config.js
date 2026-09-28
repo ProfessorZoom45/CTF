@@ -37,6 +37,9 @@
       great: {
         maxPerName: 1,
         maxPerDeck: 5,
+        maxPerMainDeck: 5,
+        maxPerFusionDeck: 5,
+        maxAcrossMainAndFusion: 10,
         cannotEnterBox: true,
         cannotBeExtracted: true,
         cannotPayEndPhaseCost: false
@@ -55,7 +58,10 @@
         opponentDrawsPerSpecialSummon: 1,
         appliesFromSummonNumber: 1,
         libraCountsAsOneSpecialSummon: true,
-        summary: 'Every Special Spawn causes the opponent to draw 1 card. Libra Spawn counts as 1 Special Spawn. Hard cap: 5 per turn.'
+        triggersAfterSuccessfulSpawn: true,
+        failedOrNegatedSpawnsCount: false,
+        failedOrNegatedSpawnsDraw: false,
+        summary: 'After every successful Special Spawn, the opponent draws 1 card — including effect-based Special Spawns, Fusion Spawns, and Libra Spawns. Unsuccessful or negated Spawns do not draw and do not count. A whole Libra Spawn counts as 1 Special Spawn. Hard cap: 5 per turn.'
       },
       libra: {
         requiresNormalCatalysts: true,
@@ -68,7 +74,7 @@
         treatedAsTricksWhileInZone: true,
         cannotBeEndPhaseSacrifice: true,
         destroyedScaleDoesNotRemoveExistingSummons: true,
-        summary: 'Place Normal Catalysts in the two outermost Libra Zones. Their Levels become your Scales. You may Libra Spawn up to 5 Catalysts whose Levels are strictly between those Scales. The whole Libra Spawn counts as exactly 1 Special Spawn and causes exactly 1 Shotgun draw total.'
+        summary: 'Place Normal Catalysts in the two outermost Libra Zones. Their Ranks become your Scales. You may Libra Spawn up to 5 Catalysts whose Ranks are strictly between those Scales. The whole Libra Spawn counts as exactly 1 Special Spawn and causes exactly 1 Shotgun draw total.'
       },
       assertions: {
         sideDeckOptionalRange: '0–15',
@@ -127,7 +133,9 @@
     get handLimit(){ return `${CTF_CONFIG.game.handLimit}`; },
     get phaseCount(){ return `${CTF_CONFIG.game.phases.length}`; },
     get phaseList(){ return CTF_CONFIG.game.phases.join(' → '); },
-    get greatCap(){ return `${CTF_CONFIG.game.great.maxPerDeck}`; },
+    get greatCap(){ return `${CTF_CONFIG.game.great.maxPerMainDeck}`; },
+    get greatFusionCap(){ return `${CTF_CONFIG.game.great.maxPerFusionDeck}`; },
+    get greatCombinedCap(){ return `${CTF_CONFIG.game.great.maxAcrossMainAndFusion}`; },
     get shotgunSummary(){ return CTF_CONFIG.game.shotgun.summary; },
     get endTurnSummary(){ const a=CTF_CONFIG.game.endPhase.actions.endTurn; return `${a.cost}. ${a.effect} ${a.notes}`; },
     get extractionSummary(){ const a=CTF_CONFIG.game.endPhase.actions.extraction; return `${a.cost}. ${a.effect} ${a.notes}`; },
@@ -135,7 +143,7 @@
     get destroyTrickSummary(){ const a=CTF_CONFIG.game.endPhase.actions.destroyTrick; return `${a.cost}. ${a.effect} ${a.notes}`; },
     get libraSummary(){ return CTF_CONFIG.game.libra.summary; },
     get logicTestAssumptions(){ return [
-      `Side Deck: ${CTF_CONFIG.game.assertions.sideDeckOptionalRange}`,
+      `Substitute Deck: ${CTF_CONFIG.game.assertions.sideDeckOptionalRange}`,
       'Shotgun: every Special Spawn draws 1 for the opponent',
       'END TURN: locked beta path and always legal',
       `Opening hand: ${CTF_CONFIG.game.startingHand}`,

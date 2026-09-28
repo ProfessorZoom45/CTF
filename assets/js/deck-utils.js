@@ -105,13 +105,17 @@
       if (card.great) greatCount += 1;
     }
 
+    let fusionGreatCount = 0;
     for (const id of d.fusion){
+      counts.set(id, (counts.get(id) || 0) + 1);
       const card = byId.get(id);
       if (!card){ missing.push(id); continue; }
       if (card.cardType !== 'Fusion') errors.push(`${card.name} is in the Fusion Deck but is not a Fusion card.`);
+      if (card.great) fusionGreatCount += 1;
     }
 
     for (const id of d.side){
+      counts.set(id, (counts.get(id) || 0) + 1);
       const card = byId.get(id);
       if (!card){ missing.push(id); continue; }
     }
@@ -125,8 +129,10 @@
 
     if (d.main.length < (DECK_CFG.mainMin || 40) || d.main.length > (DECK_CFG.mainMax || 60)) errors.push(`Main Deck must contain ${(DECK_CFG.mainMin || 40)}–${(DECK_CFG.mainMax || 60)} cards. Current: ${d.main.length}.`);
     if (d.fusion.length > (DECK_CFG.fusionMax || 15)) errors.push(`Fusion Deck cannot exceed ${(DECK_CFG.fusionMax || 15)} cards. Current: ${d.fusion.length}.`);
-    if (greatCount > (GREAT_CFG.maxPerDeck || 5)) errors.push(`Main Deck cannot contain more than ${(GREAT_CFG.maxPerDeck || 5)} Great Cards. Current: ${greatCount}.`);
-    if (d.side.length < (DECK_CFG.sideMin || 0) || d.side.length > (DECK_CFG.sideMax || 15)) errors.push(`Side Deck must contain ${(DECK_CFG.sideMin || 0)}–${(DECK_CFG.sideMax || 15)} cards. Current: ${d.side.length}.`);
+    if (greatCount > (GREAT_CFG.maxPerMainDeck || GREAT_CFG.maxPerDeck || 5)) errors.push(`Main Deck cannot contain more than ${(GREAT_CFG.maxPerMainDeck || GREAT_CFG.maxPerDeck || 5)} Great Cards. Current: ${greatCount}.`);
+    if (fusionGreatCount > (GREAT_CFG.maxPerFusionDeck || 5)) errors.push(`Fusion Deck cannot contain more than ${(GREAT_CFG.maxPerFusionDeck || 5)} Great Fusion Catalysts. Current: ${fusionGreatCount}.`);
+    if (greatCount + fusionGreatCount > (GREAT_CFG.maxAcrossMainAndFusion || 10)) errors.push(`Main and Fusion Decks together cannot exceed ${(GREAT_CFG.maxAcrossMainAndFusion || 10)} Great Cards.`);
+    if (d.side.length < (DECK_CFG.sideMin || 0) || d.side.length > (DECK_CFG.sideMax || 15)) errors.push(`Substitute Deck must contain ${(DECK_CFG.sideMin || 0)}–${(DECK_CFG.sideMax || 15)} cards. Current: ${d.side.length}.`);
     if (missing.length) errors.push(`Missing or unknown card IDs: ${missing.slice(0, 8).join(', ')}${missing.length > 8 ? '…' : ''}`);
 
     return {
@@ -139,7 +145,8 @@
         fusion: d.fusion.length,
         side: d.side.length,
         greatCount,
-        uniqueMain: counts.size
+        fusionGreatCount,
+        uniqueMain: new Set(d.main).size
       }
     };
   }
