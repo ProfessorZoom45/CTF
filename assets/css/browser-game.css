@@ -18,13 +18,19 @@
 
 .ctf-playmat {
   --playmat-width: 40rem;
-  --playmat-gap: clamp(3px, 1vw, 8px);
+  /* Scale the official 506px row as a whole, including its gaps and corners. */
+  --playmat-row-width: min(100cqw, var(--playmat-width), var(--playmat-width-limit, 100cqw));
+  --playmat-unit: calc(var(--playmat-row-width) / 506);
+  --playmat-card-width: calc(72 * var(--playmat-unit));
+  --playmat-side-width: calc(58 * var(--playmat-unit));
+  --playmat-card-height: calc(96 * var(--playmat-unit));
   position: relative;
   isolation: isolate;
+  container-type: inline-size;
   display: grid;
   justify-items: center;
   align-content: center;
-  gap: var(--playmat-gap);
+  gap: 0;
   padding: clamp(.55rem, 2vw, 1.15rem);
   border: 1px solid #765139;
   border-radius: clamp(.45rem, 1.5vw, 1rem);
@@ -47,19 +53,22 @@
   line-height: 1.15;
 }
 
-.ctf-playmat :is(.playmat-side, .playmat-row, .playmat-divide, .playmat-seat) {
-  width: min(100%, var(--playmat-width));
+.ctf-playmat :is(.playmat-side, .playmat-row, .playmat-seat) {
+  width: var(--playmat-row-width);
   min-width: 0;
 }
 
 .ctf-playmat .playmat-side {
   display: grid;
-  gap: var(--playmat-gap);
+  row-gap: calc(4 * var(--playmat-unit));
   margin: 0;
   padding: 0;
   border: 0;
   background: none;
 }
+
+.ctf-playmat > :is(.playmat-side,.playmat-row,.playmat-seat-label) { margin-block-start: calc(4 * var(--playmat-unit)); }
+.ctf-playmat > .playmat-divide { margin-block-start: calc(6 * var(--playmat-unit)); }
 
 .playmat-seat {
   display: flex;
@@ -86,19 +95,19 @@
 
 .ctf-playmat .playmat-row {
   display: grid;
-  grid-template-columns: minmax(0, .8fr) repeat(5, minmax(0, 1fr)) minmax(0, .8fr);
-  gap: var(--playmat-gap);
+  grid-template-columns: var(--playmat-side-width) repeat(5, var(--playmat-card-width)) var(--playmat-side-width);
+  grid-template-rows: var(--playmat-card-height);
+  column-gap: calc(5 * var(--playmat-unit));
   align-items: stretch;
 }
 
 .ctf-playmat .playmat-row > * { min-width: 0; }
-.ctf-playmat .playmat-row > .playmat-slot { align-self: stretch; }
-.ctf-playmat .playmat-row > :is(.catalyst-zone, .trick-zone) { aspect-ratio: 1 / 1.21; }
 
 .ctf-playmat .playmat-stack {
   display: grid;
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: var(--playmat-gap);
+  grid-template-rows: repeat(2, calc(47 * var(--playmat-unit)));
+  gap: 0;
+  align-self: start;
   min-width: 0;
 }
 
@@ -107,6 +116,9 @@
   --slot-light: #30323b;
   --slot-rim: #747787;
   --slot-label: #edeef3;
+  --zone-radius: calc(6 * var(--playmat-unit));
+  --bevel-radius: calc(4 * var(--playmat-unit));
+  --zone-border: max(1px, calc(2.5 * var(--playmat-unit)));
   position: relative;
   display: grid;
   place-content: center;
@@ -117,13 +129,35 @@
   min-width: 0;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--slot-rim);
-  border-radius: clamp(3px, .7vw, 8px);
+  border: var(--zone-border) solid var(--slot-rim);
+  border-radius: var(--zone-radius);
   background: linear-gradient(150deg, var(--slot-light), var(--slot-dark) 74%);
-  box-shadow: inset 0 0 0 2px #fff0d217, inset 0 0 1rem #0005, 0 1px 3px #000a;
+  box-shadow: inset 0 0 1rem #0005, 0 1px 3px #000a;
   color: var(--slot-label);
   text-align: center;
 }
+
+body.board-clarity .ctf-playmat .zone { border-width: var(--zone-border); }
+
+.ctf-playmat .playmat-slot:not(.is-occupied)::after {
+  content: "";
+  position: absolute;
+  inset: calc(3 * var(--playmat-unit));
+  border: 1px solid #fff0d217;
+  border-radius: var(--bevel-radius);
+  pointer-events: none;
+}
+
+.ctf-playmat .playmat-stack > :first-child {
+  border-bottom-width: max(1px, var(--playmat-unit));
+  border-radius: var(--zone-radius) var(--zone-radius) 0 0;
+}
+.ctf-playmat .playmat-stack > :last-child {
+  border-top-width: max(1px, var(--playmat-unit));
+  border-radius: 0 0 var(--zone-radius) var(--zone-radius);
+}
+.ctf-playmat .playmat-stack > :first-child:not(.is-occupied)::after { border-radius: var(--bevel-radius) var(--bevel-radius) 0 0; }
+.ctf-playmat .playmat-stack > :last-child:not(.is-occupied)::after { border-radius: 0 0 var(--bevel-radius) var(--bevel-radius); }
 
 .ctf-playmat .catalyst-zone {
   --slot-dark: #4b190e;
@@ -163,8 +197,10 @@ body.board-clarity .ctf-playmat .zone-label { color: var(--slot-label); }
 
 .playmat-divide {
   display: grid;
-  grid-template-columns: 1fr minmax(0, 6rem) minmax(0, 6rem) 1fr;
-  gap: var(--playmat-gap);
+  width: min(100%, calc(844 * var(--playmat-unit)));
+  grid-template-columns: minmax(0, 1fr) repeat(2, calc(110 * var(--playmat-unit))) minmax(0, 1fr);
+  grid-template-rows: calc(52 * var(--playmat-unit));
+  column-gap: calc(14 * var(--playmat-unit));
   align-items: center;
 }
 
@@ -175,7 +211,11 @@ body.board-clarity .ctf-playmat .zone-label { color: var(--slot-label); }
   box-shadow: 0 0 7px #f8744966;
 }
 .playmat-divide::after { transform: scaleX(-1); }
-.ctf-playmat .playmat-divide > .playmat-slot { align-self: stretch; min-height: 2.15rem; }
+.ctf-playmat .playmat-divide > .playmat-slot {
+  --zone-radius: calc(5 * var(--playmat-unit));
+  --bevel-radius: calc(3 * var(--playmat-unit));
+  align-self: stretch;
+}
 .ctf-playmat .playmat-divide .zone-label { font-size: clamp(.54rem, 1.05vw, .74rem); }
 .ctf-playmat .playmat-divide .zone-label[data-zone-short] { font-size: 0; }
 .ctf-playmat .playmat-divide .zone-label[data-zone-short]::after { content: attr(data-zone-short); font-size: clamp(.54rem, 1.05vw, .74rem); }
@@ -311,15 +351,14 @@ body.card-art-off .ctf-playmat .playmat-card:has(.playmat-card-art)::before { di
 #game .ctf-playmat { --playmat-width: min(39rem, max(21rem, 77vh)); flex: 1 0 auto; margin: .3rem clamp(.25rem, 1vw, .85rem); }
 #game .ctf-playmat .field-card:not(.mini) .fc-name { font-size: clamp(.52rem, 1vw, .78rem); }
 #game .ctf-playmat .field-card:not(.mini) .fc-stats { font-size: clamp(.48rem, .87vw, .67rem); }
-body.compact-zones #game .ctf-playmat { --playmat-width: 23rem; }
+body.compact-zones #game .ctf-playmat { --playmat-width-limit: 23rem; }
 
 @media (max-width: 480px) {
-  .ctf-playmat { --playmat-gap: 3px; padding: .42rem; }
+  .ctf-playmat { padding: .42rem; }
   .playmat-seat { column-gap: .5rem; }
   .playmat-seat p { font-size: .69rem; }
   .ctf-playmat .playmat-pile-summary { gap: .1rem; }
   .playmat-pile-summary::after { display: none; }
-  .ctf-playmat .playmat-divide { grid-template-columns: 1fr 4.2rem 4.2rem 1fr; }
   .ctf-playmat .is-occupied::before { inset: -1px; padding: 2px; }
   .ctf-playmat .zone-label[data-zone-short] { font-size: 0; }
   .ctf-playmat .zone-label[data-zone-short]::after { content: attr(data-zone-short); font-size: .57rem; }
@@ -422,11 +461,10 @@ body[data-ctf-page='play'][data-ctf-duel='local'].ctf-duel-fullscreen #game { he
   #game .score-bar.opp { grid-area: opponent-score; }
   #game .opp-hand { display: none; }
   #game .compact-hand-count { display: inline-flex; }
-  #game .ctf-playmat { grid-area: playmat; align-content: start; row-gap: 2px; margin-block: .15rem; overflow: auto; }
+  #game .ctf-playmat { grid-area: playmat; align-content: start; margin-block: .15rem; overflow: auto; }
   #game .score-bar.me { grid-area: player-score; }
   #game .my-hand { grid-area: player-hand; }
-  #game .ctf-playmat, .friend-duel-layout .ctf-playmat { --playmat-width: min(24rem, max(17rem, 80dvh)); --playmat-gap: 3px; padding: .3rem; }
-  .ctf-playmat .playmat-row > :is(.catalyst-zone, .trick-zone) { aspect-ratio: auto; min-height: clamp(1.55rem, 9dvh, 2.55rem); }
+  #game .ctf-playmat, .friend-duel-layout .ctf-playmat { --playmat-width: clamp(11.5rem, calc((100dvh - 10.6rem) * 1.02), 25rem); padding: .3rem; }
   #game .ctf-playmat .playmat-title, .friend-duel-layout .playmat-title { font-size: .9rem; }
   #game .ctf-playmat .playmat-seat-label { font-size: .66rem; }
   #game .my-hand { position: static; min-height: 3.85rem; padding: 4px; }
@@ -443,12 +481,13 @@ body[data-ctf-page='play'][data-ctf-duel='local'].ctf-duel-fullscreen #game { he
   .duel-local-display .act-btn { padding: .2rem; font-size: .68rem; }
   #game .sidebar :is(.helper-panel,.legal-actions-panel,.battle-coach) { max-height: none; }
   #game .ctf-playmat :is(.zone-label,.sz-label), .friend-duel-layout .ctf-playmat :is(.zone-label,.sz-label) { font-size: .59rem; }
-  #game .ctf-playmat .playmat-stack .zone-label[data-zone-short],
-  .friend-duel-layout .ctf-playmat .playmat-stack .zone-label[data-zone-short] { font-size: 0; }
-  .ctf-playmat .playmat-stack .zone-label[data-zone-short]::after { content: attr(data-zone-short); font-size: .59rem; }
+  #game .ctf-playmat .zone-label[data-zone-short],
+  .friend-duel-layout .ctf-playmat .zone-label[data-zone-short] { font-size: 0; }
+  .ctf-playmat .zone-label[data-zone-short]::after { content: attr(data-zone-short); font-size: .55rem; }
   #game .ctf-playmat .playmat-box { display: flex; flex-direction: row-reverse; gap: .12rem; }
   #game .ctf-playmat .playmat-box .sz-count { font-size: .64rem; }
-  .ctf-playmat .playmat-divide > .playmat-slot { min-height: 1.55rem; }
+  .ctf-playmat .playmat-pile-summary { display: flex; align-items: center; justify-content: center; gap: .12rem; }
+  .ctf-playmat .playmat-pile-summary::after { display: none; }
   .ctf-playmat .playmat-divide .playmat-count { font-size: .69rem; }
   .friend-duel h1 { font-size: 1.25rem; }
   .friend-duel-header > div:first-child { display: flex; align-items: baseline; gap: .45rem; flex-wrap: wrap; }
