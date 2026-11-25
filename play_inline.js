@@ -191,6 +191,7 @@ function applySettings(){
   document.body.classList.toggle('compact-zones',    s.compact);
   document.body.classList.toggle('board-clarity',   s.clarity !== false);
   document.body.classList.toggle('watch-mode',      !!s.watchMode);
+  if (s.watchMode) closeCardText();
   document.documentElement.style.fontSize = (s.scale / 100 * 16) + 'px';
   updateWatchModeButton?.(s.watchMode);
   // Gate the Settings > Watch Mode row for seated players (always) and tutorials (always).
@@ -323,6 +324,27 @@ function getTutorialDeck(){
 function getTutorialStepData(){ return TUTORIAL_STEPS[Math.min(Math.max(tutorialStep,0), TUTORIAL_STEPS.length - 1)]; }
 
 // ─── Per-phase guide ──────────────────────────────────────────────────────
+const WALKTHROUGH_PHASES = ['turnStart','draw','ignition','action','battle','resolution','end'];
+let walkthroughReview = null;
+
+function renderWalkthroughRail() {
+  const interactive = tutorialActive || isVsAITutorialMode;
+  $('phase-list').innerHTML = PHASE_NAMES.map((name, i) => {
+    const classes = `phase-item${i === GS.phase ? ' active' : ''}${i < GS.phase ? ' done' : ''}`;
+    const current = i === GS.phase ? ' aria-current="step"' : '';
+    return interactive
+      ? `<button type="button" class="${classes} phase-review-button" aria-label="Review phase: ${name}"${current} aria-pressed="${walkthroughReview === i}" onclick="reviewWalkthroughPhase(${i})">${i + 1}. ${name}</button>`
+      : `<div class="${classes}"${current}>${i + 1}. ${name}</div>`;
+  }).join('');
+}
+
+function reviewWalkthroughPhase(index) {
+  walkthroughReview = index === GS.phase ? null : index;
+  renderPhaseGuide();
+  renderWalkthroughRail();
+  $('phase-list').querySelectorAll('button')[index]?.focus({preventScroll:true});
+}
+
 function renderPhaseGuide(){
   const banner = document.getElementById('tutorial-phase-banner');
   if (!banner) return;
@@ -334,26 +356,44 @@ function renderPhaseGuide(){
     ? PHASE_NAMES
     : ['Turn Start','Draw','Ignition','Action','Battle','Resolution','End'];
   const copy = {
-    turnStart:  'Turn begins. Any start-of-turn effects resolve here. Press Continue to draw.',
+    turnStart:  'Resolve start-of-turn effects, then go to Draw.',
     draw:       'Draw one card from your Main Deck. If the deck is empty, skip the draw and keep playing.',
-    ignition:   'Ignition Phase. Revives, upkeep and per-turn effects activate. Press Continue to open Action Phase.',
-    action:     'Normal Spawn, set cards, activate Palm Tricks, or use a legal Special Spawn. Continue to Battle when ready.',
+    ignition:   'Handle any revives, upkeep, or per-turn effects before you play cards.',
+    action:     'Select a card in your hand, then choose a zone or an action. Continue when you’re ready to leave this phase.',
     battle:     GS._p1BattleSkipPending
       ? 'The first player skips Battle on their first turn. Continue to Resolution.'
-      : 'Attack with a Catalyst in Pressure position. A direct attack normally requires an empty opposing field. Continue to Resolution when ready.',
-    resolution: 'You may change the position of one eligible Catalyst that did not attack. Continue to End Phase when ready.',
+      : 'Attack with a Catalyst in Pressure position. A direct attack usually requires an empty opposing field.',
+    resolution: 'You may change the position of one eligible Catalyst that did not attack.',
     end:        'Choose Extraction, Rescue, Destroy Trick, or free End Turn. Discard to seven if needed before the turn passes.'
   };
   const phaseKey = GS.phaseName || 'turnStart';
-  const displayName = names[GS.phase] || phaseKey;
+  const guided = tutorialActive || isVsAITutorialMode;
+  const reviewing = guided && walkthroughReview !== null && walkthroughReview !== GS.phase;
+  const displayPhase = reviewing ? walkthroughReview : GS.phase || 0;
+  const displayName = names[displayPhase] || phaseKey;
   const isMyTurn = GS.activePlayer === myPlayer;
+  const buttons = {
+    turnStart: ['Go to Draw', 'doAdvance()'],
+    draw: GS.players[myPlayer]._drawPhaseResolved ? ['Go to Ignition', 'doAdvance()']
+      : [GS.players[myPlayer].deck.length ? 'Draw from Main Deck' : 'Skip empty draw', 'doDrawPhaseClick()'],
+    ignition: ['Go to Action','doAdvance()'], action: ['Go to Battle','doAdvance()'],
+    battle: ['Go to Resolution', GS._p1BattleSkipPending ? 'dismissP1SkipBattle()' : 'doAdvance()'],
+    resolution: ['Go to End','doAdvance()'], end: ['Show End Phase choices','openEndPhaseModal()']
+  };
+  const next = guided && !reviewing && isMyTurn && !GS.waitingForResponse && !GS.pendingDiscard && !attackMode
+    ? buttons[phaseKey] : null;
+  const title = tutorialActive ? getTutorialStepData().title.replace(/^Match \d+ — /, '') : '';
+  const match = title ? `<span class="tpb-lesson">Match ${tutorialStep + 1} of ${TUTORIAL_STEPS.length} · ${title}</span>` : '';
   banner.style.display = 'block';
-  banner.innerHTML = (
-    '<div class="tpb-head"><span class="tpb-step">Phase ' + ((GS.phase||0)+1) + ' / 7</span>'
-    + '<span class="tpb-name">' + displayName + '</span></div>'
-    + '<div class="tpb-copy">' + (copy[phaseKey] || 'Press Continue when ready.') + '</div>'
-    + (isMyTurn ? '' : '<div class="tpb-wait">Opponent’s turn.</div>')
-  );
+  banner.dataset.guided = guided ? 'true' : 'false';
+  banner.innerHTML = `${match}<div class="tpb-head"><span class="tpb-step">${reviewing ? 'Review' : 'Phase'} ${displayPhase + 1} / 7</span>
+    <span class="tpb-name">${displayName}</span></div>
+    <p class="tpb-copy">${copy[WALKTHROUGH_PHASES[displayPhase]]}</p>
+    ${reviewing ? `<button type="button" class="act-btn tpb-review-back" onclick="reviewWalkthroughPhase(${GS.phase})">Return to ${names[GS.phase]}</button>` : ''}
+    ${!reviewing && GS.waitingForResponse ? '<p class="tpb-wait">Finish the Chain in Actions to continue.</p>' : ''}
+    ${!reviewing && GS.pendingDiscard && isMyTurn ? '<p class="tpb-wait">Tap cards in your hand to discard to seven.</p>' : ''}
+    ${!reviewing && !isMyTurn && !GS.waitingForResponse ? '<p class="tpb-wait">Opponent’s turn.</p>' : ''}
+    ${next ? `<button type="button" class="act-btn act-btn-fire tpb-primary" onclick="${next[1]}">${next[0]}</button>` : ''}`;
 }
 
 function renderTutorialPanel(){
@@ -365,12 +405,20 @@ function renderTutorialPanel(){
   $('tutorial-title').textContent = `${data.title} (${tutorialStep + 1}/${TUTORIAL_STEPS.length})`;
   $('tutorial-copy').textContent = data.copy;
   const prog = $('tutorial-progress');
-  if (prog) prog.innerHTML = TUTORIAL_STEPS.map((_, idx) => `<span class="tutorial-step-dot${idx < tutorialStep ? ' done' : ''}${idx === tutorialStep ? ' active' : ''}">${idx + 1}</span>`).join('');
+  if (prog) prog.innerHTML = TUTORIAL_STEPS.map((step, idx) => `<button type="button" class="act-btn act-btn-ghost tutorial-lesson-link" ${idx === tutorialStep ? 'aria-current="true" disabled' : ''} onclick="switchWalkthroughMatch(${idx})">${step.title}</button>`).join('');
   $('tutorial-points').innerHTML = data.points.map(point => `<li>${point}</li>`).join('');
   const nextBtn = $('tutorial-next-btn');
   const exitBtn = $('tutorial-exit-btn');
   if (nextBtn) { nextBtn.style.display = ''; nextBtn.textContent = tutorialStep >= TUTORIAL_STEPS.length - 1 ? 'Finish Tutorial' : 'Next Tutorial Match'; }
   if (exitBtn) exitBtn.style.display = '';
+}
+async function switchWalkthroughMatch(index) {
+  if (!tutorialActive || index === tutorialStep || !TUTORIAL_STEPS[index]) return;
+  if (!GS.gameOver && !await ctfConfirm('Start the selected practice match? This will replace the current practice duel.', 'Switch practice match?')) return;
+  tutorialStep = index;
+  saveTutorialProgress();
+  $('tutorial-panel').open = false;
+  replayTutorialMatch();
 }
 function startTutorial(reset=false){
   if (reset) localStorage.setItem(TUTORIAL_KEY, '0');
@@ -395,8 +443,6 @@ function startTutorial(reset=false){
   } catch (e) { /* non-fatal */ }
   const deck = getTutorialDeck();
   initGame(deck, deck);
-  const data = getTutorialStepData();
-  showToast(`${data.title} — ${data.copy}`);
 }
 function replayTutorialMatch(){
   const deck = getTutorialDeck();
@@ -1072,6 +1118,8 @@ function startGame() {
 }
 
 function initGame(p1Deck, p2Deck) {
+  walkthroughReview = null;
+  closeCardText();
   const prepare = deck => Object.assign(CTFDeckUtils.normalizeDeck(deck), {
     fixedOpeningHand: Array.isArray(deck?.fixedOpeningHand) ? deck.fixedOpeningHand.slice() : [],
     fixedOrder: deck?.fixedOrder === true,
@@ -2150,10 +2198,12 @@ function showFieldTip(event, playerIdx) {
 // ═══ RENDERING ═══
 function renderAll() {
   if (!GS) return;
-  $('tip')?.classList.remove('show');
+  const previousViewer = myPlayer;
   if (isHotSeatMode || isSandboxMode) myPlayer = GS.waitingForResponse ? GS.currentResponder : GS.activePlayer;
   // Patch v3.2: VS-AI mode locks myPlayer to seat 0 (human is always P1).
   if (isVsAIMode) myPlayer = 0;
+  if (myPlayer !== previousViewer) closeCardText();
+  else hideTip();
   const me = GS.players[myPlayer];
   const opp = GS.players[1 - myPlayer];
   const isMyTurn = GS.activePlayer === myPlayer;
@@ -2185,6 +2235,7 @@ function renderAll() {
   }
   $('my-box').textContent = me.box.length;
   $('opp-box').textContent = opp.box.length;
+  $('opp-hand-count').textContent = opp.hand.length;
 
   // Side zone counts
   $('my-deck-c').textContent = me.deck.length;
@@ -2203,7 +2254,7 @@ function renderAll() {
   $('active-p').textContent = GS.activePlayer + 1;
 
   // Phase rail
-  $('phase-list').innerHTML = PHASE_NAMES.map((name, i) => `<div class="phase-item${i === GS.phase ? ' active' : ''}${i < GS.phase ? ' done' : ''}">${i + 1}. ${name}</div>`).join('');
+  renderWalkthroughRail();
 
   // Opponent hand (card backs)
   $('opp-hand').innerHTML = Array(opp.hand.length).fill('<div class="card-back"></div>').join('');
@@ -2269,7 +2320,7 @@ function renderMyHand(me) {
     const art = cardArtUrl(c);
     const artClass = art ? ' has-art' : '';
     const artStyle = art ? ` style="background-image:url('${art.replace(/'/g,"%27")}')"` : '';
-    return `<div class="hand-card${artClass}${i === selectedHandIdx ? ' selected' : ''}"${artStyle} onclick="handClick(${i})" onmouseenter="showTip(event,'${id}')" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="Hand card ${i + 1}: ${String(c.name).replace(/"/g,'&quot;')}">
+    return `<div class="hand-card${artClass}${i === selectedHandIdx ? ' selected' : ''}"${artStyle} data-inspect-card="${id}" onclick="handClick(${i})" onmouseenter="showTip(event,'${id}')" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="Hand card ${i + 1}: ${String(c.name).replace(/"/g,'&quot;')}">
       <div class="hc-bar" style="background:${color}"></div>
       <div class="hc-name">${c.name}</div>
       <div class="hc-type">${c.cardType}${c.level ? ' Lv' + c.level : ''}</div>
@@ -2368,7 +2419,7 @@ function renderFieldCard(card, slot, isOpp, mini = false, playerIdx = null, zone
   if (slot.faceDown) statusBits.push('Face-down');
   const shownPr = hidePrivate ? '?' : ((playerIdx !== null && zoneIdx !== null && typeof getEffectivePressure === 'function' && isCat && !slot.isLibra) ? getEffectivePressure(GS, playerIdx, zoneIdx) : card.pr);
   const shownCp = hidePrivate ? '?' : ((playerIdx !== null && zoneIdx !== null && typeof getEffectiveCounterPressure === 'function' && isCat && !slot.isLibra) ? getEffectiveCounterPressure(GS, playerIdx, zoneIdx) : card.cp);
-  const tipHandlers = hidePrivate ? '' : ` onmouseenter="showTip(event,'${card.id}')" onmouseleave="hideTip()"`;
+  const tipHandlers = hidePrivate ? '' : ` data-inspect-card="${card.id}" onmouseenter="showTip(event,'${card.id}')" onmouseleave="hideTip()"`;
   const selectedClass = (!isOpp && selectedFieldZone && ((selectedFieldZone.type === 'cat' && playerIdx === myPlayer && zoneIdx === selectedFieldZone.zone) || (selectedFieldZone.type === 'trick' && playerIdx === myPlayer && zoneIdx === selectedFieldZone.zone))) ? ' selected' : '';
   const visibleName = hidePrivate ? (isCat ? 'Face-Down Catalyst' : 'Set Trick') : card.name;
   const visibleType = hidePrivate ? (isCat ? 'Hidden Catalyst' : 'Hidden Trick') : card.cardType;
@@ -2948,18 +2999,22 @@ function doEndPhase(action) {
 }
 
 // ═══ TOOLTIP ═══
-function showTip(event, id) {
-  if (isWatchModeEnabled() && event?.target?.closest('.my-hand')) return;
+function updateCardText(id) {
   const c = getCard(id);
-  if (!c) return;
-  const tip = $('tip');
+  if (!c) return false;
   $('tip-name').textContent = c.name + (CTFDeckUtils.isGreatCard(c) ? ' ★' : '');
   $('tip-info').textContent = `${c.cardType}${c.sub && c.sub !== 'Normal' ? ' (' + c.sub + ')' : ''} · ${c.set}${c.alignment ? ' · ' + c.alignment : ''}${c.level ? ' · Lv ' + c.level : ''}${c.kindsStr ? ' · ' + c.kindsStr : ''}`;
   const isCat = c.cardType === 'Catalyst' || c.cardType === 'Fusion';
   $('tip-stats').textContent = isCat ? `Pressure: ${c.pr}  ·  Counter Pressure: ${c.cp}` : '';
   $('tip-desc').textContent = c.desc || 'No text.';
+  return true;
+}
 
-  const rect = event.target.getBoundingClientRect();
+function showTip(event, id) {
+  const tip = $('tip');
+  if (tip.classList.contains('pinned') || matchMedia('(pointer:coarse)').matches || (isWatchModeEnabled() && event?.target?.closest('.my-hand'))) return;
+  if (!updateCardText(id)) return;
+  const rect = event.currentTarget?.getBoundingClientRect() || event.target.getBoundingClientRect();
   let left = rect.right + 8, top = rect.top;
   if (left + 250 > window.innerWidth) left = rect.left - 250;
   if (top + 180 > window.innerHeight) top = window.innerHeight - 190;
@@ -2967,7 +3022,46 @@ function showTip(event, id) {
   tip.style.top = Math.max(4, top) + 'px';
   tip.classList.add('show');
 }
-function hideTip() { $('tip').classList.remove('show'); }
+function hideTip() {
+  const tip = $('tip');
+  if (!tip.classList.contains('pinned')) tip.classList.remove('show');
+}
+
+function inspectCardText(id, trigger) {
+  if (!updateCardText(id)) return;
+  const tip = $('tip');
+  if (!tip.classList.contains('pinned')) {
+    tip.classList.add('pinned', 'show');
+    const width = tip.offsetWidth;
+    const height = tip.offsetHeight;
+    const box = trigger?.getBoundingClientRect();
+    const left = box ? Math.min(box.left, innerWidth - width - 8) : innerWidth - width - 12;
+    const top = box && box.top > height + 8 ? box.top - height - 8 : 12;
+    tip.style.left = `${Math.max(8, left)}px`;
+    tip.style.top = `${top}px`;
+  }
+  const header = tip.querySelector('.duel-window-bar');
+  header.tabIndex = 0;
+  header.focus({preventScroll:true});
+}
+
+function closeCardText() {
+  $('tip').classList.remove('show', 'pinned');
+  $('tip').querySelector('.duel-window-bar').tabIndex = -1;
+  for (const id of ['tip-name','tip-info','tip-stats','tip-desc']) $(id).textContent = '';
+}
+
+function inspectSelectedCard() {
+  if (isWatchModeEnabled()) return showToast('Card Text is hidden while Watch Mode is on.');
+  const info = getCurrentEffectInfoCard();
+  if (!info) return showToast('Select a card, then open Card Text.');
+  inspectCardText(info.card.id);
+}
+
+async function returnToPlayLobby() {
+  if (GS && !GS.gameOver && !await ctfConfirm('Leave this duel and return to the lobby?', 'Leave duel?')) return;
+  location.assign('play.html');
+}
 
 // ═══ TOAST ═══
 let toastTimer = null;

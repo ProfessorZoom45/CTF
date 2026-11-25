@@ -328,3 +328,191 @@ body.compact-zones #game .ctf-playmat { --playmat-width: 23rem; }
 @media (prefers-reduced-motion: reduce) {
   .ctf-playmat .is-occupied::before, .ctf-playmat .is-occupied::after { animation: none; }
 }
+
+/* Walkthrough controls */
+.tpb-lesson { display: block; margin-bottom: .25rem; color: #ffcf9a; font-size: .73rem; }
+#tutorial-phase-banner :is(.tpb-primary, .tpb-review-back) { margin: .45rem 0 0; }
+.tpb-review-back { color: #ffe4bc; background: #352115; border: 1px solid #ae7343; }
+.phase-list:has(.phase-review-button) { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .22rem; }
+.phase-review-button { min-height: 1.9rem; text-align: left; color: #ebd7c1; background: #251c18; border: 1px solid #563d2e; border-radius: .2rem; cursor: pointer; }
+.phase-review-button.done { color: #c8b5a2; }
+.phase-review-button.active { color: #ffcf8f; border-color: var(--flame); background: #4b260e; }
+.phase-review-button[aria-pressed='true'] { color: #fff3df; border-color: #b89979; }
+.tutorial-guide-heading { color: var(--gold); font-weight: 700; cursor: pointer; }
+.tutorial-panel[open] .tutorial-guide-heading { margin-bottom: .45rem; }
+#tutorial-panel .tutorial-progress { display: grid; grid-template-columns: 1fr; margin: .45rem 0; }
+#tutorial-panel .tutorial-lesson-link { margin: 0; text-align: left; }
+#tutorial-panel .tutorial-lesson-link[aria-current] { border-color: #df995d; color: #fff2da; opacity: 1; }
+
+/* Display options */
+body[data-ctf-page='play'] { --duel-nav-height: 68px; }
+.duel-display-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; }
+.duel-local-display { padding: .35rem .5rem; order: -2; }
+.duel-local-display .act-btn { flex: 1 1 auto; width: auto; margin: 0; text-align: center; }
+.duel-display-status {
+  position: fixed;
+  z-index: 1801;
+  bottom: max(.75rem, env(safe-area-inset-bottom));
+  left: 50%;
+  translate: -50% 0;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  padding: .55rem .8rem;
+  border: 1px solid #c47b47;
+  border-radius: .35rem;
+  background: #211817;
+  color: #fff1db;
+}
+.duel-rotate-hint { display: none; color: #ffcf9a; font-size: .82rem; }
+.sidebar .duel-rotate-hint { padding: .25rem .55rem; }
+.compact-hand-count { display: none; }
+
+body[data-ctf-page='play'][data-ctf-duel='friend'] #friend-duel {
+  height: calc(100dvh - var(--duel-nav-height));
+  margin-block: 0;
+  padding-top: .75rem;
+  overflow-y: auto;
+}
+body[data-ctf-page='play'][data-ctf-duel].ctf-duel-fullscreen {
+  --duel-nav-height: 0px;
+  padding-top: 0;
+}
+body[data-ctf-page='play'][data-ctf-duel].ctf-duel-fullscreen > nav.ctf-unified { display: none; }
+body[data-ctf-page='play'][data-ctf-duel='local'].ctf-duel-fullscreen #game { height: 100dvh; }
+
+@media (pointer: coarse) and (orientation: portrait) {
+  .duel-rotate-hint { display: block; }
+  #lobby .duel-rotate-hint { text-align: center; }
+  body[data-ctf-page='play'][data-ctf-duel='local'] #game { grid-template-columns: minmax(0,1fr); grid-template-rows: auto auto; height: auto; }
+  body[data-ctf-page='play'][data-ctf-duel='local'] { overflow-y: auto; }
+  #game .sidebar { height: auto; max-height: none; overflow: visible; }
+  .friend-duel-layout { grid-template-columns: minmax(0,1fr); }
+}
+
+@media (orientation: landscape) and (max-height: 700px), (orientation: landscape) and (pointer: coarse) {
+  body[data-ctf-page='play'][data-ctf-duel='local'] #game {
+    grid-template-columns: minmax(0,1fr) minmax(11rem,31%);
+    grid-template-rows: minmax(0,1fr);
+    height: calc(100dvh - var(--duel-nav-height));
+    min-height: 0;
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  }
+  #game .board, #game .sidebar { min-height: 0; max-height: none; min-width: 0; overflow: auto; }
+  #game .board { padding-bottom: env(safe-area-inset-bottom); }
+  #game .sidebar { border-top: 0; border-left: 1px solid #55301a; }
+  #game .ctf-playmat { --playmat-width: min(35rem, max(14rem, 69dvh)); }
+  .friend-duel-layout { grid-template-columns: minmax(0,1fr) minmax(11rem,31%); }
+  body[data-ctf-page='play'][data-ctf-duel='friend'] #friend-duel {
+    padding-inline: max(.5rem, env(safe-area-inset-left)) max(.5rem, env(safe-area-inset-right));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 540px) {
+  body[data-ctf-page='play'][data-ctf-duel] { --duel-nav-height: 0px; padding-top: 0; }
+  body[data-ctf-page='play'][data-ctf-duel] > nav.ctf-unified { display: none; }
+  #game .board {
+    display: grid;
+    grid-template:
+      'opponent-score' auto
+      'playmat' minmax(0, 1fr)
+      'player-score' auto
+      'player-hand' auto / minmax(0, 1fr);
+    overflow: hidden;
+  }
+  #game .score-bar.opp { grid-area: opponent-score; }
+  #game .opp-hand { display: none; }
+  #game .compact-hand-count { display: inline-flex; }
+  #game .ctf-playmat { grid-area: playmat; align-content: start; row-gap: 2px; margin-block: .15rem; overflow: auto; }
+  #game .score-bar.me { grid-area: player-score; }
+  #game .my-hand { grid-area: player-hand; }
+  #game .ctf-playmat, .friend-duel-layout .ctf-playmat { --playmat-width: min(24rem, max(17rem, 80dvh)); --playmat-gap: 3px; padding: .3rem; }
+  .ctf-playmat .playmat-row > :is(.catalyst-zone, .trick-zone) { aspect-ratio: auto; min-height: clamp(1.55rem, 9dvh, 2.55rem); }
+  #game .ctf-playmat .playmat-title, .friend-duel-layout .playmat-title { font-size: .9rem; }
+  #game .ctf-playmat .playmat-seat-label { font-size: .66rem; }
+  #game .my-hand { position: static; min-height: 3.85rem; padding: 4px; }
+  #game .my-hand .hand-card { height: 3.3rem; width: 2.65rem; }
+  #game :is(.battle-readout,.status-banner) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  #game .sidebar .act-btn { min-height: 36px; }
+  .duel-local-display { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .duel-local-display .act-btn { padding: .2rem; font-size: .68rem; }
+  #game .sidebar :is(.helper-panel,.legal-actions-panel,.battle-coach) { max-height: none; }
+  #game .ctf-playmat :is(.zone-label,.sz-label), .friend-duel-layout .ctf-playmat :is(.zone-label,.sz-label) { font-size: .59rem; }
+  #game .ctf-playmat .playmat-stack .zone-label[data-zone-short],
+  .friend-duel-layout .ctf-playmat .playmat-stack .zone-label[data-zone-short] { font-size: 0; }
+  .ctf-playmat .playmat-stack .zone-label[data-zone-short]::after { content: attr(data-zone-short); font-size: .59rem; }
+  #game .ctf-playmat .playmat-box { display: flex; flex-direction: row-reverse; gap: .12rem; }
+  #game .ctf-playmat .playmat-box .sz-count { font-size: .64rem; }
+  .ctf-playmat .playmat-divide > .playmat-slot { min-height: 1.55rem; }
+  .ctf-playmat .playmat-divide .playmat-count { font-size: .69rem; }
+  .friend-duel h1 { font-size: 1.25rem; }
+  .friend-duel-header > div:first-child { display: flex; align-items: baseline; gap: .45rem; flex-wrap: wrap; }
+  .friend-duel-header #friend-duel-room { font-size: .8rem; }
+  .friend-duel-header .lb-btn { min-height: 36px; padding: .2rem .4rem; }
+  #friend-duel-status { margin-block: .3rem; font-size: .85rem; }
+  #friend-duel-phases { gap: .2rem; padding: 0 0 .35rem; }
+  #friend-duel-phases li { padding: .17rem .33rem; font-size: .73rem; }
+  .friend-duel-layout { gap: .45rem; }
+  .friend-duel-layout .playmat-seat { gap: 0 .35rem; }
+  .friend-duel-layout .playmat-seat p { font-size: .66rem; }
+  .friend-duel-layout .playmat-seat h2 { font-size: .7rem; }
+  .friend-duel-desk section { padding: .45rem; }
+}
+
+/* Movable card text and duel prompts */
+.duel-window { translate: var(--duel-window-x, 0px) var(--duel-window-y, 0px); }
+.duel-window-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .4rem;
+  min-height: 2rem;
+  margin-bottom: .3rem;
+  cursor: grab;
+  touch-action: none;
+}
+.duel-window-bar:active { cursor: grabbing; }
+.duel-window-bar:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.duel-window-controls { display: flex; gap: .25rem; margin-left: auto; }
+.duel-window-controls button {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #8f603e;
+  border-radius: .25rem;
+  background: #342017;
+  color: #fff2dd;
+  font: 700 1.15rem/1 var(--font-body);
+  cursor: pointer;
+}
+.duel-window-controls button:hover { border-color: #ffd29b; background: #663517; }
+.duel-window-minimized { height: auto !important; }
+.duel-window-minimized > :not(.duel-window-bar, form),
+.duel-window-minimized > form > :not(.duel-window-bar) { display: none !important; }
+.duel-window-minimized .duel-window-bar { margin-bottom: 0; }
+#result-card .result-panel { max-height: calc(100dvh - 1rem); overflow-y: auto; }
+#tip:not(.pinned) .duel-window-controls { display: none; }
+#tip:not(.pinned) .duel-window-bar { min-height: auto; margin: 0; }
+#tip.pinned {
+  width: min(22rem,calc(100vw - 1rem));
+  max-width: none;
+  max-height: min(24rem,calc(100dvh - 1rem));
+  overflow: auto;
+  z-index: 1550;
+  pointer-events: auto;
+  border-radius: .4rem;
+  padding: .55rem .65rem;
+}
+#tip.pinned .tip-desc { font-size: .86rem; line-height: 1.42; }
+button.playmat-card { cursor: pointer; font: inherit; text-align: center; }
+#friend-duel-hand .friend-duel-card button { margin-top: .35rem; }
+
+@media (pointer: coarse) {
+  .duel-window-controls button { width: 2.5rem; height: 2.5rem; }
+}

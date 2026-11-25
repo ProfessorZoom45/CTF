@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Play — Carry The Flame</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
@@ -782,7 +782,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <!-- END PHASE MODAL (3 sacrificial choices + End Turn below) -->
 <div class="epm-overlay" id="end-phase-modal" aria-hidden="true" role="dialog" aria-labelledby="epm-title" aria-describedby="epm-sub">
   <div class="epm-card">
-    <h3 id="epm-title">End Phase</h3>
+    <header class="duel-window-bar"><h3 id="epm-title">End Phase</h3></header>
     <div class="epm-sub" id="epm-sub">Pick ONE End Phase action below, or end your turn.</div>
     <div class="epm-sacrifice-row">
       <button class="epm-btn" id="epm-extract"  onclick="doEndPhaseFromModal('extraction')">Extraction</button>
@@ -866,6 +866,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="lobby-title">Play Carry The Flame</div>
 <div class="lobby-sub">Learn the rules, build a deck, and play against the CPU or a friend in your browser.</div>
 <div class="lobby-note"><strong>New player?</strong> Play a guided duel with a starter deck, then create your first five cards in the Forge.</div>
+<p class="duel-rotate-hint">Rotate your device to see the board and controls side by side.</p>
 <section class="ctf-alpha-panel" aria-label="Carry The Flame alpha download information">
   <img class="ctf-alpha-panel__badge" src="assets/img/ctf-torch-badge.png" alt="Carry The Flame torch badge">
   <div>
@@ -882,6 +883,7 @@ body.ctf-nav-pad { padding-top: 0; }
   <button class="lb-btn lb-btn-ghost" data-local-mode disabled onclick="startHotSeat()">Hot-Seat Local</button>
   <button class="lb-btn lb-btn-ghost" data-local-mode disabled onclick="startSandbox()">Solo Sandbox</button>
   <button class="lb-btn lb-btn-ghost" id="lobby-settings-button" onclick="toggleSettings(true)" aria-controls="settings-drawer">Settings</button>
+  <button class="lb-btn lb-btn-ghost" type="button" data-duel-fullscreen>Fullscreen</button>
   <a class="lb-btn lb-btn-ghost" href="index.html#game-hub">Game Hub</a>
   <a class="lb-btn lb-btn-ghost" href="assets/img/board-diagram.html">Board Map</a>
   <a class="lb-btn lb-btn-ghost" href="https://discord.gg/cKj3ayt2Mp" target="_blank" rel="noopener">Alpha Discord</a>
@@ -927,8 +929,12 @@ body.ctf-nav-pad { padding-top: 0; }
 <main id="friend-duel" class="friend-duel" hidden>
   <header class="friend-duel-header">
     <div><h1>Friend Duel</h1><p id="friend-duel-room"></p></div>
-    <button type="button" id="friend-duel-leave" class="lb-btn lb-btn-ghost">Return to Lobby</button>
+    <div class="duel-display-actions">
+      <button type="button" class="lb-btn lb-btn-ghost" data-duel-fullscreen>Fullscreen</button>
+      <button type="button" id="friend-duel-leave" class="lb-btn lb-btn-ghost">Return to Lobby</button>
+    </div>
   </header>
+  <p class="duel-rotate-hint">Rotate your device to see the board and controls side by side.</p>
   <p id="friend-duel-status" role="status"></p>
   <ol id="friend-duel-phases" aria-label="Turn phases"></ol>
   <div class="friend-duel-layout">
@@ -951,7 +957,7 @@ body.ctf-nav-pad { padding-top: 0; }
 </main>
 <dialog id="friend-duel-choice" aria-labelledby="friend-choice-title">
   <form method="dialog">
-    <h2 id="friend-choice-title"></h2>
+    <header class="duel-window-bar"><h2 id="friend-choice-title"></h2></header>
     <p id="friend-choice-note"></p>
     <div id="friend-choice-fields"></div>
     <div class="friend-duel-dialog-buttons">
@@ -970,6 +976,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <span class="score-stat">Capt: <strong id="opp-captures">0</strong></span>
 <span class="score-stat">Ext: <strong id="opp-extractions">0</strong></span>
 <span class="score-stat">Box: <strong id="opp-box">0</strong></span>
+<span class="score-stat compact-hand-count">Hand: <strong id="opp-hand-count">0</strong></span>
 </div>
 
 <!-- Opponent hand (card backs) -->
@@ -1054,6 +1061,12 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <!-- SIDEBAR -->
 <div class="sidebar">
+<div class="duel-display-actions duel-local-display">
+  <button type="button" class="act-btn act-btn-ghost" data-duel-fullscreen>Fullscreen</button>
+  <button type="button" class="act-btn act-btn-ghost" onclick="inspectSelectedCard()">Card Text</button>
+  <button type="button" class="act-btn act-btn-ghost" onclick="returnToPlayLobby()">Lobby</button>
+</div>
+<p class="duel-rotate-hint">Rotate your device to see the board and controls side by side.</p>
 <div class="phase-rail">
 <h4>Turn <span id="turn-num">1</span> — P<span id="active-p">1</span></h4>
 <div class="phase-list" id="phase-list"></div>
@@ -1073,7 +1086,8 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="helper-title">What Can I Do?</div>
 <div class="helper-copy" id="helper-copy" aria-live="polite">Choose a deck to begin.</div>
 </div>
-<div class="tutorial-panel" id="tutorial-panel">
+<details class="tutorial-panel" id="tutorial-panel">
+  <summary class="tutorial-guide-heading">Walkthrough matches</summary>
   <h4 id="tutorial-title">Tutorial</h4>
   <p id="tutorial-copy">Start the 5-match tutorial from the lobby.</p>
   <div class="tutorial-progress" id="tutorial-progress"></div>
@@ -1087,7 +1101,7 @@ body.ctf-nav-pad { padding-top: 0; }
     <a class="act-btn act-btn-ghost" href="rules.html#combat" target="_blank" rel="noopener">Battle Basics</a>
     <a class="act-btn act-btn-ghost" href="rules.html#libra" target="_blank" rel="noopener">Libra Rules</a>
   </div>
-</div>
+</details>
 <div class="battle-coach" id="battle-coach">
   <h4>Battle Coach</h4>
   <div class="bc-main" id="battle-coach-main">Open a duel to see simple battle guidance.</div>
@@ -1139,7 +1153,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <!-- RESULT CARD -->
 <div class="result-card" id="result-card" role="dialog" aria-modal="true" aria-labelledby="result-winner">
   <div class="result-panel">
-    <div class="result-title" id="result-winner">In Progress</div>
+    <header class="duel-window-bar"><div class="result-title" id="result-winner">In Progress</div></header>
     <div class="result-sub" id="result-sub">Open this card any time for a clean duel snapshot.</div>
     <div class="result-badge-row">
       <span class="result-badge" id="result-reason">Live Snapshot</span>
@@ -1200,13 +1214,8 @@ body.ctf-nav-pad { padding-top: 0; }
 <!-- CHOICE MODAL -->
 <div class="choice-modal" id="choice-modal">
   <div class="choice-card">
-    <div class="choice-head">
-      <div>
-        <div class="choice-title" id="choice-title">Choose</div>
-        <div class="choice-sub" id="choice-sub"></div>
-      </div>
-      <button class="lb-btn lb-btn-ghost" onclick="closeChoiceModal()">Close</button>
-    </div>
+    <header class="duel-window-bar"><div class="choice-title" id="choice-title">Choose</div></header>
+    <div class="choice-sub" id="choice-sub"></div>
     <div class="choice-list" id="choice-list"></div>
     <div class="choice-actions">
       <button class="lb-btn lb-btn-ghost" onclick="closeChoiceModal()">Cancel</button>
@@ -1215,19 +1224,18 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 
 <!-- TOOLTIP -->
-<div class="tip" id="tip">
-<div class="tip-name" id="tip-name"></div>
+<aside class="tip" id="tip" aria-labelledby="tip-name">
+<header class="duel-window-bar"><h2 class="tip-name" id="tip-name"></h2></header>
 <div class="tip-info" id="tip-info"></div>
 <div class="tip-stats" id="tip-stats"></div>
 <div class="tip-desc" id="tip-desc"></div>
-</div>
+</aside>
 
 <!-- SETTINGS DRAWER -->
 <div class="settings-drawer" id="settings-drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true" inert>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+  <header class="duel-window-bar">
     <div style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;color:var(--flame)">Settings</div>
-    <button class="lb-btn lb-btn-ghost" onclick="toggleSettings(false)" aria-label="Close settings" style="padding:.3rem .7rem;font-size:.75rem">✕ Close</button>
-  </div>
+  </header>
   <div class="settings-row">
     <label for="set-card-art" style="cursor:pointer">Card Art</label>
     <input type="checkbox" id="set-card-art" onchange="applySettings()" aria-label="Show card art">
@@ -1279,7 +1287,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <!-- CONFIRM MODAL (replaces native browser confirm()) -->
 <div class="confirm-modal" id="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-body">
   <div class="confirm-card">
-    <div class="confirm-title" id="confirm-title">Are you sure?</div>
+    <header class="duel-window-bar"><div class="confirm-title" id="confirm-title">Are you sure?</div></header>
     <div class="confirm-body" id="confirm-body"></div>
     <div class="confirm-actions">
       <button class="lb-btn lb-btn-ghost" id="confirm-cancel" onclick="resolveConfirm(false)">Cancel</button>
@@ -1308,6 +1316,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <script src="play_inline.js?v=zf1-lessons-2026-09-25"></script>
 <script src="assets/js/friend-duel.js"></script>
 
+<div id="duel-display-status" class="duel-display-status" role="status" hidden></div>
 <script src="assets/js/browser-app.js"></script>
 </body>
 </html>

@@ -203,7 +203,12 @@
   function boardCard(slot) {
     const known = slot.cardId ? getCard(slot.cardId) : null;
     const name = known?.name || (slot.faceDown ? 'Face-down card' : 'Unknown card');
-    const card = element('div', undefined, 'playmat-card');
+    const card = element(known ? 'button' : 'div', undefined, 'playmat-card');
+    if (known) {
+      card.type = 'button';
+      card.setAttribute('aria-label', `Card text: ${name}`);
+      card.addEventListener('click', () => inspectCardText(known.id, card));
+    }
     card.classList.toggle('face-down', slot.faceDown);
     card.title = slot.faceDown && known ? `${name} · Face down` : name;
     const art = !slot.faceDown && cardArtUrl(known);
@@ -314,6 +319,7 @@
         element('span', card?.cardType || 'Card'));
       if (card?.cardType === 'Catalyst') item.append(element('span', `Rank ${card.level} · P ${card.pr} · CP ${card.cp}`));
       if (card?.desc) item.append(element('p', card.desc));
+      if (card) item.append(button('Card Text', event => inspectCardText(id, event.currentTarget)));
       hand.append(item);
     });
     byId('friend-duel-hand').replaceChildren(element('h2','Your hand'),hand);

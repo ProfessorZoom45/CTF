@@ -1,5 +1,5 @@
 importScripts('offline-assets.js');
-const CACHE = 'ctf-browser-20261125-v10';
+const CACHE = 'ctf-browser-20261125-v11';
 const CORE = ['./','./index.html','./play.html','./cards.html','./collections.html','./deckbuilder.html','./rules.html','./glossary.html','./first-five-forge.html','./submit.html','./About_Us.html','./play_inline.js','./manifest.json','./icon-ctf.svg','./assets/js/ctf-config.js','./assets/js/data.js','./assets/js/zf1-tutorial-data.js','./assets/js/deck-utils.js','./assets/js/engine.js','./assets/js/card-playability-manifest.js','./assets/js/ai_opponent.js','./assets/js/cpu-browser.js','./assets/js/tutorial_coach.js','./assets/js/first-five-forge.js','./assets/js/ctf-unified-nav.js','./assets/css/first-five-forge.css','./assets/css/ctf-unified-nav.css','./ALPHA/forge-review-data.json','./images/placeholder.png'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll([...new Set([...CORE,...self.CTF_OFFLINE_ASSETS])])).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('ctf-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
