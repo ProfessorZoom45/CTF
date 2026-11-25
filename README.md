@@ -27,14 +27,20 @@ Run `node tools/audit-browser.cjs`, `node tools/test-browser-rules.cjs --simulat
 | `rules.html` | Complete rulebook — all 22 locked rules, board layout, phases |
 | `cards.html` | Card database browser — search, filter, sort 1,610 cards |
 | `deckbuilder.html` | Deck builder — build, save, load 40–60 card decks |
-| `play.html` | Guided Play, CPU, local hot-seat and development Friend Rooms |
+| `play.html` | Guided Play, CPU, local hot-seat and private Friend Rooms |
 | `first-five-forge.html` | Six creation lessons, private drafts and JSON backup |
 | `glossary.html` | CTF-native terminology reference |
 | `submit.html` | Custom card submission — 5-card sets with stat pool system |
 
 Start with a guided starter duel, then create cards in the Forge. Finishing a draft opens the Deck Workshop or a guided replay with the starter deck. The lessons and provisional teaching deck use the 26 cards in `assets/data/ZF1.ptcg`. Regenerate the data with `node tools/build-zf1-tutorial-data.mjs` and check it with `node tools/test-zf1-tutorial.cjs`.
 
-GitHub Pages serves the browser files from `main` at the repository root. The integration branch keeps the old full-snapshot relay on loopback for development. The new local referee at `/api/private-multiplayer/` owns duel state and sends each authenticated seat a separate view. Run `node tools/test-private-rooms.mjs http://127.0.0.1:8028` to exercise both seats. Public Friend Rooms still require browser integration, hosting, the full room and series rules, and cross-network testing. The launch set and art and the hosted Forge review and email workflow are also release gates.
+## Friend Rooms
+
+Run the local server and open the Game Hub in two independent browser sessions. Choose a legal deck in each session. Create a room in the first and join using its link or code in the second. Refresh in the same browser tab to recover your seat. When a duel ends, each player can select a deck and confirm a rematch. The server owns the complete match state and sends separate views to the two seats. Run `node tools/test-private-rooms.mjs http://127.0.0.1:8028` to check this protocol.
+
+GitHub Pages serves the static files from `main` at the repository root. For an HTTPS referee preview, deploy `server.mjs` on a Node 22+ host with `CTF_REFEREE_ONLY=1`, `CTF_PAGES_ORIGIN=https://professorzoom45.github.io`, and the port and bind address required by the hosting service. This mode serves the private referee API with that Pages origin on its CORS allowlist. Keep TLS at the deployment proxy. Set the `ctf-friend-room-api` meta value in `play.html` to the deployed HTTPS `/api/private-multiplayer/` endpoint. Verify invite, play and reconnect across different networks before releasing.
+
+The first private browser mode supports single duels. Best-of-three, the full timer and disconnect-forfeit policy, and production hosting are release work. The launch set and art and the hosted Forge review and email workflow also remain release gates.
 
 ## Card Database
 

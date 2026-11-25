@@ -150,3 +150,20 @@ assert.deepEqual(view.result,{winner:0,reason:'Concession'});
 assert.equal((await act(host,{type:'passChain'},view.revision)).status,409);
 assert.deepEqual((await request(root + '/events',{seat:host})).view.result,view.result);
 console.log('PASS complete private duel flow and terminal concession during a Chain');
+
+async function ready(seat, revision) {
+  return request(root + '/messages',{seat,body:{type:'rematchRequest',revision}});
+}
+const nextHost = await ready(host,view.revision);
+assert.equal(nextHost.status,200);
+assert.deepEqual(nextHost.view.rematchReady,[true,false]);
+assert.equal((await ready(guest,view.revision)).status,409);
+const nextGuest = await ready(guest,nextHost.view.revision);
+assert.equal(nextGuest.status,200);
+assert.equal(nextGuest.view.turn,1);
+assert.equal(nextGuest.view.phase,'turnStart');
+assert.equal(nextGuest.view.result,null);
+assert.equal(nextGuest.view.players[1].hand.length,5);
+assert.equal(nextGuest.view.players[0].hand,undefined);
+assert.equal((await request(root + '/events',{seat:host})).view.revision,nextGuest.view.revision);
+console.log('PASS both seats ready a same-room rematch with a fresh private duel');

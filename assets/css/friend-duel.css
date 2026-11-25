@@ -1,0 +1,55 @@
+.friend-duel {
+  max-width: 78rem;
+  margin: 1rem auto;
+  padding: 0 clamp(.75rem, 3vw, 2rem) 2rem;
+}
+.friend-duel-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+.friend-duel h1 { color: var(--gold); font-family: var(--font-display); font-size: 2.2rem; }
+.friend-duel h2 { font-size: 1.2rem; color: var(--gold); }
+#friend-duel-status, #friend-duel-guidance { margin-block: .5rem; }
+#friend-duel-phases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  list-style: none;
+  padding: .65rem 0;
+}
+#friend-duel-phases li { padding: .3rem .65rem; border: 1px solid var(--coal-mid); }
+#friend-duel-phases [aria-current="step"] { border-color: var(--gold); color: var(--gold); font-weight: 700; }
+.friend-duel section {
+  margin-block: .75rem;
+  padding: .9rem;
+  border: 1px solid var(--coal-mid);
+  border-radius: .4rem;
+  background: var(--coal);
+}
+.friend-duel-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .4rem; margin-block: .45rem; }
+.friend-duel-card { min-width: 0; min-height: 3rem; padding: .45rem; border: 1px solid var(--coal-mid); background: var(--coal-light); overflow-wrap: anywhere; }
+.friend-duel-card strong, .friend-duel-card span { display: block; }
+.friend-duel-card span { color: var(--cream); font-size: .85rem; }
+.friend-duel-card.face-down { border-color: var(--purple); }
+.friend-duel-actions button { margin: 0 .3rem .35rem 0; }
+.friend-duel details { margin-top: .7rem; }
+.friend-duel details ol { padding-left: 1.25rem; }
+#friend-duel-choice {
+  max-width: min(34rem, 94vw);
+  width: 100%;
+  max-height: 85vh;
+  margin: auto;
+  padding: 1.15rem;
+  color: var(--cream);
+  background: var(--coal-light);
+  border: 1px solid var(--flame);
+}
+#friend-duel-choice::backdrop { background: #000b; }
+#friend-duel-choice h2 { color: var(--gold); }
+.friend-choice-field { display: grid; gap: .25rem; margin-block: .75rem; }
+#friend-choice-fields select, #friend-rematch-deck {
+  width: 100%;
+  padding: .55rem;
+  background: var(--coal);
+  border: 1px solid var(--coal-mid);
+  color: var(--cream);
+  font: inherit;
+}
+.friend-duel-dialog-buttons { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }

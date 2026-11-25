@@ -1,6 +1,8 @@
 self.CTF_OFFLINE_ASSETS = [
   "assets/css/site-theme.css",
   "assets/js/friend-network.js",
+  "assets/js/friend-duel.js",
+  "assets/css/friend-duel.css",
   "assets/js/timing-lab.js",
   "submit-forge.html",
   "assets/css/forge-submission.css",

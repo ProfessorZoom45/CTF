@@ -19,7 +19,8 @@ export class RoomService {
     if(role){
       room[role].seen=this.now();room.updated=this.now();
       const snapshot=room.duel ? room.duel.view(role==='host'?0:1) : room.snapshot||null;
-      return {status:200,body:{code,token,role,resumed:true,cursor:room.seq,snapshot}};
+      const registered=room.duel?.registered(role==='host'?0:1);
+      return {status:200,body:{code,token,role,resumed:true,cursor:room.seq,snapshot,registered}};
     }
     if(room.guest)return {status:409,body:{error:'This room already has two players.'}};
     const guestToken=id();room.guest={token:guestToken,seen:this.now(),events:[]};room.updated=this.now();
@@ -46,6 +47,7 @@ export class RoomService {
       let result;
       if(data?.type==='deckChoice')result=room.duel.register(seat,data.deck);
       else if(data?.type==='actionRequest')result=room.duel.act(seat,data.action,data.revision);
+      else if(data?.type==='rematchRequest')result=room.duel.rematch(seat,data.deck,data.revision);
       else return {status:400,body:{error:'The referee only accepts deck choices and game commands.'}};
       if(result.status===200){
         room.updated=this.now();room[role].seen=this.now();

@@ -8,20 +8,40 @@ import { PrivateDuel } from './match-referee.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.CTF_PORT || 8028);
+const refereeOnly = process.env.CTF_REFEREE_ONLY === '1';
+const frontendOrigin = process.env.CTF_PAGES_ORIGIN || '';
+if (refereeOnly && (!frontendOrigin || new URL(frontendOrigin).origin !== frontendOrigin)) {
+  throw Error('Set CTF_PAGES_ORIGIN to the exact browser site origin.');
+}
+const bindHost = refereeOnly ? process.env.CTF_BIND_HOST || '127.0.0.1' : '127.0.0.1';
 const rooms = new RoomService();
 const privateRooms = new RoomService({createDuel:()=>new PrivateDuel()});
 const reviewDirectory = path.resolve(root,'../output/browser-submissions');
-const forgeTree = JSON.parse(fs.readFileSync(path.join(root,'ALPHA/forge-review-data.json'),'utf8'));
+const forgeTree = refereeOnly ? null : JSON.parse(fs.readFileSync(path.join(root,'ALPHA/forge-review-data.json'),'utf8'));
 const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json', '.svg':'image/svg+xml', '.png':'image/png', '.gif':'image/gif', '.jpg':'image/jpeg', '.pdf':'application/pdf' };
 http.createServer(async (req, res) => {
   const pathname = new URL(req.url,'http://localhost').pathname;
-  if(pathname==='/api/site-config'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify({submissionDelivery:'local_inbox'}));return;}
   const isPrivateRoomRoute = pathname.startsWith('/api/private-multiplayer/');
+  if(refereeOnly && !isPrivateRoomRoute){
+    res.writeHead(404,{'Content-Type':'application/json'}).end(JSON.stringify({error:'Referee endpoint not found.'}));
+    return;
+  }
+  if(pathname==='/api/site-config'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify({submissionDelivery:'local_inbox'}));return;}
   const roomPrefix = isPrivateRoomRoute ? '/api/private-multiplayer/' : '/api/multiplayer/';
   if(pathname.startsWith(roomPrefix)){
-    const json=(status,body)=>res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify(body));
     const origin=`http://${req.headers.host}`;
-    if(req.method==='POST'&&req.headers.origin!==origin){json(403,{error:'Open the CTF website before using this room.'});return;}
+    const requestedOrigin = req.headers.origin;
+    const pagesRequest = isPrivateRoomRoute && frontendOrigin && requestedOrigin === frontendOrigin;
+    const permitted = !!pagesRequest || (!refereeOnly && requestedOrigin === origin);
+    const cors = pagesRequest ? {'Access-Control-Allow-Origin':frontendOrigin,'Vary':'Origin'} : {};
+    const json=(status,body)=>res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store',...cors}).end(JSON.stringify(body));
+    if(req.method==='OPTIONS'){
+      if(!pagesRequest){json(403,{error:'Origin is unavailable.'});return;}
+      res.writeHead(204,{...cors,'Access-Control-Allow-Methods':'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers':'Authorization, Content-Type','Access-Control-Max-Age':'600'}).end();
+      return;
+    }
+    if((req.method==='POST' || requestedOrigin) && !permitted){json(403,{error:'Open the CTF website before using this room.'});return;}
     if(pathname===roomPrefix+'config'){json(200,{transport:isPrivateRoomRoute?'private-referee':'relay',shareUrl:origin+'/',maxPlayers:2});return;}
     let result;
     const service=isPrivateRoomRoute?privateRooms:rooms;
@@ -56,4 +76,4 @@ http.createServer(async (req, res) => {
   if (!fs.existsSync(filename) || !fs.statSync(filename).isFile()) { res.writeHead(404).end('Not found'); return; }
   res.writeHead(200, { 'Content-Type': types[path.extname(filename)] || 'application/octet-stream', 'Cache-Control':'no-cache', 'X-Content-Type-Options':'nosniff' });
   fs.createReadStream(filename).pipe(res);
-}).listen(port, '127.0.0.1', () => console.log(`Carry The Flame: http://127.0.0.1:${port}/`));
+}).listen(port, bindHost, () => console.log(`Carry The Flame: http://${bindHost}:${port}/`));

@@ -2986,12 +2986,10 @@ document.addEventListener('click',event=>{
   }
 },true);
 const lobbyParams = new URLSearchParams(location.search);
-if (['127.0.0.1','localhost','[::1]'].includes(location.hostname)) {
-  $('friend-room-note').textContent = 'Development Friend Rooms work in two browser tabs on this computer with the local CTF server running.';
-}
 loadSettings();
 updateWatchModeButton();
 renderDeckSelect(lobbyParams.get('deck') === 'custom');
+document.querySelectorAll('[data-local-mode]').forEach(button => { button.disabled = false; });
 for (const deck of lobbyDecks) {
   if (deck.source === 'starter') $('cpu-deck-select').add(new Option(deck.name, deck.id));
 }

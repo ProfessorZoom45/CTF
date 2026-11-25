@@ -20,7 +20,11 @@ const refereeRules = new Script(`
     clone(state) { return deserializeState(serializeState(state)); },
     advancePhase, handleDrawPhaseClick, normalSummon, setCatalyst, setTrick,
     declareAttack, passChain, queueConcealedResponse, endPhaseAction,
-    discardForHandLimit, changeCatalystPositionInResolution, finishDuel
+    discardForHandLimit, changeCatalystPositionInResolution, finishDuel,
+    placeLibraScale, libraSummon, fusionSummon, activatePalmTrick,
+    activateSetPalmTrick, activateSetFieldTrick, getEligibleCatalysts,
+    getEligibleBoxTargets, getRespondableTricks, getEffectivePressure,
+    getEffectiveCounterPressure, canNormalSummon
   })
 `);
 
@@ -35,15 +39,16 @@ function loadRules() {
   return refereeRules.runInContext(context);
 }
 
-function viewSlot(slot, ownSeat) {
+function viewSlot(slot, ownSeat, values) {
   if (!slot) return null;
   const view = { faceDown:!!slot.faceDown };
   if (slot.position === 'atk' || slot.position === 'def') view.position = slot.position;
   if (!slot.faceDown || ownSeat) view.cardId = slot.cardId;
+  if (values && view.cardId) Object.assign(view, values());
   return view;
 }
 
-export function viewForSeat(state, seat, revision, events) {
+export function viewForSeat(state, seat, revision, events, rules) {
   // The match state and raw engine log can contain private card IDs, choices,
   // and draw order. Build the response from an allowlist for both seats.
   return {
@@ -54,6 +59,8 @@ export function viewForSeat(state, seat, revision, events) {
     prioritySeat:state.waitingForResponse ? state.currentResponder : state.activePlayer,
     waitingForResponse:state.waitingForResponse,
     pendingDiscard:state.pendingDiscard?.playerIdx === seat,
+    drawResolved:!!state.players[seat]._drawPhaseResolved,
+    skippedBattle:!!state._p1BattleSkipPending,
     result:state.gameOver ? { winner:state.winner, reason:state.winReason || 'Duel ended' } : null,
     events:events.map(({ revision, seat, action, phase }) => ({ revision, seat, action, phase })),
     players:state.players.map((player, index) => ({
@@ -65,7 +72,10 @@ export function viewForSeat(state, seat, revision, events) {
       deckCount:player.deck.length,
       fusionCount:player.fusionDeck.length,
       ...(index === seat ? { hand:[...player.hand], fusionDeck:[...player.fusionDeck] } : {}),
-      catalysts:player.catalysts.map(slot => viewSlot(slot, index === seat)),
+      catalysts:player.catalysts.map((slot, zone) => viewSlot(slot, index === seat, rules && (() => ({
+        pressure:rules.getEffectivePressure(state,index,zone),
+        counterPressure:rules.getEffectiveCounterPressure(state,index,zone)
+      })))),
       tricks:player.tricks.map(slot => viewSlot(slot, index === seat)),
       fieldTrick:viewSlot(player.fieldTrick, index === seat),
       void:[...player.void],
@@ -94,6 +104,26 @@ const commands = new Map([
     ? rules.setCatalyst(state, seat, action.handIdx, action.zone) : reject()],
   ['setTrick', (rules, state, seat, action) => handIndex(state, seat, action.handIdx) && zone(action.zone)
     ? rules.setTrick(state, seat, action.handIdx, action.zone) : reject()],
+  ['activatePalmTrick', (rules, state, seat, action) => state.phaseName === 'action' &&
+    handIndex(state, seat, action.handIdx) && action.manual === undefined
+    ? rules.activatePalmTrick(state, seat, action.handIdx) : reject()],
+  ['activateSetPalmTrick', (rules, state, seat, action) => state.phaseName === 'action' &&
+    zone(action.zone) && action.manual === undefined
+    ? rules.activateSetPalmTrick(state, seat, action.zone) : reject()],
+  ['activateSetFieldTrick', (rules, state, seat) => state.phaseName === 'action'
+    ? rules.activateSetFieldTrick(state, seat) : reject()],
+  ['placeLibraScale', (rules, state, seat, action) => state.phaseName === 'action' &&
+    handIndex(state, seat, action.handIdx) && [0,4].includes(action.zone)
+    ? rules.placeLibraScale(state, seat, action.handIdx, action.zone) : reject()],
+  ['libraSummon', (rules, state, seat, action) => state.phaseName === 'action' &&
+    validZones(action.zoneIdxs) && Array.isArray(action.handIdxs) &&
+    action.handIdxs.length === action.zoneIdxs.length &&
+    new Set(action.handIdxs).size === action.handIdxs.length &&
+    action.handIdxs.every(value => handIndex(state, seat, value))
+    ? rules.libraSummon(state, seat, action.handIdxs, action.zoneIdxs) : reject()],
+  ['fusionSummon', (rules, state, seat, action) => state.phaseName === 'action' && zone(action.zone) &&
+    index(action.fusionDeckIdx, state.players[seat].fusionDeck.length)
+    ? rules.fusionSummon(state, seat, action.fusionDeckIdx, action.zone) : reject()],
   ['attack', (rules, state, seat, action) => zone(action.attackerZone) &&
     (zone(action.defenderZone) || action.defenderZone === -1)
     ? rules.declareAttack(state, seat, action.attackerZone, 1 - seat, action.defenderZone) : reject()],
@@ -107,6 +137,12 @@ const commands = new Map([
     if (!zone(action.sacrificeZone)) return reject();
     if (['extraction','rescue'].includes(action.action) && Number.isInteger(action.targetIdx)) {
       return rules.endPhaseAction(state, seat, action.action, action.sacrificeZone, action.targetIdx);
+    }
+    if (action.action === 'destroyTrick' && index(action.targetIdx?.player, 2)) {
+      const {player, kind, zone:targetZone} = action.targetIdx;
+      if (kind === 'field' || zone(targetZone)) {
+        return rules.endPhaseAction(state, seat, action.action, action.sacrificeZone, {player, kind, zone:targetZone});
+      }
     }
     return reject();
   }],
@@ -134,8 +170,11 @@ export class PrivateDuel {
   #state = null;
   #revision = 0;
   #events = [];
+  #rematchDecks = [null, null];
 
   get revision() { return this.#revision; }
+
+  registered(seat) { return !!this.#decks[seat]; }
 
   register(seat, deck) {
     if (this.#state) return { status:409, body:{ error:'This duel already started.' } };
@@ -145,14 +184,50 @@ export class PrivateDuel {
     if (!this.#rules.validate(deckChoice)) return { status:400, body:{ error:'Choose a legal deck.' } };
     this.#decks[seat] = deckChoice;
     if (this.#decks.every(Boolean)) {
-      this.#state = this.#rules.start(this.#decks);
-      this.#revision = 1;
+      this.#start();
     }
     return { status:200, body:{ ok:true, ready:!!this.#state } };
   }
 
+  #start() {
+    this.#state = this.#rules.start(this.#decks);
+    this.#events = [];
+    this.#revision += 1;
+  }
+
+  rematch(seat, deck, revision) {
+    if (!this.#state?.gameOver || revision !== this.#revision) {
+      return { status:409, body:{ error:'Refresh the finished duel before requesting a rematch.' } };
+    }
+    const choice = deck === undefined ? this.#decks[seat] : safeDeck(deck);
+    if (!choice || !this.#rules.validate(choice)) return { status:400, body:{ error:'Choose a legal deck.' } };
+    this.#rematchDecks[seat] = choice;
+    if (this.#rematchDecks.every(Boolean)) {
+      this.#decks = this.#rematchDecks;
+      this.#rematchDecks = [null, null];
+      this.#rules = loadRules();
+      this.#start();
+    } else {
+      this.#revision += 1;
+    }
+    return { status:200, body:{ ok:true, view:this.view(seat) } };
+  }
+
   view(seat) {
-    return this.#state ? viewForSeat(this.#state, seat, this.#revision, this.#events) : null;
+    const state = this.#state;
+    if (!state) return null;
+    const view = viewForSeat(state, seat, this.#revision, this.#events, this.#rules);
+    const ownPriority = view.prioritySeat === seat && !view.result;
+    view.choices = {
+      normalSpawn:ownPriority && this.#rules.canNormalSummon(state,seat),
+      payWith:ownPriority && view.phase === 'end' ? Array.from(this.#rules.getEligibleCatalysts(state,seat)) : [],
+      extract:ownPriority && view.phase === 'end' ? Array.from(this.#rules.getEligibleBoxTargets(state,seat,'extraction')) : [],
+      rescue:ownPriority && view.phase === 'end' ? Array.from(this.#rules.getEligibleBoxTargets(state,seat,'rescue')) : [],
+      counters:ownPriority && view.waitingForResponse
+        ? Array.from(this.#rules.getRespondableTricks(state,seat), option => option.zone) : []
+    };
+    if (view.result) view.rematchReady = this.#rematchDecks.map(Boolean);
+    return view;
   }
 
   act(seat, action, revision) {

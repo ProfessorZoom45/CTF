@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/ctf-brand-refresh.css">
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<meta name="ctf-friend-room-api" content="">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--coal:#0d0d0d;--coal-light:#1a1a1a;--coal-mid:#242424;--flame:#ff6a00;--ember:#c0392b;--amber:#ffb347;--ash:#888;--white:#f5f0e8;--cream:#e8e0d0;--green:#4CAF50;--red:#e74c3c;--blue:#2196F3;--purple:#9C27B0;--gold:#FFD700;--font-display:'Bebas Neue',sans-serif;--font-label:'Barlow Condensed',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Space Mono',monospace}
@@ -775,6 +775,7 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <link rel="stylesheet" href="assets/css/browser-game.css">
 <link rel="stylesheet" href="assets/css/site-theme.css">
+<link rel="stylesheet" href="assets/css/friend-duel.css">
 </head>
 <body>
 
@@ -877,9 +878,9 @@ body.ctf-nav-pad { padding-top: 0; }
   </div>
 </section>
 <div id="local-play" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
-  <button class="lb-btn lb-btn-fire" onclick="startTutorial()">Guided Play</button>
-  <button class="lb-btn lb-btn-ghost" onclick="startHotSeat()">Hot-Seat Local</button>
-  <button class="lb-btn lb-btn-ghost" onclick="startSandbox()">Solo Sandbox</button>
+  <button class="lb-btn lb-btn-fire" data-local-mode disabled onclick="startTutorial()">Guided Play</button>
+  <button class="lb-btn lb-btn-ghost" data-local-mode disabled onclick="startHotSeat()">Hot-Seat Local</button>
+  <button class="lb-btn lb-btn-ghost" data-local-mode disabled onclick="startSandbox()">Solo Sandbox</button>
   <button class="lb-btn lb-btn-ghost" id="lobby-settings-button" onclick="toggleSettings(true)" aria-controls="settings-drawer">Settings</button>
   <a class="lb-btn lb-btn-ghost" href="index.html#game-hub">Game Hub</a>
   <a class="lb-btn lb-btn-ghost" href="assets/img/board-diagram.html">Board Map</a>
@@ -888,7 +889,7 @@ body.ctf-nav-pad { padding-top: 0; }
   <button class="lb-btn lb-btn-ghost" id="reconnect-btn" onclick="reconnectRoom()" style="display:none">Reconnect</button>
   <button class="lb-btn lb-btn-ghost" id="install-btn" onclick="installApp()" style="display:none">Install App</button>
 </div>
-<div class="lobby-note" id="friend-room-note">Friend Rooms are being prepared for the public release.</div>
+<div class="lobby-note" id="friend-room-note">Create a private room and share its code with a friend. The referee runs the duel.</div>
 
 <div class="lobby-box">
 <h3>Select Deck</h3>
@@ -897,31 +898,59 @@ body.ctf-nav-pad { padding-top: 0; }
   <h4 id="cpu-controls-title">Player vs CPU</h4>
   <label for="cpu-deck-select">CPU deck</label>
   <select id="cpu-deck-select"><option value="">Random starter</option></select>
-  <button id="btn-vs-ai-tutorial" class="lb-btn lb-btn-fire" onclick="startVsAITutorial()">Guided CPU Match</button>
-  <button id="btn-vs-ai-free" class="lb-btn lb-btn-ghost" onclick="startVsAIFreePlay()">CPU Free Play</button>
+  <button id="btn-vs-ai-tutorial" class="lb-btn lb-btn-fire" data-local-mode disabled onclick="startVsAITutorial()">Guided CPU Match</button>
+  <button id="btn-vs-ai-free" class="lb-btn lb-btn-ghost" data-local-mode disabled onclick="startVsAIFreePlay()">CPU Free Play</button>
 </div>
 </div>
 
 <div class="lobby-box" id="friend-room">
 <h3>Create Room</h3>
-<button class="lb-btn lb-btn-fire" onclick="createRoom()" id="create-btn" style="width:100%">Create Room</button>
-<div class="lb-code" id="room-code" style="display:none"></div>
+<button class="lb-btn lb-btn-fire" id="create-btn" style="width:100%" disabled>Create Room</button>
+<div class="lb-code" id="room-code" hidden></div>
 <a id="room-link" class="lb-btn lb-btn-ghost" hidden target="_blank" rel="noopener">Open invitation link</a>
-<button id="copy-room-link" class="lb-btn lb-btn-ghost" hidden onclick="copyRoomLink()">Copy invitation link</button>
-<div class="lb-status" id="create-status"></div>
+<button id="copy-room-link" class="lb-btn lb-btn-ghost" hidden>Copy invitation link</button>
+<button id="cancel-waiting-room" class="lb-btn lb-btn-ghost" hidden>Leave waiting room</button>
+<div class="lb-status" id="create-status" role="status"></div>
 </div>
 
 <div class="lobby-box">
 <h3>Join Room</h3>
 <div class="lb-row">
-<input class="lb-input" id="join-input" placeholder="CODE" maxlength="6">
-<button class="lb-btn lb-btn-ghost" onclick="joinRoom()" id="join-btn">Join</button>
+<input class="lb-input" id="join-input" aria-label="Room code" placeholder="CODE" maxlength="6">
+<button class="lb-btn lb-btn-ghost" id="join-btn" disabled>Join</button>
 </div>
-<div class="lb-status" id="join-status"></div>
+<div class="lb-status" id="join-status" role="status"></div>
 </div>
 </div>
 
 <!-- ═══ GAME SCREEN ═══ -->
+<main id="friend-duel" class="friend-duel" hidden>
+  <header class="friend-duel-header">
+    <div><h1>Friend Duel</h1><p id="friend-duel-room"></p></div>
+    <button type="button" id="friend-duel-leave" class="lb-btn lb-btn-ghost">Return to Lobby</button>
+  </header>
+  <p id="friend-duel-status" role="status"></p>
+  <ol id="friend-duel-phases" aria-label="Turn phases"></ol>
+  <section id="friend-duel-opponent" aria-label="Opponent's field"></section>
+  <section id="friend-duel-board" aria-label="Your field"></section>
+  <section id="friend-duel-hand" aria-label="Your hand"></section>
+  <section class="friend-duel-actions" aria-label="Duel actions">
+    <p id="friend-duel-guidance"></p>
+    <div id="friend-duel-controls"></div>
+  </section>
+  <details><summary>Match log</summary><ol id="friend-duel-log"></ol></details>
+</main>
+<dialog id="friend-duel-choice" aria-labelledby="friend-choice-title">
+  <form method="dialog">
+    <h2 id="friend-choice-title"></h2>
+    <p id="friend-choice-note"></p>
+    <div id="friend-choice-fields"></div>
+    <div class="friend-duel-dialog-buttons">
+      <button type="submit" class="lb-btn lb-btn-fire">Confirm</button>
+      <button type="button" id="friend-choice-cancel" class="lb-btn lb-btn-ghost">Cancel</button>
+    </div>
+  </form>
+</dialog>
 <div id="game">
 <div class="board">
 <!-- Opponent score bar -->
@@ -1267,6 +1296,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <script src="assets/js/tutorial_coach.js"></script>
 <script src="assets/js/cpu-browser.js"></script>
 <script src="play_inline.js?v=zf1-lessons-2026-09-25"></script>
+<script src="assets/js/friend-duel.js"></script>
 
 <script src="assets/js/browser-app.js"></script>
 </body>
