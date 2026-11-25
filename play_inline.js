@@ -326,6 +326,23 @@ function getTutorialStepData(){ return TUTORIAL_STEPS[Math.min(Math.max(tutorial
 // ─── Per-phase guide ──────────────────────────────────────────────────────
 const WALKTHROUGH_PHASES = ['turnStart','draw','ignition','action','battle','resolution','end'];
 let walkthroughReview = null;
+let localDuelWindowMatch = 0;
+let localChainWindowNumber = 0;
+let localChainWasOpen = false;
+
+function getLocalPhaseCopy(phase) {
+  return {
+    turnStart: 'Resolve start-of-turn effects, then go to Draw.',
+    draw: 'Draw one card from your Main Deck. If the deck is empty, skip the draw and keep playing.',
+    ignition: 'Handle any revives, upkeep, or per-turn effects before you play cards.',
+    action: 'Select a card in your hand, then choose a zone or an action. Continue when you’re ready to leave this phase.',
+    battle: GS._p1BattleSkipPending
+      ? 'The first player skips Battle on their first turn. Continue to Resolution.'
+      : 'Attack with a Catalyst in Pressure position. A direct attack usually requires an empty opposing field.',
+    resolution: 'You may change the position of one eligible Catalyst that did not attack.',
+    end: 'Choose Extraction, Rescue, Destroy Trick, or free End Turn. Discard to seven if needed before the turn passes.'
+  }[phase];
+}
 
 function renderWalkthroughRail() {
   const interactive = tutorialActive || isVsAITutorialMode;
@@ -355,17 +372,6 @@ function renderPhaseGuide(){
   const names = (typeof PHASE_NAMES !== 'undefined' && Array.isArray(PHASE_NAMES))
     ? PHASE_NAMES
     : ['Turn Start','Draw','Ignition','Action','Battle','Resolution','End'];
-  const copy = {
-    turnStart:  'Resolve start-of-turn effects, then go to Draw.',
-    draw:       'Draw one card from your Main Deck. If the deck is empty, skip the draw and keep playing.',
-    ignition:   'Handle any revives, upkeep, or per-turn effects before you play cards.',
-    action:     'Select a card in your hand, then choose a zone or an action. Continue when you’re ready to leave this phase.',
-    battle:     GS._p1BattleSkipPending
-      ? 'The first player skips Battle on their first turn. Continue to Resolution.'
-      : 'Attack with a Catalyst in Pressure position. A direct attack usually requires an empty opposing field.',
-    resolution: 'You may change the position of one eligible Catalyst that did not attack.',
-    end:        'Choose Extraction, Rescue, Destroy Trick, or free End Turn. Discard to seven if needed before the turn passes.'
-  };
   const phaseKey = GS.phaseName || 'turnStart';
   const guided = tutorialActive || isVsAITutorialMode;
   const reviewing = guided && walkthroughReview !== null && walkthroughReview !== GS.phase;
@@ -388,9 +394,9 @@ function renderPhaseGuide(){
   banner.dataset.guided = guided ? 'true' : 'false';
   banner.innerHTML = `${match}<div class="tpb-head"><span class="tpb-step">${reviewing ? 'Review' : 'Phase'} ${displayPhase + 1} / 7</span>
     <span class="tpb-name">${displayName}</span></div>
-    <p class="tpb-copy">${copy[WALKTHROUGH_PHASES[displayPhase]]}</p>
+    <p class="tpb-copy">${getLocalPhaseCopy(WALKTHROUGH_PHASES[displayPhase])}</p>
     ${reviewing ? `<button type="button" class="act-btn tpb-review-back" onclick="reviewWalkthroughPhase(${GS.phase})">Return to ${names[GS.phase]}</button>` : ''}
-    ${!reviewing && GS.waitingForResponse ? '<p class="tpb-wait">Finish the Chain in Actions to continue.</p>' : ''}
+    ${!reviewing && GS.waitingForResponse ? '<p class="tpb-wait">Finish the Chain response to continue.</p>' : ''}
     ${!reviewing && GS.pendingDiscard && isMyTurn ? '<p class="tpb-wait">Tap cards in your hand to discard to seven.</p>' : ''}
     ${!reviewing && !isMyTurn && !GS.waitingForResponse ? '<p class="tpb-wait">Opponent’s turn.</p>' : ''}
     ${next ? `<button type="button" class="act-btn act-btn-fire tpb-primary" onclick="${next[1]}">${next[0]}</button>` : ''}`;
@@ -1119,6 +1125,8 @@ function startGame() {
 
 function initGame(p1Deck, p2Deck) {
   walkthroughReview = null;
+  localDuelWindowMatch += 1;
+  localChainWasOpen = false;
   closeCardText();
   const prepare = deck => Object.assign(CTFDeckUtils.normalizeDeck(deck), {
     fixedOpeningHand: Array.isArray(deck?.fixedOpeningHand) ? deck.fixedOpeningHand.slice() : [],
@@ -1161,6 +1169,7 @@ function markDisconnected() {
   if (el) { el.textContent = 'Disconnected'; el.className = 'net-pill err'; }
   const btn = $('reconnect-btn');
   if (btn) btn.style.display = '';
+  renderLocalDuelWindows();
 }
 
 function clearDisconnectState() {
@@ -2043,7 +2052,7 @@ function getLegalActionsList() {
   const items = [];
   if (GS.waitingForResponse) {
     if (GS.currentResponder === myPlayer) {
-      const responses = getRespondableTricks(GS, myPlayer);
+      const responses = getLocalChainResponses();
       items.push({ label: responses.length ? 'Respond with Concealed/Counter' : 'Pass chain', tone: responses.length ? '' : 'warn' });
     } else {
       items.push({ label: 'Wait for response', tone: 'blocked' });
@@ -2166,6 +2175,131 @@ function getHelperCopy() {
   return 'Use Continue to move through automatic phases. Watch the status banner and duel log for the next legal step.';
 }
 
+function getLocalChainResponses() {
+  return isZeroDegreesLockActive(GS) ? [] : getRespondableTricks(GS, myPlayer);
+}
+
+function getLocalNextStep() {
+  const phase = GS.phaseName;
+  const player = GS.players[myPlayer];
+  const advance = label => ({label, run:doAdvance, primary:true});
+  const guide = {title:`Next Step · ${PHASE_NAMES[GS.phase]}`, copy:getLocalPhaseCopy(phase), actions:[]};
+  if (GS.pendingDiscard?.playerIdx === myPlayer) {
+    const count = GS.pendingDiscard.remaining;
+    return {title:'Hand Limit', copy:`Choose ${count} ${count === 1 ? 'card' : 'cards'} from your hand to discard. Your turn ends when your hand is down to seven.`, actions:[]};
+  }
+
+  switch (phase) {
+    case 'turnStart':
+      guide.actions = [advance('Continue to Draw')];
+      break;
+    case 'draw':
+      if (player._drawPhaseResolved) {
+        guide.copy = 'Draw is complete. Continue to Ignition.';
+        guide.actions = [advance('Continue to Ignition')];
+      } else {
+        guide.actions = [{label:player.deck.length ? 'Draw a Card' : 'Skip the Draw', run:doDrawPhaseClick, primary:true}];
+      }
+      break;
+    case 'ignition':
+      if (player.toolboxActive) guide.actions.push({label:'Use Toolbox Effect', run:startToolboxIgnition});
+      guide.actions.push(advance('Continue to Action'));
+      break;
+    case 'action': {
+      const selected = getCard(player.hand[selectedHandIdx]);
+      if (selected) {
+        guide.copy = 'Use a highlighted zone for your selected card, or clear the selection.';
+        if (!isWatchModeEnabled()) {
+          if (selected.cardType === 'Catalyst') guide.copy = 'Place the selected Catalyst in an open Catalyst Zone. Higher levels may require Tributes.';
+          if (selected.cardType === 'Field Trick') guide.copy = 'Choose your Field slot to play the selected Field Trick.';
+          if (selected.cardType === 'Palm Trick') guide.copy = 'Activate the selected Palm Trick, or set it in an open Trick Zone.';
+          if (['Counter Trick','Concealed Trick'].includes(selected.cardType)) guide.copy = 'Set the selected Trick in an open Trick Zone.';
+        }
+        if (selected.cardType === 'Palm Trick' && !isZeroDegreesLockActive(GS)) {
+          guide.actions.push({label:'Activate Selected Trick', run:startActivatePalm, primary:true});
+        }
+        if (selected.cardType === 'Catalyst' && selected.level >= 1 && selected.level <= 4 &&
+            !player.normalSummonUsed && player.catalysts.some(slot => !slot)) {
+          guide.actions.push({label:'Set Selected Card Face Down', run:startSetCatalyst});
+        }
+        guide.actions.push({label:'Clear Selection', run:cancelSelection});
+      }
+      guide.actions.push({...advance('Continue to Battle'), primary:!selected});
+      break;
+    }
+    case 'battle':
+      if (GS._p1BattleSkipPending) {
+        guide.actions = [{label:'Skip to Resolution', run:dismissP1SkipBattle, primary:true}];
+      } else if (attackMode) {
+        guide.copy = attackerZone < 0 ? 'Choose one of your eligible Pressure-position Catalysts.' : 'Choose an opposing Catalyst Zone as the attack target.';
+        guide.actions = [{label:'Cancel Attack Selection', run:cancelAttack}];
+      } else {
+        const canAttack = player.catalysts.some(slot => slot && slot.position === 'atk' && !slot.attackedThisTurn && !slot.cannotAttackThisTurn);
+        if (canAttack) {
+          const direct = !GS.players[1-myPlayer].catalysts.some(Boolean);
+          guide.actions.push({label:direct ? 'Attack Directly' : 'Choose an Attacker', run:direct ? directAttack : enterAttackMode, primary:true});
+        }
+        guide.actions.push({...advance('Continue to Resolution'), primary:!canAttack});
+      }
+      break;
+    case 'resolution':
+      player.catalysts.forEach((slot, zone) => {
+        if (!slot || slot.attackedThisTurn || player.posChanged?.has(zone)) return;
+        guide.actions.push({label:`Change C${zone + 1} to ${slot.position === 'atk' ? 'Counter Pressure' : 'Pressure'}`, run:() => doResolutionFlipPosition(zone)});
+      });
+      guide.actions.push(advance('Continue to End'));
+      break;
+    case 'end':
+      guide.actions = [{label:'End My Turn', run:() => doEndPhase('endTurn'), primary:true}];
+      if (getEligibleCatalysts(GS, myPlayer).length) guide.actions.push({label:'Choose an End Phase Action', run:openEndPhaseModal});
+      break;
+  }
+  return guide;
+}
+
+function renderLocalDuelWindows() {
+  const windows = window.CTF_DUEL_WINDOWS;
+  if (!windows || $('game').style.display !== 'grid' || $('friend-duel')?.hidden === false) return;
+  const chainOpen = !!GS?.waitingForResponse;
+  if (chainOpen && !localChainWasOpen) localChainWindowNumber += 1;
+  localChainWasOpen = chainOpen;
+  const key = GS && `local:${localDuelWindowMatch}:${GS.turn}:${myPlayer}:${GS.phaseName}`;
+  const canPlay = GS && !GS.gameOver && (!net || net.peerNet || (net.connected && !awaitingActionAck));
+  if (canPlay && chainOpen && GS.currentResponder === myPlayer) {
+    const depth = GS.chain.length;
+    const latest = GS.chain[depth - 1];
+    const revealedTrick = ['palm','concealed'].includes(latest?.source) ? getCard(latest.cardId)?.name : '';
+    const source = latest?.source === 'attack' ? 'An attack' : revealedTrick || 'An effect';
+    const responses = getLocalChainResponses();
+    const useZoneLabels = isWatchModeEnabled() || isHotSeatMode || isSandboxMode;
+    const actions = responses.map(response => ({
+      label:useZoneLabels ? `Respond from T${response.zone + 1}` : `Respond with ${response.card.name}`,
+      run:() => doRespondFromZone(response.zone)
+    }));
+    actions.push({label:'Pass Chain', run:doPassChain, primary:!responses.length});
+    windows.update('next', {show:false});
+    windows.update('chain', {
+      key:`${key}:${localChainWindowNumber}:${depth}:${GS.consecutivePasses}`,
+      title:isHotSeatMode || isSandboxMode ? `Chain Response · P${myPlayer + 1}` : 'Chain Response',
+      copy:responses.length
+        ? `${source} is Link ${depth} and resolves first. Respond with a legal set Trick or pass.`
+        : `${source} is Link ${depth}. No set Tricks can respond, so pass to continue.`,
+      actions,
+      show:true
+    });
+    return;
+  }
+  windows.update('chain', {show:false});
+  if (!canPlay || chainOpen || GS.activePlayer !== myPlayer) {
+    windows.update('next', {show:false});
+    return;
+  }
+  const step = GS.pendingDiscard ? 'discard'
+    : GS.phaseName === 'draw' && GS.players[myPlayer]._drawPhaseResolved ? 'drawn'
+    : attackMode ? (attackerZone < 0 ? 'attacker' : 'target') : 'phase';
+  windows.update('next', {...getLocalNextStep(), key:`${key}:${step}`, show:true});
+}
+
 function getLogType(msg) {
   if (msg.includes('🏆')) return 'win';
   if (msg.includes('⚔')) return 'combat';
@@ -2283,6 +2417,7 @@ function renderAll() {
 
   // Actions
   renderActions(isMyTurn);
+  renderLocalDuelWindows();
 
   // Log
   renderLog();
@@ -2503,7 +2638,7 @@ function renderActions(isMyTurn) {
   let html = getChainSummaryHtml();
   if (GS.waitingForResponse) {
     if (GS.currentResponder === myPlayer) {
-      const opts = getRespondableTricks(GS, myPlayer);
+      const opts = getLocalChainResponses();
       html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Chain response window. Counter Tricks take priority if one is already on the stack.</div>`;
       if (opts.length) {
         opts.forEach(o => {
@@ -2621,8 +2756,7 @@ function renderActions(isMyTurn) {
   } else if (phase === 'end') {
     $('actions-panel').style.display = 'none';
     epPanel.style.display = '';
-    // Auto-open the End Phase modal so choices are front-and-center.
-    try { openEndPhaseModal(); } catch(e){}
+    if (!window.CTF_DUEL_WINDOWS) openEndPhaseModal();
     const eligible = getEligibleCatalysts(GS, myPlayer);
     const extractLocked = eligible.length === 0 || getEligibleBoxTargets(GS, myPlayer, 'extraction').length === 0;
     const rescueLocked = eligible.length === 0 || getEligibleBoxTargets(GS, myPlayer, 'rescue').length === 0;
@@ -3074,6 +3208,7 @@ function showToast(msg) {
 }
 
 // ═══ INIT ═══
+document.addEventListener('ctf-duel-windows-ready', renderLocalDuelWindows);
 // Commands in the UI execute optimistically, so block a second click until the
 // host acknowledges the first one. Inspection and reconnect remain available.
 document.addEventListener('click',event=>{

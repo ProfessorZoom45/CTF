@@ -1,7 +1,12 @@
 (function () {
+  let lastWindowTap = null;
   const page=document.getElementById('friend-duel') ? 'play' : (location.pathname.split('/').pop()||'index').replace(/\.html$/,'');
   document.body.dataset.ctfPage=page;
-  if (page === 'play') setupDuelDisplay();
+  if (page === 'play') {
+    window.CTF_DUEL_WINDOWS = setupDuelPrompts();
+    setupDuelDisplay();
+    document.dispatchEvent(new Event('ctf-duel-windows-ready'));
+  }
   if(page==='rules')for(const table of document.querySelectorAll('.rule-table')){const scroll=document.createElement('div');scroll.className='ctf-table-scroll';scroll.tabIndex=0;scroll.setAttribute('aria-label','Scrollable rules table');table.before(scroll);scroll.append(table);}
   const sidebar = document.querySelector('#game .sidebar');
   if (sidebar) {
@@ -44,7 +49,10 @@
       const mode = !friendDuel.hidden ? 'friend' : localDuel.style.display === 'grid' ? 'local' : '';
       if ((document.body.dataset.ctfDuel || '') === mode) return;
       if (mode) document.body.dataset.ctfDuel = mode;
-      else delete document.body.dataset.ctfDuel;
+      else {
+        delete document.body.dataset.ctfDuel;
+        window.CTF_DUEL_WINDOWS.reset();
+      }
       closeCardText();
     }
     const modeObserver = new MutationObserver(updateMode);
@@ -66,6 +74,17 @@
     }
     document.addEventListener('fullscreenchange', syncFullscreenLabels);
     document.addEventListener('webkitfullscreenchange', syncFullscreenLabels);
+
+    document.addEventListener('pointerdown', () => { lastWindowTap = null; }, true);
+    document.addEventListener('click', event => {
+      const physicalMouse = event.pointerType === 'mouse' && !event.sourceCapabilities?.firesTouchEvents;
+      if (!lastWindowTap || !event.detail || physicalMouse || performance.now() - lastWindowTap.at > 500) return;
+      if (Math.hypot(event.clientX - lastWindowTap.x, event.clientY - lastWindowTap.y) > 8) return;
+      // A response can replace the button before the same touch also produces a click.
+      lastWindowTap = null;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }, true);
 
     async function setFullscreen(explicit) {
       const enter = root.requestFullscreen || root.webkitRequestFullscreen;
@@ -93,7 +112,7 @@
         automaticFullscreenTried = true;
         void setFullscreen(true);
       } else if (!automaticFullscreenTried && !touch.matches && event.isTrusted &&
-          button.matches('[data-local-mode], #create-btn, #join-btn, .tpb-primary')) {
+          button.matches('[data-local-mode], #create-btn, #join-btn, .tpb-primary, .duel-prompt-actions button')) {
         automaticFullscreenTried = true;
         void setFullscreen(false);
       }
@@ -126,7 +145,120 @@
     });
   }
 
-  function setupWindow(panel, close, visible) {
+  function setupDuelPrompts() {
+    const dock = document.querySelector('.duel-prompt-dock');
+    const states = {};
+    for (const kind of ['next', 'chain']) {
+      const panel = document.getElementById(`duel-${kind}-window`);
+      const reopen = document.getElementById(`duel-reopen-${kind}`);
+      const state = {
+        panel, reopen,
+        heading: panel.querySelector('h2'), copy: panel.querySelector('.duel-prompt-copy'),
+        controls: panel.querySelector('.duel-prompt-actions'),
+        actions: [], visibleKey: null, available: false, dismissed: false, placed: false
+      };
+      states[kind] = state;
+      state.window = setupWindow(panel, () => {
+        state.dismissed = true;
+        renderVisibility();
+        reopen.focus({preventScroll:true});
+      }, node => !node.hidden, true);
+      bindWindowPress(reopen, () => {
+        if (!state.available) return;
+        state.dismissed = false;
+        renderVisibility();
+        state.window.expand();
+        panel.querySelector('.duel-window-bar').focus({preventScroll:true});
+      });
+    }
+
+    function place(state) {
+      const mat = document.querySelector('#friend-duel:not([hidden]) .ctf-playmat') || document.querySelector('#game .ctf-playmat');
+      const bounds = mat.getBoundingClientRect();
+      const x = Math.min(innerWidth - state.panel.offsetWidth - 8, Math.max(8, bounds.left + 10));
+      const y = Math.min(innerHeight - state.panel.offsetHeight - 8, Math.max(8, bounds.top + 10));
+      state.panel.style.left = `${Math.max(8, x)}px`;
+      state.panel.style.top = `${Math.max(8, y)}px`;
+      state.placed = true;
+    }
+
+    function renderVisibility() {
+      const active = states.chain.available ? states.chain : states.next.available ? states.next : null;
+      for (const state of Object.values(states)) {
+        state.reopen.hidden = state !== active || !state.dismissed;
+        state.panel.hidden = state !== active || state.dismissed;
+        if (!state.panel.hidden && !state.placed) place(state);
+      }
+      if (active?.dismissed) {
+        dock.style.left = `${Math.max(8, Math.min(parseFloat(active.panel.style.left), innerWidth - dock.offsetWidth - 8))}px`;
+        dock.style.top = `${Math.max(8, Math.min(parseFloat(active.panel.style.top), innerHeight - dock.offsetHeight - 8))}px`;
+      }
+    }
+    window.addEventListener('resize', renderVisibility);
+
+    function update(kind, {show = true, key, title, copy, actions = []}) {
+      const state = states[kind];
+      state.available = show;
+      if (!show) {
+        state.actions = [];
+        state.controls.replaceChildren();
+        state.copy.textContent = '';
+        state.heading.textContent = kind === 'chain' ? 'Chain response' : 'Next step';
+        renderVisibility();
+        return;
+      }
+      const changed = key !== state.visibleKey;
+      if (changed) {
+        state.visibleKey = key;
+        state.dismissed = false;
+      }
+      if (state.heading.textContent !== title) state.heading.textContent = title;
+      if (state.copy.textContent !== copy) state.copy.textContent = copy;
+      state.actions = actions;
+      while (state.controls.children.length > actions.length) state.controls.lastElementChild.remove();
+      actions.forEach((action, index) => {
+        let button = state.controls.children[index];
+        if (!button) {
+          button = document.createElement('button');
+          button.type = 'button';
+          bindWindowPress(button, () => state.actions[index]?.run());
+          state.controls.append(button);
+        }
+        button.className = `act-btn ${action.primary ? 'act-btn-fire' : 'act-btn-ghost'}`;
+        if (button.textContent !== action.label) button.textContent = action.label;
+        button.disabled = !!action.disabled;
+      });
+      renderVisibility();
+      if (changed) state.window.expand();
+    }
+
+    function reset() {
+      for (const [kind, state] of Object.entries(states)) {
+        state.placed = false;
+        state.visibleKey = null;
+        state.dismissed = false;
+        state.window.reset();
+        update(kind, {show:false});
+      }
+    }
+
+    return {update, reset};
+  }
+
+  function bindWindowPress(node, action) {
+    node.addEventListener('pointerup', event => {
+      if (node.disabled || event.pointerType !== 'touch' || !event.isPrimary || document.elementFromPoint(event.clientX, event.clientY) !== node) return;
+      // A touch tap immediately after dragging a window may produce no click.
+      lastWindowTap = {x:event.clientX, y:event.clientY, at:performance.now()};
+      action();
+    });
+    node.addEventListener('click', () => {
+      if (node.disabled) return;
+      action();
+    });
+  }
+
+  function setupWindow(panel, close, visible, keepWhenHidden = false) {
     const header = panel.querySelector('.duel-window-bar');
     const controls = document.createElement('div');
     controls.className = 'duel-window-controls';
@@ -136,17 +268,7 @@
       node.title = label;
       node.setAttribute('aria-label', label);
       node.textContent = glyph;
-      let lastTouch = -Infinity;
-      node.addEventListener('pointerup', event => {
-        if (event.pointerType !== 'touch' || !event.isPrimary || document.elementFromPoint(event.clientX, event.clientY) !== node) return;
-        // A touch tap immediately after dragging a window may produce no click.
-        lastTouch = performance.now();
-        action();
-      });
-      node.addEventListener('click', event => {
-        if (event.detail && event.pointerType !== 'mouse' && performance.now() - lastTouch < 500) return;
-        action();
-      });
+      bindWindowPress(node, action);
       controls.append(node);
       return node;
     };
@@ -196,15 +318,18 @@
       move(direction[0] * 16, direction[1] * 16);
     });
     window.addEventListener('resize', () => { if (visible(panel)) move(0, 0); });
-    const reset = new MutationObserver(() => {
-      if (visible(panel)) return;
+    function reset() {
       if (panel.classList.contains('duel-window-minimized')) minimize(false);
       x = 0;
       y = 0;
       panel.style.removeProperty('--duel-window-x');
       panel.style.removeProperty('--duel-window-y');
-    });
-    reset.observe(panel, {attributes:true,attributeFilter:['class','open','aria-hidden']});
-    reset.observe(panel.parentElement, {attributes:true,attributeFilter:['class']});
+    }
+    if (!keepWhenHidden) {
+      const closed = new MutationObserver(() => { if (!visible(panel)) reset(); });
+      closed.observe(panel, {attributes:true,attributeFilter:['class','open','aria-hidden']});
+      closed.observe(panel.parentElement, {attributes:true,attributeFilter:['class']});
+    }
+    return {reset, expand() { minimize(false); if (visible(panel)) move(0, 0); }};
   }
 })();

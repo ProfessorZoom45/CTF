@@ -34,6 +34,8 @@
   let pending = false;
   let pollTimer;
   let choice;
+  let duelStartRevision = 0;
+  let actionError = '';
 
   const element = (tag, text, className) => {
     const node = document.createElement(tag);
@@ -128,6 +130,8 @@
 
   function acceptView(next) {
     if (!next || view && next.revision < view.revision) return;
+    if (!view || view.result && !next.result) duelStartRevision = next.revision;
+    if (!view || next.revision > view.revision) actionError = '';
     if (choiceDialog.open && view && next.revision > view.revision) choiceDialog.close();
     view = next;
     duelPage.hidden = false;
@@ -157,12 +161,16 @@
     if (!room || !view || pending) return;
     const seat = room;
     pending = true;
-    controlPanel.querySelectorAll('button').forEach(node => { node.disabled = true; });
+    actionError = '';
+    renderControls();
     try {
       const result = await api('rooms/' + seat.code + '/messages', {...body, revision:view.revision}, seat.token);
       if (room === seat) acceptView(result.view);
     } catch (error) {
-      if (room === seat) byId('friend-duel-status').textContent = error.message;
+      if (room === seat) {
+        actionError = error.message;
+        byId('friend-duel-status').textContent = actionError;
+      }
     } finally {
       pending = false;
       if (room === seat) renderControls();
@@ -385,12 +393,42 @@
   function renderControls() {
     if (!view) return;
     controlPanel.replaceChildren();
+    const actions = [];
+    appendControls((label, run, primary = false, popupLabel = label) => {
+      controlPanel.append(button(label,run,primary));
+      actions.push({label:popupLabel,run,primary,disabled:pending});
+    });
+    updateDuelWindows(actions);
+  }
+
+  function updateDuelWindows(actions) {
+    const windows = window.CTF_DUEL_WINDOWS;
+    if (!windows) return;
+    const canAct = !!(room && view && connected && !view.result && view.prioritySeat === view.seat && actions.length);
+    const inChain = canAct && view.waitingForResponse;
+    if (!inChain) windows.update('chain',{show:false});
+    if (!canAct || inChain) windows.update('next',{show:false});
+    if (!canAct) return;
+
+    const phase = phases.find(([key])=>key === view.phase);
+    const step = view.pendingDiscard ? 'discard' : view.phase === 'draw' && !view.drawResolved ? 'draw-card' : 'choice';
+    const key = inChain ? `${room.code}:${view.revision}:chain` : `${room.code}:${duelStartRevision}:${view.turn}:${view.phase}:${step}`;
+    let copy = byId('friend-duel-guidance').textContent;
+    if (inChain) copy = view.choices.counters.length
+      ? 'You have response priority. Play a legal Trick or pass.'
+      : 'You have response priority. Pass to continue the Chain.';
+    else if (view.pendingDiscard) copy = 'Choose a card to discard. Repeat until you have seven cards in hand.';
+    const title = inChain ? 'Chain response' : `Next step · ${view.pendingDiscard ? 'Hand limit' : phase?.[1] || 'Your turn'}`;
+    windows.update(inChain ? 'chain' : 'next',{key,title,copy:actionError || copy,actions,show:true});
+  }
+
+  function appendControls(addAction) {
     const {seat, players, phase, prioritySeat, waitingForResponse, pendingDiscard, result, choices} = view;
     const me = players[seat], other = players[1-seat];
-    const simple = (label, command, primary = false) => controlPanel.append(button(label,()=>act(command),primary));
-    const prompt = (label, type, fields, params = {}, onChange) => {
+    const simple = (label, command, primary, popupLabel) => addAction(label,()=>act(command),primary,popupLabel);
+    const prompt = (label, type, fields, {params = {}, onChange, primary = false} = {}) => {
       if (fields.some(field => !field.multiple && !field.options.length)) return;
-      controlPanel.append(button(label,()=>choose(label, fields, data=>act({type,...params,...data}),onChange)));
+      addAction(label,()=>choose(label, fields, data=>act({type,...params,...data}),onChange),primary);
     };
     if (result) {
       const deck = element('select');
@@ -432,14 +470,18 @@
       return;
     }
     if (pendingDiscard) {
-      prompt('Discard to Seven','discardForHandLimit',[setHand(Boolean)]);
+      prompt('Discard to Seven','discardForHandLimit',[setHand(Boolean)],{primary:true});
       return;
     }
     if (phase === 'draw' && !view.drawResolved) {
-      simple(me.deckCount ? 'Draw Card' : 'Skip Draw',{type:'drawPhaseClick'},true);
+      const draw = Boolean(me.deckCount);
+      simple(draw ? 'Draw Card' : 'Skip Draw',{type:'drawPhaseClick'},true,draw ? 'Draw from Main Deck' : 'Skip Empty Draw');
       return;
     }
-    if (phase !== 'end') simple('Continue',{type:'advancePhase'},true);
+    if (phase !== 'end') {
+      const next = phases[phases.findIndex(([key])=>key === phase) + 1]?.[1];
+      simple('Continue',{type:'advancePhase'},true,next ? `Go to ${next}` : 'Continue');
+    }
     if (phase === 'action') {
       if (choices.normalSpawn) {
         prompt('Normal Spawn','normalSummon',[
@@ -479,31 +521,31 @@
       prompt('Declare Attack','attack',[
         selector('attackerZone','Your attacker',indexes(me.catalysts,slot=>slot?.position==='atk' && !slot.faceDown,'C')),
         selector('defenderZone','Attack target',defenders.length ? defenders : [option(-1,'Opposing Chi')])
-      ],{}, ({attackerZone, defenderZone})=>{
+      ],{onChange:({attackerZone, defenderZone})=>{
         const attacker = me.catalysts[attackerZone], target = other.catalysts[defenderZone];
         if (target?.faceDown) return 'The defender’s value will be known when it is revealed.';
         const recoil = target?.position === 'def' ? target.counterPressure - attacker?.pressure : 0;
         return recoil > 0 ? `At current values, this attack risks ${recoil} Chi before responses or effects.` : '';
-      });
+      }});
     }
     if (phase === 'resolution') prompt('Change Catalyst Position','resolutionFlipPosition',[selector('zoneIdx','Your Catalyst',occupied)]);
     if (phase === 'end') {
       simple('End Turn',{type:'endPhaseAction',action:'endTurn'},true);
       const payment = selector('sacrificeZone','Catalyst you own and control',occupied.filter(item=>choices.payWith.includes(item.value)));
       for (const [action,label,box,targets] of [['extraction','Extract',me.box,choices.extract],['rescue','Rescue',other.box,choices.rescue]]) {
-        prompt(label,'endPhaseAction',[payment,selector('targetIdx','Box target',targets.map(i=>option(i,cardName(box[i]))))],{action});
+        prompt(label,'endPhaseAction',[payment,selector('targetIdx','Box target',targets.map(i=>option(i,cardName(box[i]))))],{params:{action}});
       }
       const destroy = players.flatMap((player,i) => [
         ...player.tricks.flatMap((slot,z) => slot ? [option(`${i}:${z}`, `Player ${i+1} · T${z+1} · ${slot.cardId ? cardName(slot.cardId) : 'Face down'}`)] : []),
         ...(player.fieldTrick ? [option(`${i}:field`,`Player ${i+1} · Field Trick`)] : [])
       ]);
-      if (payment.options.length && destroy.length) controlPanel.append(button('Destroy Trick',()=>choose('Destroy Trick', [
+      if (payment.options.length && destroy.length) addAction('Destroy Trick',()=>choose('Destroy Trick', [
         payment,selector('target','Trick target',destroy)
       ], ({sacrificeZone,target})=>{
         const [player,z] = target.split(':');
         act({type:'endPhaseAction',action:'destroyTrick',sacrificeZone,
           targetIdx:z==='field'?{player:Number(player),kind:'field'}:{player:Number(player),zone:Number(z)}});
-      })));
+      }));
     }
   }
 
@@ -533,6 +575,8 @@
     room = null;
     view = null;
     connected = false;
+    actionError = '';
+    updateDuelWindows([]);
     clearTimeout(pollTimer);
     byId('cancel-waiting-room').hidden = true;
     byId('room-code').hidden = true;

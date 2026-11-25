@@ -1231,6 +1231,25 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="tip-desc" id="tip-desc"></div>
 </aside>
 
+<section id="duel-next-window" class="duel-prompt-window" aria-labelledby="duel-next-title" hidden>
+  <header class="duel-window-bar">
+    <h2 id="duel-next-title">Next step</h2>
+  </header>
+  <p class="duel-prompt-copy" aria-live="polite"></p>
+  <div class="duel-prompt-actions"></div>
+</section>
+<section id="duel-chain-window" class="duel-prompt-window duel-prompt-chain" aria-labelledby="duel-chain-title" hidden>
+  <header class="duel-window-bar">
+    <h2 id="duel-chain-title">Chain response</h2>
+  </header>
+  <p class="duel-prompt-copy" aria-live="polite"></p>
+  <div class="duel-prompt-actions"></div>
+</section>
+<div class="duel-prompt-dock" aria-label="Duel windows">
+  <button class="act-btn act-btn-ghost" type="button" id="duel-reopen-next" aria-controls="duel-next-window" hidden>Open next step</button>
+  <button class="act-btn act-btn-fire" type="button" id="duel-reopen-chain" aria-controls="duel-chain-window" hidden>Open Chain response</button>
+</div>
+
 <!-- SETTINGS DRAWER -->
 <div class="settings-drawer" id="settings-drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true" inert>
   <header class="duel-window-bar">

@@ -552,6 +552,43 @@ body[data-ctf-page='play'][data-ctf-duel='local'].ctf-duel-fullscreen #game { he
 button.playmat-card { cursor: pointer; font: inherit; text-align: center; }
 #friend-duel-hand .friend-duel-card button { margin-top: .35rem; }
 
+.duel-prompt-window {
+  position: fixed;
+  z-index: 1450;
+  left: .75rem;
+  top: calc(var(--duel-nav-height, 0px) + .75rem);
+  width: min(17.5rem, calc(100vw - 1rem));
+  max-height: calc(100dvh - 1rem);
+  overflow: auto;
+  padding: .55rem .65rem;
+  border: 1px solid #c98956;
+  border-radius: .4rem;
+  background: #201711;
+  box-shadow: 0 8px 24px #000b;
+}
+.duel-prompt-chain { z-index: 1570; border-color: #e5a7f5; background: #291b31; }
+.duel-prompt-window .duel-window-bar h2 {
+  color: #ffe4ba;
+  font: 700 1.04rem/1.1 var(--font-label);
+  overflow-wrap: anywhere;
+}
+.duel-prompt-chain .duel-window-bar h2 { color: #f5d2ff; }
+.duel-prompt-copy { font-size: .84rem; line-height: 1.36; color: #f0e2d6; }
+.duel-prompt-actions { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .5rem; }
+.duel-prompt-actions:empty { display: none; }
+.duel-prompt-actions .act-btn { flex: 1 1 auto; width: auto; margin: 0; text-align: center; }
+.duel-prompt-dock { position: fixed; z-index: 1449; left: .75rem; top: .75rem; }
+.duel-prompt-dock .act-btn { width: auto; margin: 0; }
+.duel-prompt-dock button[hidden], .duel-prompt-window[hidden] { display: none; }
+
 @media (pointer: coarse) {
   .duel-window-controls button { width: 2.5rem; height: 2.5rem; }
+  .duel-prompt-actions .act-btn, .duel-prompt-dock .act-btn { min-height: 40px; }
+}
+
+@media (orientation: landscape) and (max-height: 540px) {
+  .duel-prompt-window { width: min(13rem, 47vw); padding: .4rem .45rem; }
+  .duel-prompt-window .duel-window-controls button { height: 2.15rem; width: 2.15rem; }
+  .duel-prompt-window .duel-window-bar h2 { font-size: .95rem; }
+  .duel-prompt-copy { font-size: .75rem; }
 }
