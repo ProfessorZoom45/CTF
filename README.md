@@ -1,12 +1,11 @@
 # Carry The Flame — Browser-First Beta
 
-This repo now ships the free browser-first beta path first:
+This is the source repository for the Carry The Flame browser game.
 
-- all cards viewable
-- live deckbuilder
-- 5-match tutorial + hot-seat + solo sandbox
-- beta signup + Discord funnel
-- PWA install shell now, account systems later
+- Game Hub with Guided Play, CPU opponents, local hot-seat, and solo sandbox
+- Card collection, Deck Workshop, and six-lesson Forge
+- Searchable Rules Codex and interactive board previews
+- Installable browser app and offline support for local play
 
 # CTF — Carry The Flame
 
@@ -14,9 +13,11 @@ A fully original tactical card game by Perfect Timing Gaming / Makairis Holding 
 
 ## Quick Start
 
-1. Clone: `git clone https://github.com/ProfessorZoom45/CTF.git`
-2. Open `index.html` in any browser — no build step required.
-3. All pages are static HTML + vanilla JS. No dependencies.
+1. Clone `https://github.com/ProfessorZoom45/CTF.git`.
+2. Run `node server.mjs` from the checkout with Node.js 22 or newer.
+3. Open [the local Game Hub](http://127.0.0.1:8028/). The server binds to loopback. To select a different port, set `CTF_PORT` before starting it.
+
+Run `node tools/audit-browser.cjs`, `node tools/test-browser-rules.cjs --simulate`, `node tools/test-zf1-tutorial.cjs`, and `node tools/test-forge.cjs` from the checkout. With the local server running, run `node tools/test-site-http.cjs http://127.0.0.1:8028` and `node tools/test-online.mjs http://127.0.0.1:8028` to verify the static assets and development relay.
 
 ## Pages
 
@@ -26,17 +27,14 @@ A fully original tactical card game by Perfect Timing Gaming / Makairis Holding 
 | `rules.html` | Complete rulebook — all 22 locked rules, board layout, phases |
 | `cards.html` | Card database browser — search, filter, sort 1,610 cards |
 | `deckbuilder.html` | Deck builder — build, save, load 40–60 card decks |
-| `play.html` | Online play client — WebRTC P2P with room codes |
-| `first-five-forge.html` | Six ZF1-only lessons with quick checks, followed by a guided battle |
+| `play.html` | Guided Play, CPU, local hot-seat and development Friend Rooms |
+| `first-five-forge.html` | Six creation lessons, private drafts and JSON backup |
 | `glossary.html` | CTF-native terminology reference |
 | `submit.html` | Custom card submission — 5-card sets with stat pool system |
 
-The Learn to Play page keeps lesson progress in browser storage. Card creation and
-submission are handled on `submit.html`. Lesson examples and the guided battle use
-only the 26 cards in the supplied `assets/data/ZF1.ptcg`; their names and printed
-text are preserved. The battle uses a focused teaching deck rather than a standard-size deck.
-Regenerate its browser data with `node tools/build-zf1-tutorial-data.mjs` and check
-it with `node tools/test-zf1-tutorial.cjs`.
+Start with a guided starter duel, then create cards in the Forge. Finishing a draft opens the Deck Workshop or a guided replay with the starter deck. The lessons and provisional teaching deck use the 26 cards in `assets/data/ZF1.ptcg`. Regenerate the data with `node tools/build-zf1-tutorial-data.mjs` and check it with `node tools/test-zf1-tutorial.cjs`.
+
+GitHub Pages serves the browser files from `main` at the repository root. The local relay still exchanges a complete match snapshot. Public Friend Rooms require a referee that sends authenticated views for each seat, plus cross-network series and reconnect testing. The launch set and art and the hosted Forge review and email workflow are also release gates.
 
 ## Card Database
 

@@ -41,6 +41,7 @@ nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(13,13,13
 .rules-layout{display:flex;max-width:1200px;margin:0 auto;padding:2rem 1.5rem;gap:2rem}
 .sidebar{position:sticky;top:5rem;width:240px;flex-shrink:0;height:fit-content;max-height:calc(100vh - 6rem);overflow-y:auto}
 .sidebar a{display:block;font-family:var(--font-label);font-weight:600;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;color:var(--ash);padding:.5rem .8rem;border-left:2px solid transparent;transition:all .2s}
+.sidebar a[hidden]{display:none}
 .sidebar a:hover,.sidebar a.active{color:var(--flame);border-left-color:var(--flame);background:rgba(255,106,0,.05)}
 .rules-content{flex:1;min-width:0}
 .rule-section{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,106,0,.08)}.rule-section:last-child{border-bottom:none}
@@ -267,6 +268,8 @@ body.ctf-nav-open { overflow: hidden; }
 body.ctf-nav-pad { padding-top: 0; }
 </style>
 
+<link rel="stylesheet" href="assets/css/site-theme.css">
+<script src="assets/js/timing-lab.js" defer></script>
 </head>
 <body>
 <!-- CTF unified nav -->
@@ -282,7 +285,7 @@ body.ctf-nav-pad { padding-top: 0; }
     <ul class="nav-links" id="ctf-nav-list">
       <li><a href="index.html">Home</a></li>
       <li><a href="rules.html" class="active" aria-current="page">Rules</a></li>
-      <li><a href="first-five-forge.html">Learn to Play</a></li>
+      <li><a href="play.html?guided=1">Learn to Play</a></li>
       <li><a href="https://discord.gg/cKj3ayt2Mp">Join Our Discord</a></li>
       <li><a href="glossary.html">Glossary</a></li>
       <li><a href="About_Us.html">About</a></li>
@@ -326,7 +329,7 @@ body.ctf-nav-pad { padding-top: 0; }
 </script>
 <div class="page-header">
 <h1>Official Rulebook</h1>
-<p>Beginner-first explanations of the locked rules. Read the quick start first, then use the battle section as your clean cheat sheet. If any other document conflicts, this page wins.</p>
+<p>Start with a guided match, then use this rulebook to look up phases, battle outcomes, and card interactions.</p>
 </div>
 
 <div class="rules-layout">
@@ -335,6 +338,16 @@ body.ctf-nav-pad { padding-top: 0; }
 </aside>
 
 <main class="rules-content">
+
+<div class="ctf-rule-search" role="search" aria-label="Rules Codex">
+  <label for="rule-search">Search the Rules Codex</label>
+  <div class="ctf-rule-search-controls">
+    <input id="rule-search" type="search" placeholder="Try Shotgun, Chain, or Counter Pressure">
+    <button id="rule-search-clear" type="button">Clear</button>
+    <a href="assets/img/board-diagram.html">Open the Board Map</a>
+  </div>
+  <p id="rule-search-status" role="status"></p>
+</div>
 
 <div class="rule-section" id="start-here">
 <h2>Start Here — Learn CTF Fast</h2>
@@ -429,6 +442,19 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="warn-box"><strong>Box vs Void:</strong> The Void is a graveyard (destroyed/discarded). The Box is a trophy case for Captured opponent Catalysts — drives the Extraction win condition. Both always visible. Do NOT mix them up.</div>
 </div>
 
+<div class="rule-section" id="turn">
+<h2>The Seven Turn Phases</h2>
+<ol>
+  <li><strong>Turn Start.</strong> Resolve turn-start effects and reset turn allowances.</li>
+  <li><strong>Draw.</strong> Draw one card from your Main Deck. An empty Main Deck skips the draw.</li>
+  <li><strong>Ignition.</strong> Resolve any effects that use the Ignition Phase.</li>
+  <li><strong>Action.</strong> Normal Spawn or Set a Catalyst, use legal Tricks and effects, and Special Spawn when allowed.</li>
+  <li><strong>Battle.</strong> Declare legal attacks and resolve responses. The first player skips Battle on their first turn.</li>
+  <li><strong>Resolution.</strong> Finish pending effects and apply the results.</li>
+  <li><strong>End.</strong> Choose one legal paid action or pass, then discard down to seven if required before the next turn.</li>
+</ol>
+</div>
+
 <div class="rule-section" id="summoning">
 <h2>Spawning</h2>
 <table class="rule-table">
@@ -444,6 +470,19 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <div class="rule-section" id="shotgun">
 <h2>The Shotgun Rule <span class="locked">🔒 LOCKED</span></h2>
+<aside class="timing-window" id="timing-lab" aria-labelledby="timing-title">
+<span class="eyebrow">Design principle · Precise trigger windows</span>
+<h3 id="timing-title">Resolve first. Then draw.</h3>
+<p class="timing-quote">After a qualifying Special Spawn resolves, before any on-Spawn effect or the next player action begins.</p>
+<p>That is Shotgun’s window. Finish the placement and its costs, then the opponent draws 1 card immediately. Resolve that draw before continuing any on-Spawn effect, the remainder of the resolving effect, or the next action. Announcing a Spawn does not draw. A failed or negated Spawn does not draw or use the cap.</p>
+<p>A Libra Spawn places its entire group first. The completed group then counts once and produces exactly one Shotgun draw. If the opponent’s Deck is empty, skip that draw; an empty Deck is not a loss.</p>
+<details><summary>Exercise: choose a trigger and write its timing</summary>
+<form id="timing-form">
+<div class="timing-fields"><label>After which event resolves?<input id="timing-event" value="a qualifying Special Spawn" maxlength="140" required></label><label>Before which next step begins?<input id="timing-next" value="any on-Spawn effect or the next player action" maxlength="140" required></label></div>
+<output id="timing-output" aria-live="polite">After a qualifying Special Spawn resolves, before any on-Spawn effect or the next player action begins.</output>
+<button type="submit">Save my timing window</button><p class="timing-status" id="timing-status" role="status"></p>
+</form></details>
+</aside>
 <p><span data-ctf="ui.shotgunSummary">Every Special Spawn causes the opponent to draw 1 card. Libra Spawn counts as 1 Special Spawn. Hard cap: 5 per turn.</span></p>
 <table class="rule-table">
 <thead><tr><th>Special Spawn #</th><th>Shotgun?</th><th>Opponent Draws</th><th>Total This Turn</th></tr></thead>
@@ -485,8 +524,8 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <div class="rule-section" id="win">
 <h2>Win Conditions — 3 Paths</h2>
-<p>All three are active simultaneously. You do NOT choose one at the start. The moment ANY one is achieved, that player wins IMMEDIATELY. Paths do NOT mix: 3 Kills + 4 Extractions ≠ a win.</p>
-<div class="callout"><strong>Simultaneous Win Priority:</strong> Chi KO > 7 Kills > 7 Extractions.</div>
+<p>All three win conditions are active from the start. Check them after a completed resolution, in order from Chi KO to seven Kills to seven Extractions.</p>
+<div class="callout">If both players reach zero Chi in the same resolution or both reach seven Kills in the same battle, the duel is a draw. Only the active player can score an Extraction.</div>
 </div>
 
 <div class="rule-section" id="chi-ko">
@@ -515,7 +554,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <p>The most complex win path. Three stages:</p>
 <p><strong>Stage 1 — Capture:</strong> Your ATK Pressure must strictly exceed opponent's DEF Counter Pressure. Their Catalyst goes to YOUR Box. No Logic damage. Great Cards cannot be Captured.</p>
 <p><strong>Stage 2 — Box Management:</strong> Cards in your Box are resources. Opponent can Rescue their own cards from your Box (costs them 1 Catalyst + their End Phase).</p>
-<p><strong>Stage 3 — Extraction:</strong> End Phase: sacrifice 1 eligible Catalyst → Void. Move 1 opponent Catalyst from your Box to the RFG Zone permanently. +1 toward 7 Extractions.</p>
+<p><strong>Stage 3 — Extraction:</strong> During your End Phase, send one eligible Catalyst you own and control to your Void. Move a captured opponent-owned Catalyst from your Box to its owner’s RFG and score one Extraction.</p>
 </div>
 
 <div class="rule-section" id="box">
@@ -525,19 +564,19 @@ body.ctf-nav-pad { padding-top: 0; }
 <thead><tr><th>Situation</th><th>Opponent's Choice</th><th>Result</th></tr></thead>
 <tbody>
 <tr><td>Your Catalyst in opp's Box</td><td>Rescue (cost: 1 Catalyst → Void)</td><td>Returns to YOUR Deck (shuffled in)</td></tr>
-<tr><td>Your Catalyst in opp's Box</td><td>Leave it</td><td>Opponent Extracts it → RFG permanently</td></tr>
-<tr><td>No eligible Catalysts</td><td>Cannot Rescue</td><td>Opponent Extracts freely — winning position</td></tr>
+<tr><td>Your Catalyst in the opponent’s Box</td><td>Leave it</td><td>The opponent may pay to Extract it to your RFG during their End Phase.</td></tr>
+<tr><td>You have no eligible Catalyst to pay with</td><td>End Turn</td><td>The captured card stays in the Box.</td></tr>
 </tbody></table>
 </div>
 
 <div class="rule-section" id="end-phase">
 <h2>End Phase — Strategic Choice <span class="locked">🔒 LOCKED</span></h2>
-<p><strong>END TURN is always valid and costs nothing.</strong> An <strong>eligible Catalyst</strong> = a Catalyst in one of your Catalyst Zones that is not blocked by a tribute/sacrifice restriction. Great and non-Great Catalysts may be sacrificed. If you have at least one eligible Catalyst, you may choose END TURN for free or choose one of these three paid actions:</p>
+<p><strong>END TURN is always valid and costs nothing.</strong> For a paid action, choose a Catalyst you own and control in one of your Catalyst Zones. The Catalyst must be eligible to sacrifice. Great and regular Catalysts can pay if eligible, including a Catalyst Spawned this turn.</p>
 <table class="rule-table">
 <thead><tr><th>Action</th><th>Cost</th><th>Effect</th></tr></thead>
 <tbody>
 <tr><td style="color:var(--flame);font-weight:700">END TURN</td><td>No cost</td><td>Always legal. End your turn without paying a Catalyst.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">EXTRACTION</td><td>1 eligible Catalyst → Void</td><td>Move 1 opponent Catalyst from YOUR Box to RFG permanently. +1 toward 7.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">EXTRACTION</td><td>1 eligible Catalyst → Void</td><td>Move 1 captured opponent-owned Catalyst from your Box to its owner’s RFG. Score 1 Extraction.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">RESCUE</td><td>1 eligible Catalyst → Void</td><td>Return 1 of YOUR OWN Catalysts from opponent's Box to your Deck (shuffled).</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">DESTROY TRICK</td><td>1 eligible Catalyst → Void</td><td>Destroy 1 Trick on the field — yours or opponent's, face-up or face-down.</td></tr>
 </tbody></table>
@@ -584,13 +623,13 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <div class="rule-section" id="great">
 <h2>Great Cards</h2>
-<p>A card marked <strong>Great</strong> in the approved card record is a Great Card. The name alone does not set that status. Great Catalysts have special battle restrictions:</p>
+<p>A card is Great when <strong>Great</strong> is a standalone word in its approved name. Great Warrior qualifies. Greatness Rising is a regular card.</p>
 <table class="rule-table">
 <tr><td style="color:var(--flame);font-weight:700;width:220px">Max 1 copy per name</td><td>Cannot run 2–3 copies of any Great Card.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Main Deck: <span data-ctf="ui.greatCap">5</span> Great Cards</td><td>This limit applies to all Great Cards placed in the Standard Main Deck.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Fusion Deck: <span data-ctf="ui.greatFusionCap">5</span> Great Fusion Catalysts</td><td>Main and Fusion together allow at most <span data-ctf="ui.greatCombinedCap">10</span> Great Cards.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">NEVER enter the Box</td><td>Cannot be Captured. ATK beats Great DEF → Void as +1 Kill.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Cannot be Extracted</td><td>Extraction attempt → Void as Kill.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Great Catalyst in Counter Pressure</td><td>When defeated by higher Pressure, goes straight to its owner’s Void and awards one battle Kill.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Box eligibility</td><td>Extraction and Rescue require an eligible regular Catalyst in the Box.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Great Catalyst sacrifice</td><td>Great and non-Great eligible Catalysts may be sacrificed for paid End Phase actions.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">CAN be Killed in ATK vs ATK</td><td>No combat immunity — destroyed normally in battle.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Great Trick cards</td><td>Same copy limit. Otherwise governed by their card type's normal rules.</td></tr>
@@ -611,14 +650,15 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 
 <div class="rule-section" id="modes">
-<h2>Game Modes — All 4 Formats</h2>
+<h2>Game Formats</h2>
+<p>The <a href="assets/img/board-diagram.html">Board Map</a> includes rules previews for Team, Boss Battle, and Free-for-All. Browser duels use the Standard 1v1 format.</p>
 <table class="rule-table">
 <thead><tr><th>Mode</th><th>Players</th><th>Chi</th><th>Key Rules</th></tr></thead>
 <tbody>
-<tr><td style="color:var(--flame);font-weight:700">Standard 1v1</td><td>2</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Default. Best of 3: loser picks first. Side Deck swaps.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Standard 1v1</td><td>2</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Single duel or best of three. Between duels in a series, adjust your deck using its Substitute Deck.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Team 2v2</td><td>4 (2 teams)</td><td><span data-ctf="ui.startingChi">10,000</span> shared</td><td>Shared Chi. 1 Normal Spawn/player. Shared Chi to 0 = team loses. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Boss Battle 3v1</td><td>4 (3 vs 1)</td><td><span data-ctf="ui.startingChi">10,000</span> each side</td><td>Boss: 2 Normal Spawns/turn, 2 draws/turn, 1 free Fusion Turn 1.</td></tr>
-<tr><td style="color:var(--flame);font-weight:700">Free For All</td><td>4</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Elimination. Last above 0 Chi wins. Attacks simultaneous and secret.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Free-for-All</td><td>3 or 4</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Each player has an independent field and can target any opponent. See the board preview for the desktop format notes.</td></tr>
 </tbody></table>
 </div>
 
@@ -655,13 +695,53 @@ body.ctf-nav-pad { padding-top: 0; }
 
 </main></div>
 
+<script>
+(() => {
+  const input = document.querySelector('#rule-search');
+  const clear = document.querySelector('#rule-search-clear');
+  const status = document.querySelector('#rule-search-status');
+  const sections = [...document.querySelectorAll('.rules-content .rule-section[id]')];
+  const menuLinks = [...document.querySelectorAll('.sidebar a[href^="#"]')];
+
+  function filterRules() {
+    const words = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const visibleSections = new Set();
+    for (const section of sections) {
+      const sectionText = section.textContent.toLowerCase();
+      const matches = words.every(word => sectionText.includes(word));
+      section.hidden = !matches;
+      if (matches) visibleSections.add(section.id);
+    }
+    for (const link of menuLinks) link.hidden = !visibleSections.has(link.hash.slice(1));
+    const count = visibleSections.size;
+    status.textContent = count === 0 ? 'No matching rules. Try a different search.' : `${count} of ${sections.length} sections shown.`;
+  }
+
+  input.addEventListener('input', filterRules);
+  clear.addEventListener('click', () => {
+    input.value = '';
+    filterRules();
+    input.focus();
+  });
+  window.addEventListener('hashchange', () => {
+    const section = sections.find(item => item.id === location.hash.slice(1));
+    if (!section?.hidden) return;
+    input.value = '';
+    filterRules();
+    section.scrollIntoView();
+  });
+  filterRules();
+})();
+</script>
+
 <footer>
 <div class="footer-brand">CARRY THE FLAME</div>
 <div class="footer-links">
-<a href="rules.html">Rules</a><a href="first-five-forge.html">Learn to Play</a><a href="https://discord.gg/cKj3ayt2Mp">Join Our Discord</a><a href="glossary.html">Glossary</a><a href="submit.html">Submit Cards</a>
+<a href="rules.html">Rules</a><a href="play.html?guided=1">Learn to Play</a><a href="https://discord.gg/cKj3ayt2Mp">Join Our Discord</a><a href="glossary.html">Glossary</a><a href="submit.html">Submit Cards</a>
 </div>
 <p class="footer-copy">© 2026 Perfect Timing Gaming · Makairis Holding Group · Dr. Zoom \&amp; Newz · Buffalo, NY · Consistency > Hype</p>
 </footer>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script>
+<script src="assets/js/browser-app.js"></script>
 </body>
 </html>

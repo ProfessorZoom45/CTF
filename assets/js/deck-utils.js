@@ -50,6 +50,10 @@
     return CARD_NAME_ALIASES[lower] || raw;
   }
 
+  function isGreatCard(card){
+    return /(?:^|[^\p{L}\p{M}\p{N}_])great(?:$|[^\p{L}\p{M}\p{N}_])/iu.test(card?.name || '');
+  }
+
   function normalizeDeck(deck){
     deck = deck || {};
     return {
@@ -102,7 +106,7 @@
       const card = byId.get(id);
       if (!card){ missing.push(id); continue; }
       if (card.cardType === 'Fusion') errors.push(`${card.name} is in the Main Deck but must be placed in the Fusion Deck.`);
-      if (card.great) greatCount += 1;
+      if (isGreatCard(card)) greatCount += 1;
     }
 
     let fusionGreatCount = 0;
@@ -111,7 +115,7 @@
       const card = byId.get(id);
       if (!card){ missing.push(id); continue; }
       if (card.cardType !== 'Fusion') errors.push(`${card.name} is in the Fusion Deck but is not a Fusion card.`);
-      if (card.great) fusionGreatCount += 1;
+      if (isGreatCard(card)) fusionGreatCount += 1;
     }
 
     for (const id of d.side){
@@ -124,7 +128,7 @@
       const card = byId.get(id);
       if (!card) continue;
       if (count > (DECK_CFG.copiesPerCard || 3)) errors.push(`${card.name} exceeds the ${(DECK_CFG.copiesPerCard || 3)}-copy limit (${count}).`);
-      if (card.great && count > (GREAT_CFG.maxPerName || 1)) errors.push(`${card.name} is a Great Card and can only have ${(GREAT_CFG.maxPerName || 1)} copy.`);
+      if (isGreatCard(card) && count > (GREAT_CFG.maxPerName || 1)) errors.push(`${card.name} is a Great Card and can only have ${(GREAT_CFG.maxPerName || 1)} copy.`);
     }
 
     if (d.main.length < (DECK_CFG.mainMin || 40) || d.main.length > (DECK_CFG.mainMax || 60)) errors.push(`Main Deck must contain ${(DECK_CFG.mainMin || 40)}–${(DECK_CFG.mainMax || 60)} cards. Current: ${d.main.length}.`);
@@ -160,6 +164,7 @@
     getPreparedPlayDeck,
     clearPlayDeck,
     validateDeck,
+    isGreatCard,
     normalizeCardId,
     normalizeCardName
   };

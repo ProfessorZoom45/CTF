@@ -523,6 +523,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <script src="assets/js/data.js"></script>
 <script src="assets/js/sets-2026-08-24-patch.js"></script>
 <script src="assets/js/sets-2026-08-25-patch.js"></script>
+<script src="assets/js/verified-card-images.js"></script>
 <script src="assets/js/card-image-map.js"></script>
 <script src="assets/js/deck-utils.js"></script>
 <script src="assets/js/starter-decks-2026-08-25.js"></script>
@@ -532,6 +533,7 @@ const ALL_CARDS = (typeof CTF_CARDS!=='undefined' && Array.isArray(CTF_CARDS) &&
 const ALL_SETS = (typeof CTF_SETS!=='undefined' && Array.isArray(CTF_SETS) && CTF_SETS.length) ? CTF_SETS : ((window.CTF_SETS && Array.isArray(window.CTF_SETS)) ? window.CTF_SETS : []);
 const STARTER_DECKS = (typeof CTF_STARTER_DECKS!=='undefined' && Array.isArray(CTF_STARTER_DECKS)) ? CTF_STARTER_DECKS : ((window.CTF_STARTER_DECKS && Array.isArray(window.CTF_STARTER_DECKS)) ? window.CTF_STARTER_DECKS : []);
 const DECK_CFG = (window.CTF_CONFIG && window.CTF_CONFIG.game && window.CTF_CONFIG.game.deck) || {mainMin:40,mainMax:60,fusionMax:15,sideMin:0,sideMax:15,copiesPerCard:3};
+const isGreatCard = CTFDeckUtils.isGreatCard;
 const GREAT_CFG = (window.CTF_CONFIG && window.CTF_CONFIG.game && window.CTF_CONFIG.game.great) || {maxPerName:1,maxPerDeck:5};
 
 if(!ALL_CARDS.length){
@@ -600,8 +602,8 @@ function filterPool(){
     if(fl){const lv=+fl;if(lv>=8){if(c.level<8)return false}else if(c.level!==lv)return false}
     if(fk&&!(c.kinds||[]).includes(fk))return false;
     if(fsu&&c.sub!==fsu)return false;
-    if(fg==='great'&&!c.great)return false;
-    if(fg==='standard'&&c.great)return false;
+    if(fg==='great'&&!isGreatCard(c))return false;
+    if(fg==='standard'&&isGreatCard(c))return false;
     if(minPr&&(c.pr||0)<minPr)return false;
     if(minCp&&(c.cp||0)<minCp)return false;
     const searchable=[c.name,c.kindsStr,Array.isArray(c.kinds)?c.kinds.join(' '):'',c.desc,c.set,c.id].filter(Boolean).join(' ').toLowerCase();
@@ -632,8 +634,8 @@ function renderPool(){
  list.innerHTML=poolFiltered.map(c=>{
   const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
   const total=countInAllDecks(c.id);
-  const max=c.great?GREAT_CFG.maxPerName:DECK_CFG.copiesPerCard;
-  return`<div class="pc${c.great?' pc-great':''}" onclick="addCard('${c.id}')" oncontextmenu="event.preventDefault();addCard('${c.id}','side')" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
+  const max=isGreatCard(c)?GREAT_CFG.maxPerName:DECK_CFG.copiesPerCard;
+  return`<div class="pc${isGreatCard(c)?' pc-great':''}" onclick="addCard('${c.id}')" oncontextmenu="event.preventDefault();addCard('${c.id}','side')" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
    ${imgTag(c,'pc-thumb')}
    <div class="pc-color ${pcClass(c.cardType)}"></div>
    <div class="pc-info"><div class="pc-name">${c.name}</div><div class="pc-meta">${c.cardType}${c.sub&&c.sub!=='Normal'?' · '+c.sub:''} · ${c.set}${c.level?' · Rank '+c.level:''}</div></div>
@@ -750,12 +752,12 @@ function countInAllDecks(id){return mainDeck.filter(x=>x===id).length+fusionDeck
 function addCard(id,zone){
  const c=cardMap[id];if(!c)return;
  const total=countInAllDecks(id);
- const max=c.great?GREAT_CFG.maxPerName:DECK_CFG.copiesPerCard;
+ const max=isGreatCard(c)?GREAT_CFG.maxPerName:DECK_CFG.copiesPerCard;
  if(total>=max)return;
- if(c.great && zone!=='side'){
+ if(isGreatCard(c) && zone!=='side'){
   const target=c.cardType==='Fusion'?fusionDeck:mainDeck;
   const cap=c.cardType==='Fusion'?(GREAT_CFG.maxPerFusionDeck||5):(GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5);
-  if(target.filter(cardId=>cardMap[cardId]?.great).length>=cap){
+  if(target.filter(cardId=>isGreatCard(cardMap[cardId])).length>=cap){
    setImportStatus(`${c.cardType==='Fusion'?'Fusion':'Main'} Deck already has ${cap} Great Cards.`,'warn');
    return;
   }
@@ -799,7 +801,7 @@ function moveCard(zone,index){
  const limit=zone==='main'?DECK_CFG.sideMax:DECK_CFG.mainMax;
  if(destination.length>=limit){setImportStatus(`The ${zone==='main'?'Side':'Main'} Deck is full.`,'warn');return}
  const id=source[index];if(!id)return;
- if(zone==='side'&&cardMap[id]?.great&&mainDeck.filter(cardId=>cardMap[cardId]?.great).length>=(GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5)){
+ if(zone==='side'&&isGreatCard(cardMap[id])&&mainDeck.filter(cardId=>isGreatCard(cardMap[cardId])).length>=(GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5)){
   setImportStatus('Main Deck already has five Great Cards.','warn');return;
  }
  recordHistory();source.splice(index,1);destination.push(id);renderAll();markDeckDirty();
@@ -832,7 +834,7 @@ function renderDeckZone(arr,gridId,zone){
  for(const[id,{card:c,indices}]of seen){
   const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';
   const qty=indices.length;
-  html+=`<div class="dc${c.great?' dc-great':''}" onclick="removeCard('${zone}',${indices[indices.length-1]})" oncontextmenu="event.preventDefault();moveCard('${zone}',${indices[indices.length-1]})" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
+  html+=`<div class="dc${isGreatCard(c)?' dc-great':''}" onclick="removeCard('${zone}',${indices[indices.length-1]})" oncontextmenu="event.preventDefault();moveCard('${zone}',${indices[indices.length-1]})" onmouseenter="showTT(event,this,'${c.id}')" onmouseleave="hideTT()">
    <div class="dc-bar" style="background:${barColor(c.cardType)}"></div>
    ${imgTag(c,'dc-thumb')}
    <div class="dc-name">${c.name}</div>
@@ -847,14 +849,14 @@ function renderDeckZone(arr,gridId,zone){
 function validate(){
  const v=document.getElementById('valid');
  const mc=mainDeck.length,fc=fusionDeck.length,sc=sideDeck.length;
- const greatMain=mainDeck.filter(id=>cardMap[id]?.great).length;
- const greatFusion=fusionDeck.filter(id=>cardMap[id]?.great).length;
+ const greatMain=mainDeck.filter(id=>isGreatCard(cardMap[id])).length;
+ const greatFusion=fusionDeck.filter(id=>isGreatCard(cardMap[id])).length;
  
  // Check copy limits
  const allIds=[...mainDeck,...fusionDeck,...sideDeck];
  const counts={};allIds.forEach(id=>{counts[id]=(counts[id]||0)+1});
  let copyOk=true;
- for(const[id,ct]of Object.entries(counts)){const c=cardMap[id];if(c&&ct>(c.great?1:3)){copyOk=false;break}}
+ for(const[id,ct]of Object.entries(counts)){const c=cardMap[id];if(c&&ct>(isGreatCard(c)?1:3)){copyOk=false;break}}
  
  // Check for non-Fusion in Fusion deck
  const fusionPure=fusionDeck.every(id=>cardMap[id]&&cardMap[id].cardType==='Fusion');
@@ -890,8 +892,8 @@ function renderForgeAnalysis(){
  const summary=curve.length?`${[...payments.values()].reduce((sum,count)=>sum+count,0)} paid effects · ${curve.slice(0,6).map(([amount,count])=>`${amount.toLocaleString()}×${count}`).join(' · ')}${curve.length>6?` · +${curve.length-6} more`:''}`:'No explicit paid Chi effects in this deck';
  const catalysts=cards.filter(card=>card.cardType==='Catalyst').length;
  const tricks=cards.filter(card=>/Trick$/.test(card.cardType)).length;
- const greatMain=mainDeck.filter(id=>cardMap[id]?.great).length;
- const greatFusion=fusionDeck.filter(id=>cardMap[id]?.great).length;
+ const greatMain=mainDeck.filter(id=>isGreatCard(cardMap[id])).length;
+ const greatFusion=fusionDeck.filter(id=>isGreatCard(cardMap[id])).length;
  target.innerHTML=`<strong>CHI ACTIVATION CURVE</strong> · ${summary}<br><strong>FORGE BALANCE</strong> · Catalysts ${catalysts} · Tricks ${tricks} · Great Main ${greatMain}/${GREAT_CFG.maxPerMainDeck||GREAT_CFG.maxPerDeck||5} · Great Fusion ${greatFusion}/${GREAT_CFG.maxPerFusionDeck||5}`;
 }
 
@@ -908,7 +910,7 @@ function renderAll(){
 function showTT(event,el,id){
  const c=cardMap[id];if(!c)return;
  const tt=document.getElementById('tooltip');
- document.getElementById('tt-name').textContent=c.name+(c.great?' ★ GREAT':'');
+ document.getElementById('tt-name').textContent=c.name+(isGreatCard(c)?' ★ GREAT':'');
  document.getElementById('tt-type').textContent=`${c.cardType}${c.sub&&c.sub!=='Normal'?' ('+c.sub+')':''} · ${c.set} · ${c.id}${c.alignment?' · '+c.alignment:''}${c.level?' · Rank '+c.level:''}${c.kindsStr?' · '+c.kindsStr:''}`;
  const ttImg=document.getElementById('tt-img');const ttSrc=cardImg(c);ttImg.src=ttSrc;ttImg.dataset.cardId=c.id;ttImg.dataset.imageIndex='0';ttImg.classList.toggle('is-gif', /\.gif$/i.test(ttSrc));ttImg.onerror=()=>advanceCardImage(ttImg);
  const isC=c.cardType==='Catalyst'||c.cardType==='Fusion';

@@ -41,19 +41,18 @@ assert(context.tutorialDeck.fusion.every(id => id.startsWith('zf1-')));
 assert.equal(context.getTutorialDeckForTest().fixedOpeningHand.join(','), context.openingHands[0].join(','));
 
 const lessonsScript = read('assets/js/first-five-forge.js');
-const lessonsStart = lessonsScript.indexOf('const LESSONS = ');
+const lessonsStart = lessonsScript.indexOf('const ZF1_REFERENCES = ');
 const lessonsEnd = lessonsScript.indexOf('\nconst $ =', lessonsStart);
 assert(lessonsStart >= 0 && lessonsEnd > lessonsStart);
-vm.runInContext(`${lessonsScript.slice(lessonsStart, lessonsEnd)}\nglobalThis.lessonsForTest = LESSONS;`, context);
+vm.runInContext(`${lessonsScript.slice(lessonsStart, lessonsEnd)}\nglobalThis.lessonsForTest = ZF1_REFERENCES;`, context);
 assert.equal(context.lessonsForTest.length, 6);
 for (const lesson of context.lessonsForTest) {
-  assert(lesson.cards.length > 0);
-  assert(lesson.cards.every(number => cards.some(card => card.sourceCardNo === number)));
-  assert.equal(lesson.choices.length, 3);
-  assert(lesson.answer >= 0 && lesson.answer < lesson.choices.length);
+  assert(lesson.numbers.length > 0 && lesson.note.length > 0);
+  assert(lesson.numbers.every(number => cards.some(card => card.sourceCardNo === number)));
 }
 const lessonPage = read('first-five-forge.html');
-assert(!lessonPage.includes('id="form-fields"'));
-assert(!lessonPage.includes('id="download-draft"'));
-assert(lessonPage.includes('href="submit.html"'));
-console.log('ZF1 tutorial: 26 exact source names, six ZF1-only lessons without a card creator, focused 24-card battle deck, and five ZF1-only opening hands.');
+assert(lessonPage.includes('id="form-fields"'));
+assert(lessonPage.includes('id="download-draft"'));
+assert(lessonPage.includes('href="play.html?guided=1"'));
+assert(lessonPage.includes('href="deckbuilder.html"'));
+console.log('ZF1 tutorial: 26 exact source names, six Forge lessons with ZF1 references, a 24-card teaching deck, and five ZF1 opening hands.');

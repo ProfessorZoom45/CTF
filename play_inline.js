@@ -7,11 +7,16 @@ let GS = null;  // GameState
 let net = null;  // CTFNet instance
 let myPlayer = 0; // 0 or 1
 let selectedHandIdx = -1;
+let spawnPosition = 'atk';
 let logFilter = 'all';
 let logSearch = '';
 let deferredInstallPrompt = null;
 let selectedFieldZone = null; // {type:'cat'|'trick', zone:idx}
 let lastStateHash = '';
+let awaitingActionAck = false;
+let rematchRequested = false;
+let opponentRematchRequested = false;
+let pendingReconnect = false;
 let attackMode = false;
 let attackerZone = -1;
 let sacrificeMode = false;
@@ -28,7 +33,7 @@ const TUTORIAL_STEPS = [
   { title: 'Match 2 — Second Catalyst', copy: 'Use Newz The Watcher and Reaper — Master Swordsman to compare battle values and field positions.', points: ['Newz The Watcher has 1,100 Pressure and 1,800 Counter Pressure.', 'Reaper — Master Swordsman has 2,000 Pressure and 1,100 Counter Pressure.', 'Pressure attacks; Counter Pressure protects a defending Catalyst.'] },
   { title: 'Match 3 — High-Rank Plan', copy: 'Ace The Goat is a Rank 6 ZF1 Catalyst. First establish a lower-Rank Catalyst you can Tribute.', points: ['Ace The Goat needs one Tribute for a Normal Spawn.', 'Compare Pressure against the opposing Catalyst’s active value.', 'Watch how a Kill differs from a Capture.'] },
   { title: 'Match 4 — Fusion & End Phase', copy: 'Fusion Zone and Destin The Great Warlord show printed requirements for a Fusion Spawn.', points: ['Destin The Great Warlord requires Newz The Great Watcher plus a distinct Rank 5 or higher Warrior.', 'Ace The Great is a ZF1 example of that second material.', 'Check Fusion Zone’s printed effect and the available End Phase choices.'] },
-  { title: 'Match 5 — Trick & Full Flow', copy: 'Rapier and The Great One show how ZF1 Tricks use different timing, costs, and conditions.', points: ['Rapier is an Equip Palm Trick that grants 800 Pressure to its equipped Catalyst.', 'The Great One is a Concealed Trick; read its Chi cost and empty-field requirement before activation.', 'Review the ZF1 lessons after the battle or continue free play.'] }
+  { title: 'Match 5 — Trick & Full Flow', copy: 'Rapier and The Great One show how ZF1 Tricks use different timing, costs, and conditions.', points: ['Rapier is an Equip Palm Trick that grants 800 Pressure to its equipped Catalyst.', 'The Great One is a Concealed Trick; read its Chi cost and empty-field requirement before activation.', 'Review your five private FORGE drafts after the battle.'] }
 ];
 let tutorialActive = false;
 let tutorialStep = 0;
@@ -83,21 +88,21 @@ function resolveConfirm(value) {
 }
 
 // ═══ LOBBY ═══
-const starterDecks = typeof buildStarterDecks === 'function' ? buildStarterDecks() : [];
+const starterDecks = typeof CTF_STARTER_DECKS !== 'undefined' ? CTF_STARTER_DECKS.map(deck => ({...deck,cards:deck.main.slice()})) : [];
 function buildLobbyDecks(){
   const decks = starterDecks.map((d, i) => ({
     id: `starter-${i}`,
     source: 'starter',
     name: d.name,
-    desc: d.desc,
+    desc: d.desc || 'Official preset deck',
     // Patch v3.2: carry fixedOpeningHand through the lobby so tutorial /
     // VS-AI matches can deal a reproducible hand.
     fixedOpeningHand: Array.isArray(d.fixedOpeningHand) ? d.fixedOpeningHand.slice() : [],
     deck: {
       name: d.name,
       main: d.cards.slice(),
-      fusion: [],
-      side: [],
+      fusion: Array.isArray(d.fusion) ? d.fusion.slice() : [],
+      side: Array.isArray(d.side) ? d.side.slice() : [],
       fixedOpeningHand: Array.isArray(d.fixedOpeningHand) ? d.fixedOpeningHand.slice() : []
     }
   }));
@@ -114,13 +119,43 @@ function buildLobbyDecks(){
   }
   return decks;
 }
+let settingsReturnFocus;
 function toggleSettings(force){
   const el = $('settings-drawer');
   const bd = $('settings-backdrop');
-  const show = typeof force === 'boolean' ? force : !el.classList.contains('show');
+  const wasOpen = el.classList.contains('show');
+  const show = typeof force === 'boolean' ? force : !wasOpen;
+  if (show === wasOpen) return;
+  if (show) settingsReturnFocus = document.activeElement;
+  el.inert = !show;
+  el.setAttribute('aria-hidden', String(!show));
   el.classList.toggle('show', show);
   if (bd) bd.classList.toggle('active', show);
+  if (show) el.querySelector('button')?.focus();
+  else if (settingsReturnFocus === document.body) $('lobby-settings-button')?.focus();
+  else settingsReturnFocus?.focus();
 }
+
+document.addEventListener('keydown', event => {
+  const drawer = $('settings-drawer');
+  if (!drawer?.classList.contains('show')) return;
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    toggleSettings(false);
+  } else if (event.key === 'Tab') {
+    const controls = [...drawer.querySelectorAll('button, input, select')]
+      .filter(control => !control.disabled && control.getClientRects().length);
+    const first = controls[0], last = controls.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+}, true);
 function loadSettings(){
   let s = { cardArt:true, contrast:false, motion:false, scale:100, compact:false, clarity:true, watchMode:false, logMax:100 };
   try { Object.assign(s, JSON.parse(localStorage.getItem(APP_SETTINGS_KEY) || '{}')); } catch {}
@@ -133,6 +168,10 @@ function loadSettings(){
   if ($('set-watch-mode')) $('set-watch-mode').checked = !!s.watchMode;
   if ($('set-log-max'))   $('set-log-max').value      = String(s.logMax || 100);
   applySettings();
+}
+function resetSettings(){
+  localStorage.removeItem(APP_SETTINGS_KEY);
+  loadSettings();
 }
 function applySettings(){
   const s = {
@@ -217,7 +256,7 @@ function toggleWatchMode(){
   showToast(cb.checked ? 'Watch mode on. Your hidden information is protected for spectators.' : 'Watch mode off. Your private information is visible again.');
 }
 function shouldHidePrivateFaceDown(playerIdx, slot){
-  return !!(isWatchModeEnabled() && slot && slot.faceDown && playerIdx === myPlayer);
+  return !!(slot && slot.faceDown && (playerIdx !== myPlayer || isWatchModeEnabled()));
 }
 function sanitizeChoiceItemForWatchMode(item, idx){
   if (!isWatchModeEnabled() || !item || !item.sensitive) return item;
@@ -283,11 +322,11 @@ function getTutorialDeck(){
 }
 function getTutorialStepData(){ return TUTORIAL_STEPS[Math.min(Math.max(tutorialStep,0), TUTORIAL_STEPS.length - 1)]; }
 
-// ─── Tutorial-mode per-phase Continue banner ──────────────────────────────
-function renderTutorialPhaseBanner(){
+// ─── Per-phase guide ──────────────────────────────────────────────────────
+function renderPhaseGuide(){
   const banner = document.getElementById('tutorial-phase-banner');
   if (!banner) return;
-  if (!window.tutorialActive || typeof GS === 'undefined' || !GS) {
+  if (!GS || GS.gameOver) {
     banner.style.display = 'none';
     return;
   }
@@ -296,12 +335,14 @@ function renderTutorialPhaseBanner(){
     : ['Turn Start','Draw','Ignition','Action','Battle','Resolution','End'];
   const copy = {
     turnStart:  'Turn begins. Any start-of-turn effects resolve here. Press Continue to draw.',
-    draw:       'Draw Phase. Click "Draw Card" to draw 1 from your deck, or "Skip Draw Phase" if your deck is empty. Empty deck is NOT a loss.',
+    draw:       'Draw one card from your Main Deck. If the deck is empty, skip the draw and keep playing.',
     ignition:   'Ignition Phase. Revives, upkeep and per-turn effects activate. Press Continue to open Action Phase.',
-    action:     'Action Phase. This is your main play window: Normal Spawn, activate Palm Tricks, set Tricks, Libra or Fusion Spawns. When finished, press → To Battle Phase.',
-    battle:     'Battle Phase. Declare attacks with P-position Catalysts or go direct if opponent has no Catalysts. Press → To End Phase when done.',
-    resolution: 'Resolution Phase. Set face-down Tricks if you wish, change ONE non-attacking Catalyst\'s position, or pass. Win conditions check here. Press Continue to move to End Phase.',
-    end:        'End Phase. Pick ONE End-Phase action: Extraction, Rescue, Destroy Trick, OR End Turn. Then press Continue to pass the turn.'
+    action:     'Normal Spawn, set cards, activate Palm Tricks, or use a legal Special Spawn. Continue to Battle when ready.',
+    battle:     GS._p1BattleSkipPending
+      ? 'The first player skips Battle on their first turn. Continue to Resolution.'
+      : 'Attack with a Catalyst in Pressure position. A direct attack normally requires an empty opposing field. Continue to Resolution when ready.',
+    resolution: 'You may change the position of one eligible Catalyst that did not attack. Continue to End Phase when ready.',
+    end:        'Choose Extraction, Rescue, Destroy Trick, or free End Turn. Discard to seven if needed before the turn passes.'
   };
   const phaseKey = GS.phaseName || 'turnStart';
   const displayName = names[GS.phase] || phaseKey;
@@ -311,7 +352,7 @@ function renderTutorialPhaseBanner(){
     '<div class="tpb-head"><span class="tpb-step">Phase ' + ((GS.phase||0)+1) + ' / 7</span>'
     + '<span class="tpb-name">' + displayName + '</span></div>'
     + '<div class="tpb-copy">' + (copy[phaseKey] || 'Press Continue when ready.') + '</div>'
-    + (isMyTurn ? '' : '<div class="tpb-wait">Opponent\'s turn — watching.</div>')
+    + (isMyTurn ? '' : '<div class="tpb-wait">Opponent’s turn.</div>')
   );
 }
 
@@ -372,6 +413,8 @@ function renderTutorialGameOver(){
   // Always hide net-only rematch button in tutorial/hotseat context
   const rematchBtn = $('rematch-btn');
   if (rematchBtn) rematchBtn.style.display = (!tutorialActive && net) ? '' : 'none';
+  const forgeBtn = $('go-forge-btn');
+  if (forgeBtn) forgeBtn.hidden = !tutorialActive;
   if (!tutorialActive) {
     panel.style.display = 'none';
     nextBtn.style.display = 'none';
@@ -407,10 +450,10 @@ function advanceTutorialStep(){
     } catch (e) { /* non-fatal */ }
     localStorage.removeItem(TUTORIAL_KEY);
     renderTutorialPanel();
-  renderTutorialPhaseBanner();
+  renderPhaseGuide();
   renderP1SkipBattleBanner();
     $('game-over')?.classList.remove('show');
-    showToast('Tutorial complete! Review the ZF1 lessons or continue free play.');
+    showToast('Tutorial complete! Review your first five FORGE drafts or continue free play.');
     return;
   }
   tutorialStep += 1;
@@ -430,7 +473,7 @@ function exitTutorial(){
     if (typeof applySettings === 'function') applySettings();
   } catch (e) { /* non-fatal */ }
   renderTutorialPanel();
-  renderTutorialPhaseBanner();
+  renderPhaseGuide();
   renderP1SkipBattleBanner();
   showToast('Tutorial exited. Continue this CPU duel or return to the lobby.');
 }
@@ -440,12 +483,12 @@ function startHotSeat(){ tutorialActive=false; const deck = selectedDeckPayload(
 function startSandbox(){ tutorialActive=false; const deck = selectedDeckPayload() || (lobbyDecks[0] && CTFDeckUtils.normalizeDeck(lobbyDecks[0].deck)); if(!deck) return showToast('No deck available.'); isSandboxMode=true; isHotSeatMode=true; isVsAIMode=false; isVsAITutorialMode=false; initGame(deck, deck); showToast('Sandbox duel started.'); }
 
 // ─── Patch v3.2: VS-AI launch helpers ─────────────────────────────────────
-function pickRandomStarterDeckForAI(){
-  // AI gets a RANDOM starter deck (different each run), preserving its
-  // fixed opening hand so the deck plays the way it was authored.
+function selectStarterDeckForAI(){
   const starters = lobbyDecks.filter(d => d && d.source === 'starter');
   if(!starters.length) return null;
-  const pick = starters[Math.floor(Math.random() * starters.length)];
+  const selection = $('cpu-deck-select').value;
+  const pick = starters.find(deck => deck.id === selection) ??
+    starters[Math.floor(Math.random() * starters.length)];
   const deck = CTFDeckUtils.normalizeDeck(pick.deck);
   return Object.assign({}, deck, {
     name: pick.deck.name,
@@ -465,7 +508,7 @@ function selectedHumanDeck(){
 
 function startVsAITutorial(){
   const me = selectedHumanDeck();
-  const ai = pickRandomStarterDeckForAI();
+  const ai = selectStarterDeckForAI();
   if(!me || !ai){ showToast('Need at least one deck to play.'); return; }
   tutorialActive = false;
   window.tutorialActive = false;
@@ -490,7 +533,7 @@ function startVsAITutorial(){
 
 function startVsAIFreePlay(){
   const me = selectedHumanDeck();
-  const ai = pickRandomStarterDeckForAI();
+  const ai = selectStarterDeckForAI();
   if(!me || !ai){ showToast('Need at least one deck to play.'); return; }
   tutorialActive = false;
   window.tutorialActive = false;
@@ -508,11 +551,12 @@ function startVsAIFreePlay(){
 // Drive the AI when it's its turn. Re-entrant guard via aiTurnInFlight.
 function vsAITick(){
   if(!isVsAIMode || !GS || GS.gameOver) return;
-  if(GS.activePlayer === myPlayer) return;            // human's turn
+  if(GS.activePlayer === myPlayer && !(GS.waitingForResponse && GS.currentResponder !== myPlayer)) return;
   if(aiTurnInFlight) return;                          // already running
   if(typeof window.CTF_AI === 'undefined') return;    // brain not loaded
   aiTurnInFlight = true;
-  window.CTF_AI.takeTurn(GS, GS.activePlayer, function onStep(){
+  const cpuPlayer = 1-myPlayer;
+  window.CTF_AI.takeTurn(GS, cpuPlayer, function onStep(){
     try { renderAll(); } catch(e){}
   }).then(function(){
     aiTurnInFlight = false;
@@ -530,6 +574,7 @@ if (typeof window !== 'undefined') {
   window.vsAITick = vsAITick;
 }
 function reconnectRoom(){ const code = localStorage.getItem('ctf:lastRoomCode') || ''; if (!code) return showToast('No saved room code.'); $('join-input').value = code; joinRoom(); }
+async function copyRoomLink(){try{await navigator.clipboard.writeText(net.getShareUrl());showToast('Invitation link copied. Send it to the other player.');}catch{showToast('Copy the invitation link shown beside the room code.');}}
 function getResultCardSignature(){
   if (!GS) return '';
   return [GS.turn, GS.phaseName, GS.gameOver ? '1' : '0', GS.winner, GS.winReason, GS.players?.[0]?.chi, GS.players?.[1]?.chi, GS.players?.[0]?.kills, GS.players?.[1]?.kills, GS.players?.[0]?.extractions, GS.players?.[1]?.extractions].join('|');
@@ -542,6 +587,10 @@ function getWinPathLabel(summary){
   if (p1.kills || p2.kills) return 'Kill pressure';
   if (p1.chi < CLIENT_CFG.startingChi || p2.chi < CLIENT_CFG.startingChi) return 'Chi pressure';
   return 'Live Snapshot';
+}
+function getDuelWinnerLabel(state){
+  if (!state.gameOver) return 'In Progress';
+  return state.winner < 0 ? 'Draw' : `P${state.winner+1} Wins`;
 }
 function getTutorialLabel(){
   if (!tutorialActive) return isSandboxMode ? 'Solo Sandbox' : (isHotSeatMode ? 'Hot-Seat Local' : 'Free play');
@@ -587,7 +636,7 @@ function showResultCard(force=false){
   const card = $('result-card');
   if(!card) return;
   const summary = typeof generatePostMatchSummary === 'function' ? generatePostMatchSummary(GS) : null;
-  const winner = GS.gameOver ? `P${GS.winner+1} Wins` : 'In Progress';
+  const winner = getDuelWinnerLabel(GS);
   const reason = getWinPathLabel(summary);
   $('result-winner').textContent = winner;
   $('result-reason').textContent = reason;
@@ -608,7 +657,7 @@ function showResultCard(force=false){
   $('result-tutorial').textContent = getTutorialLabel();
   $('result-decks').textContent = `${($('my-deck-name')?.textContent)||'Deck'} vs ${($('opp-deck-name')?.textContent)||'Deck'}`;
   $('result-sub').textContent = summary && GS.gameOver
-    ? `Winner: P${summary.winner+1} by ${summary.winMethod || GS.winReason || 'Duel Ended'}. Turn ${summary.turns}.`
+    ? `${winner}. ${reason}. Turn ${summary.turns}.`
     : 'Open this card any time for a clean duel snapshot.';
   card.classList.add('show');
   if (force) lastResultCardSig = getResultCardSignature();
@@ -619,7 +668,7 @@ function copyResultCardText(){
   if (!GS) return;
   const summary = typeof generatePostMatchSummary === 'function' ? generatePostMatchSummary(GS) : null;
   const txt = [
-    `CTF Result — ${GS.gameOver ? `P${GS.winner+1} Wins` : 'In Progress'}`,
+    `CTF Result — ${getDuelWinnerLabel(GS)}`,
     `Reason: ${getWinPathLabel(summary)}`,
     `Turn ${GS.turn} · ${PHASE_NAMES[GS.phase]||'—'}`,
     `P1 CHI ${GS.players[0].chi} · K ${GS.players[0].kills} · C ${GS.players[0].captures} · E ${GS.players[0].extractions}`,
@@ -637,7 +686,7 @@ function buildResultCardSnapshot(){
   const p2 = GS.players[1] || { chi: CLIENT_CFG.startingChi, kills:0, captures:0, extractions:0 };
   return {
     summary,
-    winnerLabel: GS.gameOver ? `P${GS.winner+1} WINS` : 'MATCH IN PROGRESS',
+    winnerLabel: getDuelWinnerLabel(GS).toUpperCase(),
     reason: getWinPathLabel(summary),
     phase: PHASE_NAMES[GS.phase] || '—',
     turn: GS.turn || 1,
@@ -873,7 +922,7 @@ function showPostMatchSummary() {
   const p1 = summary.players[0]; const p2 = summary.players[1];
   const lines = [
     `Turns: ${summary.turns}  |  Game Over: ${summary.gameOver ? 'YES' : 'NO'}`,
-    summary.gameOver ? `Winner: P${summary.winner+1} by ${summary.winMethod}` : 'Winner: In progress',
+    summary.gameOver ? `${getDuelWinnerLabel(summary)}. ${summary.winMethod}` : 'Result: In progress',
     '',
     `Total log entries: ${summary.totalActions}`,
     `Battles: ${summary.combatCount}  |  Chains: ${summary.chainCount}`,
@@ -897,51 +946,41 @@ function showPostMatchSummary() {
 window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstallPrompt = e; const btn = $('install-btn'); if (btn) btn.style.display = ''; });
 async function installApp(){ if (!deferredInstallPrompt) return showToast('Install prompt not ready yet.'); deferredInstallPrompt.prompt(); const choice = await deferredInstallPrompt.userChoice; if (choice && choice.outcome === 'accepted') showToast('App install started.'); deferredInstallPrompt = null; const btn = $('install-btn'); if (btn) btn.style.display = 'none'; }
 
-function renderDeckSelect() {
+function renderDeckSelect(preferCustom = false) {
   const el = $('deck-select');
   lobbyDecks = buildLobbyDecks();
   if (!lobbyDecks.length) { el.innerHTML = '<div style="color:var(--red);font-size:.8rem">No decks available. Build a deck first or make sure data.js is loaded.</div>'; return; }
-  const forcedCustom = new URLSearchParams(location.search).get('deck') === 'custom';
-  if (forcedCustom) {
+  if (preferCustom) {
     const idx = lobbyDecks.findIndex(d => d.source === 'custom');
     if (idx >= 0) selectedDeckIdx = idx;
   }
   selectedDeckIdx = Math.min(selectedDeckIdx, Math.max(0, lobbyDecks.length - 1));
-  el.innerHTML = lobbyDecks.map((d, i) => {
+  el.replaceChildren(...lobbyDecks.map((d, i) => {
     const report = CTFDeckUtils.validateDeck(d.deck, CTF_CARDS);
     const classes = `${i === selectedDeckIdx ? ' selected' : ''}${report.ok ? '' : ' invalid'}`;
     const status = report.ok
       ? `Ready · Main ${report.stats.main} · Fusion ${report.stats.fusion}`
       : `Blocked · ${report.errors[0]}`;
-    return `<div class="deck-opt${classes}" onclick="selectDeck(${i})"><div><div class="deck-opt-name">${d.name}</div><div class="deck-opt-desc">${d.desc}</div><div class="deck-opt-meta">${status}</div></div></div>`;
-  }).join('');
-  // Patch v3.2: ensure VS-AI lobby buttons exist (injected once near the
-  // deck select panel). Idempotent — re-running renderDeckSelect is safe.
-  try { ensureVsAILobbyButtons(); } catch(e){}
-}
-
-// Patch v3.2: injects two buttons next to the deck-select panel so users
-// can start VS-CPU matches without editing play.html. Buttons render once
-// and re-bind handlers each call (idempotent).
-function ensureVsAILobbyButtons(){
-  const sel = document.getElementById('deck-select');
-  if(!sel || !sel.parentNode) return;
-  let bar = document.getElementById('vs-ai-lobby-bar');
-  if(!bar){
-    bar = document.createElement('div');
-    bar.id = 'vs-ai-lobby-bar';
-    bar.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px;align-items:center;justify-content:center';
-    bar.innerHTML = ''
-      + '<div style="width:100%;text-align:center;font-size:.7rem;color:var(--ash,#aaa);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">VS-CPU Modes</div>'
-      + '<button id="btn-vs-ai-tutorial" class="act-btn act-btn-fire" style="padding:8px 14px;font-size:.8rem;font-weight:700">🔥 VS-CPU Tutorial</button>'
-      + '<button id="btn-vs-ai-free" class="act-btn act-btn-blue" style="padding:8px 14px;font-size:.8rem;font-weight:700">⚔ VS-CPU Free Play</button>'
-      + '<div style="width:100%;text-align:center;font-size:.65rem;color:var(--ash,#aaa);margin-top:2px">AI gets a random starter deck. Tutorial = inline coach card for 3 turns. Free Play = silent CPU.</div>';
-    sel.parentNode.insertBefore(bar, sel.nextSibling);
-  }
-  const t = document.getElementById('btn-vs-ai-tutorial');
-  const f = document.getElementById('btn-vs-ai-free');
-  if(t) t.onclick = function(){ if(typeof startVsAITutorial === 'function') startVsAITutorial(); };
-  if(f) f.onclick = function(){ if(typeof startVsAIFreePlay === 'function') startVsAIFreePlay(); };
+    const option = document.createElement('div');
+    option.className = `deck-opt${classes}`;
+    option.setAttribute('role', 'button');
+    option.setAttribute('aria-pressed', String(i === selectedDeckIdx));
+    option.tabIndex = 0;
+    option.addEventListener('click', () => {
+      const restoreFocus = document.activeElement === option;
+      selectDeck(i);
+      if (restoreFocus) el.children[i]?.focus();
+    });
+    const details = document.createElement('div');
+    for (const [key, value] of [['name', d.name], ['desc', d.desc], ['meta', status]]) {
+      const field = document.createElement('div');
+      field.className = `deck-opt-${key}`;
+      field.textContent = value;
+      details.append(field);
+    }
+    option.append(details);
+    return option;
+  }));
 }
 function selectDeck(i) { selectedDeckIdx = i; loadSettings();
 updateWatchModeButton();
@@ -958,8 +997,10 @@ function createRoom() {
   $('create-status').textContent = 'Creating room...';
   $('create-status').className = 'lb-status';
 
-  net = new CTFNet(
-    (isHost) => { $('create-status').textContent = 'Opponent connected! Starting...'; $('create-status').className = 'lb-status ok'; $('net-state').textContent = 'Connected'; $('net-state').className = 'net-pill ok'; setTimeout(startGame, 500); },
+  net?.disconnect();GS=null;awaitingActionAck=false;rematchRequested=false;opponentRematchRequested=false;
+  isVsAIMode=isVsAITutorialMode=isHotSeatMode=isSandboxMode=tutorialActive=false;
+  net = new CTFFriendNet(
+    (isHost) => { myPlayer=isHost?0:1; $('create-status').textContent = 'Opponent connected! Starting...'; $('create-status').className = 'lb-status ok'; $('net-state').textContent = 'Connected'; $('net-state').className = 'net-pill ok'; if(GS)commitAuthoritativeState();else setTimeout(startGame, 300); },
     (data) => handleNetData(data),
     () => { showToast('Opponent disconnected.'); markDisconnected(); },
     (err) => { $('create-status').textContent = err; $('create-status').className = 'lb-status err'; $('create-btn').disabled = false; }
@@ -968,6 +1009,7 @@ function createRoom() {
   net.createRoom().then(code => {
     $('room-code').textContent = code;
     $('room-code').style.display = 'block';
+    $('room-link').href=net.getShareUrl();$('room-link').hidden=false;$('copy-room-link').hidden=false;
     localStorage.setItem('ctf:lastRoomCode', code);
     $('net-state').textContent = 'Waiting'; $('net-state').className = 'net-pill warn';
     $('create-status').textContent = 'Waiting for opponent...';
@@ -990,8 +1032,10 @@ function joinRoom() {
   $('join-status').textContent = 'Connecting...';
   $('join-status').className = 'lb-status';
 
-  net = new CTFNet(
-    (isHost) => { $('join-status').textContent = 'Connected! Waiting for host to start...'; $('join-status').className = 'lb-status ok'; $('net-state').textContent = 'Connected'; $('net-state').className = 'net-pill ok'; },
+  net?.disconnect();awaitingActionAck=false;
+  isVsAIMode=isVsAITutorialMode=isHotSeatMode=isSandboxMode=tutorialActive=false;
+  net = new CTFFriendNet(
+    (isHost) => { myPlayer=isHost?0:1; $('join-status').textContent = 'Connected! Waiting for host to start...'; $('join-status').className = 'lb-status ok'; $('net-state').textContent = 'Connected'; $('net-state').className = 'net-pill ok'; if(isHost&&GS)commitAuthoritativeState();else if(!isHost)net.send({type:'requestState'}); },
     (data) => handleNetData(data),
     () => { showToast('Host disconnected.'); markDisconnected(); },
     (err) => { $('join-status').textContent = err; $('join-status').className = 'lb-status err'; $('join-btn').disabled = false; }
@@ -1015,6 +1059,7 @@ function startGame() {
     return;
   }
   if (net && net.isHost) {
+    window._hostDeck = myDeck;
     net.send({ type: 'requestDeck' });
   }
   if (net && !net.isHost) {
@@ -1083,15 +1128,23 @@ function updateStateHashNotice() {
   lastStateHash = current;
 }
 
-function applyActionLocal(action) {
+function applyActionLocal(action, expectedPlayer = null) {
   if (!GS) return { ok:false, msg:'Game not initialized.' };
+  if (!action || typeof action.type !== 'string' || GS.gameOver) return {ok:false,msg:'No command is available.'};
+  if (expectedPlayer !== null) {
+    const actor = action.player ?? action.attacker ?? expectedPlayer;
+    const seat = GS.waitingForResponse ? GS.currentResponder : GS.activePlayer;
+    if (actor !== expectedPlayer || seat !== expectedPlayer) return {ok:false,msg:'This command does not belong to your seat or response window.'};
+    if (GS.waitingForResponse && !['passChain','queueConcealedResponse'].includes(action.type)) return {ok:false,msg:'Resolve the response window first.'};
+  }
   let result = { ok:true, msg:'' };
   switch (action.type) {
     case 'normalSummon': result = normalSummon(GS, action.player, action.handIdx, action.zone, action.position, action.tributeZones); break;
+    case 'setCatalyst': result = setCatalyst(GS, action.player, action.handIdx, action.zone); break;
     case 'setTrick': result = setTrick(GS, action.player, action.handIdx, action.zone); break;
     case 'changePosition': result = changePosition(GS, action.player, action.zone); break;
     case 'attack': result = declareAttack(GS, action.attacker, action.attackerZone, action.defender, action.defenderZone); break;
-    case 'advancePhase': advancePhase(GS); result = { ok:true, msg:'' }; break;
+    case 'advancePhase': result = advancePhase(GS) || { ok:true, msg:'' }; break;
     case 'drawPhaseClick': result = (typeof handleDrawPhaseClick === 'function') ? handleDrawPhaseClick(GS) : { ok:false, msg:'Not loaded.' }; break;
     case 'resolutionFlipPosition': result = (typeof changeCatalystPositionInResolution === 'function') ? changeCatalystPositionInResolution(GS, action.player ?? GS.activePlayer, action.zoneIdx) : { ok:false, msg:'Not loaded.' }; break;
     case 'endPhaseAction': result = endPhaseAction(GS, action.player, action.action, action.sacrificeZone, action.targetIdx); break;
@@ -1131,6 +1184,7 @@ function requestAction(action) {
     return result;
   }
   if (awaitingActionAck) return { ok:false, msg:'Waiting for previous action to resolve.' };
+  if (!net.connected && !net.peerNet) return {ok:false,msg:'Wait for the other player to reconnect.'};
   if (net.isHost) {
     const result = applyActionLocal(action);
     if (!result.ok) { showIllegal(result.msg || 'Illegal action.'); return result; }
@@ -1156,11 +1210,13 @@ function attemptReconnect() {
 
 function requestRematch() {
   if (!net) return showToast('Rematch is for online matches only.');
+  if(!GS?.gameOver)return showToast('Finish this match before requesting a rematch.');
   rematchRequested = true;
   $('rematch-btn')?.style && ($('rematch-btn').style.display = 'none');
   console.log('[CTF:Rematch] Rematch requested. isHost:', net?.isHost, 'turn:', GS?.turn, 'winner:', GS?.winner);
   if (GS) addLog(GS, `[DEBUG] Rematch requested by P${myPlayer+1}. Previous winner: P${(GS.winner ?? -1)+1}.`);
   net.send({ type: 'rematchRequest' });
+  if(net.isHost && opponentRematchRequested){const decks=GS.deckMeta;rematchRequested=opponentRematchRequested=false;initGame(decks.p1,decks.p2);commitAuthoritativeState();}
   showToast('Rematch request sent.');
 }
 
@@ -1168,6 +1224,10 @@ function handleNetData(data) {
   if (!data || !data.type) return;
 
   switch (data.type) {
+    case 'transportError':
+      awaitingActionAck=false;markDisconnected();showToast(data.message||'Connection interrupted. Reconnect to recover the match.');
+      break;
+    case 'requestState': if(net.isHost){if(GS)commitAuthoritativeState();else startGame();} break;
     case 'requestDeck': {
       const deck = selectedDeckPayload();
       const check = selectedDeckCheck();
@@ -1180,6 +1240,7 @@ function handleNetData(data) {
       break;
     }
     case 'deckChoice':
+      if(net.isHost&&GS){commitAuthoritativeState();break;}
       if (net.isHost && window._hostDeck) {
         const p1Deck = window._hostDeck;
         const p2Deck = CTFDeckUtils.normalizeDeck(data.deck);
@@ -1195,6 +1256,8 @@ function handleNetData(data) {
         commitAuthoritativeState();
       }
       break;
+    case 'resumeState':
+      myPlayer=data.role==='host'?0:1;
     case 'initGame':
     case 'authoritativeState': {
       GS = deserializeState(data.state);
@@ -1204,7 +1267,8 @@ function handleNetData(data) {
       $('opp-num').textContent = (1 - myPlayer) + 1;
       if (GS.deckMeta) { $('my-deck-name').textContent = myPlayer === 0 ? GS.deckMeta.p1.name : GS.deckMeta.p2.name; $('opp-deck-name').textContent = myPlayer === 0 ? GS.deckMeta.p2.name : GS.deckMeta.p1.name; }
       const incomingHash = data.hash || (typeof computeStateHash === 'function' ? computeStateHash(GS) : '');
-      if (lastStateHash && incomingHash && lastStateHash !== incomingHash) {
+      const receivedHash = (typeof computeStateHash === 'function') ? computeStateHash(GS) : incomingHash;
+      if (incomingHash && receivedHash !== incomingHash) {
         showIllegal(`Desync detected. Resynced to host state (${incomingHash}).`);
         $('net-state').textContent = 'Resynced'; $('net-state').className = 'net-pill warn';
       } else {
@@ -1218,10 +1282,11 @@ function handleNetData(data) {
     case 'actionRequest':
       if (net.isHost) {
         const snapshot = serializeState(GS);
-        const result = applyActionLocal(data.action);
+        let result;try{result=applyActionLocal(data.action,1);}catch{result={ok:false,msg:'Invalid game command.'};}
         if (!result.ok) {
           GS = deserializeState(snapshot);
           net.send({ type: 'actionRejected', msg: result.msg || 'Illegal action.' });
+          commitAuthoritativeState();
           renderAll();
           break;
         }
@@ -1244,18 +1309,23 @@ function handleNetData(data) {
       }
       break;
     case 'rematchRequest':
+      if(!GS?.gameOver)break;
+      opponentRematchRequested=true;
       $('rematch-btn')?.style && ($('rematch-btn').style.display = '');
       showToast('Opponent wants a rematch. Press Rematch to restart.');
       if (rematchRequested && net.isHost && GS && GS.deckMeta) {
         initGame(GS.deckMeta.p1, GS.deckMeta.p2);
         commitAuthoritativeState();
-        rematchRequested = false;
+        rematchRequested = opponentRematchRequested = false;
       }
       break;
   }
 }
 
 function sendAction(action) {
+  // UI handlers have already executed the command. Never execute it a second time.
+  if (!net) { updateStateHashNotice(); return {ok:true}; }
+  if (net.isHost) { commitAuthoritativeState(); return {ok:true}; }
   return requestAction(action);
 }
 
@@ -1264,7 +1334,7 @@ function syncState() {
   if (net.isHost) {
     commitAuthoritativeState();
   } else {
-    net.send({ type: 'stateHash', hash: (typeof computeStateHash === 'function') ? computeStateHash(GS) : '' });
+    net.send({ type: 'requestState' });
   }
 }
 
@@ -1600,49 +1670,41 @@ function promptEndPhaseAction(action) {
     (pickIdx) => {
       const sacrificeZone = eligible[pickIdx];
       closeChoiceModal();
-      if (action === 'extraction') return promptExtractionTarget(sacrificeZone);
-      if (action === 'rescue') return promptRescueTarget(sacrificeZone);
+      if (action === 'extraction' || action === 'rescue') return promptBoxTarget(action, sacrificeZone);
       if (action === 'destroyTrick') return promptDestroyTrickTarget(sacrificeZone);
     }
   );
 }
 
-function promptExtractionTarget(sacrificeZone) {
-  const me = GS.players[myPlayer];
-  openChoiceModal('Choose Extraction Target', 'Pick which card in your Box to Extract.', me.box.map((id, idx) => {
-    const c = getCard(id);
-    return { label: `${c ? c.name : 'Unknown Card'}`, meta: `Box Slot ${idx + 1}${c ? ` · ${c.cardType} · ${c.set}` : ''}` };
-  }), async (pickIdx) => {
-    closeChoiceModal();
-    // Ask the player to confirm the extraction. This prevents accidental moves.
-    const targetCard = getCard(me.box[pickIdx]);
-    const confirmMsg = targetCard ? `Extract ${targetCard.name} from your Box?` : 'Confirm Extraction?';
-    if (!await ctfConfirm(confirmMsg, 'Confirm Extraction')) return;
-    const result = endPhaseAction(GS, myPlayer, 'extraction', sacrificeZone, pickIdx);
-    if (!result.ok) return showToast(result.msg);
-    sendAction({ type: 'endPhaseAction', player: myPlayer, action: 'extraction', sacrificeZone, targetIdx: pickIdx });
-    renderAll();
-  });
-}
-
-function promptRescueTarget(sacrificeZone) {
-  const opp = GS.players[1 - myPlayer];
+function promptBoxTarget(action, sacrificeZone) {
+  const rescue = action === 'rescue';
+  const title = rescue ? 'Rescue' : 'Extraction';
+  const boxLabel = rescue ? 'the opponent’s Box' : 'your Box';
+  const duel = GS;
+  const player = myPlayer;
+  const boxPlayer = rescue ? 1 - player : player;
+  const box = duel.players[boxPlayer].box;
+  const targets = getEligibleBoxTargets(duel, player, action);
+  if (!targets.length) return showToast(`No eligible Catalyst in ${boxLabel}.`);
   openChoiceModal(
-    'Choose Rescue Target',
-    'Pick which of your cards to Rescue from the opponent\'s Box.',
-    opp.box.map((id, idx) => {
-      const c = getCard(id);
-      return { label: `${c ? c.name : 'Unknown Card'}`, meta: `Opponent Box Slot ${idx + 1}${c ? ` · ${c.cardType} · ${c.set}` : ''}` };
+    `Choose ${title} Target`,
+    rescue ? 'Choose a Catalyst you own.' : 'Choose a captured Catalyst your opponent owns.',
+    targets.map(index => {
+      const card = getCard(box[index]);
+      return { label: card.name, meta: `Box Slot ${index + 1} · ${card.cardType} · ${card.set || ''}` };
     }),
     async (pickIdx) => {
+      const targetIdx = targets[pickIdx];
+      const cardId = box[targetIdx];
       closeChoiceModal();
-      // Confirm rescue so the player doesn't accidentally pick the wrong card.
-      const targetCard = getCard(opp.box[pickIdx]);
-      const confirmMsg = targetCard ? `Rescue ${targetCard.name} from your opponent's Box?` : 'Confirm Rescue?';
-      if (!await ctfConfirm(confirmMsg, 'Confirm Rescue')) return;
-      const result = endPhaseAction(GS, myPlayer, 'rescue', sacrificeZone, pickIdx);
+      const verb = rescue ? 'Rescue' : 'Extract';
+      if (!await ctfConfirm(`${verb} ${getCard(cardId).name} from ${boxLabel}?`, `Confirm ${title}`)) return;
+      if (GS !== duel || myPlayer !== player || duel.players[boxPlayer].box[targetIdx] !== cardId) {
+        return showToast('The Box changed. Choose the target again.');
+      }
+      const result = endPhaseAction(duel, player, action, sacrificeZone, targetIdx);
       if (!result.ok) return showToast(result.msg);
-      sendAction({ type: 'endPhaseAction', player: myPlayer, action: 'rescue', sacrificeZone, targetIdx: pickIdx });
+      sendAction({ type: 'endPhaseAction', player, action, sacrificeZone, targetIdx });
       renderAll();
     }
   );
@@ -1960,8 +2022,10 @@ function getLegalActionsList() {
   if (GS.phaseName === 'end') {
     const eligible = getEligibleCatalysts(GS, myPlayer);
     items.push({ label: 'END TURN', tone: 'warn' });
-    items.push({ label: eligible.length && me.box.length ? 'Extraction' : 'Extraction locked', tone: eligible.length && me.box.length ? '' : 'blocked' });
-    items.push({ label: eligible.length && GS.players[1-myPlayer].box.length ? 'Rescue' : 'Rescue locked', tone: eligible.length && GS.players[1-myPlayer].box.length ? '' : 'blocked' });
+    const canExtract = eligible.length && getEligibleBoxTargets(GS, myPlayer, 'extraction').length;
+    const canRescue = eligible.length && getEligibleBoxTargets(GS, myPlayer, 'rescue').length;
+    items.push({ label: canExtract ? 'Extraction' : 'Extraction locked', tone: canExtract ? '' : 'blocked' });
+    items.push({ label: canRescue ? 'Rescue' : 'Rescue locked', tone: canRescue ? '' : 'blocked' });
     items.push({ label: eligible.length ? 'Destroy Trick' : 'Destroy Trick locked', tone: eligible.length ? '' : 'blocked' });
     return items;
   }
@@ -1977,7 +2041,7 @@ function renderLegalActions(){
 
 function getStatusMessage() {
   if (!GS) return { main: 'Waiting to start duel…', sub: '', mode: '' };
-  if (GS.gameOver) return { main: GS.winner === myPlayer ? 'Victory secured.' : 'Defeat recorded.', sub: GS.log[GS.log.length - 1]?.msg || '', mode: 'alert' };
+  if (GS.gameOver) return { main: GS.winner < 0 ? 'Duel drawn.' : GS.winner === myPlayer ? 'Victory secured.' : 'Defeat recorded.', sub: GS.log[GS.log.length - 1]?.msg || '', mode: 'alert' };
   const isMyTurn = GS.activePlayer === myPlayer;
   const me = GS.players[myPlayer];
   if ((isHotSeatMode || isSandboxMode) && isMyTurn) { $('status-sub').textContent = `Pass device to P${myPlayer+1} if needed. Local ${isSandboxMode ? 'sandbox' : 'hot-seat'} mode.`; }
@@ -2085,7 +2149,8 @@ function showFieldTip(event, playerIdx) {
 // ═══ RENDERING ═══
 function renderAll() {
   if (!GS) return;
-  if (isHotSeatMode || isSandboxMode) myPlayer = GS.activePlayer;
+  $('tip')?.classList.remove('show');
+  if (isHotSeatMode || isSandboxMode) myPlayer = GS.waitingForResponse ? GS.currentResponder : GS.activePlayer;
   // Patch v3.2: VS-AI mode locks myPlayer to seat 0 (human is always P1).
   if (isVsAIMode) myPlayer = 0;
   const me = GS.players[myPlayer];
@@ -2154,7 +2219,7 @@ function renderAll() {
   $('helper-copy').textContent = isWatchModeEnabled() ? `${baseHelperCopy} Watch Mode is on, so your hand contents stay hidden on screen.` : baseHelperCopy;
   renderLegalActions();
   renderTutorialPanel();
-  renderTutorialPhaseBanner();
+  renderPhaseGuide();
   renderP1SkipBattleBanner();
   renderBattleCoach();
 
@@ -2174,9 +2239,10 @@ function renderAll() {
 
   // Game over
   if (GS.gameOver) {
+    const drawn = GS.winner < 0;
     const won = GS.winner === myPlayer;
-    $('go-title').textContent = won ? 'VICTORY' : 'DEFEAT';
-    $('go-title').className = 'go-title ' + (won ? 'go-win' : 'go-lose');
+    $('go-title').textContent = drawn ? 'DRAW' : won ? 'VICTORY' : 'DEFEAT';
+    $('go-title').className = 'go-title' + (drawn ? '' : won ? ' go-win' : ' go-lose');
     $('go-reason').textContent = GS.log[GS.log.length - 1]?.msg || '';
     renderTutorialGameOver();
     $('game-over').classList.add('show');
@@ -2221,7 +2287,7 @@ function renderFieldZones(me, opp) {
     if (cat) {
       const c = getCard(cat.cardId);
       const isDef = cat.position === 'def';
-      zone.innerHTML = renderFieldCard(c, cat, false, false, me, i);
+      zone.innerHTML = renderFieldCard(c, cat, false, false, myPlayer, i);
     }
     if (selectedHandIdx >= 0 && !cat) {
       const sel = getCard(me.hand[selectedHandIdx]);
@@ -2238,7 +2304,7 @@ function renderFieldZones(me, opp) {
     zone.classList.remove('highlight', 'atk-target');
     if (cat) {
       const c = getCard(cat.cardId);
-      zone.innerHTML = renderFieldCard(c, cat, true, false, opp, i);
+      zone.innerHTML = renderFieldCard(c, cat, true, false, 1-myPlayer, i);
     }
     if (attackMode && attackerZone >= 0) zone.classList.add('atk-target');
   }
@@ -2254,13 +2320,13 @@ function renderFieldZones(me, opp) {
         zone.innerHTML = '<div class="field-card face-down" style="width:54px;height:64px"></div>';
       } else {
         const c = getCard(trick.cardId);
-        zone.innerHTML = renderFieldCard(c, trick, false, false, me, i);
+        zone.innerHTML = renderFieldCard(c, trick, false, false, myPlayer, i);
       }
     }
     if (selectedHandIdx >= 0 && !trick) {
       const selCard = getCard(me.hand[selectedHandIdx]);
       const isLib = (i === 0 || i === 4);
-      if (selCard && ['Concealed Trick','Counter Trick','Palm Trick'].includes(selCard.cardType) && selCard.cardType !== 'Field Trick') zone.classList.add('highlight');
+      if (!isLib && selCard && ['Concealed Trick','Counter Trick','Palm Trick'].includes(selCard.cardType)) zone.classList.add('highlight');
       if (isLib && selCard && selCard.cardType === 'Catalyst' && typeof isNormalCatalystCard === 'function' && isNormalCatalystCard(selCard)) zone.classList.add('highlight');
     }
   }
@@ -2273,19 +2339,22 @@ function renderFieldZones(me, opp) {
     zone.innerHTML = `<span class="zone-label">${lbl}</span>`;
     if (trick) {
       if (trick.faceDown) zone.innerHTML = '<div class="field-card face-down" style="width:54px;height:64px"></div>';
-      else { const c = getCard(trick.cardId); zone.innerHTML = renderFieldCard(c, trick, true, false, opp, i); }
+      else { const c = getCard(trick.cardId); zone.innerHTML = renderFieldCard(c, trick, true, false, 1-myPlayer, i); }
     }
   }
 }
 
-function cardArtUrl(card){ return (card && (card.image || card.imagePath || card.img || '')) || ''; }
+function cardArtUrl(card){
+  if (!card) return '';
+  return window.CTF_VERIFIED_IMAGES?.[card.id] || card.image || card.imagePath || card.img || '';
+}
 function renderFieldCard(card, slot, isOpp, mini = false, playerIdx = null, zoneIdx = null) {
   if (!card) return '';
   const isCat = card.cardType === 'Catalyst' || card.cardType === 'Fusion';
   const color = isCat ? 'var(--flame)' : card.cardType === 'Palm Trick' ? 'var(--blue)' : card.cardType === 'Field Trick' ? 'var(--green)' : card.cardType === 'Concealed Trick' || card.cardType === 'Counter Trick' ? 'var(--purple)' : 'var(--amber)';
   const defClass = slot.position === 'def' ? ' def-pos' : '';
-  const greatClass = card.great ? ' fc-great' : '';
   const hidePrivate = shouldHidePrivateFaceDown(playerIdx, slot);
+  const greatClass = !hidePrivate && CTFDeckUtils.isGreatCard(card) ? ' fc-great' : '';
   const art = hidePrivate ? '' : cardArtUrl(card);
   const artClass = art ? ' has-art' : '';
   const artStyle = art ? ` style="background-image:url('${art.replace(/'/g,"%27")}')"` : '';
@@ -2293,8 +2362,8 @@ function renderFieldCard(card, slot, isOpp, mini = false, playerIdx = null, zone
   if (slot.attackedThisTurn) statusBits.push('Pressure used');
   if (slot.cannotAttackThisTurn) statusBits.push('Cannot attack');
   if (slot.faceDown) statusBits.push('Face-down');
-  const shownPr = hidePrivate ? '?' : ((playerIdx !== null && zoneIdx !== null && typeof getEffectivePressure === 'function' && isCat) ? getEffectivePressure(GS, playerIdx, zoneIdx) : card.pr);
-  const shownCp = hidePrivate ? '?' : ((playerIdx !== null && zoneIdx !== null && typeof getEffectiveCounterPressure === 'function' && isCat) ? getEffectiveCounterPressure(GS, playerIdx, zoneIdx) : card.cp);
+  const shownPr = hidePrivate ? '?' : ((playerIdx !== null && zoneIdx !== null && typeof getEffectivePressure === 'function' && isCat && !slot.isLibra) ? getEffectivePressure(GS, playerIdx, zoneIdx) : card.pr);
+  const shownCp = hidePrivate ? '?' : ((playerIdx !== null && zoneIdx !== null && typeof getEffectiveCounterPressure === 'function' && isCat && !slot.isLibra) ? getEffectiveCounterPressure(GS, playerIdx, zoneIdx) : card.cp);
   const tipHandlers = hidePrivate ? '' : ` onmouseenter="showTip(event,'${card.id}')" onmouseleave="hideTip()"`;
   const selectedClass = (!isOpp && selectedFieldZone && ((selectedFieldZone.type === 'cat' && playerIdx === myPlayer && zoneIdx === selectedFieldZone.zone) || (selectedFieldZone.type === 'trick' && playerIdx === myPlayer && zoneIdx === selectedFieldZone.zone))) ? ' selected' : '';
   const visibleName = hidePrivate ? (isCat ? 'Face-Down Catalyst' : 'Set Trick') : card.name;
@@ -2322,8 +2391,8 @@ function openEndPhaseModal(){
   // Compute disabled states the same way the inline panel does
   try {
     const eligible = (typeof getEligibleCatalysts === 'function') ? getEligibleCatalysts(GS, myPlayer) : [];
-    const meBox  = (GS.players[myPlayer].box || []).length;
-    const oppBox = (GS.players[1-myPlayer].box || []).length;
+    const meBox  = getEligibleBoxTargets(GS, myPlayer, 'extraction').length;
+    const oppBox = getEligibleBoxTargets(GS, myPlayer, 'rescue').length;
     const extractLocked = (eligible.length === 0) || (meBox === 0);
     const rescueLocked  = (eligible.length === 0) || (oppBox === 0);
     const destroyLocked = (eligible.length === 0);
@@ -2423,6 +2492,10 @@ function renderActions(isMyTurn) {
   } else if (phase === 'action') {
     html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Normal Spawn, activate Palm Tricks, set Tricks face-down, place Libra Scales, flip a set Field Trick, or Fusion Spawn.</div>`;
     const selected = selectedHandIdx >= 0 ? getCard(GS.players[myPlayer].hand[selectedHandIdx]) : null;
+    if (selected?.cardType === 'Catalyst' && !GS.players[myPlayer].normalSummonUsed) {
+      html += `<button class="act-btn act-btn-blue" onclick="spawnPosition=spawnPosition==='atk'?'def':'atk';renderAll()">Spawn position: ${spawnPosition==='atk'?'P':'CP'} · Switch</button>`;
+      if (selected.level >= 1 && selected.level <= 4) html += '<button class="act-btn act-btn-ghost" onclick="startSetCatalyst()">Set Catalyst Face-Down (CP)</button>';
+    }
     if (selected?.cardType === 'Palm Trick') html += `<button class="act-btn act-btn-fire" onclick="startActivatePalm()">Activate Palm</button>`;
     const setPalmZones = GS.players[myPlayer].tricks.map((t,i)=>({t,i})).filter(x => x.t && x.t.faceDown && !x.t.isLibra && getCard(x.t.cardId)?.cardType === 'Palm Trick');
     if (setPalmZones.length) html += `<button class="act-btn act-btn-blue" onclick="showToast('Click your set Palm Trick to flip and activate it.')">Flip Set Palm</button>`;
@@ -2445,6 +2518,10 @@ function renderActions(isMyTurn) {
       html += `<button class="act-btn act-btn-red" onclick="cancelSelection()">Cancel Selection</button>`;
     }
   } else if (phase === 'battle') {
+    if (GS._p1BattleSkipPending) {
+      panel.innerHTML = html + '<div>First-turn Battle Phase is skipped.</div><button class="act-btn act-btn-fire" onclick="dismissP1SkipBattle()">Continue to Resolution →</button>';
+      return;
+    }
     if (!attackMode) {
       html += `<button class="act-btn act-btn-fire" onclick="enterAttackMode()">Declare Attack</button>`;
       // Direct attack button
@@ -2452,7 +2529,7 @@ function renderActions(isMyTurn) {
       if (!oppHasCats) {
         html += `<button class="act-btn act-btn-red" onclick="directAttack()">Direct Attack!</button>`;
       }
-      html += `<button class="act-btn act-btn-ghost" onclick="doAdvance()">→ To End Phase</button>`;
+      html += `<button class="act-btn act-btn-ghost" onclick="doAdvance()">→ To Resolution Phase</button>`;
     } else {
       if (attackerZone < 0) {
         html += `<div style="font-size:.65rem;color:var(--cream);margin-bottom:4px">Click YOUR P-position Catalyst to select attacker.</div>`;
@@ -2492,16 +2569,16 @@ function renderActions(isMyTurn) {
     // Auto-open the End Phase modal so choices are front-and-center.
     try { openEndPhaseModal(); } catch(e){}
     const eligible = getEligibleCatalysts(GS, myPlayer);
-    const extractLocked = eligible.length === 0 || GS.players[myPlayer].box.length === 0;
-    const rescueLocked = eligible.length === 0 || GS.players[1-myPlayer].box.length === 0;
+    const extractLocked = eligible.length === 0 || getEligibleBoxTargets(GS, myPlayer, 'extraction').length === 0;
+    const rescueLocked = eligible.length === 0 || getEligibleBoxTargets(GS, myPlayer, 'rescue').length === 0;
     const destroyLocked = eligible.length === 0;
     $('ep-extract').disabled = extractLocked;
     $('ep-rescue').disabled = rescueLocked;
     $('ep-destroy').disabled = destroyLocked;
     const reasons = [];
     if (!eligible.length) reasons.push('No eligible Catalyst remains on your field, so Extraction, Rescue, and Destroy Trick are locked.');
-    if (eligible.length && !GS.players[myPlayer].box.length) reasons.push('Extraction is locked because your Box is empty.');
-    if (eligible.length && !GS.players[1-myPlayer].box.length) reasons.push('Rescue is locked because the opponent has none of your cards in their Box.');
+    if (eligible.length && extractLocked) reasons.push('Your Box needs an eligible opponent-owned Catalyst for Extraction.');
+    if (eligible.length && rescueLocked) reasons.push('The opponent’s Box needs an eligible Catalyst you own for Rescue.');
     reasons.push('END TURN is always available and costs nothing.');
     $('end-phase-note').textContent = reasons.join(' ');
     return;
@@ -2510,6 +2587,8 @@ function renderActions(isMyTurn) {
 }
 
 function sanitizeVisibleLogMessage(msg){
+  const draw = String(msg || '').match(/^P([12]) drew /);
+  if (draw && Number(draw[1])-1 !== myPlayer) return `P${draw[1]} drew a card.`;
   if (!isWatchModeEnabled()) return msg;
   const text = String(msg || '');
   const privatePatterns = [
@@ -2550,7 +2629,22 @@ function renderLog() {
 }
 
 // ═══ PLAYER ACTIONS ═══
+function startSetCatalyst() {
+  if (!GS || selectedHandIdx < 0) return;
+  const handIdx = selectedHandIdx;
+  const zones = GS.players[myPlayer].catalysts.map((slot,zone)=>({slot,zone})).filter(item=>!item.slot);
+  if (!zones.length) return showToast('No empty Catalyst Zone.');
+  openChoiceModal('Set Catalyst','Choose a zone. This uses your Normal Spawn.',zones.map(item=>({label:`C${item.zone+1}`})),index=>{
+    const zone = zones[index].zone;
+    const result = setCatalyst(GS,myPlayer,handIdx,zone);
+    if (!result.ok) return showToast(result.msg);
+    closeChoiceModal(); selectedHandIdx=-1;
+    sendAction({type:'setCatalyst',player:myPlayer,handIdx,zone}); renderAll();
+  });
+}
+
 function handClick(idx) {
+  spawnPosition = 'atk';
   if (GS.activePlayer !== myPlayer) return;
   if (GS.pendingDiscard && GS.pendingDiscard.playerIdx === myPlayer) {
     const result = discardForHandLimit(GS, myPlayer, idx);
@@ -2565,14 +2659,24 @@ function handClick(idx) {
   renderAll();
 }
 
-function zoneClick(player, type, zone) {
+async function zoneClick(player, type, zone) {
   if (!GS || GS.gameOver) return;
   const isMyTurn = GS.activePlayer === myPlayer;
 
   // Attack mode — selecting target
   if (attackMode && attackerZone >= 0 && player === 'opp' && type === 'cat') {
-    const result = declareAttack(GS, myPlayer, attackerZone, 1 - myPlayer, zone);
-    sendAction({ type: 'attack', attacker: myPlayer, attackerZone, defender: 1 - myPlayer, defenderZone: zone });
+    const duel = GS;
+    const from = attackerZone;
+    const attacker = myPlayer;
+    const damage = previewCounterPressureDamage(duel, attacker, from, zone);
+    if (damage > 0) {
+      const risk = damage >= duel.players[attacker].chi ? ' This could end your duel.' : '';
+      if (!await ctfConfirm(`At current values, this attack would cost you ${damage.toLocaleString()} Chi before responses or battle effects.${risk}`, 'Attack into higher Counter Pressure')) return;
+      if (GS !== duel || !attackMode || attacker !== myPlayer || from !== attackerZone) return;
+    }
+    const result = declareAttack(duel, attacker, from, 1 - attacker, zone);
+    if (!result.ok) return showToast(result.msg);
+    sendAction({ type: 'attack', attacker, attackerZone: from, defender: 1 - attacker, defenderZone: zone });
     attackMode = false;
     attackerZone = -1;
     renderAll();
@@ -2640,9 +2744,9 @@ function zoneClick(player, type, zone) {
           const ok = await ctfConfirm(isWatchModeEnabled() ? `Normal Spawn your selected hidden card by sending ${tributeNames} to the Void?` : `Normal Spawn ${card.name} by sending ${tributeNames} to the Void?`, 'Confirm Tribute Spawn');
           if (!ok) return;
         }
-        const result = normalSummon(GS, myPlayer, handIdx, zone, 'atk', tributeZones);
+        const result = normalSummon(GS, myPlayer, handIdx, zone, spawnPosition, tributeZones);
         if (result.ok) {
-          sendAction({ type: 'normalSummon', player: myPlayer, handIdx, zone, position: 'atk', tributeZones });
+          sendAction({ type: 'normalSummon', player: myPlayer, handIdx, zone, position: spawnPosition, tributeZones });
         } else {
           showToast(result.msg);
         }
@@ -2845,7 +2949,7 @@ function showTip(event, id) {
   const c = getCard(id);
   if (!c) return;
   const tip = $('tip');
-  $('tip-name').textContent = c.name + (c.great ? ' ★' : '');
+  $('tip-name').textContent = c.name + (CTFDeckUtils.isGreatCard(c) ? ' ★' : '');
   $('tip-info').textContent = `${c.cardType}${c.sub && c.sub !== 'Normal' ? ' (' + c.sub + ')' : ''} · ${c.set}${c.alignment ? ' · ' + c.alignment : ''}${c.level ? ' · Lv ' + c.level : ''}${c.kindsStr ? ' · ' + c.kindsStr : ''}`;
   const isCat = c.cardType === 'Catalyst' || c.cardType === 'Fusion';
   $('tip-stats').textContent = isCat ? `Pressure: ${c.pr}  ·  Counter Pressure: ${c.cp}` : '';
@@ -2872,8 +2976,25 @@ function showToast(msg) {
 }
 
 // ═══ INIT ═══
+// Commands in the UI execute optimistically, so block a second click until the
+// host acknowledges the first one. Inspection and reconnect remain available.
+document.addEventListener('click',event=>{
+  if(!net||net.peerNet||!GS)return;
+  if(!awaitingActionAck&&net.connected)return;
+  if(event.target.closest('#action-btns,#end-phase-panel,#my-hand,.board,#my-field-slot,#p1-skip-battle-banner,#choice-modal,#end-phase-modal')){
+    event.preventDefault();event.stopImmediatePropagation();showToast(awaitingActionAck?'Waiting for the host to confirm your action…':'Wait for the other player to reconnect.');
+  }
+},true);
+const lobbyParams = new URLSearchParams(location.search);
 loadSettings();
 updateWatchModeButton();
-renderDeckSelect();
+renderDeckSelect(lobbyParams.get('deck') === 'custom');
+for (const deck of lobbyDecks) {
+  if (deck.source === 'starter') $('cpu-deck-select').add(new Option(deck.name, deck.id));
+}
 if (lastRoomCode && $('join-input')) $('join-input').value = lastRoomCode;
-if (new URLSearchParams(location.search).get('onboarding') === '1') startTutorial(true);
+if (lobbyParams.get('onboarding') === '1') startTutorial(true);
+else if (lobbyParams.get('guided') === '1') startTutorial();
+if (lobbyParams.get('settings') === '1') toggleSettings(true);
+const invitedRoom=lobbyParams.get('room');
+if(invitedRoom&&/^[A-Z0-9]{6}$/i.test(invitedRoom)){$('join-input').value=invitedRoom.toUpperCase();$('join-status').textContent='Choose your deck, then press Join to enter your friend’s room.';}

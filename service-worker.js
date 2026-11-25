@@ -1,5 +1,17 @@
-const CACHE='ctf-theforge-13';
-const ASSETS=['./','./index.html','./cards.html','./collections.html','./deckbuilder.html','./rules.html','./glossary.html','./play.html','./first-five-forge.html','./submit.html','./thanks.html','./About_Us.html','./play_inline.js','./assets/js/first-five-forge.js','./assets/js/zf1-tutorial-data.js','./assets/js/ctf-unified-nav.js','./assets/data/ZF1.ptcg','./assets/css/first-five-forge.css','./assets/css/ctf-unified-nav.css','./assets/js/ctf-config.js','./assets/js/submission-delivery-config.js','./assets/js/data.js','./assets/js/sets-2026-08-24-patch.js','./assets/js/sets-2026-08-25-patch.js','./assets/js/deck-utils.js','./assets/js/starter-decks-2026-08-25.js','./assets/js/engine.js','./assets/js/net.js','./assets/js/ai_opponent.js','./assets/js/tutorial_coach.js','./manifest.json','./assets/css/ctf-brand-refresh.css','./assets/img/ctf-mark.png','./assets/img/ctf-social-preview.png','./assets/img/carry-the-flame-horizontal.png','./assets/img/carry-the-flame-vertical.png','./assets/img/ctf-crest.png','./assets/img/ctf-torch-badge.png','./assets/img/the-forge-branded-background.png','./images/index-promo.jpg','./images/about-guide.jpg','./assets/js/card-image-map.js','./images/placeholder.png'];
-self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET') return; e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{const copy=resp.clone(); caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{}); return resp;}).catch(()=>caches.match('./index.html'))));});
+importScripts('offline-assets.js');
+const CACHE = 'ctf-browser-20261124-v8';
+const CORE = ['./','./index.html','./play.html','./cards.html','./collections.html','./deckbuilder.html','./rules.html','./glossary.html','./first-five-forge.html','./submit.html','./About_Us.html','./play_inline.js','./manifest.json','./icon-ctf.svg','./assets/js/ctf-config.js','./assets/js/data.js','./assets/js/zf1-tutorial-data.js','./assets/js/deck-utils.js','./assets/js/engine.js','./assets/js/card-playability-manifest.js','./assets/js/ai_opponent.js','./assets/js/cpu-browser.js','./assets/js/tutorial_coach.js','./assets/js/first-five-forge.js','./assets/js/ctf-unified-nav.js','./assets/css/first-five-forge.css','./assets/css/ctf-unified-nav.css','./ALPHA/forge-review-data.json','./images/placeholder.png'];
+self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll([...new Set([...CORE,...self.CTF_OFFLINE_ASSETS])])).then(() => self.skipWaiting())));
+self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('ctf-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  if (url.pathname.includes('/api/')) return;
+  if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
+  event.respondWith(fetch(event.request).then(response => {
+    if (response.ok) { const copy = response.clone(); caches.open(CACHE).then(cache => cache.put(event.request,copy)); }
+    return response;
+  }).catch(async () => {
+    const cache = await caches.open(CACHE);
+    return await cache.match(event.request, {ignoreSearch:true}) || new Response('This resource is not available offline.', {status:503,headers:{'Content-Type':'text/plain'}});
+  }));
+});

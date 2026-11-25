@@ -146,6 +146,8 @@
 
   // ── RESOLVER ──────────────────────────────────────────────────────────
   function candidates(card){
+    var verified = card && global.CTF_VERIFIED_IMAGES?.[card.id];
+    if (verified) return verified === PLACEHOLDER ? [PLACEHOLDER] : [verified, PLACEHOLDER];
     var list = [];
     var seen = {};
     function push(p){ if(p && !seen[p]){ seen[p] = true; list.push(p); } }

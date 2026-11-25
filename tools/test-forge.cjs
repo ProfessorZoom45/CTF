@@ -1,0 +1,23 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+const source=fs.readFileSync(path.join(root,'assets/js/first-five-forge.js'),'utf8').replace(/\r\n/g,'\n');
+const storage=new Map();
+const context=vm.createContext({console,URL,assert,window:{},document:{getElementById:()=>({textContent:''})},localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)}});
+vm.runInContext(fs.readFileSync(path.join(root,'assets/js/forge-submission.mjs'),'utf8').replace(/export /g,''),context);
+vm.runInContext(source.slice(0,source.lastIndexOf('try{\n  const response=await fetch')).replace(/^import .*;\r?\n/m,'').replace('import.meta.url','"http://localhost/assets/js/first-five-forge.js"'),context);
+context.snapshot=JSON.parse(fs.readFileSync(path.join(root,'ALPHA/forge-review-data.json'),'utf8'));
+vm.runInContext(`tree=snapshot;globalThis.fixture=()=>{cards=SLOTS.map((slot,i)=>({...blank(i),name:['QA Scout','QA Guard','QA Beacon','QA Great Alliance','QA Spark'][i],lore:'Original card lore.',resolution:'Place in the legal zone.',effectText:i===4?'Target 1 Catalyst; it gains 300 Pressure.':'Use the printed materials.',fusionRules:'QA Scout + QA Guard',pressure:i===2?2000:i===3?2000:1000,counterPressure:i===2?2000:i===3?2000:1000}));savedLessons=SLOTS.map(()=>true);step=5;complete=true;};`,context);
+let passed=0,failed=0;
+function test(name,code){try{vm.runInContext(`fixture();(()=>{${code}})()`,context);passed++;console.log('PASS '+name);}catch(error){failed++;console.log('FAIL '+name+': '+error.message);}}
+test('valid five-card package',`assert.equal(validateAll().length,0);`);
+test('blank and duplicate card names rejected',`cards[0].name='';assert(validateCard(0).length);cards[0].name=cards[1].name.toUpperCase();assert(validateCard(0).some(s=>/distinct/.test(s)));`);
+test('low-Rank stat caps enforced',`cards[0].pressure=1801;assert(validateCard(0).some(s=>/0–1800/.test(s)));`);
+test('shared 4500 Pressure and CP pools enforced',`cards[0].pressure=1800;cards[1].pressure=1800;cards[2].pressure=2000;assert(validateCard(0).some(s=>/4,500 Pressure/.test(s)));cards[0].counterPressure=2000;cards[1].counterPressure=2000;assert(validateCard(0).some(s=>/4,500 Counter/.test(s)));`);
+test('canonical Alignment/Race/Skill branches enforced',`cards[0].race='Invalid';assert(validateCard(0).some(s=>/race allowed/.test(s)));`);
+test('Normal Catalysts require lore and resolution',`cards[0].lore='';cards[0].resolution='';assert.equal(validateCard(0).filter(s=>/lore|resolution/.test(s)).length,2);`);
+test('Fusion needs distinct exact materials',`cards[3].materialTwo='0';assert(validateCard(3).some(s=>/different materials/.test(s)));`);
+test('Fusion cannot exceed material statistics or 4000 combined',`cards[3].pressure=2500;assert(validateCard(3).some(s=>/exceeds its materials/.test(s)));assert(validateCard(3).some(s=>/4,000/.test(s)));`);
+test('Trick needs a single Catalyst target and boost at most 300',`cards[4].effectText='Draw 1 card.';assert(validateCard(4).some(s=>/Target 1 Catalyst/.test(s)));cards[4].effectText='Target 1 Catalyst; it gains 500 Pressure.';assert(validateCard(4).some(s=>/300/.test(s)));`);
+test('finalized package saves and reloads intact',`save();cards=[];step=0;complete=false;load();assert.equal(step,5);assert.equal(complete,true);assert.equal(cards.length,5);assert.equal(cards[0].name,'QA Scout');assert.equal(validateAll().length,0);`);
+test('triggered cards require an explicit timing window',`cards[0].effectClass='Effect';cards[0].effectText='After a Special Spawn resolves: Target 1 Catalyst; it gains 100 Pressure.';assert(validateCard(0).some(s=>/trigger timing/.test(s)));cards[0].timingWindow='After a Special Spawn resolves, before the next action begins.';assert.equal(validateCard(0).length,0);`);
+console.log(passed+' passed; '+failed+' failed');process.exitCode=failed?1:0;

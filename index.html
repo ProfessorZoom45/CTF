@@ -1071,6 +1071,7 @@ body.ctf-nav-pad { padding-top: 0; }
 }
 </style>
 
+<link rel="stylesheet" href="assets/css/site-theme.css">
 </head>
 <body>
 
@@ -1088,7 +1089,7 @@ body.ctf-nav-pad { padding-top: 0; }
     <ul class="nav-links" id="ctf-nav-list">
       <li><a href="index.html" class="active" aria-current="page">Home</a></li>
       <li><a href="rules.html">Rules</a></li>
-      <li><a href="first-five-forge.html">Learn to Play</a></li>
+      <li><a href="play.html?guided=1">Learn to Play</a></li>
       <li><a href="https://discord.gg/cKj3ayt2Mp">Join Our Discord</a></li>
       <li><a href="glossary.html">Glossary</a></li>
       <li><a href="About_Us.html">About</a></li>
@@ -1367,10 +1368,9 @@ body.ctf-nav-pad { padding-top: 0; }
   <div class="hero-divider"></div>
 
   <div class="cta-group">
-    <a class="btn-fire" href="first-five-forge.html">New Player: Learn to Play</a>
-    <a class="btn-fire" href="https://discord.gg/cKj3ayt2Mp">Get Alpha Access</a>
-    <a class="btn-ghost" href="deckbuilder.html">The Forge</a>
-    <a class="btn-ghost" href="collections.html">Browse All Sets</a>
+    <a class="btn-fire" href="play.html?guided=1">Start Guided Play</a>
+    <a class="btn-ghost" href="#game-hub">Game Hub</a>
+    <a class="btn-ghost" href="https://discord.gg/cKj3ayt2Mp">Join Discord</a>
       </div>
   <div class="beta-badges">
     <span class="beta-badge">All Cards Viewable</span>
@@ -1385,6 +1385,21 @@ body.ctf-nav-pad { padding-top: 0; }
   </div>
 </section>
 
+<section class="ctf-game-hub" id="game-hub" aria-labelledby="game-hub-title">
+  <h2 id="game-hub-title">Game Hub</h2>
+  <div class="ctf-hub-grid">
+    <a href="play.html?guided=1"><strong>Guided Play</strong><span>Learn with a starter deck.</span></a>
+    <a href="play.html#cpu-controls"><strong>Player vs CPU</strong><span>Choose a deck and challenge the CPU.</span></a>
+    <a href="play.html#local-play"><strong>Local 1v1</strong><span>Share one screen in hot-seat play.</span></a>
+    <a href="play.html#friend-room"><strong>Friend Rooms</strong><span>Create a room or join with a code.</span></a>
+    <a href="first-five-forge.html"><strong>Forge Cards</strong><span>Create and review your first five cards.</span></a>
+    <a href="deckbuilder.html"><strong>Deck Workshop</strong><span>Build, validate, and save a deck.</span></a>
+    <a href="deckbuilder.html#collection"><strong>Card Database</strong><span>Browse card art and effects.</span></a>
+    <a href="rules.html"><strong>Rules and Board</strong><span>Search rules and inspect board zones.</span></a>
+    <a href="play.html?settings=1"><strong>Settings</strong><span>Adjust the board and text display.</span></a>
+  </div>
+</section>
+
 <!-- ══════════════════════════════ CLAIM ══════════════════════════════ -->
 <section class="claim-strip">
   <div class="fire-rule"></div>
@@ -1394,7 +1409,7 @@ body.ctf-nav-pad { padding-top: 0; }
     <em>CTF gives you the pen.</em>
   </h2>
   <p class="sub-claim reveal">
-    <strong>FORGE</strong> your own 5‑card set. Once approved, your creations stand alongside the 1,600+ cards in the database that every player can use to battle an opponent. Your flame burns in the database forever.
+    <strong>FORGE</strong> your own five-card set. Approved creations can join the public card database when released.
   </p>
 </section>
 
@@ -1487,8 +1502,8 @@ body.ctf-nav-pad { padding-top: 0; }
     official card database for everyone to build with.
   </p>
   <div class="cta-group reveal">
-    <a class="btn-fire" href="submit.html">Submit Your Cards</a>
-    <a class="btn-ghost" href="first-five-forge.html">Learn to Play</a>
+    <a class="btn-fire" href="first-five-forge.html">Forge Your First Five</a>
+    <a class="btn-ghost" href="submit.html">Official Submission</a>
   </div>
 </section>
 
@@ -1496,22 +1511,22 @@ body.ctf-nav-pad { padding-top: 0; }
 <section class="start-section">
   <div class="fire-rule"></div>
   <p class="section-label reveal">Join The Alpha Forge</p>
-  <h2 class="section-title reveal">Request Exclusive Alpha Access</h2>
+  <h2 class="section-title reveal">Play Carry The Flame In Your Browser</h2>
   <div class="tester-wrap">
     <div class="tester-card reveal">
       <h4>Help Shape Carry The Flame</h4>
-      <p>The exclusive Carry The Flame alpha download is available by request through the Perfect Timing Gaming Discord. Join the community, request access, and help shape the game with your feedback.</p>
+      <p>Open the game, learn with the guided tutorial, and practice against the CPU. Build and save decks or create your first five cards in the Forge.</p>
       <ul class="tester-bullets">
         <li>Join the Perfect Timing Gaming Discord</li>
-        <li>Request the exclusive alpha download</li>
+        <li>Play locally or against the CPU in your browser</li>
         <li>Send feedback through the tester form</li>
         <li>Help shape later account systems and friend matches</li>
       </ul>
       <div class="discord-cta">
-        <a class="btn-ghost" href="https://discord.gg/cKj3ayt2Mp">Alpha Details</a>
+        <a class="btn-ghost" href="play.html">Play Now</a>
         <a class="btn-fire" href="https://discord.gg/cKj3ayt2Mp" target="_blank" rel="noopener">Join Perfect Timing Gaming Discord</a>
       </div>
-      <p class="discord-note">Download access is provided by request through the community Discord.</p>
+      <p class="discord-note">Local matches need no account. Join the community to share feedback.</p>
       <p class="tester-mail">Direct contact: <a href="mailto:changethewrld@outlook.com?subject=GAME%20TESTER">changethewrld@outlook.com</a></p>
     </div>
 
@@ -1573,7 +1588,7 @@ body.ctf-nav-pad { padding-top: 0; }
     <li>All cards viewable</li>
     <li>Local tutorial + hot-seat play</li>
   </ul>
-  <a class="btn-fire reveal" href="https://discord.gg/cKj3ayt2Mp">Start Playing — It's Free</a>
+  <a class="btn-fire reveal" href="play.html?guided=1">Start Playing — It's Free</a>
 </section>
 
 <!-- ══════════════════════════════ FINAL CTA ══════════════════════════════ -->
@@ -1600,168 +1615,7 @@ body.ctf-nav-pad { padding-top: 0; }
 </footer>
 
 <script>
-/* ══════════════════════════════════════════════════════════════
-   FLAME BACKGROUND + EMBER PARTICLE SYSTEM
-   Canvas is FIXED — covers the viewport at all scroll positions.
-   A layered radial flame glow sits at the viewport bottom,
-   and 140 embers continuously rise from the base upward.
-══════════════════════════════════════════════════════════════ */
-(function () {
-  const canvas = document.getElementById('ember-canvas');
-  const fgCanvas = document.getElementById('ember-canvas-foreground');
-  const ctx    = canvas.getContext('2d');
-  const fgCtx  = fgCanvas.getContext('2d');
-  let VW, VH;
-  let FG_MIN_Y;
-
-  function resize() {
-    VW = canvas.width  = window.innerWidth;
-    VH = canvas.height = window.innerHeight;
-    fgCanvas.width = VW;
-    fgCanvas.height = VH;
-    FG_MIN_Y = VH * 0.85;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  /* ── Ember class ── */
-  class Ember {
-    constructor(scatter) { this.spawn(scatter); }
-
-    spawn(scatter) {
-      this.x    = Math.random() * VW;
-      this.y    = scatter ? Math.random() * VH : VH + 8;
-      this.r    = Math.random() * 2.8 + 0.4;
-      this.vx   = (Math.random() - 0.5) * 0.85;
-      this.vy   = -(Math.random() * 1.7 + 0.4);
-      this.life = Math.random() * 280 + 80;
-      this.max  = this.life;
-      this.hue  = Math.random() * 36 + 6;   // 6–42 = deep red through amber
-      this.hot  = Math.random() < 0.18;      // bright hotspot embers
-    }
-
-    tick() {
-      this.x += this.vx + Math.sin(this.life * 0.021) * 0.42;
-      this.y += this.vy;
-      this.life--;
-      if (this.life <= 0 || this.y < -14) this.spawn(false);
-    }
-
-    draw() {
-      const t = this.life / this.max;
-      const r = this.r * (0.25 + 0.75 * t);
-
-      if (this.hot) {
-        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r * 6);
-        g.addColorStop(0,   `hsla(${this.hue},100%,75%,${t * 0.65})`);
-        g.addColorStop(0.4, `hsla(${this.hue},100%,55%,${t * 0.3})`);
-        g.addColorStop(1,   `hsla(${this.hue},100%,40%,0)`);
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, r * 6, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-      }
-
-      /* solid core */
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${this.hue},100%,64%,${t * 0.78})`;
-      ctx.fill();
-
-      /* outer soft halo */
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, r * 3.5, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${this.hue},100%,50%,${t * 0.09})`;
-      ctx.fill();
-    }
-  }
-
-  /* 70 pre-scattered + 70 rising from bottom */
-  const embers = [
-    ...Array.from({ length: 70 }, () => new Ember(true)),
-    ...Array.from({ length: 70 }, () => new Ember(false))
-  ];
-
-  class ForegroundEmber {
-    constructor() { this.spawn(true); }
-    spawn(scatter) {
-      this.x = Math.random() * VW;
-      this.y = scatter ? FG_MIN_Y + Math.random() * (VH - FG_MIN_Y) : VH - Math.random() * (VH * 0.08);
-      this.r = Math.random() * 3.8 + 1.3;
-      this.vx = (Math.random() - 0.5) * 0.8;
-      this.vy = -(Math.random() * 0.16 + 0.05);
-      this.life = Math.random() * 260 + 120;
-      this.max = this.life;
-      this.hue = Math.random() * 18 + 18;
-    }
-    tick() {
-      this.x += this.vx + Math.sin(this.life * 0.021 + this.x * 0.01) * 0.28;
-      this.y += this.vy;
-      this.life--;
-      if (this.life <= 0 || this.y < FG_MIN_Y - 10 || this.x < -20 || this.x > VW + 20) this.spawn(false);
-    }
-    draw() {
-      const t = this.life / this.max;
-      const r = this.r * (0.45 + 0.55 * t);
-      const g = fgCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r * 4.8);
-      g.addColorStop(0,   `hsla(${this.hue},100%,78%,${t * 0.30})`);
-      g.addColorStop(0.38,`hsla(${this.hue},100%,58%,${t * 0.14})`);
-      g.addColorStop(1,   `hsla(${this.hue},100%,40%,0)`);
-      fgCtx.beginPath();
-      fgCtx.arc(this.x, this.y, r * 4.8, 0, Math.PI * 2);
-      fgCtx.fillStyle = g;
-      fgCtx.fill();
-      fgCtx.beginPath();
-      fgCtx.arc(this.x, this.y, r, 0, Math.PI * 2);
-      fgCtx.fillStyle = `hsla(${this.hue},100%,66%,${t * 0.78})`;
-      fgCtx.fill();
-    }
-  }
-
-  const foregroundEmbers = Array.from({ length: 18 }, () => new ForegroundEmber());
-
-  /* ── Flame base glow drawn at bottom of fixed canvas ── */
-  function drawFlameBase() {
-    /* fill pure black first */
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, VW, VH);
-
-    /* wide molten pool */
-    const pool = ctx.createRadialGradient(VW * 0.5, VH, 0, VW * 0.5, VH, VH * 0.75);
-    pool.addColorStop(0,    'rgba(230,75,0,0.55)');
-    pool.addColorStop(0.2,  'rgba(190,45,0,0.35)');
-    pool.addColorStop(0.5,  'rgba(130,22,0,0.15)');
-    pool.addColorStop(1,    'rgba(0,0,0,0)');
-    ctx.fillStyle = pool;
-    ctx.fillRect(0, 0, VW, VH);
-
-    /* offset hot core for realism */
-    const core = ctx.createRadialGradient(VW * 0.47, VH, 0, VW * 0.47, VH, VH * 0.42);
-    core.addColorStop(0,    'rgba(255,120,0,0.38)');
-    core.addColorStop(0.35, 'rgba(210,65,0,0.18)');
-    core.addColorStop(1,    'rgba(0,0,0,0)');
-    ctx.fillStyle = core;
-    ctx.fillRect(0, 0, VW, VH);
-
-    /* narrow bright tongue of flame */
-    const tongue = ctx.createRadialGradient(VW * 0.5, VH, 0, VW * 0.5, VH * 0.55, VH * 0.25);
-    tongue.addColorStop(0,   'rgba(255,160,0,0.18)');
-    tongue.addColorStop(0.6, 'rgba(220,80,0,0.08)');
-    tongue.addColorStop(1,   'rgba(0,0,0,0)');
-    ctx.fillStyle = tongue;
-    ctx.fillRect(0, 0, VW, VH);
-  }
-
-  /* ── Animation loop ── */
-  function frame() {
-    drawFlameBase();
-    embers.forEach(e => { e.tick(); e.draw(); });
-    fgCtx.clearRect(0, 0, VW, VH);
-    foregroundEmbers.forEach(e => { e.tick(); e.draw(); });
-    requestAnimationFrame(frame);
-  }
-  frame();
-})();
+/* The shared embers-bg.js renderer supplies both flame layers. */
 
 /* ══════════════════════════════════════════════════════════════
    SCROLL REVEAL  (.reveal → .vis)
@@ -1887,5 +1741,6 @@ body.ctf-nav-pad { padding-top: 0; }
   });
 })();
 </script>
+<script src="assets/js/browser-app.js"></script>
 </body>
 </html>

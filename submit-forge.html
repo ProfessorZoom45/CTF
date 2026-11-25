@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Submit Your Forge Cards — Carry The Flame</title>
+<meta name="theme-color" content="#0d0d0d">
+<link rel="icon" href="assets/img/ctf-mark.png"><link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="assets/css/ctf-unified-nav.css"><link rel="stylesheet" href="assets/css/forge-submission.css">
+<script defer src="assets/js/ctf-unified-nav.js"></script>
+<script src="assets/js/submission-delivery-config.js"></script>
+<script type="module" src="assets/js/forge-submission-page.mjs"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/css/site-theme.css">
+</head><body>
+<nav class="ctf-unified" aria-label="Primary"><div class="nav-inner"><a class="nav-brand" href="index.html">Carry The Flame</a><button class="menu-toggle" aria-expanded="false" aria-controls="submission-nav" aria-label="Open navigation">☰</button><ul class="nav-links" id="submission-nav"><li><a href="first-five-forge.html">Create Cards</a></li><li><a href="play.html">Play</a></li></ul></div></nav>
+<main>
+<p class="eyebrow">The Forge · Creator Review</p><h1>Submit your five cards.</h1>
+<p>Review the exact package you finalized in Lesson 6. Your names, effects, stats, materials and resolution text travel together.</p>
+<p id="delivery-mode" class="notice"></p>
+<section id="package-error" class="notice error" hidden></section>
+<div class="actions"><a href="first-five-forge.html">Edit your Forge cards</a><button type="button" id="download-package" disabled>Download package JSON</button></div>
+<section id="package-preview" class="cards" aria-label="Your five cards"></section>
+<form id="submit-forge-form">
+<h2>Creator details</h2>
+<div class="details"><label>Name / gamertag<input id="creator-name" name="creatorName" autocomplete="nickname" maxlength="128" required></label><label>Email<input id="creator-email" name="creatorEmail" type="email" autocomplete="email" maxlength="254" required></label></div>
+<label class="agreement"><input type="checkbox" id="creator-agreement" required><span>I confirm these are my original card names and that I may submit this content. I understand that approved cards become the property of Perfect Timing Gaming / Makairis Holding Group, may be modified or rejected, and only enter shared play after manual approval.</span></label>
+<div id="submission-verification"></div>
+<button class="primary" id="send-package" type="submit" disabled>Submit five cards for review</button>
+<p id="submission-status" role="status" aria-live="polite"></p>
+<section id="submission-receipt" class="receipt" hidden><h2>Submission received</h2><p id="receipt-copy"></p><p>Reference: <strong id="receipt-id"></strong></p><p>Approval is pending. Your draft remains editable in the Forge.</p><a href="play.html">Return to the game →</a></section>
+</form>
+</main><script src="assets/js/browser-app.js"></script>
+</body></html>

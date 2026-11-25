@@ -263,7 +263,7 @@ body.watch-mode .status-banner{box-shadow:inset 0 0 0 1px rgba(255,179,71,.12)}
 .field-card.has-art,.hand-card.has-art{background-size:cover;background-position:center;border-color:rgba(255,255,255,.12)}
 .field-card.has-art::before,.hand-card.has-art::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.72));pointer-events:none}
 .field-card.has-art>*,.hand-card.has-art>*{position:relative;z-index:1}
-.settings-drawer{position:fixed;top:0;right:-320px;width:min(320px,92vw);height:100vh;background:var(--coal-light);border-left:1px solid rgba(255,106,0,.14);z-index:1700;transition:right .2s ease;display:flex;flex-direction:column;padding:14px;gap:10px}
+.settings-drawer{position:fixed;top:0;right:-320px;width:min(320px,92vw);height:100vh;height:100dvh;overflow-y:auto;background:var(--coal-light);border-left:1px solid rgba(255,106,0,.14);z-index:1700;transition:right .2s ease;display:flex;flex-direction:column;padding:14px;gap:10px}
 .settings-drawer.show{right:0}
 .settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.8rem;color:var(--cream)}
 .settings-row input[type="range"]{width:120px}
@@ -310,7 +310,7 @@ body.compact-zones .zone{width:40px;height:48px}
 body.compact-zones .field-card{width:36px;height:44px}
 
 /* Settings drawer — wire backdrop toggle */
-.settings-drawer.show~#settings-backdrop{display:block}
+#settings-backdrop{display:none}
 #settings-backdrop.active{display:block}
 
 /* Confirm modal */
@@ -773,6 +773,8 @@ body.ctf-nav-open { overflow: hidden; }
 body.ctf-nav-pad { padding-top: 0; }
 </style>
 
+<link rel="stylesheet" href="assets/css/browser-game.css">
+<link rel="stylesheet" href="assets/css/site-theme.css">
 </head>
 <body>
 
@@ -813,7 +815,7 @@ body.ctf-nav-pad { padding-top: 0; }
     <ul class="nav-links" id="ctf-nav-list">
       <li><a href="index.html">Home</a></li>
       <li><a href="rules.html">Rules</a></li>
-      <li><a href="first-five-forge.html">Learn to Play</a></li>
+      <li><a href="play.html?guided=1">Learn to Play</a></li>
       <li><a href="https://discord.gg/cKj3ayt2Mp">Join Our Discord</a></li>
       <li><a href="glossary.html">Glossary</a></li>
       <li><a href="About_Us.html">About</a></li>
@@ -860,40 +862,52 @@ body.ctf-nav-pad { padding-top: 0; }
 <a href="index.html" style="font-family:var(--font-label);font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;display:inline-block">← Back to Home</a>
 <img class="ctf-brand-image ctf-brand-horizontal" src="assets/img/carry-the-flame-horizontal.png" alt="Carry The Flame">
 <img class="ctf-brand-image ctf-brand-vertical" src="assets/img/carry-the-flame-vertical.png" alt="Carry The Flame">
-<div class="lobby-title">Exclusive Alpha Access</div>
-<div class="lobby-sub">The Carry The Flame alpha download is available by request through the Perfect Timing Gaming Discord.</div>
-<div class="lobby-note"><strong>New player?</strong> Learn the rules through six short lessons using ZF1 cards, then begin the guided battle. <a href="first-five-forge.html" style="color:var(--gold)">Start Learn to Play →</a></div>
+<div class="lobby-title">Play Carry The Flame</div>
+<div class="lobby-sub">Learn the rules, build a deck, and play against the CPU or a friend in your browser.</div>
+<div class="lobby-note"><strong>New player?</strong> Play a guided duel with a starter deck, then create your first five cards in the Forge.</div>
 <section class="ctf-alpha-panel" aria-label="Carry The Flame alpha download information">
   <img class="ctf-alpha-panel__badge" src="assets/img/ctf-torch-badge.png" alt="Carry The Flame torch badge">
   <div>
     <p class="ctf-alpha-panel__eyebrow">Perfect Timing Gaming</p>
-    <h2 class="ctf-alpha-panel__title">Request the Alpha Download</h2>
-    <p class="ctf-alpha-panel__copy">Join the community, introduce yourself, and request the exclusive alpha version of Carry The Flame. The team will provide download access through the Discord.</p>
+    <h2 class="ctf-alpha-panel__title">Your Table Is Ready</h2>
+    <p class="ctf-alpha-panel__copy">Start with the guided tutorial, practice against the CPU, or share a local hot-seat match. Your decks and Forge drafts save in this browser.</p>
     <div class="ctf-alpha-panel__actions">
       <a class="lb-btn lb-btn-fire" href="https://discord.gg/cKj3ayt2Mp" target="_blank" rel="noopener">Join Perfect Timing Gaming Discord</a>
     </div>
   </div>
 </section>
-<div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
-  <button class="lb-btn lb-btn-fire" onclick="startTutorial()">Browser Tutorial</button>
+<div id="local-play" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
+  <button class="lb-btn lb-btn-fire" onclick="startTutorial()">Guided Play</button>
   <button class="lb-btn lb-btn-ghost" onclick="startHotSeat()">Hot-Seat Local</button>
   <button class="lb-btn lb-btn-ghost" onclick="startSandbox()">Solo Sandbox</button>
+  <button class="lb-btn lb-btn-ghost" id="lobby-settings-button" onclick="toggleSettings(true)" aria-controls="settings-drawer">Settings</button>
+  <a class="lb-btn lb-btn-ghost" href="index.html#game-hub">Game Hub</a>
+  <a class="lb-btn lb-btn-ghost" href="assets/img/board-diagram.html">Board Map</a>
   <a class="lb-btn lb-btn-ghost" href="https://discord.gg/cKj3ayt2Mp" target="_blank" rel="noopener">Alpha Discord</a>
   <span class="net-pill" id="net-state">Offline</span>
   <button class="lb-btn lb-btn-ghost" id="reconnect-btn" onclick="reconnectRoom()" style="display:none">Reconnect</button>
   <button class="lb-btn lb-btn-ghost" id="install-btn" onclick="installApp()" style="display:none">Install App</button>
 </div>
-<div class="lobby-note">Browser tools remain available for preview and testing. For the exclusive alpha build and download, join Perfect Timing Gaming and request access.</div>
+<div class="lobby-note">For two PCs: open this same website on both computers. One player creates a room and shares its link; the other joins using the six-character code.</div>
 
 <div class="lobby-box">
 <h3>Select Deck</h3>
 <div class="deck-select" id="deck-select"></div>
+<div class="cpu-lobby-controls" id="cpu-controls" aria-labelledby="cpu-controls-title">
+  <h4 id="cpu-controls-title">Player vs CPU</h4>
+  <label for="cpu-deck-select">CPU deck</label>
+  <select id="cpu-deck-select"><option value="">Random starter</option></select>
+  <button id="btn-vs-ai-tutorial" class="lb-btn lb-btn-fire" onclick="startVsAITutorial()">Guided CPU Match</button>
+  <button id="btn-vs-ai-free" class="lb-btn lb-btn-ghost" onclick="startVsAIFreePlay()">CPU Free Play</button>
+</div>
 </div>
 
-<div class="lobby-box">
+<div class="lobby-box" id="friend-room">
 <h3>Create Room</h3>
 <button class="lb-btn lb-btn-fire" onclick="createRoom()" id="create-btn" style="width:100%">Create Room</button>
 <div class="lb-code" id="room-code" style="display:none"></div>
+<a id="room-link" class="lb-btn lb-btn-ghost" hidden target="_blank" rel="noopener">Open invitation link</a>
+<button id="copy-room-link" class="lb-btn lb-btn-ghost" hidden onclick="copyRoomLink()">Copy invitation link</button>
 <div class="lb-status" id="create-status"></div>
 </div>
 
@@ -1011,6 +1025,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <div id="action-btns"></div>
 <button class="act-btn act-btn-ghost" id="watch-toggle-btn" onclick="toggleWatchMode()">Watch Mode: Off</button>
 <button class="act-btn act-btn-ghost" onclick="toggleSettings()">Settings</button>
+<a class="act-btn act-btn-ghost" href="assets/img/board-diagram.html" target="_blank" rel="noopener">Board Map</a>
 <button class="act-btn act-btn-ghost" onclick="showResultCard()">Result Card</button>
 </div>
 
@@ -1029,7 +1044,7 @@ body.ctf-nav-pad { padding-top: 0; }
     <button class="act-btn act-btn-ghost" id="tutorial-exit-btn" onclick="exitTutorial()" style="display:none">Exit Tutorial</button>
   </div>
   <div class="tutorial-links">
-    <a class="act-btn act-btn-fire" href="first-five-forge.html">Review ZF1 Lessons</a>
+    <a class="act-btn act-btn-fire" href="first-five-forge.html">Review First Five FORGE Drafts</a>
     <a class="act-btn act-btn-ghost" href="rules.html#combat" target="_blank" rel="noopener">Battle Basics</a>
     <a class="act-btn act-btn-ghost" href="rules.html#libra" target="_blank" rel="noopener">Libra Rules</a>
   </div>
@@ -1127,10 +1142,11 @@ body.ctf-nav-pad { padding-top: 0; }
 <!-- Tutorial-specific primary actions (hidden in non-tutorial mode) -->
 <button class="lb-btn lb-btn-fire" id="go-next-tutorial-btn" style="display:none" onclick="advanceTutorialStep()">Next Tutorial Match</button>
 <button class="lb-btn lb-btn-ghost" id="go-replay-tutorial-btn" style="display:none" onclick="replayTutorialMatch()">Replay This Match</button>
+<a class="lb-btn lb-btn-fire" id="go-forge-btn" href="first-five-forge.html" hidden>Create Cards in Forge</a>
 <!-- Net rematch (hidden unless online match) -->
 <button class="lb-btn lb-btn-fire" id="rematch-btn" style="display:none" onclick="requestRematch()">Rematch</button>
 <!-- Standard actions always available -->
-<button class="lb-btn lb-btn-fire" id="go-lobby-btn" onclick="location.reload()">Return to Lobby</button>
+<a class="lb-btn lb-btn-fire" id="go-lobby-btn" href="play.html">Return to Lobby</a>
 <button class="lb-btn lb-btn-ghost" onclick="showResultCard(true)">Result Card</button>
 <button class="lb-btn lb-btn-ghost" onclick="shareResultCardImage()">Share Result Image</button>
 <button class="lb-btn lb-btn-ghost" onclick="downloadMatchLog()">Export Match Log</button>
@@ -1168,7 +1184,7 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 
 <!-- SETTINGS DRAWER -->
-<div class="settings-drawer" id="settings-drawer" role="dialog" aria-modal="true" aria-label="Settings">
+<div class="settings-drawer" id="settings-drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true" inert>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
     <div style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;color:var(--flame)">Settings</div>
     <button class="lb-btn lb-btn-ghost" onclick="toggleSettings(false)" aria-label="Close settings" style="padding:.3rem .7rem;font-size:.75rem">✕ Close</button>
@@ -1214,11 +1230,12 @@ body.ctf-nav-pad { padding-top: 0; }
     </select>
   </div>
   <hr style="border:none;border-top:1px solid rgba(255,106,0,.12);margin:4px 0">
+  <button class="act-btn act-btn-ghost" onclick="resetSettings()">Restore Defaults</button>
   <button class="act-btn act-btn-ghost" onclick="downloadMatchLog()" style="margin-top:auto">Export Match Log</button>
   <button class="act-btn act-btn-ghost" onclick="downloadNetDebugLog()">Net Debug Log</button>
 </div>
 <!-- Settings backdrop -->
-<div id="settings-backdrop" onclick="toggleSettings(false)" style="display:none;position:fixed;inset:0;z-index:1699;background:rgba(0,0,0,.45)"></div>
+<div id="settings-backdrop" onclick="toggleSettings(false)" style="position:fixed;inset:0;z-index:1699;background:rgba(0,0,0,.45)"></div>
 
 <!-- CONFIRM MODAL (replaces native browser confirm()) -->
 <div class="confirm-modal" id="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-body">
@@ -1233,16 +1250,24 @@ body.ctf-nav-pad { padding-top: 0; }
 </div>
 
 <script src="assets/js/data.js"></script>
+<script src="assets/js/sets-2026-08-24-patch.js"></script>
+<script src="assets/js/sets-2026-08-25-patch.js"></script>
+<script src="assets/js/verified-card-images.js"></script>
+<script src="assets/js/card-image-map.js"></script>
 <script src="assets/js/zf1-tutorial-data.js?v=zf1-lessons-2026-09-25"></script>
 <script src="assets/js/deck-utils.js"></script>
+<script src="assets/js/starter-decks-2026-08-25.js"></script>
 <script src="assets/js/engine.js"></script>
+<script src="assets/js/friend-network.js"></script>
 <script src="assets/js/card-playability-manifest.js"></script>
 <!-- v3.2: VS-CPU brain + inline tutorial coach. Load AFTER engine.js (which
      defines the action functions the brain calls) and BEFORE play_inline.js
      (which references CTF_AI / CTF_COACH on startup). -->
 <script src="assets/js/ai_opponent.js"></script>
 <script src="assets/js/tutorial_coach.js"></script>
-<script src="play_inline.js?v=zf1-read-only-2026-09-28"></script>
+<script src="assets/js/cpu-browser.js"></script>
+<script src="play_inline.js?v=zf1-lessons-2026-09-25"></script>
 
+<script src="assets/js/browser-app.js"></script>
 </body>
 </html>

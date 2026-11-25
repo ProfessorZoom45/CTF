@@ -210,7 +210,8 @@ function createPlayer(deckInput) {
     deck: shouldShuffle ? shuffle(mainDeck) : mainDeck,
     fusionDeck: [...(deckObj.fusion || [])],
     void: [],
-    box: [],       // opponent catalysts captured by this player
+    box: [],       // Catalyst IDs captured by this player
+    boxOwners: [], // original owners, indexed alongside box
     rfg: [],       // extracted cards
     kills: 0,
     captures: 0,
@@ -323,8 +324,8 @@ function summonNamedToken(state, playerIdx, tokenId, count, sourceLabel, extraPr
       _cannotBeTributed: true
     }, extraProps || {});
     p.summonedThisTurn.add(zoneIdx);
-    registerSpecialSummon(state, playerIdx, sourceLabel || 'Token Effect');
     addLog(state, `P${playerIdx+1} Special Spawned ${getCard(tokenId)?.name || 'a token'} to C${zoneIdx+1}${sourceLabel ? ' via ' + sourceLabel : ''}.`);
+    registerSpecialSummon(state, playerIdx, sourceLabel || 'Token Effect');
     spawned += 1;
   }
   return { ok: spawned > 0, summoned: spawned };
@@ -693,6 +694,7 @@ function stealFirstOpponentCatalystUntilEndTurn(state, playerIdx, reasonLabel, p
   opp.catalysts[targetZone] = null;
   own.catalysts[openZone] = {
     cardId: stolen.cardId,
+    owner: getCatalystOwner(stolen, oppIdx),
     position: 'atk',
     faceDown: false,
     attackedThisTurn: false,
@@ -2300,6 +2302,13 @@ function getInferredAuraBoost(state, targetPlayerIdx, zoneIdx, statKey) {
   return boost;
 }
 
+function getCatalystOwner(slot, controller) {
+  const owner = slot.owner ?? slot._stolenFromPlayer ?? slot._temporaryReturnToPlayer;
+  if (owner === 0 || owner === 1) return owner;
+  return slot._stolenThisTurn || slot._jeanControlled || slot._stolenByRyoko || slot._stolenByEd
+    ? 1 - controller : controller;
+}
+
 function runGenericTakeControl(state, playerIdx, sourceCardId, eff, manual, reasonLabel) {
   const p = state.players[playerIdx];
   const sourceCard = getCard(sourceCardId);
@@ -2333,6 +2342,7 @@ function runGenericTakeControl(state, playerIdx, sourceCardId, eff, manual, reas
       opp.catalysts[tz] = null;
       state.players[playerIdx].catalysts[openZone] = {
         cardId: stolen.cardId,
+        owner: getCatalystOwner(stolen, 1 - playerIdx),
         position: stolen.position || 'atk',
         faceDown: false,
         attackedThisTurn: false,
@@ -2365,6 +2375,7 @@ function runGenericTakeControl(state, playerIdx, sourceCardId, eff, manual, reas
     opp.catalysts[manualZone] = null;
     state.players[playerIdx].catalysts[openZone] = {
       cardId: stolen.cardId,
+      owner: getCatalystOwner(stolen, 1 - playerIdx),
       position: stolen.position || 'atk',
       faceDown: false,
       attackedThisTurn: false,
@@ -3512,7 +3523,7 @@ function runPalmScript(state, playerIdx, card, manual) {
           const stolen = opp.catalysts[bestZ];
           opp.catalysts[bestZ] = null;
           const stolenCard = getCard(stolen.cardId);
-          p.catalysts[emptyZ] = { cardId: stolen.cardId, position: 'atk', faceDown: false, attackedThisTurn: false, atkMod: 0, cpMod: 0, extraAttackThisTurn: 0, cannotAttackThisTurn: false, _stolenByLeGat0: true, _stolenFromPlayer: 1 - playerIdx, _stolenFromZone: bestZ, _leGat0DirectDraw: true };
+          p.catalysts[emptyZ] = { cardId: stolen.cardId, owner: getCatalystOwner(stolen, 1 - playerIdx), position: 'atk', faceDown: false, attackedThisTurn: false, atkMod: 0, cpMod: 0, extraAttackThisTurn: 0, cannotAttackThisTurn: false, _stolenByLeGat0: true, _stolenFromPlayer: 1 - playerIdx, _stolenFromZone: bestZ, _leGat0DirectDraw: true };
           p.summonedThisTurn.add(emptyZ);
           addLog(state, `Effect Script: LeGat0 The Great paid 2000 Chi and took control of ${stolenCard?.name || 'a Catalyst'} (C${bestZ+1} → C${emptyZ+1}). Returns at End Phase.`);
         }
@@ -3864,7 +3875,7 @@ function runPalmScript(state, playerIdx, card, manual) {
         const c = getCard(slot.cardId);
         if (!c || !slotHasAlignment(slot, c, 'Fire')) continue;
         opp.catalysts[z] = null;
-        p.catalysts[empty] = { cardId: slot.cardId, position: slot.position || 'atk', faceDown:false, attackedThisTurn:false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false, _temporaryControl:true, _temporaryReturnToPlayer:1 - playerIdx };
+        p.catalysts[empty] = { cardId: slot.cardId, owner: getCatalystOwner(slot, 1 - playerIdx), position: slot.position || 'atk', faceDown:false, attackedThisTurn:false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false, _temporaryControl:true, _temporaryReturnToPlayer:1 - playerIdx };
         stolen += 1;
       }
       addLog(state, `Effect Script: Inferno Takeover took control of ${stolen} FIRE Catalyst(s) until End Phase.`);
@@ -4803,7 +4814,7 @@ function exportMatchLog(state) {
     `Exported: ${new Date().toISOString()}`,
     `Turns completed: ${state.turn}`,
     `Game over: ${state.gameOver ? 'YES' : 'NO'}`,
-    state.gameOver ? `Winner: P${state.winner+1}` : 'Winner: In Progress',
+    state.gameOver ? (state.winner < 0 ? 'Result: Draw' : `Winner: P${state.winner+1}`) : 'Winner: In Progress',
     `State hash: ${typeof computeStateHash === 'function' ? computeStateHash(state) : 'N/A'}`,
     '═══════════════════════════════════════',
     '',
@@ -4859,7 +4870,8 @@ function generatePostMatchSummary(state) {
   };
   if (state.gameOver) {
     const lastMsg = state.log[state.log.length - 1]?.msg || '';
-    if (lastMsg.includes('Chi KO')) summary.winMethod = 'Chi KO';
+    if (state.winReason) summary.winMethod = state.winReason;
+    else if (lastMsg.includes('Chi KO')) summary.winMethod = 'Chi KO';
     else if (lastMsg.includes('7 Kills')) summary.winMethod = '7 Kills';
     else if (lastMsg.includes('7 Extractions')) summary.winMethod = '7 Extractions';
   }
@@ -4907,6 +4919,8 @@ function setLastBattleResult(state, data) {
 
 // ── PHASE SYSTEM ──
 function advancePhase(state) {
+  if (state.gameOver || state.waitingForResponse || state.pendingDiscard) return {ok:false,msg:'Resolve the pending action before advancing.'};
+  if (state.phaseName === 'draw' && !state.players[state.activePlayer]._drawPhaseResolved) return {ok:false,msg:'Draw or skip the empty Deck before continuing.'};
   const prevPhase = PHASE_NAMES[state.phase] || 'unknown';
   state.phase++;
   if (state.phase >= PHASES.length) {
@@ -4971,6 +4985,7 @@ function changeCatalystPositionInResolution(state, playerIdx, zoneIdx) {
   if (slot.attackedThisTurn) return { ok: false, msg: 'That Catalyst attacked this turn and cannot change position.' };
   if (player.posChanged && player.posChanged.has(zoneIdx)) return { ok: false, msg: 'That Catalyst has already changed position this turn.' };
   slot.position = (slot.position === 'atk') ? 'def' : 'atk';
+  slot.faceDown = false;
   if (player.posChanged) player.posChanged.add(zoneIdx);
   const cardName = getCard(slot.cardId)?.name || 'A Catalyst';
   addLog(state, `P${playerIdx + 1} changed ${cardName} to ${slot.position === 'atk' ? 'Attack' : 'Defense'} position during Resolution.`);
@@ -5063,14 +5078,15 @@ function finalizeTurnSwitch(state) {
       const returnZone = getFirstEmptyCatalystZone(state, returnTo);
       if (returnZone >= 0) {
         state.players[returnTo].catalysts[returnZone] = {
-          cardId: slot.cardId, position: 'atk', faceDown: false,
+          cardId: slot.cardId, owner: getCatalystOwner(slot, p), position: 'atk', faceDown: false,
           attackedThisTurn: false, atkMod: 0, cpMod: 0,
           extraAttackThisTurn: 0, cannotAttackThisTurn: false
         };
         addLog(state, `Effect Script: ${returnCard?.name || 'Stolen Catalyst'} returned to P${returnTo+1}'s field (C${returnZone+1}).`);
       } else {
-        state.players[returnTo].void.push(slot.cardId);
-        addLog(state, `Effect Script: ${returnCard?.name || 'Stolen Catalyst'} returned to P${returnTo+1}'s Void (no empty zone).`);
+        const owner = getCatalystOwner(slot, p);
+        state.players[owner].void.push(slot.cardId);
+        addLog(state, `Effect Script: ${returnCard?.name || 'Stolen Catalyst'} returned to P${owner+1}'s Void (no empty zone).`);
       }
     }
   }
@@ -5152,6 +5168,7 @@ function canNormalSummon(state, playerIdx) {
 }
 
 function normalSummon(state, playerIdx, handIdx, zoneIdx, position, tributeZones) {
+  if (state.gameOver || state.waitingForResponse || state.pendingDiscard || !canNormalSummon(state, playerIdx)) return { ok:false, msg:'Normal Spawn is only legal during your Action Phase with no pending response.' };
   const p = state.players[playerIdx];
   const cardId = p.hand[handIdx];
   const card = getCard(cardId);
@@ -5229,7 +5246,22 @@ function normalSummon(state, playerIdx, handIdx, zoneIdx, position, tributeZones
   return { ok: true };
 }
 
+function setCatalyst(state, playerIdx, handIdx, zoneIdx) {
+  if (state.gameOver || state.waitingForResponse || state.pendingDiscard || !canNormalSummon(state,playerIdx)) return {ok:false,msg:'Set a Catalyst during your Action Phase using your Normal Spawn.'};
+  const player = state.players[playerIdx];
+  const cardId = player.hand[handIdx], card = getCard(cardId);
+  if (!card || card.cardType !== 'Catalyst' || card.level < 1 || card.level > 4 || /cannot be normal spawned|can only be special spawned|can only be spawned/i.test(card.desc || '')) return {ok:false,msg:'Only a Catalyst requiring no Tribute may be Set.'};
+  if (![0,1,2,3,4].includes(zoneIdx) || player.catalysts[zoneIdx] !== null) return {ok:false,msg:'Choose an empty Catalyst Zone.'};
+  player.hand.splice(handIdx,1);
+  player.catalysts[zoneIdx] = {cardId,position:'def',faceDown:true,attackedThisTurn:false};
+  player.normalSummonUsed = true;
+  player.summonedThisTurn.add(zoneIdx);
+  addLog(state, `P${playerIdx+1} Set a Catalyst face-down in Counter Pressure position in C${zoneIdx+1}.`);
+  return {ok:true};
+}
+
 function setTrick(state, playerIdx, handIdx, zoneIdx) {
+  if (state.gameOver || state.phaseName !== 'action' || state.activePlayer !== playerIdx || state.waitingForResponse || state.pendingDiscard) return { ok:false, msg:'Set Tricks during your Action Phase with no pending response.' };
   const p = state.players[playerIdx];
   const cardId = p.hand[handIdx];
   const card = getCard(cardId);
@@ -5251,6 +5283,7 @@ function setTrick(state, playerIdx, handIdx, zoneIdx) {
     return { ok: true };
   }
 
+  if (![1,2,3].includes(zoneIdx)) return { ok:false, msg:'Tricks occupy the three central Trick Zones. Outer zones are Libra Zones.' };
   if (p.tricks[zoneIdx] !== null) return { ok: false, msg: 'Trick zone occupied.' };
 
   p.hand.splice(handIdx, 1);
@@ -5267,6 +5300,7 @@ function changePosition(state, playerIdx, zoneIdx) {
   if (p.posChanged.has(zoneIdx)) return { ok: false, msg: 'Already changed position this turn.' };
 
   cat.position = cat.position === 'atk' ? 'def' : 'atk';
+  cat.faceDown = false;
   p.posChanged.add(zoneIdx);
   const card = getCard(cat.cardId);
   addLog(state, `P${playerIdx+1} changed ${card ? card.name : 'Catalyst'} to ${cat.position === 'atk' ? 'ATK' : 'DEF'} position.`);
@@ -5284,15 +5318,17 @@ function isNormalCatalystCard(card) {
 }
 
 function registerSpecialSummon(state, playerIdx, label) {
+  // Placement resolves before Shotgun; on-Spawn scripts and new actions follow it.
   const p = state.players[playerIdx];
   p.specialSummonCount += 1;
+  addLog(state, `Special Spawn resolved: P${playerIdx+1}${label ? ' — ' + label : ''}.`);
   const oppIdx = 1 - playerIdx;
   if (p.specialSummonCount < SHOTGUN_START) return;
   for (let i = 0; i < SHOTGUN_DRAWS; i++) {
     const drawn = drawCard(state, oppIdx);
     if (drawn) {
       const c = getCard(drawn);
-      addLog(state, `Shotgun Rule: P${oppIdx+1} drew ${c ? c.name : 'a card'} because P${playerIdx+1} Special Spawned${label ? ' (' + label + ')' : ''}.`);
+      addLog(state, `Shotgun Rule: P${oppIdx+1} drew ${c ? c.name : 'a card'} after P${playerIdx+1}'s Special Spawn resolved${label ? ' (' + label + ')' : ''}, before the next effect or action.`);
     } else {
       addLog(state, `Shotgun Rule: P${oppIdx+1} skipped draw because deck is empty.`);
     }
@@ -5308,9 +5344,9 @@ function specialSummonToZone(state, playerIdx, cardId, zoneIdx, sourceLabel) {
   if (p.catalysts[zoneIdx] !== null) return { ok: false, msg: 'Chosen Catalyst Zone is occupied.' };
   p.catalysts[zoneIdx] = { cardId, position: 'atk', faceDown: false, attackedThisTurn: false, atkMod:0, cpMod:0, extraAttackThisTurn:0, cannotAttackThisTurn:false };
   p.summonedThisTurn.add(zoneIdx);
-  registerSpecialSummon(state, playerIdx, sourceLabel);
   const c = getCard(cardId);
   addLog(state, `P${playerIdx+1} Special Spawned ${c ? c.name : 'a card'} to C${zoneIdx+1}${sourceLabel ? ' via ' + sourceLabel : ''}.`);
+  registerSpecialSummon(state, playerIdx, sourceLabel);
   runOnSummonScripts(state, playerIdx, zoneIdx, 'special');
   return { ok: true, zoneIdx, cardId };
 }
@@ -5356,12 +5392,12 @@ function libraSummon(state, playerIdx, handIdxs, zoneIdxs) {
     if (p.catalysts[entry.z] !== null) return { ok: false, msg: `Catalyst Zone C${entry.z+1} is occupied.` };
   }
   for (const entry of chosen.sort((a,b)=>b.h-a.h)) { p.hand.splice(entry.h, 1); }
-  registerSpecialSummon(state, playerIdx, 'Libra Spawn');
   for (const entry of chosen) {
     p.catalysts[entry.z] = { cardId: entry.id, position: 'atk', faceDown: false, attackedThisTurn: false };
     p.summonedThisTurn.add(entry.z);
     addLog(state, `Libra Spawn: ${entry.card.name} entered C${entry.z+1}.`);
   }
+  registerSpecialSummon(state, playerIdx, 'Libra Spawn');
   return { ok: true };
 }
 
@@ -5720,12 +5756,17 @@ function activatePalmTrick(state, playerIdx, handIdx, manual) {
 }
 
 function declareAttack(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone) {
+  if (state.gameOver || state.phaseName !== 'battle' || state.activePlayer !== attackerPlayer || defenderPlayer !== 1-attackerPlayer || state.pendingDiscard) return { ok:false, msg:'Attack the opponent during your Battle Phase.' };
+  if (attackerPlayer === 0 && state.turn === 1 && state.isP1FirstTurn) return { ok:false, msg:'The first player cannot attack on the first turn.' };
   const atk = state.players[attackerPlayer];
   const atkCat = atk.catalysts[attackerZone];
   if (!atkCat) return { ok: false, msg: 'No attacker in this zone.' };
   if (atkCat.position !== 'atk') return { ok: false, msg: 'Catalyst must be in ATK position to attack.' };
   if (atkCat.attackedThisTurn) return { ok: false, msg: 'This Catalyst already attacked this turn.' };
   if (state.waitingForResponse) return { ok: false, msg: 'A chain is already open.' };
+  if (defenderZone !== -1 && (!Number.isInteger(defenderZone) || !state.players[defenderPlayer].catalysts[defenderZone])) {
+    return { ok:false, msg:'Choose an occupied opposing Catalyst Zone.' };
+  }
   return beginResponseWindow(state, { type: 'attack', attackerPlayer, attackerZone, defenderPlayer, defenderZone, cardId: atkCat.cardId }, { player: attackerPlayer, cardId: atkCat.cardId, source: 'attack', effectType: 'attack', isCounter: false });
 }
 
@@ -5836,6 +5877,19 @@ function resolveChain(state) {
 }
 
 // ── COMBAT ──
+function counterPressureDamage(state, attackerPlayer, pressure, counterPressure) {
+  return state.players[attackerPlayer].preventBattleDamage ? 0 : Math.max(0, counterPressure - pressure);
+}
+
+function previewCounterPressureDamage(state, attackerPlayer, attackerZone, defenderZone) {
+  const defendingPlayer = 1 - attackerPlayer;
+  const defender = state.players[defendingPlayer].catalysts[defenderZone];
+  if (!defender || defender.faceDown || defender.position !== 'def') return null;
+  return counterPressureDamage(state, attackerPlayer,
+    getEffectivePressure(state, attackerPlayer, attackerZone),
+    getEffectiveCounterPressure(state, defendingPlayer, defenderZone));
+}
+
 function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone) {
   const atk = state.players[attackerPlayer];
   const def = state.players[defenderPlayer];
@@ -5858,6 +5912,7 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
   }
 
   const atkCard = getCard(atkCat.cardId);
+  if (defenderZone >= 0 && def.catalysts[defenderZone]) def.catalysts[defenderZone].faceDown = false;
   runCombatPreHooks(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone);
   // Apply registered battle calc boosts (once per turn PR boosts during combat)
   const battleBoost = runRegisteredBattleCalcBoost(state, attackerPlayer, attackerZone);
@@ -5930,7 +5985,9 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
   const defCard = getCard(defCat.cardId);
   const defPR = getEffectivePressure(state, defenderPlayer, defenderZone);
   const defCP = getEffectiveCounterPressure(state, defenderPlayer, defenderZone);
-  const isGreat = defCard ? defCard.great : false;
+  const isGreat = CTFDeckUtils.isGreatCard(defCard);
+  const attackerOwner = getCatalystOwner(atkCat, attackerPlayer);
+  const defenderOwner = getCatalystOwner(defCat, defenderPlayer);
 
   let result = {};
 
@@ -5948,7 +6005,7 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
       } else {
         runOnSelfDestroyed(state, defenderPlayer, defCat.cardId, { destroyerPlayer:attackerPlayer, destroyerZone:attackerZone, reason:'battle' });
         def.catalysts[defenderZone] = null;
-        def.void.push(defCat.cardId);
+        state.players[defenderOwner].void.push(defCat.cardId);
         atk.kills++;
         addLog(state, `⚔ ATK vs ATK: ${atkCard.name} (${atkPR}) beats ${defCard.name} (${defPR}). ${defCard.name} → Void. ${dmg} Logic damage. +1 Kill for P${attackerPlayer+1}.`);
         setLastBattleResult(state, { type:'kill', attackerPlayer, attackerZone, defenderPlayer, defenderZone, chiDamage:dmg, summary:`Kill + ${dmg} Chi damage.` });
@@ -5967,7 +6024,7 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
       } else {
         runOnSelfDestroyed(state, attackerPlayer, atkCat.cardId, { destroyerPlayer:defenderPlayer, destroyerZone:defenderZone, reason:'battle' });
         atk.catalysts[attackerZone] = null;
-        atk.void.push(atkCat.cardId);
+        state.players[attackerOwner].void.push(atkCat.cardId);
         def.kills++;
         addLog(state, `⚔ ATK vs ATK: ${defCard.name} (${defPR}) beats ${atkCard.name} (${atkPR}). ${atkCard.name} → Void. ${dmg} recoil damage to P${attackerPlayer+1}. +1 Kill for P${defenderPlayer+1}.`);
         setLastBattleResult(state, { type:'killed', attackerPlayer, attackerZone, defenderPlayer, defenderZone, chiDamage:dmg, summary:`Attacker destroyed. ${dmg} Chi rebound.` });
@@ -5983,14 +6040,14 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
       if (!atkProtected) {
         runOnSelfDestroyed(state, attackerPlayer, atkCat.cardId, { destroyerPlayer:defenderPlayer, destroyerZone:defenderZone, reason:'battle' });
         atk.catalysts[attackerZone] = null;
-        atk.void.push(atkCat.cardId);
+        state.players[attackerOwner].void.push(atkCat.cardId);
         def.kills++;
         addRoadToGreatnessCounter(state, defenderPlayer, 1);
       }
       if (!defProtected) {
         runOnSelfDestroyed(state, defenderPlayer, defCat.cardId, { destroyerPlayer:attackerPlayer, destroyerZone:attackerZone, reason:'battle' });
         def.catalysts[defenderZone] = null;
-        def.void.push(defCat.cardId);
+        state.players[defenderOwner].void.push(defCat.cardId);
         atk.kills++;
         addRoadToGreatnessCounter(state, attackerPlayer, 1);
       }
@@ -6005,7 +6062,7 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
         // Great Card → Void as Kill
         runOnSelfDestroyed(state, defenderPlayer, defCat.cardId, { destroyerPlayer:attackerPlayer, destroyerZone:attackerZone, reason:'battle' });
         def.catalysts[defenderZone] = null;
-        def.void.push(defCat.cardId);
+        state.players[defenderOwner].void.push(defCat.cardId);
         atk.kills++;
         addLog(state, `⚔ ATK vs DEF (Great): ${atkCard.name} (${atkPR}) beats ${defCard.name} ★ (CP ${defCP}). Great Card → Void. +1 Kill. No Logic damage.`);
         setLastBattleResult(state, { type:'great_kill', attackerPlayer, attackerZone, defenderPlayer, defenderZone, chiDamage:0, summary:'Great Card sent to Void. Kill scored.' });
@@ -6014,6 +6071,8 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
       } else {
         // Normal DEF → Capture to Box
         def.catalysts[defenderZone] = null;
+        atk.boxOwners ??= [];
+        atk.boxOwners[atk.box.length] = defenderOwner;
         atk.box.push(defCat.cardId);
         atk.captures++;
         let bonusChi = 0;
@@ -6039,7 +6098,7 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
       result = { type: 'bounce', dmg: 0 };
     } else {
       // ATK < DEF — rebound Chi damage, no Kill/Capture
-      const dmg = atk.preventBattleDamage ? 0 : (defCP - atkPR);
+      const dmg = counterPressureDamage(state, attackerPlayer, atkPR, defCP);
       atk.chi = Math.max(0, atk.chi - dmg);
       addLog(state, `⚔ ATK vs DEF: ${atkCard.name} (${atkPR}) < ${defCard.name} (CP ${defCP}). No Kill. No Capture. P${attackerPlayer+1} takes ${dmg} Chi damage.`);
       setLastBattleResult(state, { type:'rebound', attackerPlayer, attackerZone, defenderPlayer, defenderZone, chiDamage:dmg, summary:`Rebound for ${dmg} Chi damage. No Kill, no Capture.` });
@@ -6084,7 +6143,7 @@ function getEligibleCatalysts(state, playerIdx) {
   const eligible = [];
   for (let i = 0; i < 5; i++) {
     const slot = p.catalysts[i];
-    if (slot !== null) {
+    if (slot && getCatalystOwner(slot, playerIdx) === playerIdx) {
       const c = getCard(slot.cardId);
       // Runtime states or card text that forbid tribute/sacrifice are not eligible.
       if (slot && slot._cannotBeTributed) continue;
@@ -6095,7 +6154,26 @@ function getEligibleCatalysts(state, playerIdx) {
   return eligible;
 }
 
+function canUseBoxTarget(state, boxPlayer, targetIdx, requiredOwner) {
+  const player = state.players[boxPlayer];
+  if (!Number.isInteger(targetIdx) || targetIdx < 0 || targetIdx >= player.box.length) return false;
+  const owner = player.boxOwners?.[targetIdx] ?? 1 - boxPlayer;
+  const card = getCard(player.box[targetIdx]);
+  return owner === requiredOwner &&
+    (card?.cardType === 'Catalyst' || card?.cardType === 'Fusion') &&
+    !CTFDeckUtils.isGreatCard(card);
+}
+
+function getEligibleBoxTargets(state, playerIdx, action) {
+  const boxPlayer = action === 'rescue' ? 1 - playerIdx : playerIdx;
+  return state.players[boxPlayer].box
+    .map((_, index) => index)
+    .filter(index => canUseBoxTarget(state, boxPlayer, index, 1 - boxPlayer));
+}
+
 function endPhaseAction(state, playerIdx, action, sacrificeZone, targetIdx) {
+  if (state.gameOver || state.phaseName !== 'end' || state.activePlayer !== playerIdx || state.waitingForResponse || state.pendingDiscard) return { ok:false, msg:'End Phase actions require your End Phase with no pending response.' };
+  if (!['endTurn','skip','extraction','rescue','destroyTrick'].includes(action)) return { ok:false, msg:'Unknown End Phase action.' };
   const p = state.players[playerIdx];
   const opp = state.players[1 - playerIdx];
 
@@ -6118,17 +6196,15 @@ function endPhaseAction(state, playerIdx, action, sacrificeZone, targetIdx) {
 
   const eligible = getEligibleCatalysts(state, playerIdx);
   if (sacrificeZone === undefined || !eligible.includes(sacrificeZone)) {
-    return { ok: false, msg: 'Must sacrifice an eligible Catalyst.' };
+    return { ok: false, msg: 'Choose an eligible Catalyst you own and control.' };
   }
 
   if (action === 'extraction') {
-    if (p.box.length === 0) return { ok: false, msg: 'No cards in your Box to Extract.' };
-    if (targetIdx === undefined || targetIdx < 0 || targetIdx >= p.box.length) return { ok: false, msg: 'Select a valid Box target.' };
+    if (!canUseBoxTarget(state, playerIdx, targetIdx, 1 - playerIdx)) return { ok: false, msg: 'Choose an opponent-owned Catalyst in your Box. Great Catalysts cannot be Extracted.' };
   } else if (action === 'rescue') {
-    if (opp.box.length === 0) return { ok: false, msg: 'Opponent has none of your cards in their Box.' };
-    if (targetIdx === undefined || targetIdx < 0 || targetIdx >= opp.box.length) return { ok: false, msg: 'Select a valid Rescue target.' };
+    if (!canUseBoxTarget(state, 1 - playerIdx, targetIdx, playerIdx)) return { ok: false, msg: 'Choose your own Catalyst in the opponent’s Box. Great Catalysts cannot be Rescued.' };
   } else if (action === 'destroyTrick') {
-    if (!targetIdx || targetIdx.player === undefined) return { ok: false, msg: 'Must select a Trick to destroy.' };
+    if (!targetIdx || ![0,1].includes(targetIdx.player)) return { ok: false, msg: 'Must select a Trick to destroy.' };
     const tp = state.players[targetIdx.player];
     if (targetIdx.kind === 'field') {
       if (!tp.fieldTrick) return { ok: false, msg: 'No Field Trick there.' };
@@ -6145,21 +6221,16 @@ function endPhaseAction(state, playerIdx, action, sacrificeZone, targetIdx) {
 
   if (action === 'extraction') {
     const extracted = p.box.splice(targetIdx, 1)[0];
+    p.boxOwners?.splice(targetIdx, 1);
     const exCard = getCard(extracted);
-    if (exCard && exCard.great) {
-      p.void.push(extracted);
-      p.kills++;
-      addLog(state, `Great Card extraction redirect: ${exCard.name} cannot be Extracted and is sent to the Void instead. +1 Kill for P${playerIdx+1}.`);
-      setLastBattleResult(state, { type:'great_extract_redirect', attackerPlayer:playerIdx, attackerZone:-1, defenderPlayer:1-playerIdx, defenderZone:-1, chiDamage:0, summary:'Great Card could not be Extracted and was redirected to the Void.' });
-    } else {
-      p.rfg.push(extracted);
-      p.extractions++;
-      addLog(state, `P${playerIdx+1} Extracted ${exCard ? exCard.name : 'a Catalyst'} from Box → RFG. Extractions: ${p.extractions}/7.`);
-      setLastBattleResult(state, { type:'extraction', attackerPlayer:playerIdx, attackerZone:-1, defenderPlayer:1-playerIdx, defenderZone:-1, chiDamage:0, summary:'Box target Extracted to RFG.' });
-    }
+    opp.rfg.push(extracted);
+    p.extractions++;
+    addLog(state, `P${playerIdx+1} Extracted ${exCard.name} from their Box to P${2-playerIdx}'s RFG. Extractions: ${p.extractions}/7.`);
+    setLastBattleResult(state, { type:'extraction', attackerPlayer:playerIdx, attackerZone:-1, defenderPlayer:1-playerIdx, defenderZone:-1, chiDamage:0, summary:'Box target Extracted to its owner’s RFG.' });
     checkWinConditions(state);
   } else if (action === 'rescue') {
     const rescued = opp.box.splice(targetIdx, 1)[0];
+    opp.boxOwners?.splice(targetIdx, 1);
     p.deck.push(rescued);
     p.deck = shuffle(p.deck);
     const resCard = getCard(rescued);
@@ -6186,36 +6257,26 @@ function endPhaseAction(state, playerIdx, action, sacrificeZone, targetIdx) {
 
 // ── WIN CONDITIONS ──
 function checkWinConditions(state) {
-  for (let i = 0; i < 2; i++) {
-    const p = state.players[i];
-    const opp = state.players[1 - i];
+  if (state.gameOver) return;
+  const [first, second] = state.players;
+  if (first.chi <= 0 && second.chi <= 0) {
+    finishDuel(state, -1, 'Both players reached zero Chi');
+  } else if (first.chi <= 0 || second.chi <= 0) {
+    finishDuel(state, first.chi <= 0 ? 1 : 0, 'Chi KO');
+  } else if (first.kills >= KILLS_TO_WIN && second.kills >= KILLS_TO_WIN) {
+    finishDuel(state, -1, 'Both players reached seven Kills');
+  } else if (first.kills >= KILLS_TO_WIN || second.kills >= KILLS_TO_WIN) {
+    finishDuel(state, first.kills >= KILLS_TO_WIN ? 0 : 1, '7 Kills');
+  } else if (state.players[state.activePlayer].extractions >= EXTRACTIONS_TO_WIN) {
+    finishDuel(state, state.activePlayer, '7 Extractions');
+  }
+}
 
-    // Chi KO (highest priority)
-    if (opp.chi <= 0) {
-      state.gameOver = true;
-      state.winner = i;
-      addLog(state, `🏆 P${i+1} WINS by Chi KO! P${1-i+1}'s Chi reached 0.`);
-      return;
-    }
-  }
-  for (let i = 0; i < 2; i++) {
-    // 7 Kills (second priority)
-    if (state.players[i].kills >= KILLS_TO_WIN) {
-      state.gameOver = true;
-      state.winner = i;
-      addLog(state, `🏆 P${i+1} WINS by 7 Kills! (${state.players[i].kills} Kills)`);
-      return;
-    }
-  }
-  for (let i = 0; i < 2; i++) {
-    // 7 Extractions (third priority)
-    if (state.players[i].extractions >= EXTRACTIONS_TO_WIN) {
-      state.gameOver = true;
-      state.winner = i;
-      addLog(state, `🏆 P${i+1} WINS by 7 Extractions! (${state.players[i].extractions} Extractions)`);
-      return;
-    }
-  }
+function finishDuel(state, winner, reason) {
+  state.gameOver = true;
+  state.winner = winner;
+  state.winReason = reason;
+  addLog(state, winner < 0 ? `Draw: ${reason}.` : `🏆 P${winner+1} WINS by ${reason}!`);
 }
 
 // ── SERIALIZATION (for P2P sync) ──
@@ -6410,7 +6471,7 @@ function custom_narutoChoice(state, playerIdx, choice) {
     const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: Naruto (2) — no empty zone.');return;}
     p.chi-=1500;
     const stolen=opp.catalysts[oz]; opp.catalysts[oz]=null;
-    p.catalysts[ez]={...stolen,_stolenThisTurn:true}; addLog(state,`Effect Script: Naruto (2) took control of ${getCard(stolen.cardId)?.name||'a Catalyst'}.`);
+    p.catalysts[ez]={...stolen,owner:getCatalystOwner(stolen, 1-playerIdx),_stolenThisTurn:true}; addLog(state,`Effect Script: Naruto (2) took control of ${getCard(stolen.cardId)?.name||'a Catalyst'}.`);
   } else {
     if(p.chi<600){addLog(state,'Effect Script: Naruto (3) needs 600 Chi.');return;}
     const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: Naruto (3) — no zone.');return;}
@@ -6602,7 +6663,7 @@ function custom_jeanGreyControl(state, playerIdx) {
   const ez=getFirstEmptyCatalystZone(state,playerIdx); if(ez<0){addLog(state,'Effect Script: Jean Grey — no empty zone.');return;}
   p.chi-=1000; p._jeanGreySkipNextDraw=true;
   const stolen=opp.catalysts[oz]; opp.catalysts[oz]=null;
-  p.catalysts[ez]={...stolen,_jeanControlled:true};
+  p.catalysts[ez]={...stolen,owner:getCatalystOwner(stolen, 1-playerIdx),_jeanControlled:true};
   addLog(state,`Effect Script: Jean Grey paid 1000 Chi, took control of ${getCard(stolen.cardId)?.name||'a Catalyst'} until End Phase. Skip your next Draw Phase.`);
 }
 
@@ -6810,7 +6871,7 @@ function custom_puurCopy(state,pi){addLog(state,'Effect Script: Puar copied a fo
 
 // FF7
 function custom_yuffieVillainSteal(state,pi){const z=state.players[pi].catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'yuffie kisaragi - the villian'));if(z<0)return;state.players[pi].catalysts[z]._canStealEquip=true;}
-function custom_sephirothWipe(state,pi){const opp=state.players[1-pi];let n=0;for(let i=4;i>=0;i--){if(opp.catalysts[i]&&!getCard(opp.catalysts[i].cardId)?.great){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;state.players[pi].kills++;n++;}}addLog(state,`Effect Script: Sephiroth (Trance) wiped ${n} non-Great Catalysts. +${n} Kill(s).`);checkWinConditions(state);}
+function custom_sephirothWipe(state,pi){const opp=state.players[1-pi];let n=0;for(let i=4;i>=0;i--){if(opp.catalysts[i]&&!CTFDeckUtils.isGreatCard(getCard(opp.catalysts[i].cardId))){opp.void.push(opp.catalysts[i].cardId);opp.catalysts[i]=null;state.players[pi].kills++;n++;}}addLog(state,`Effect Script: Sephiroth (Trance) wiped ${n} non-Great Catalysts. +${n} Kill(s).`);checkWinConditions(state);}
 function custom_redXIIISearch(state,pi){const found=addCardToHandFromDeckByPredicate(state,pi,c=>cardHasKind(c,'Beast'));if(found)addLog(state,`Effect Script: Red XIII (Trance) searched ${found.name}.`);}
 
 // INU
@@ -6833,7 +6894,7 @@ function custom_hanyaDebuff(state,pi){const opp=state.players[1-pi];const z=opp.
 
 // TUV
 function custom_tenchiFlip(state,pi){const res=specialSummonFromDeckByPredicate(state,pi,c=>cardNameHas(c,'ryoko'),'Tenchi Masaki');addLog(state,res.ok?'Effect Script: Tenchi (Flip) SS\'d Ryoko from Deck.':`Effect Script: Tenchi — no Ryoko in Deck. (${res.msg})`);}
-function custom_ryokoControl(state,pi){const p=state.players[pi];if(p.chi<2000){addLog(state,'Effect Script: Ryoko needs 2000 Chi.');return;}const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Ryoko — no opponent Catalyst.');return;}const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: Ryoko — no empty zone.');return;}p.chi-=2000;const stolen=opp.catalysts[oz];opp.catalysts[oz]=null;p.catalysts[ez]={...stolen,_stolenByRyoko:true};addLog(state,`Effect Script: Ryoko paid 2000 Chi, took control of ${getCard(stolen.cardId)?.name||'a Catalyst'}.`);}
+function custom_ryokoControl(state,pi){const p=state.players[pi];if(p.chi<2000){addLog(state,'Effect Script: Ryoko needs 2000 Chi.');return;}const opp=state.players[1-pi];const oz=opp.catalysts.findIndex(Boolean);if(oz<0){addLog(state,'Effect Script: Ryoko — no opponent Catalyst.');return;}const ez=getFirstEmptyCatalystZone(state,pi);if(ez<0){addLog(state,'Effect Script: Ryoko — no empty zone.');return;}p.chi-=2000;const stolen=opp.catalysts[oz];opp.catalysts[oz]=null;p.catalysts[ez]={...stolen,owner:getCatalystOwner(stolen, 1-pi),_stolenByRyoko:true};addLog(state,`Effect Script: Ryoko paid 2000 Chi, took control of ${getCard(stolen.cardId)?.name||'a Catalyst'}.`);}
 function custom_ayekaTribute(state,pi){const p=state.players[pi];const z=p.catalysts.findIndex(s=>s&&cardNameHas(getCard(s.cardId)||{},'ayeka'));if(z<0)return;p.void.push(p.catalysts[z].cardId);p.catalysts[z]=null;const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,pi,c=>cardNameHas(c,'tsunami'),'Ayeka');addLog(state,res.ok?'Effect Script: Ayeka tributed herself to SS Tsunami.':`Effect Script: Ayeka — no Tsunami to spawn. (${res.msg})`);}
 function custom_droppingTheTowel(state,pi){const found=addCardToHandFromDeckByNameToken(state,pi,['nudity']);if(found)addLog(state,`Effect Script: Dropping The Towel added ${found.name} from Deck.`);}
 function custom_mihoshiSS(state,pi){const p=state.players[pi];if(p.chi<1000){addLog(state,'Effect Script: Mihoshi needs 1000 Chi.');return;}const res=specialSummonFromHandOrDeckOrVoidByPredicate(state,pi,c=>cardNameHas(c,'mihoshi')&&c.cardType==='Catalyst','Mihoshi');addLog(state,res.ok?'Effect Script: Mihoshi SS\'d from hand/deck/void.':`Effect Script: Mihoshi SS failed. (${res.msg})`);if(res.ok)p.chi-=1000;}
@@ -7034,7 +7095,7 @@ function custom_edControlMachine(state, pi) {
   if (ez < 0) return;
   p.chi -= 500;
   const stolen = opp.catalysts[oz]; opp.catalysts[oz] = null;
-  p.catalysts[ez] = {...stolen, _stolenByEd: true};
+  p.catalysts[ez] = {...stolen, owner:getCatalystOwner(stolen, 1-pi), _stolenByEd: true};
   addLog(state,`Effect Script: Edward paid 500 Chi and took control of ${getCard(stolen.cardId)?.name||'a Machine'}.`);
 }
 

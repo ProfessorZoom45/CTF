@@ -1,169 +1,58 @@
-(() => {
-  const styleId = 'ctf-embers-style';
-  const bgCanvasId = 'ctf-embers-canvas';
-  const fgCanvasId = 'ctf-embers-foreground';
-
-  function injectUniversalImageFix() {
-    const pages = ['cards.html', 'deckbuilder.html', 'play.html'];
-    const path = String(window.location.pathname || '').toLowerCase();
-    const shouldLoad = pages.some(page => path.endsWith('/' + page) || path.endsWith(page));
-    if (!shouldLoad) return;
-    if (document.querySelector('script[src="assets/js/ctf-universal-image-fix.js"]')) return;
-    const script = document.createElement('script');
-    script.src = 'assets/js/ctf-universal-image-fix.js';
-    script.defer = true;
-    document.head.appendChild(script);
+// One shared ember renderer for every CTF page, including the home page.
+(()=>{
+  if(window.CTFEmbers)return;
+  window.CTFEmbers=true;
+  const media=matchMedia('(prefers-reduced-motion: reduce)');
+  const layers=[];
+  let frameId=0,last=0,width=0,height=0;
+  const style=document.createElement('style');
+  style.textContent='.ctf-ember-layer{position:fixed;inset:0;width:100%;height:100%;pointer-events:none!important;z-index:-1;opacity:.8}.ctf-ember-layer.ctf-ember-front{z-index:2;opacity:.48}';
+  document.head.append(style);
+  function layer(id,foreground,count){
+    const canvas=document.getElementById(id)||document.createElement('canvas');
+    canvas.id=id;canvas.className='ctf-ember-layer'+(foreground?' ctf-ember-front':'');canvas.setAttribute('aria-hidden','true');
+    if(!canvas.isConnected)document.body.prepend(canvas);
+    const ctx=canvas.getContext('2d');if(!ctx)return;
+    const particles=Array.from({length:count},()=>({}));
+    const reset=(p,initial=false)=>Object.assign(p,{x:Math.random()*width,y:initial?Math.random()*height:height+12,r:foreground?1.5+Math.random()*1.5:.5+Math.random()*1.5,speed:foreground?12+Math.random()*15:25+Math.random()*35,drift:(Math.random()-.5)*18,life:.4+Math.random()*.6});
+    layers.push({canvas,ctx,particles,reset,foreground});
   }
-
-  injectUniversalImageFix();
-
-  function injectStyle() {
-    if (document.getElementById(styleId)) return;
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = `
-      #${bgCanvasId}{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;opacity:.9;}
-      #${fgCanvasId}{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;opacity:.95;}
-    `;
-    document.head.appendChild(style);
+  function resize(){
+    width=innerWidth;height=innerHeight;const scale=Math.min(devicePixelRatio||1,2);
+    for(const l of layers){l.canvas.width=Math.floor(width*scale);l.canvas.height=Math.floor(height*scale);l.ctx.setTransform(scale,0,0,scale,0,0);l.particles.forEach(p=>l.reset(p,true));}
+    if(!frameId)paint(0);
   }
-
-  function makeCanvas(id, prepend = true) {
-    let canvas = document.getElementById(id);
-    if (canvas) return canvas;
-    canvas = document.createElement('canvas');
-    canvas.id = id;
-    if (prepend) document.body.prepend(canvas);
-    else document.body.appendChild(canvas);
-    return canvas;
+  function reduced(){
+    if(media.matches||document.body.classList.contains('reduced-motion'))return true;
+    try{return JSON.parse(localStorage.getItem('ctf:settings')||'{}').motion===true;}catch{return false;}
   }
-
-  function initBackgroundLayer(canvas) {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    let w = 0, h = 0;
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const embers = [];
-    const count = prefersReduced ? 24 : 70;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    resize();
-    class Ember {
-      constructor() { this.reset(true); }
-      reset(initial = false) {
-        this.x = Math.random() * w;
-        this.y = initial ? Math.random() * h : h + 10;
-        this.r = Math.random() * 2.2 + 0.6;
-        this.vx = (Math.random() - 0.5) * 0.45;
-        this.vy = -(Math.random() * 1.2 + 0.35);
-        this.life = Math.random() * 180 + 90;
-        this.maxLife = this.life;
-        this.hue = Math.random() * 26 + 12;
-      }
-      update() {
-        this.x += this.vx + Math.sin(this.life * 0.02) * 0.25;
-        this.y += this.vy;
-        this.life--;
-        if (this.life <= 0 || this.y < -12) this.reset();
-      }
-      draw() {
-        const a = this.life / this.maxLife;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r * a, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${this.hue},100%,58%,${a * 0.42})`;
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r * a * 2.8, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${this.hue},100%,55%,${a * 0.05})`;
-        ctx.fill();
+  function paint(dt){
+    for(const l of layers){
+      const {ctx,particles}=l;ctx.clearRect(0,0,width,height);
+      for(const p of particles){
+        if(dt){p.y-=p.speed*dt;p.x+=p.drift*dt+Math.sin(p.y*.012)*.25;if(p.y< -15||p.x< -20||p.x>width+20)l.reset(p);}
+        const alpha=Math.max(0,Math.min(1,p.y/(height*.25)))*p.life;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r*3,0,Math.PI*2);ctx.fillStyle='rgba(255,106,0,'+(alpha*.06)+')';ctx.fill();
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(255,164,63,'+(alpha*.6)+')';ctx.fill();
       }
     }
-    for (let i = 0; i < count; i++) embers.push(new Ember());
-    function loop() {
-      ctx.clearRect(0, 0, w, h);
-      for (const e of embers) { e.update(); e.draw(); }
-      requestAnimationFrame(loop);
-    }
-    window.addEventListener('resize', resize, { passive: true });
-    loop();
   }
-
-  function initForegroundLayer(canvas) {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    let w = 0, h = 0, spawnMinY = 0;
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const embers = [];
-    const count = prefersReduced ? 10 : 35;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-      spawnMinY = h * 0.85;
-    }
-    resize();
-    class ForegroundEmber {
-      constructor() { this.reset(true); }
-      reset(initial = false) {
-        this.x = Math.random() * w;
-        this.y = initial ? spawnMinY + Math.random() * (h - spawnMinY) : h - Math.random() * (h * 0.08);
-        this.r = Math.random() * 3.2 + 1.4;
-        this.vx = (Math.random() - 0.5) * 0.7;
-        this.vy = -(Math.random() * 0.18 + 0.04);
-        this.life = Math.random() * 260 + 140;
-        this.maxLife = this.life;
-        this.hue = Math.random() * 18 + 18;
-      }
-      update() {
-        this.x += this.vx + Math.sin(this.life * 0.018 + this.x * 0.01) * 0.35;
-        this.y += this.vy;
-        this.life--;
-        if (this.life <= 0 || this.y < spawnMinY - 10 || this.x < -20 || this.x > w + 20) this.reset();
-      }
-      draw() {
-        const a = this.life / this.maxLife;
-        const radius = this.r * (0.55 + 0.45 * a);
-        const halo = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, radius * 4.6);
-        halo.addColorStop(0, `hsla(${this.hue},100%,72%,${a * 0.34})`);
-        halo.addColorStop(0.38, `hsla(${this.hue},100%,58%,${a * 0.15})`);
-        halo.addColorStop(1, `hsla(${this.hue},100%,40%,0)`);
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, radius * 4.6, 0, Math.PI * 2);
-        ctx.fillStyle = halo;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${this.hue},100%,64%,${a * 0.78})`;
-        ctx.fill();
-      }
-    }
-    for (let i = 0; i < count; i++) embers.push(new ForegroundEmber());
-    function loop() {
-      ctx.clearRect(0, 0, w, h);
-      for (const e of embers) { e.update(); e.draw(); }
-      requestAnimationFrame(loop);
-    }
-    window.addEventListener('resize', resize, { passive: true });
-    loop();
+  function frame(now){
+    frameId=0;if(document.hidden||reduced()){last=0;return;}
+    const dt=last?Math.min((now-last)/1000,.05):0;last=now;paint(dt);frameId=requestAnimationFrame(frame);
   }
-
-  function init() {
-    if (!document.body) return;
-    injectStyle();
-    const hasIndexCanvas = !!document.getElementById('ember-canvas');
-    if (!hasIndexCanvas && !document.getElementById(bgCanvasId)) {
-      initBackgroundLayer(makeCanvas(bgCanvasId, true));
-    }
-    if (!document.getElementById(fgCanvasId)) {
-      initForegroundLayer(makeCanvas(fgCanvasId, false));
-    }
+  function sync(){
+    cancelAnimationFrame(frameId);frameId=0;last=0;
+    layers.forEach(l=>{l.canvas.hidden=reduced();});
+    if(!document.hidden&&!reduced())frameId=requestAnimationFrame(frame);
   }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init, { once: true });
-  } else {
-    init();
+  function init(){
+    // Reuse the homepage's existing two canvases; other pages receive the same layers.
+    layer(document.getElementById('ember-canvas')?'ember-canvas':'ctf-embers-canvas',false,innerWidth<650?30:55);
+    layer(document.getElementById('ember-canvas-foreground')?'ember-canvas-foreground':'ctf-embers-foreground',true,innerWidth<650?8:14);
+    resize();sync();
+    addEventListener('resize',resize,{passive:true});document.addEventListener('visibilitychange',sync);media.addEventListener('change',sync);
+    new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});
   }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

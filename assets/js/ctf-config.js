@@ -1,9 +1,9 @@
 (function(global){
   const CTF_CONFIG = {
     build: {
-      version: '',
-      label: 'Exclusive Alpha',
-      releasedAt: '2026-04-21'
+      version: '0.16.0-browser',
+      label: 'Browser Game',
+      releasedAt: '2026-10-28'
     },
     beta: {
       browserFirst: true,
@@ -59,9 +59,10 @@
         appliesFromSummonNumber: 1,
         libraCountsAsOneSpecialSummon: true,
         triggersAfterSuccessfulSpawn: true,
+        timingWindow: 'After a qualifying Special Spawn resolves, before any on-Spawn effect or the next player action begins.',
         failedOrNegatedSpawnsCount: false,
         failedOrNegatedSpawnsDraw: false,
-        summary: 'After every successful Special Spawn, the opponent draws 1 card — including effect-based Special Spawns, Fusion Spawns, and Libra Spawns. Unsuccessful or negated Spawns do not draw and do not count. A whole Libra Spawn counts as 1 Special Spawn. Hard cap: 5 per turn.'
+        summary: 'Immediately after each qualifying Special Spawn resolves, before any on-Spawn effect or the next player action begins, the opponent draws 1 card. Announcing a Spawn does not trigger Shotgun. Failed or negated Spawns do not count or draw. A whole Libra group resolves first, then counts as 1 Special Spawn and 1 draw. Hard cap: 5 Special Spawns per turn.'
       },
       libra: {
         requiresNormalCatalysts: true,
@@ -87,7 +88,7 @@
         endTurnAlwaysLegal: true,
         libraSummonCountsAsOneSpecialSummon: true,
         maxSpecialSummonsPerTurn: 5,
-        greatCardsRedirectFromExtractionToVoidAsKill: true
+        greatCatalystsSkipBoxInBattle: true
       },
       endPhase: {
         allowFreeEndTurn: true,
@@ -101,9 +102,9 @@
           },
           extraction: {
             name: 'Extraction',
-            cost: 'Sacrifice 1 eligible Catalyst → Void',
-            effect: 'Move 1 opponent Catalyst from your Box to the RFG zone.',
-            notes: 'Scores +1 toward 7 Extractions. Great Cards cannot be Extracted.'
+            cost: 'Send 1 eligible Catalyst you own and control to your Void.',
+            effect: 'Move 1 opponent-owned Catalyst from your Box to its owner’s RFG.',
+            notes: 'Scores +1 toward 7 Extractions on your turn.'
           },
           rescue: {
             name: 'Rescue',
@@ -149,10 +150,10 @@
       `Opening hand: ${CTF_CONFIG.game.startingHand}`,
       'Deck-out: skip draw, not a loss',
       'Rescue: returns to Deck and shuffles',
-      'Paid End Phase actions: any eligible Catalyst required (Great or non-Great)',
+      'Paid End Phase actions: choose an eligible Catalyst you own and control',
       `Libra: ${CTF_CONFIG.game.libra.summary}`,
       `Special Spawn cap: ${CTF_CONFIG.game.assertions.maxSpecialSummonsPerTurn}`,
-      'Great Extract redirect: Void + Kill, not Extraction'
+      'Great Catalyst defeated in Counter Pressure: owner’s Void and one battle Kill'
     ].join(' • '); },
     get discordLimitNote(){ return 'Join Perfect Timing Gaming to request exclusive alpha download access.'; }
   };

@@ -1,0 +1,10 @@
+/* Keep the board and its controls reachable on short desktop windows. */
+@media (min-width:901px) {
+  #game { height:calc(100dvh - 62px); grid-template-columns:minmax(0,1fr) 310px; grid-template-rows:minmax(0,1fr); }
+  .board { min-height:0; overflow-y:auto; }
+  .sidebar { height:100%; max-height:none; overflow-y:auto; border-left:1px solid rgba(255,106,0,.15); }
+  .field { min-height:112px; }
+}
+#tutorial-phase-banner, #p1-skip-battle-banner { margin:8px; }
+.reduced-motion #ctf-embers-canvas, .reduced-motion #ctf-embers-foreground { display:none; }
+@media (prefers-reduced-motion:reduce) { #ctf-embers-canvas, #ctf-embers-foreground { display:none; } }
