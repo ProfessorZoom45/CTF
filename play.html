@@ -773,9 +773,9 @@ body.ctf-nav-open { overflow: hidden; }
 body.ctf-nav-pad { padding-top: 0; }
 </style>
 
-<link rel="stylesheet" href="assets/css/browser-game.css">
 <link rel="stylesheet" href="assets/css/site-theme.css">
 <link rel="stylesheet" href="assets/css/friend-duel.css">
+<link rel="stylesheet" href="assets/css/browser-game.css">
 </head>
 <body>
 
@@ -931,14 +931,23 @@ body.ctf-nav-pad { padding-top: 0; }
   </header>
   <p id="friend-duel-status" role="status"></p>
   <ol id="friend-duel-phases" aria-label="Turn phases"></ol>
-  <section id="friend-duel-opponent" aria-label="Opponent's field"></section>
-  <section id="friend-duel-board" aria-label="Your field"></section>
-  <section id="friend-duel-hand" aria-label="Your hand"></section>
-  <section class="friend-duel-actions" aria-label="Duel actions">
-    <p id="friend-duel-guidance"></p>
-    <div id="friend-duel-controls"></div>
-  </section>
-  <details><summary>Match log</summary><ol id="friend-duel-log"></ol></details>
+  <div class="friend-duel-layout">
+    <div class="ctf-playmat" role="group" aria-label="Carry The Flame board">
+      <p class="playmat-title">Carry The Flame</p>
+      <section id="friend-duel-opponent" class="playmat-side" aria-label="Opponent's field"></section>
+      <div id="friend-duel-rfg" class="playmat-divide" role="group" aria-label="Removed from Game"></div>
+      <section id="friend-duel-board" class="playmat-side" aria-label="Your field"></section>
+    </div>
+    <div class="friend-duel-desk">
+      <section class="friend-duel-actions" aria-label="Duel actions">
+        <h2>Duel actions</h2>
+        <p id="friend-duel-guidance"></p>
+        <div id="friend-duel-controls"></div>
+      </section>
+      <section id="friend-duel-hand" aria-label="Your hand"></section>
+      <details><summary>Match log</summary><ol id="friend-duel-log"></ol></details>
+    </div>
+  </div>
 </main>
 <dialog id="friend-duel-choice" aria-labelledby="friend-choice-title">
   <form method="dialog">
@@ -967,55 +976,56 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="opp-hand" id="opp-hand"></div>
 
 <!-- Opponent field -->
-<div class="field">
+<div class="field ctf-playmat" role="group" aria-label="Carry The Flame board">
+<p class="playmat-title">Carry The Flame</p>
+<div class="playmat-seat-label">Opponent</div>
 <!-- Opp back row: Deck | 5 Tricks (outer=Libra) | Fusion -->
-<div class="zone-row">
-<div class="side-zone"><span class="sz-count" id="opp-deck-c">0</span><span class="sz-label">Deck</span></div>
-<div class="zone trick-zone libra-zone" data-p="opp" data-type="trick" data-z="0" role="button" tabindex="0" aria-label="Opponent Libra Zone 1"><span class="zone-label">T/LIB</span></div>
-<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="1" role="button" tabindex="0" aria-label="Opponent Trick Zone 2"><span class="zone-label">T</span></div>
-<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="2" role="button" tabindex="0" aria-label="Opponent Trick Zone 3"><span class="zone-label">T</span></div>
-<div class="zone trick-zone" data-p="opp" data-type="trick" data-z="3" role="button" tabindex="0" aria-label="Opponent Trick Zone 4"><span class="zone-label">T</span></div>
-<div class="zone trick-zone libra-zone" data-p="opp" data-type="trick" data-z="4" role="button" tabindex="0" aria-label="Opponent Libra Zone 5"><span class="zone-label">T/LIB</span></div>
-<div class="side-zone"><span class="sz-count" id="opp-fusion-c">0</span><span class="sz-label">Fusion</span></div>
+<div class="zone-row playmat-row">
+<div class="side-zone playmat-slot playmat-deck"><span class="sz-count" id="opp-deck-c">0</span><span class="sz-label">Deck</span></div>
+<div class="zone playmat-slot trick-zone libra-zone" data-p="opp" data-type="trick" data-z="0" role="button" tabindex="0" aria-label="Opponent Libra Zone 1"><span class="zone-label">T/LIB</span></div>
+<div class="zone playmat-slot trick-zone" data-p="opp" data-type="trick" data-z="1" role="button" tabindex="0" aria-label="Opponent Trick Zone 2"><span class="zone-label">T</span></div>
+<div class="zone playmat-slot trick-zone" data-p="opp" data-type="trick" data-z="2" role="button" tabindex="0" aria-label="Opponent Trick Zone 3"><span class="zone-label">T</span></div>
+<div class="zone playmat-slot trick-zone" data-p="opp" data-type="trick" data-z="3" role="button" tabindex="0" aria-label="Opponent Trick Zone 4"><span class="zone-label">T</span></div>
+<div class="zone playmat-slot trick-zone libra-zone" data-p="opp" data-type="trick" data-z="4" role="button" tabindex="0" aria-label="Opponent Libra Zone 5"><span class="zone-label">T/LIB</span></div>
+<div class="side-zone playmat-slot playmat-fusion"><span class="sz-count" id="opp-fusion-c">0</span><span class="sz-label">Fusion</span></div>
 </div>
 <!-- Opp front row: Void | 5 Catalysts | Field + Box -->
-<div class="zone-row">
-<div class="side-zone"><span class="sz-count" id="opp-void-c">0</span><span class="sz-label">Void</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="0" onclick="zoneClick('opp','cat',0)" role="button" aria-label="Opponent Catalyst Zone 1"><span class="zone-label">C1</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="1" onclick="zoneClick('opp','cat',1)" role="button" aria-label="Opponent Catalyst Zone 2"><span class="zone-label">C2</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="2" onclick="zoneClick('opp','cat',2)" role="button" aria-label="Opponent Catalyst Zone 3"><span class="zone-label">C3</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="3" onclick="zoneClick('opp','cat',3)" role="button" aria-label="Opponent Catalyst Zone 4"><span class="zone-label">C4</span></div>
-<div class="zone catalyst-zone" data-p="opp" data-type="cat" data-z="4" onclick="zoneClick('opp','cat',4)" role="button" aria-label="Opponent Catalyst Zone 5"><span class="zone-label">C5</span></div>
-<div class="field-stack"><div class="field-slot empty" id="opp-field-slot" onmouseenter="showFieldTip(event,1)" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="Opponent Field Trick slot">Field Empty</div><div class="side-zone"><span class="sz-count" id="opp-box-c">0</span><span class="sz-label">Box</span></div></div>
+<div class="zone-row playmat-row">
+<div class="side-zone playmat-slot playmat-void"><span class="sz-count" id="opp-void-c">0</span><span class="sz-label">Void</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="opp" data-type="cat" data-z="0" onclick="zoneClick('opp','cat',0)" role="button" aria-label="Opponent Catalyst Zone 1"><span class="zone-label">C1</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="opp" data-type="cat" data-z="1" onclick="zoneClick('opp','cat',1)" role="button" aria-label="Opponent Catalyst Zone 2"><span class="zone-label">C2</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="opp" data-type="cat" data-z="2" onclick="zoneClick('opp','cat',2)" role="button" aria-label="Opponent Catalyst Zone 3"><span class="zone-label">C3</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="opp" data-type="cat" data-z="3" onclick="zoneClick('opp','cat',3)" role="button" aria-label="Opponent Catalyst Zone 4"><span class="zone-label">C4</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="opp" data-type="cat" data-z="4" onclick="zoneClick('opp','cat',4)" role="button" aria-label="Opponent Catalyst Zone 5"><span class="zone-label">C5</span></div>
+<div class="field-stack playmat-stack"><div class="field-slot playmat-slot playmat-field empty" id="opp-field-slot" onmouseenter="showFieldTip(event,1)" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="Opponent Field Trick slot">Field Empty</div><div class="side-zone playmat-slot playmat-box"><span class="sz-count" id="opp-box-c">0</span><span class="sz-label">Box</span></div></div>
 </div>
 
 <!-- CENTER — RFG -->
-<div style="display:flex;justify-content:center;gap:20px;margin:4px 0;align-items:center">
-<div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,#ff6a00,transparent)"></div>
-<div class="side-zone" style="width:80px;background:#5a0000;border-color:#900"><span class="sz-label" style="color:#ff6a6a">RFG</span><span class="sz-count" id="opp-rfg-c" style="color:#ff6a6a">0</span></div>
-<div class="side-zone" style="width:80px;background:#5a0000;border-color:#900"><span class="sz-label" style="color:#ff6a6a">RFG</span><span class="sz-count" id="my-rfg-c" style="color:#ff6a6a">0</span></div>
-<div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,#ff6a00,transparent)"></div>
+<div class="playmat-divide" role="group" aria-label="Removed from Game">
+<div class="playmat-slot playmat-rfg" role="group" aria-label="Opponent cards removed from game"><span class="zone-label">Opp. RFG</span><span class="sz-count" id="opp-rfg-c">0</span></div>
+<div class="playmat-slot playmat-rfg" role="group" aria-label="Your cards removed from game"><span class="zone-label">Your RFG</span><span class="sz-count" id="my-rfg-c">0</span></div>
 </div>
 
 <!-- My front row: Field + Box | 5 Catalysts | Void -->
-<div class="zone-row">
-<div class="field-stack"><div class="field-slot empty" id="my-field-slot" onclick="fieldSlotClick()" onmouseenter="showFieldTip(event,0)" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="My Field Trick slot">Field Empty</div><div class="side-zone"><span class="sz-count" id="my-box-c">0</span><span class="sz-label">Box</span></div></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="0" onclick="zoneClick('me','cat',0)" role="button" aria-label="My Catalyst Zone 1"><span class="zone-label">C1</span></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="1" onclick="zoneClick('me','cat',1)" role="button" aria-label="My Catalyst Zone 2"><span class="zone-label">C2</span></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="2" onclick="zoneClick('me','cat',2)" role="button" aria-label="My Catalyst Zone 3"><span class="zone-label">C3</span></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="3" onclick="zoneClick('me','cat',3)" role="button" aria-label="My Catalyst Zone 4"><span class="zone-label">C4</span></div>
-<div class="zone catalyst-zone" data-p="me" data-type="cat" data-z="4" onclick="zoneClick('me','cat',4)" role="button" aria-label="My Catalyst Zone 5"><span class="zone-label">C5</span></div>
-<div class="side-zone"><span class="sz-count" id="my-void-c">0</span><span class="sz-label">Void</span></div>
+<div class="playmat-seat-label">You</div>
+<div class="zone-row playmat-row">
+<div class="field-stack playmat-stack"><div class="field-slot playmat-slot playmat-field empty" id="my-field-slot" onclick="fieldSlotClick()" onmouseenter="showFieldTip(event,0)" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="My Field Trick slot">Field Empty</div><div class="side-zone playmat-slot playmat-box"><span class="sz-count" id="my-box-c">0</span><span class="sz-label">Box</span></div></div>
+<div class="zone playmat-slot catalyst-zone" data-p="me" data-type="cat" data-z="0" onclick="zoneClick('me','cat',0)" role="button" aria-label="My Catalyst Zone 1"><span class="zone-label">C1</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="me" data-type="cat" data-z="1" onclick="zoneClick('me','cat',1)" role="button" aria-label="My Catalyst Zone 2"><span class="zone-label">C2</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="me" data-type="cat" data-z="2" onclick="zoneClick('me','cat',2)" role="button" aria-label="My Catalyst Zone 3"><span class="zone-label">C3</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="me" data-type="cat" data-z="3" onclick="zoneClick('me','cat',3)" role="button" aria-label="My Catalyst Zone 4"><span class="zone-label">C4</span></div>
+<div class="zone playmat-slot catalyst-zone" data-p="me" data-type="cat" data-z="4" onclick="zoneClick('me','cat',4)" role="button" aria-label="My Catalyst Zone 5"><span class="zone-label">C5</span></div>
+<div class="side-zone playmat-slot playmat-void"><span class="sz-count" id="my-void-c">0</span><span class="sz-label">Void</span></div>
 </div>
 <!-- My back row: Fusion | 5 Tricks (outer=Libra) | Deck -->
-<div class="zone-row">
-<div class="side-zone"><span class="sz-count" id="my-fusion-c">0</span><span class="sz-label">Fusion</span></div>
-<div class="zone trick-zone libra-zone" data-p="me" data-type="trick" data-z="0" onclick="zoneClick('me','trick',0)" role="button" tabindex="0" aria-label="My Libra Zone 1"><span class="zone-label">T/LIB</span></div>
-<div class="zone trick-zone" data-p="me" data-type="trick" data-z="1" onclick="zoneClick('me','trick',1)" role="button" tabindex="0" aria-label="My Trick Zone 2"><span class="zone-label">T</span></div>
-<div class="zone trick-zone" data-p="me" data-type="trick" data-z="2" onclick="zoneClick('me','trick',2)" role="button" tabindex="0" aria-label="My Trick Zone 3"><span class="zone-label">T</span></div>
-<div class="zone trick-zone" data-p="me" data-type="trick" data-z="3" onclick="zoneClick('me','trick',3)" role="button" tabindex="0" aria-label="My Trick Zone 4"><span class="zone-label">T</span></div>
-<div class="zone trick-zone libra-zone" data-p="me" data-type="trick" data-z="4" onclick="zoneClick('me','trick',4)" role="button" tabindex="0" aria-label="My Libra Zone 5"><span class="zone-label">T/LIB</span></div>
-<div class="side-zone"><span class="sz-count" id="my-deck-c">0</span><span class="sz-label">Deck</span></div>
+<div class="zone-row playmat-row">
+<div class="side-zone playmat-slot playmat-fusion"><span class="sz-count" id="my-fusion-c">0</span><span class="sz-label">Fusion</span></div>
+<div class="zone playmat-slot trick-zone libra-zone" data-p="me" data-type="trick" data-z="0" onclick="zoneClick('me','trick',0)" role="button" tabindex="0" aria-label="My Libra Zone 1"><span class="zone-label">T/LIB</span></div>
+<div class="zone playmat-slot trick-zone" data-p="me" data-type="trick" data-z="1" onclick="zoneClick('me','trick',1)" role="button" tabindex="0" aria-label="My Trick Zone 2"><span class="zone-label">T</span></div>
+<div class="zone playmat-slot trick-zone" data-p="me" data-type="trick" data-z="2" onclick="zoneClick('me','trick',2)" role="button" tabindex="0" aria-label="My Trick Zone 3"><span class="zone-label">T</span></div>
+<div class="zone playmat-slot trick-zone" data-p="me" data-type="trick" data-z="3" onclick="zoneClick('me','trick',3)" role="button" tabindex="0" aria-label="My Trick Zone 4"><span class="zone-label">T</span></div>
+<div class="zone playmat-slot trick-zone libra-zone" data-p="me" data-type="trick" data-z="4" onclick="zoneClick('me','trick',4)" role="button" tabindex="0" aria-label="My Libra Zone 5"><span class="zone-label">T/LIB</span></div>
+<div class="side-zone playmat-slot playmat-deck"><span class="sz-count" id="my-deck-c">0</span><span class="sz-label">Deck</span></div>
 </div>
 </div>
 

@@ -4,6 +4,9 @@
   padding: 0 clamp(.75rem, 3vw, 2rem) 2rem;
 }
 .friend-duel-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+.friend-duel-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 21rem); align-items: start; gap: 1rem; }
+.friend-duel-desk { min-width: 0; }
+.friend-duel-desk > section:first-child { margin-top: 0; }
 .friend-duel h1 { color: var(--gold); font-family: var(--font-display); font-size: 2.2rem; }
 .friend-duel h2 { font-size: 1.2rem; color: var(--gold); }
 #friend-duel-status, #friend-duel-guidance { margin-block: .5rem; }
@@ -27,10 +30,9 @@
 .friend-duel-card { min-width: 0; min-height: 3rem; padding: .45rem; border: 1px solid var(--coal-mid); background: var(--coal-light); overflow-wrap: anywhere; }
 .friend-duel-card strong, .friend-duel-card span { display: block; }
 .friend-duel-card span { color: var(--cream); font-size: .85rem; }
-.friend-duel-card.face-down { border-color: var(--purple); }
 .friend-duel-actions button { margin: 0 .3rem .35rem 0; }
-.friend-duel details { margin-top: .7rem; }
-.friend-duel details ol { padding-left: 1.25rem; }
+.friend-duel-desk > details { margin-top: .7rem; }
+.friend-duel-desk > details ol { padding-left: 1.25rem; }
 #friend-duel-choice {
   max-width: min(34rem, 94vw);
   width: 100%;
@@ -53,3 +55,7 @@
   font: inherit;
 }
 .friend-duel-dialog-buttons { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+
+@media (max-width: 740px) {
+  .friend-duel-layout { grid-template-columns: minmax(0, 1fr); }
+}

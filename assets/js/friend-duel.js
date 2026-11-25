@@ -170,39 +170,121 @@
   }
   const act = action => send({type:'actionRequest',action});
 
-  function fieldPanel(player, target, title) {
-    const content = [element('h2', title),
-      element('p', `Chi ${player.chi.toLocaleString()} · Kills ${player.kills} · Extractions ${player.extractions} · Captures ${player.captures}`),
-      element('p', `Hand ${player.handCount} · Main Deck ${player.deckCount} · Fusion ${player.fusionCount}`)];
-    function group(label, slots, prefix) {
-      content.push(element('h3', label));
-      const zones = element('div', undefined, 'friend-duel-zones');
-      slots.forEach((slot, i) => {
-        const item = element('div', undefined, 'friend-duel-card' + (slot?.faceDown ? ' face-down' : ''));
-        item.append(element('strong', prefix + (i + 1)));
-        const id = slot?.cardId;
-        item.append(element('span', id ? cardName(id) : slot ? 'Face-down card' : 'Empty'));
-        if (slot?.faceDown && id) item.append(element('span', 'Face down'));
-        if (slot?.position && id) item.append(element('span',
-          `${slot.position === 'atk' ? 'Pressure' : 'Counter Pressure'} · ${slot.pressure}/${slot.counterPressure}`));
-        zones.append(item);
-      });
-      content.push(zones);
-    }
-    group('Catalysts',player.catalysts,'C');
-    group('Tricks and Libra',player.tricks,'T');
-    const field = player.fieldTrick;
-    content.push(element('p', 'Field Trick · ' + (field?.cardId ? cardName(field.cardId) : field ? 'Face-down card' : 'Empty')));
-    for (const [label, cards] of [['Box',player.box],['Void',player.void],['Removed from Game',player.rfg]]) {
-      const details = element('details');
-      details.append(element('summary', label + ' · ' + cards.length));
-      const list = element('ul');
-      list.append(...cards.map(id => element('li',cardName(id))));
-      details.append(list);
-      content.push(details);
-    }
-    target.replaceChildren(...content);
+  function zoneLabel(name, shortName) {
+    const label = element('span', name, 'zone-label');
+    label.dataset.zoneName = name;
+    label.dataset.zoneShort = shortName;
+    return label;
   }
+
+  function countTile(type, name, shortName) {
+    const node = element('div', undefined, `playmat-slot playmat-${type}`);
+    const counter = element('strong', '0', 'playmat-count');
+    node.append(zoneLabel(name, shortName), counter);
+    return {node, update(count) { counter.textContent = count; }};
+  }
+
+  function pileTile(type, name, shortName) {
+    const node = element('details', undefined, `playmat-slot playmat-pile playmat-${type}`);
+    const summary = element('summary', undefined, 'playmat-pile-summary');
+    const counter = element('strong', '0', 'playmat-count');
+    const list = element('ul', undefined, 'playmat-pile-cards');
+    summary.append(zoneLabel(name, shortName), counter);
+    node.append(summary, list);
+    let previous;
+    return {node, update(cards) {
+      if (previous?.length === cards.length && cards.every((id, index) => id === previous[index])) return;
+      previous = cards;
+      counter.textContent = cards.length;
+      list.replaceChildren(...(cards.length ? cards.map(id => element('li', cardName(id))) : [element('li', 'Empty')]));
+    }};
+  }
+
+  function boardCard(slot) {
+    const known = slot.cardId ? getCard(slot.cardId) : null;
+    const name = known?.name || (slot.faceDown ? 'Face-down card' : 'Unknown card');
+    const card = element('div', undefined, 'playmat-card');
+    card.classList.toggle('face-down', slot.faceDown);
+    card.title = slot.faceDown && known ? `${name} · Face down` : name;
+    const art = !slot.faceDown && cardArtUrl(known);
+    if (art) {
+      const image = element('img', undefined, 'playmat-card-art');
+      image.alt = '';
+      image.decoding = 'async';
+      image.addEventListener('error', () => image.remove(), {once:true});
+      image.src = art;
+      card.append(image);
+    }
+    card.append(element('strong', name, 'playmat-card-name'));
+    if (slot.faceDown && known) card.append(element('span', 'Face down', 'playmat-card-stats'));
+    if (slot.position && known && Number.isFinite(slot.pressure) && Number.isFinite(slot.counterPressure)) {
+      const position = slot.position === 'atk' ? 'Pressure' : 'Counter Pressure';
+      const stats = element('span', `${position === 'Pressure' ? 'P' : 'CP'} · ${slot.pressure}/${slot.counterPressure}`, 'playmat-card-stats');
+      stats.title = `${position} · ${slot.pressure}/${slot.counterPressure}`;
+      card.append(stats);
+    }
+    return card;
+  }
+
+  function cardTile(type, name, shortName, label) {
+    const node = element('div', undefined, `playmat-slot ${type}`);
+    node.setAttribute('role', 'group');
+    node.setAttribute('aria-label', label);
+    const empty = zoneLabel(name, shortName);
+    node.append(empty);
+    let lastCardKey = '';
+    return {node, update(slot) {
+      node.classList.toggle('is-occupied', !!slot);
+      const key = slot ? JSON.stringify([slot.cardId, slot.faceDown, slot.position, slot.pressure, slot.counterPressure]) : '';
+      if (key === lastCardKey) return;
+      lastCardKey = key;
+      node.replaceChildren(slot ? boardCard(slot) : empty);
+    }};
+  }
+
+  function fieldPanel(target, title, opponent) {
+    const header = element('header', undefined, 'playmat-seat');
+    const score = element('p', undefined, 'playmat-score');
+    const counts = element('p', undefined, 'playmat-hand-count');
+    header.append(element('h2', title), score, counts);
+    const deck = countTile('deck', 'Main Deck', 'Deck');
+    const fusion = countTile('fusion', 'Fusion Deck', 'Fusion');
+    const voidPile = pileTile('void', 'The Void', 'Void');
+    const box = pileTile('box', 'The Box', 'Box');
+    const field = cardTile('playmat-field', 'Field Trick', 'Field', 'Field Trick zone');
+    const stack = element('div', undefined, 'playmat-stack');
+    stack.append(field.node, box.node);
+    const catalysts = Array.from({length:5}, (_, index) =>
+      cardTile('catalyst-zone', 'Catalyst', `C${index + 1}`, `Catalyst zone ${index + 1}`));
+    const tricks = Array.from({length:5}, (_, index) => {
+      const libra = index === 0 || index === 4;
+      return cardTile(libra ? 'trick-zone libra-zone' : 'trick-zone', libra ? 'Trick / Libra' : 'Trick',
+        libra ? 'Libra' : `T${index + 1}`, `${libra ? 'Libra' : 'Trick'} zone ${index + 1}`);
+    });
+    const front = element('div', undefined, 'playmat-row');
+    front.append(opponent ? voidPile.node : stack, ...catalysts.map(tile => tile.node), opponent ? stack : voidPile.node);
+    const back = element('div', undefined, 'playmat-row');
+    back.append(opponent ? deck.node : fusion.node, ...tricks.map(tile => tile.node), opponent ? fusion.node : deck.node);
+    target.append(header, opponent ? back : front, opponent ? front : back);
+
+    return player => {
+      score.textContent = `Chi ${player.chi.toLocaleString()} · Kills ${player.kills} · Extractions ${player.extractions} · Captures ${player.captures}`;
+      counts.textContent = `Hand ${player.handCount} · Main Deck ${player.deckCount} · Fusion ${player.fusionCount}`;
+      deck.update(player.deckCount);
+      fusion.update(player.fusionCount);
+      voidPile.update(player.void);
+      box.update(player.box);
+      field.update(player.fieldTrick);
+      catalysts.forEach((tile, index) => tile.update(player.catalysts[index]));
+      tricks.forEach((tile, index) => tile.update(player.tricks[index]));
+    };
+  }
+
+  const paintOpponent = fieldPanel(byId('friend-duel-opponent'), 'Opponent’s field', true);
+  const paintOwn = fieldPanel(byId('friend-duel-board'), 'Your field', false);
+  const opponentRfg = pileTile('rfg', 'Opponent · Removed from Game', 'Opp. RFG');
+  const ownRfg = pileTile('rfg', 'You · Removed from Game', 'Your RFG');
+  byId('friend-duel-rfg').append(opponentRfg.node, ownRfg.node);
 
   function render() {
     const {seat, players, activeSeat, prioritySeat, phase, turn, result} = view;
@@ -221,8 +303,10 @@
       : view.skippedBattle ? 'The first player skips Battle on their first turn.'
       : view.waitingForResponse ? 'Resolve the Chain before continuing.'
       : (phases.find(([key]) => key === phase)?.[2] || '');
-    fieldPanel(other, byId('friend-duel-opponent'), 'Opponent’s field');
-    fieldPanel(me, byId('friend-duel-board'), 'Your field');
+    paintOpponent(other);
+    paintOwn(me);
+    opponentRfg.update(other.rfg);
+    ownRfg.update(me.rfg);
     const hand = element('div', undefined, 'friend-duel-zones');
     me.hand.forEach((id, index) => {
       const card = getCard(id), item = element('details', undefined, 'friend-duel-card');

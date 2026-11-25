@@ -1969,6 +1969,7 @@ function renderFieldSlot(playerIdx, elemId, perspectiveMe) {
   const slot = $(elemId);
   const pl = GS.players[playerIdx];
   slot.classList.remove('active','highlight','empty');
+  slot.classList.toggle('is-occupied', !!pl.fieldTrick);
   if (!pl.fieldTrick) {
     slot.classList.add('empty');
     const selected = selectedHandIdx >= 0 ? getCard(GS.players[myPlayer].hand[selectedHandIdx]) : null;
@@ -1976,7 +1977,7 @@ function renderFieldSlot(playerIdx, elemId, perspectiveMe) {
       slot.classList.add('highlight');
       slot.textContent = 'Play Field Trick';
     } else {
-      slot.textContent = 'Field Empty';
+      slot.innerHTML = '<span class="zone-label" data-zone-short="Field">Field Trick</span>';
     }
     return;
   }
@@ -2277,16 +2278,20 @@ function renderMyHand(me) {
   }).join('');
 }
 
+function resetPlaymatSlot(zone, card, name, shortName) {
+  zone.classList.remove('highlight', 'atk-target');
+  zone.classList.toggle('is-occupied', !!card);
+  zone.innerHTML = `<span class="zone-label" data-zone-short="${shortName}">${name}</span>`;
+}
+
 function renderFieldZones(me, opp) {
   // My catalysts
   for (let i = 0; i < 5; i++) {
     const zone = document.querySelector(`.zone[data-p="me"][data-type="cat"][data-z="${i}"]`);
     const cat = me.catalysts[i];
-    zone.innerHTML = '<span class="zone-label">C' + (i+1) + '</span>';
-    zone.classList.remove('highlight', 'atk-target');
+    resetPlaymatSlot(zone, cat, 'Catalyst', `C${i + 1}`);
     if (cat) {
       const c = getCard(cat.cardId);
-      const isDef = cat.position === 'def';
       zone.innerHTML = renderFieldCard(c, cat, false, false, myPlayer, i);
     }
     if (selectedHandIdx >= 0 && !cat) {
@@ -2300,8 +2305,7 @@ function renderFieldZones(me, opp) {
   for (let i = 0; i < 5; i++) {
     const zone = document.querySelector(`.zone[data-p="opp"][data-type="cat"][data-z="${i}"]`);
     const cat = opp.catalysts[i];
-    zone.innerHTML = '<span class="zone-label">C' + (i+1) + '</span>';
-    zone.classList.remove('highlight', 'atk-target');
+    resetPlaymatSlot(zone, cat, 'Catalyst', `C${i + 1}`);
     if (cat) {
       const c = getCard(cat.cardId);
       zone.innerHTML = renderFieldCard(c, cat, true, false, 1-myPlayer, i);
@@ -2313,11 +2317,11 @@ function renderFieldZones(me, opp) {
   for (let i = 0; i < 5; i++) {
     const zone = document.querySelector(`.zone[data-p="me"][data-type="trick"][data-z="${i}"]`);
     const trick = me.tricks[i];
-    const lbl = (i === 0 || i === 4) ? 'LIB' : 'T';
-    zone.innerHTML = `<span class="zone-label">${lbl}</span>`;
+    const isLibra = i === 0 || i === 4;
+    resetPlaymatSlot(zone, trick, isLibra ? 'Trick / Libra' : 'Trick', isLibra ? 'Libra' : `T${i + 1}`);
     if (trick) {
       if (trick.faceDown) {
-        zone.innerHTML = '<div class="field-card face-down" style="width:54px;height:64px"></div>';
+        zone.innerHTML = '<div class="field-card face-down" role="img" aria-label="Set Trick"></div>';
       } else {
         const c = getCard(trick.cardId);
         zone.innerHTML = renderFieldCard(c, trick, false, false, myPlayer, i);
@@ -2325,9 +2329,8 @@ function renderFieldZones(me, opp) {
     }
     if (selectedHandIdx >= 0 && !trick) {
       const selCard = getCard(me.hand[selectedHandIdx]);
-      const isLib = (i === 0 || i === 4);
-      if (!isLib && selCard && ['Concealed Trick','Counter Trick','Palm Trick'].includes(selCard.cardType)) zone.classList.add('highlight');
-      if (isLib && selCard && selCard.cardType === 'Catalyst' && typeof isNormalCatalystCard === 'function' && isNormalCatalystCard(selCard)) zone.classList.add('highlight');
+      if (!isLibra && selCard && ['Concealed Trick','Counter Trick','Palm Trick'].includes(selCard.cardType)) zone.classList.add('highlight');
+      if (isLibra && selCard && selCard.cardType === 'Catalyst' && typeof isNormalCatalystCard === 'function' && isNormalCatalystCard(selCard)) zone.classList.add('highlight');
     }
   }
 
@@ -2335,10 +2338,10 @@ function renderFieldZones(me, opp) {
   for (let i = 0; i < 5; i++) {
     const zone = document.querySelector(`.zone[data-p="opp"][data-type="trick"][data-z="${i}"]`);
     const trick = opp.tricks[i];
-    const lbl = (i === 0 || i === 4) ? 'LIB' : 'T';
-    zone.innerHTML = `<span class="zone-label">${lbl}</span>`;
+    const isLibra = i === 0 || i === 4;
+    resetPlaymatSlot(zone, trick, isLibra ? 'Trick / Libra' : 'Trick', isLibra ? 'Libra' : `T${i + 1}`);
     if (trick) {
-      if (trick.faceDown) zone.innerHTML = '<div class="field-card face-down" style="width:54px;height:64px"></div>';
+      if (trick.faceDown) zone.innerHTML = '<div class="field-card face-down" role="img" aria-label="Set Trick"></div>';
       else { const c = getCard(trick.cardId); zone.innerHTML = renderFieldCard(c, trick, true, false, 1-myPlayer, i); }
     }
   }
@@ -2353,9 +2356,10 @@ function renderFieldCard(card, slot, isOpp, mini = false, playerIdx = null, zone
   const isCat = card.cardType === 'Catalyst' || card.cardType === 'Fusion';
   const color = isCat ? 'var(--flame)' : card.cardType === 'Palm Trick' ? 'var(--blue)' : card.cardType === 'Field Trick' ? 'var(--green)' : card.cardType === 'Concealed Trick' || card.cardType === 'Counter Trick' ? 'var(--purple)' : 'var(--amber)';
   const defClass = slot.position === 'def' ? ' def-pos' : '';
+  const faceDownClass = slot.faceDown ? ' face-down' : '';
   const hidePrivate = shouldHidePrivateFaceDown(playerIdx, slot);
   const greatClass = !hidePrivate && CTFDeckUtils.isGreatCard(card) ? ' fc-great' : '';
-  const art = hidePrivate ? '' : cardArtUrl(card);
+  const art = slot.faceDown ? '' : cardArtUrl(card);
   const artClass = art ? ' has-art' : '';
   const artStyle = art ? ` style="background-image:url('${art.replace(/'/g,"%27")}')"` : '';
   const statusBits = [];
@@ -2375,7 +2379,7 @@ function renderFieldCard(card, slot, isOpp, mini = false, playerIdx = null, zone
     const cls = lbl === 'CP' ? 'fc-pos fc-pos-cp' : 'fc-pos fc-pos-p';
     return `<div class="${cls}">${lbl}</div>`;
   })() : '';
-  return `<div class="field-card${mini ? ' mini' : ''}${defClass}${greatClass}${artClass}${selectedClass}"${artStyle}${tipHandlers} role="img" aria-label="${ariaLabel}">
+  return `<div class="field-card${mini ? ' mini' : ''}${defClass}${faceDownClass}${greatClass}${artClass}${selectedClass}"${artStyle}${tipHandlers} role="img" aria-label="${ariaLabel}">
     <div class="fc-bar" style="background:${color}"></div>
     ${posBadge}
     <div class="fc-name">${visibleName}</div>
