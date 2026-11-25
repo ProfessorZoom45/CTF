@@ -58,4 +58,12 @@ try{
  try{await refreshed.net.joinRoom(room);await check('host refresh recovers role and state',()=>{assert(refreshed.net.isHost);assert.equal(refreshed.data.find(d=>d.type==='resumeState').hash,snapshot.hash);});}finally{refreshed.net.disconnect();}
  await check('transport produced no errors',()=>assert.deepEqual([...left.errors,...right.errors],[]));
 }finally{left.net.disconnect();right.net.disconnect();}
+await check('public URLs cannot start the development relay or fall back to peer state sharing',async()=>{
+ const publicContext=vm.createContext({URL,location:{href:'https://professorzoom45.github.io/CTF/play.html'}});
+ vm.runInContext('var window=globalThis',publicContext);
+ vm.runInContext(networkSource,publicContext);
+ const publicClient=new publicContext.CTFFriendNet();
+ await assert.rejects(publicClient.createRoom(),/prepared for the public release/);
+ await assert.rejects(publicClient.joinRoom('ABCDEF'),/prepared for the public release/);
+});
 console.log(`${passed} online integration checks passed at ${origin}`);

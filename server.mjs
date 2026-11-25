@@ -4,28 +4,33 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { saveSubmission } from './submission-store.mjs';
 import { RoomService } from './room-service.mjs';
+import { PrivateDuel } from './match-referee.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.CTF_PORT || 8028);
 const rooms = new RoomService();
+const privateRooms = new RoomService({createDuel:()=>new PrivateDuel()});
 const reviewDirectory = path.resolve(root,'../output/browser-submissions');
 const forgeTree = JSON.parse(fs.readFileSync(path.join(root,'ALPHA/forge-review-data.json'),'utf8'));
 const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json', '.svg':'image/svg+xml', '.png':'image/png', '.gif':'image/gif', '.jpg':'image/jpeg', '.pdf':'application/pdf' };
 http.createServer(async (req, res) => {
   const pathname = new URL(req.url,'http://localhost').pathname;
   if(pathname==='/api/site-config'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify({submissionDelivery:'local_inbox'}));return;}
-  if(pathname.startsWith('/api/multiplayer/')){
+  const isPrivateRoomRoute = pathname.startsWith('/api/private-multiplayer/');
+  const roomPrefix = isPrivateRoomRoute ? '/api/private-multiplayer/' : '/api/multiplayer/';
+  if(pathname.startsWith(roomPrefix)){
     const json=(status,body)=>res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify(body));
     const origin=`http://${req.headers.host}`;
     if(req.method==='POST'&&req.headers.origin!==origin){json(403,{error:'Open the CTF website before using this room.'});return;}
-    if(pathname==='/api/multiplayer/config'){json(200,{transport:'relay',shareUrl:origin+'/',maxPlayers:2});return;}
+    if(pathname===roomPrefix+'config'){json(200,{transport:isPrivateRoomRoute?'private-referee':'relay',shareUrl:origin+'/',maxPlayers:2});return;}
     let result;
-    const parts=pathname.slice('/api/multiplayer/'.length).split('/');
+    const service=isPrivateRoomRoute?privateRooms:rooms;
+    const parts=pathname.slice(roomPrefix.length).split('/');
     const token=String(req.headers.authorization||'').replace(/^Bearer /,'');
     try{
       let body={};if(req.method==='POST'){const chunks=[];let bytes=0;for await(const chunk of req){bytes+=chunk.length;if(bytes>1100000){json(413,{error:'Game message is too large.'});return;}chunks.push(chunk);}body=JSON.parse(Buffer.concat(chunks).toString()||'{}');}
-      if(parts[0]==='rooms'&&parts.length===1&&req.method==='POST')result=rooms.create();
-      else if(parts[0]==='rooms'&&parts.length===3){const code=parts[1];if(parts[2]==='join'&&req.method==='POST')result=rooms.join(code,token);else if(parts[2]==='events'&&req.method==='GET')result=rooms.events(code,token,Number(new URL(req.url,origin).searchParams.get('after'))||0);else if(parts[2]==='messages'&&req.method==='POST')result=rooms.send(code,token,body);}
+      if(parts[0]==='rooms'&&parts.length===1&&req.method==='POST')result=service.create();
+      else if(parts[0]==='rooms'&&parts.length===3){const code=parts[1];if(parts[2]==='join'&&req.method==='POST')result=service.join(code,token);else if(parts[2]==='events'&&req.method==='GET')result=service.events(code,token,Number(new URL(req.url,origin).searchParams.get('after'))||0);else if(parts[2]==='messages'&&req.method==='POST')result=service.send(code,token,body);}
       if(!result){json(404,{error:'Room endpoint not found.'});return;}json(result.status,result.body);
     }catch{json(400,{error:'Invalid room request.'});}return;
   }

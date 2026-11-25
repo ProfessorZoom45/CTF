@@ -2986,6 +2986,9 @@ document.addEventListener('click',event=>{
   }
 },true);
 const lobbyParams = new URLSearchParams(location.search);
+if (['127.0.0.1','localhost','[::1]'].includes(location.hostname)) {
+  $('friend-room-note').textContent = 'Development Friend Rooms work in two browser tabs on this computer with the local CTF server running.';
+}
 loadSettings();
 updateWatchModeButton();
 renderDeckSelect(lobbyParams.get('deck') === 'custom');

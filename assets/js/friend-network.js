@@ -1,5 +1,9 @@
 // Shared HTTP rooms work across browsers without a direct WebRTC/NAT connection.
 (function(){
+  const previewHost=()=>['127.0.0.1','localhost','[::1]'].includes(new URL(location.href).hostname);
+  function requireLocalPreview(){
+    if(!previewHost())throw Error('Friend Rooms are still being prepared for the public release.');
+  }
   class CTFFriendNet {
     constructor(onConnected,onData,onDisconnect,onError){Object.assign(this,{onConnected,onData,onDisconnect,onError,isHost:false,roomCode:'',token:'',cursor:0,connected:false,closed:false,peerNet:null,sendQueue:Promise.resolve(),failures:0});}
     async request(route,options={}){
@@ -8,16 +12,17 @@
       if(!response.ok)throw Error(result.error||'Connection failed.');return result;
     }
     async detect(){try{const response=await fetch('api/multiplayer/config',{signal:AbortSignal.timeout(5000)});if(response.ok){this.config=await response.json();return this.config.transport==='relay';}}catch{}return false;}
-    usePeer(){this.peerNet=new CTFNet(host=>this.onConnected?.(host),data=>this.onData?.(data),()=>this.onDisconnect?.(),error=>this.onError?.(error));}
     remember(){sessionStorage.setItem('ctf:room:'+this.roomCode,JSON.stringify({token:this.token,role:this.isHost?'host':'guest'}));}
     async createRoom(){
-      if(!await this.detect()){this.usePeer();this.isHost=true;return this.peerNet.createRoom().then(code=>{this.roomCode=code;return code;});}
+      requireLocalPreview();
+      if(!await this.detect())throw Error('Start the local CTF server to use development Friend Rooms.');
       const room=await this.request('/rooms',{method:'POST',body:'{}'});this.roomCode=room.code;this.token=room.token;this.isHost=true;this.remember();this.poll();return room.code;
     }
     async joinRoom(code){
       this.roomCode=String(code).trim().toUpperCase();
       if(!/^[A-Z0-9]{6}$/.test(this.roomCode))throw Error('Enter the six-character room code.');
-      if(!await this.detect()){this.usePeer();this.isHost=false;return this.peerNet.joinRoom(this.roomCode);}
+      requireLocalPreview();
+      if(!await this.detect())throw Error('Start the local CTF server to use development Friend Rooms.');
       try{this.token=JSON.parse(sessionStorage.getItem('ctf:room:'+this.roomCode)||'null')?.token||'';}catch{}
       const room=await this.request('/rooms/'+this.roomCode+'/join',{method:'POST',body:'{}'});this.token=room.token;this.isHost=room.role==='host';this.cursor=room.cursor||0;this.remember();
       if(room.snapshot)this.onData?.({...room.snapshot,type:'resumeState',role:room.role});

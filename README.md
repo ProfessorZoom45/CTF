@@ -34,7 +34,7 @@ Run `node tools/audit-browser.cjs`, `node tools/test-browser-rules.cjs --simulat
 
 Start with a guided starter duel, then create cards in the Forge. Finishing a draft opens the Deck Workshop or a guided replay with the starter deck. The lessons and provisional teaching deck use the 26 cards in `assets/data/ZF1.ptcg`. Regenerate the data with `node tools/build-zf1-tutorial-data.mjs` and check it with `node tools/test-zf1-tutorial.cjs`.
 
-GitHub Pages serves the browser files from `main` at the repository root. The local relay still exchanges a complete match snapshot. Public Friend Rooms require a referee that sends authenticated views for each seat, plus cross-network series and reconnect testing. The launch set and art and the hosted Forge review and email workflow are also release gates.
+GitHub Pages serves the browser files from `main` at the repository root. The integration branch keeps the old full-snapshot relay on loopback for development. The new local referee at `/api/private-multiplayer/` owns duel state and sends each authenticated seat a separate view. Run `node tools/test-private-rooms.mjs http://127.0.0.1:8028` to exercise both seats. Public Friend Rooms still require browser integration, hosting, the full room and series rules, and cross-network testing. The launch set and art and the hosted Forge review and email workflow are also release gates.
 
 ## Card Database
 
