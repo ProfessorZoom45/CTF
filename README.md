@@ -2,7 +2,7 @@
 
 This is the source repository for the Carry The Flame browser game.
 
-- Game Hub with Guided Play, CPU opponents, local hot-seat, and solo sandbox
+- Game Hub with Guided Play, CPU opponents, local hot-seat, solo sandbox, and private Friend Rooms
 - Card collection, Deck Workshop, and six-lesson Forge
 - Searchable Rules Codex and interactive board previews
 - Installable browser app and offline support for local play
@@ -36,11 +36,13 @@ Start with a guided starter duel, then create cards in the Forge. Finishing a dr
 
 ## Friend Rooms
 
-Run the local server and open the Game Hub in two independent browser sessions. Choose a legal deck in each session. Create a room in the first and join using its link or code in the second. Refresh in the same browser tab to recover your seat. When a duel ends, each player can select a deck and confirm a rematch. The server owns the complete match state and sends separate views to the two seats. Run `node tools/test-private-rooms.mjs http://127.0.0.1:8028` to check this protocol.
+Open the [GitHub Pages release](https://professorzoom45.github.io/CTF/) or [Carry The Flame Online](https://carry-the-flame-online.dr-zoom.chatgpt.site/). Choose a legal deck, create a room, and share the invitation link or code. Players on both sites use the same referee. Refresh in the same browser tab to recover your seat. After a duel, both players can confirm a rematch and use the same deck or choose another legal one. The referee validates actions and returns a separate view for each seat.
 
-GitHub Pages serves the static files from `main` at the repository root. For an HTTPS referee preview, deploy `server.mjs` on a Node 22+ host with `CTF_REFEREE_ONLY=1`, `CTF_PAGES_ORIGIN=https://professorzoom45.github.io`, and the port and bind address required by the hosting service. This mode serves the private referee API with that Pages origin on its CORS allowlist. Keep TLS at the deployment proxy. Set the `ctf-friend-room-api` meta value in `play.html` to the deployed HTTPS `/api/private-multiplayer/` endpoint. Verify invite, play and reconnect across different networks before releasing.
+GitHub Pages publishes the repository root from `main`. The non-GitHub Site hosts the referee at `/api/private-multiplayer/`, stores room state in D1, and runs the Forge review inbox. The GitHub Play page configures the hosted referee through the `ctf-friend-room-api` meta value. The hosted Site source documents its Worker build and database migrations in `CTF-ONLINE.md`.
 
-The first private browser mode supports single duels. Best-of-three, the full timer and disconnect-forfeit policy, and production hosting are release work. The launch set and art and the hosted Forge review and email workflow also remain release gates.
+For local development, run `node server.mjs` and use the local Game Hub in two independent browser sessions. Loopback play uses the local referee. Check its protocol with `node tools/test-private-rooms.mjs http://127.0.0.1:8028`.
+
+Friend Rooms support single duels and same-room rematches. Best-of-three, the full timer and disconnect-forfeit policy, and automated Forge approval emails are separate release work.
 
 ## Card Database
 

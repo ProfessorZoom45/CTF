@@ -20,8 +20,8 @@
   ];
   let endpoint;
   try {
-    const url = new URL(configured || 'api/private-multiplayer/', location.href);
-    if ((configured && url.protocol === 'https:' || !configured && local && url.origin === location.origin) &&
+    const url = new URL(local ? 'api/private-multiplayer/' : configured, location.href);
+    if ((configured && url.protocol === 'https:' || local && url.origin === location.origin) &&
         !url.search && !url.hash && !url.username && !url.password) {
       if (!url.pathname.endsWith('/')) url.pathname += '/';
       endpoint = url;
