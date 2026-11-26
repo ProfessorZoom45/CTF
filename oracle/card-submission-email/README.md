@@ -51,3 +51,16 @@ curl -fsS http://127.0.0.1:8787/health
 
 The service deliberately binds only to loopback. Caddy is the sole public entry
 point and handles TLS.
+
+The HTTP health check reports that the relay is running. To verify Outlook
+authorization without sending mail, run this from the app directory with the
+service environment and virtualenv loaded:
+
+```sh
+python -c 'from app import Config, OutlookGraphMailer; config = Config.from_env(); config.validate(); OutlookGraphMailer(config)._load_token(); print("Outlook authorization confirmed for CTF.OTCG@outlook.com")'
+```
+
+Run it as the service account so it can read and refresh the token cache. After
+installing an update, restart `ctf-card-email.service`. An authorized test
+submission and confirmation in the receiving inbox are required to verify mail
+delivery.

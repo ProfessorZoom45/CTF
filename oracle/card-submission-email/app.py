@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import re
 import sqlite3
+from tempfile import NamedTemporaryFile
 import time
 import textwrap
 from typing import Deque, Dict, Optional, Tuple
@@ -29,6 +30,28 @@ MAX_IMAGES = 20
 IMAGE_TYPES = {"image/jpeg": "jpeg", "image/png": "png", "image/gif": "gif", "image/webp": "webp", "image/bmp": "bmp"}
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 ID_RE = re.compile(r"^[A-Za-z0-9_-]{12,80}$")
+OUTLOOK_SENDER = "CTF.OTCG@outlook.com"
+
+
+def outlook_sender_matches(username: object) -> bool:
+    return isinstance(username, str) and username.casefold() == OUTLOOK_SENDER.casefold()
+
+
+def outlook_result_username(result: dict) -> object:
+    claims = result.get("id_token_claims") or {}
+    return claims.get("preferred_username") or claims.get("upn")
+
+
+def save_outlook_cache(cache: msal.SerializableTokenCache, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    file = NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False)
+    temporary = Path(file.name)
+    try:
+        with file:
+            file.write(cache.serialize())
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 @dataclass(frozen=True)
@@ -52,7 +75,7 @@ class Config:
         return cls(
             allowed_origin=os.getenv("CTF_ALLOWED_ORIGIN", "https://professorzoom45.github.io").rstrip("/"),
             owner_email=os.getenv("CTF_OWNER_EMAIL", "changethewrld@outlook.com").strip(),
-            sender_email=os.getenv("CTF_OUTLOOK_SENDER", "CTF.OTCG@outlook.com").strip(),
+            sender_email=os.getenv("CTF_OUTLOOK_SENDER", OUTLOOK_SENDER).strip(),
             ms_client_id=os.getenv("CTF_MS_CLIENT_ID", "").strip(),
             ms_authority=os.getenv("CTF_MS_AUTHORITY", "https://login.microsoftonline.com/consumers").strip(),
             token_cache_path=Path(os.getenv("CTF_MS_TOKEN_CACHE", "/opt/ctf-card-email/secrets/msal-cache.json")),
@@ -72,8 +95,10 @@ class Config:
                 missing.append(name)
         if missing:
             raise RuntimeError("Missing configuration: " + ", ".join(missing))
-        if not EMAIL_RE.match(self.owner_email) or not EMAIL_RE.match(self.sender_email):
-            raise RuntimeError("Configured email address is invalid")
+        if not EMAIL_RE.match(self.owner_email):
+            raise RuntimeError("Configured owner email address is invalid")
+        if not outlook_sender_matches(self.sender_email):
+            raise RuntimeError(f"CTF_OUTLOOK_SENDER must be {OUTLOOK_SENDER}")
         if not self.logo_path.is_file():
             raise RuntimeError(f"CTF logo is missing: {self.logo_path}")
 
@@ -155,16 +180,18 @@ class OutlookGraphMailer:
             authority=self.config.ms_authority,
             token_cache=cache,
         )
-        accounts = app.get_accounts(username=self.config.sender_email) or app.get_accounts()
-        result = app.acquire_token_silent(self.scopes, account=accounts[0] if accounts else None)
-        if cache.has_state_changed:
-            self.config.token_cache_path.parent.mkdir(parents=True, exist_ok=True)
-            temporary = self.config.token_cache_path.with_suffix(".tmp")
-            temporary.write_text(cache.serialize(), encoding="utf-8")
-            os.chmod(temporary, 0o600)
-            temporary.replace(self.config.token_cache_path)
-        if not result or "access_token" not in result:
+        accounts = app.get_accounts(username=OUTLOOK_SENDER)
+        account = next((account for account in accounts if outlook_sender_matches(account.get("username"))), None)
+        if account is None:
+            raise RuntimeError(f"Authorize {OUTLOOK_SENDER} with bootstrap_outlook.py")
+        result = app.acquire_token_silent(self.scopes, account=account)
+        if not result or not result.get("access_token"):
             raise RuntimeError("Outlook authorization is unavailable; run bootstrap_outlook.py")
+        username = outlook_result_username(result)
+        if username is not None and not outlook_sender_matches(username):
+            raise RuntimeError(f"Microsoft returned a token for another Outlook account. Authorize {OUTLOOK_SENDER} again")
+        if cache.has_state_changed:
+            save_outlook_cache(cache, self.config.token_cache_path)
         return result["access_token"]
 
     def _send_sync(self, message: EmailMessage) -> None:
@@ -258,7 +285,7 @@ def build_owner_message(config: Config, submission: dict, file_name: str, json_b
     submitter = submission["submitter"]
     name = safe_header(submitter["name"])
     message = EmailMessage()
-    message["From"] = config.sender_email
+    message["From"] = OUTLOOK_SENDER
     message["To"] = config.owner_email
     message["Reply-To"] = submitter["email"]
     message["Subject"] = f"{name}'s FORGE Cards"
@@ -288,7 +315,7 @@ def build_submitter_message(config: Config, submission: dict) -> EmailMessage:
     submitter = submission["submitter"]
     name = safe_header(submitter["name"])
     message = EmailMessage()
-    message["From"] = config.sender_email
+    message["From"] = OUTLOOK_SENDER
     message["To"] = submitter["email"]
     message["Reply-To"] = config.owner_email
     message["Subject"] = f"Thank You, {name} — Your Carry The Flame! Cards Are Under Review"

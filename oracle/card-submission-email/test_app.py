@@ -1,15 +1,81 @@
 import base64
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from aiohttp.test_utils import TestClient, TestServer
 
-from app import Config, create_app
+from app import Config, OUTLOOK_SENDER, OutlookGraphMailer, create_app
+from bootstrap_outlook import main as bootstrap_outlook
 
 
 ORIGIN = "https://professorzoom45.github.io"
+
+
+class OutlookSenderTests(unittest.TestCase):
+    def setUp(self):
+        temporary = self.enterContext(tempfile.TemporaryDirectory())
+        self.cache_path = Path(temporary) / "cache.json"
+        self.enterContext(patch.dict(os.environ, {
+            "CTF_MS_CLIENT_ID": "test-client-id",
+            "CTF_MS_TOKEN_CACHE": str(self.cache_path),
+            "CTF_OUTLOOK_SENDER": OUTLOOK_SENDER.lower(),
+        }, clear=True))
+        self.msal_app = self.enterContext(patch("app.msal.PublicClientApplication")).return_value
+        self.msal_app.initiate_device_flow.return_value = {"user_code": "test", "message": "Mock authorization"}
+        self.account = {"username": OUTLOOK_SENDER.lower()}
+        self.msal_app.get_accounts.return_value = [self.account]
+
+    def test_uses_only_the_exact_outlook_account(self):
+        self.msal_app.get_accounts.return_value = [{"username": "other@outlook.com"}, self.account]
+        self.msal_app.acquire_token_silent.return_value = {"access_token": "test-token"}
+        mailer = OutlookGraphMailer(Config.from_env())
+
+        self.assertEqual(mailer._load_token(), "test-token")
+        self.msal_app.get_accounts.assert_called_once_with(username=OUTLOOK_SENDER)
+        self.msal_app.acquire_token_silent.assert_called_once_with(mailer.scopes, account=self.account)
+
+    def test_no_token_is_requested_for_a_different_cached_account(self):
+        self.msal_app.get_accounts.return_value = [{"username": "other@outlook.com"}]
+        with self.assertRaisesRegex(RuntimeError, "Authorize CTF.OTCG"):
+            OutlookGraphMailer(Config.from_env())._load_token()
+
+        self.msal_app.get_accounts.assert_called_once_with(username=OUTLOOK_SENDER)
+        self.msal_app.acquire_token_silent.assert_not_called()
+
+    def test_rejects_a_refresh_result_for_a_different_account(self):
+        self.msal_app.acquire_token_silent.return_value = {
+            "access_token": "test-token",
+            "id_token_claims": {"preferred_username": "other@outlook.com"},
+        }
+        with self.assertRaisesRegex(RuntimeError, "another Outlook account"):
+            OutlookGraphMailer(Config.from_env())._load_token()
+
+    def test_bootstrap_rejects_other_sign_in_even_with_correct_account_in_cache(self):
+        self.cache_path.write_text("{}", encoding="utf-8")
+        self.msal_app.acquire_token_by_device_flow.return_value = {
+            "access_token": "test-token",
+            "id_token_claims": {"preferred_username": "other@outlook.com"},
+        }
+        with patch("builtins.print"), self.assertRaisesRegex(RuntimeError, "Authorization was not saved"):
+            bootstrap_outlook()
+
+        self.msal_app.get_accounts.assert_not_called()
+        self.assertEqual(self.cache_path.read_text(encoding="utf-8"), "{}")
+
+    def test_bootstrap_persists_an_exact_sign_in_regardless_of_case(self):
+        self.msal_app.acquire_token_by_device_flow.return_value = {
+            "access_token": "test-token",
+            "id_token_claims": {"preferred_username": OUTLOOK_SENDER.upper()},
+        }
+        with patch("builtins.print"):
+            bootstrap_outlook()
+
+        self.msal_app.get_accounts.assert_called_once_with(username=OUTLOOK_SENDER)
+        self.assertTrue(self.cache_path.is_file())
 
 
 class FakeVerifier:

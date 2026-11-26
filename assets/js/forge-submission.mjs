@@ -1,4 +1,23 @@
 export const DRAFT_KEY = 'ctf:first-five-forge:v1';
+export function hasGreatName(name) {
+  return /(?:^|[^\p{L}\p{M}\p{N}_])great(?:$|[^\p{L}\p{M}\p{N}_])/iu.test(name);
+}
+
+export function validateTrickEffect(effectText = '') {
+  const errors = [];
+  if (!/\btarget\s+(?:exactly\s+)?1\s+catalyst\b/i.test(effectText)) {
+    errors.push('State “Target 1 Catalyst” in the effect.');
+  }
+  const boosts = effectText.matchAll(/(?:\b(?:gains?|increases?|boosts?|raises?)\b[^0-9.!?;\n]{0,60}|\+\s*)(\d+(?:[,\u00a0\u202f]\d{3})*(?:\.\d+)?)/gi);
+  for (const [, amount] of boosts) {
+    if (Number(amount.replace(/[,\u00a0\u202f]/g, '')) > 300) {
+      errors.push('The Trick boost cannot exceed +300.');
+      break;
+    }
+  }
+  return errors;
+}
+
 export function validateTriggerTiming(card,isTrick=false){
   const timing=card?.timingWindow;
   if(timing!==undefined&&(typeof timing!=='string'||timing.length>500))return ['Keep the timing window to 500 characters.'];
@@ -20,9 +39,7 @@ export function validateDraft(draft, tree) {
     for (const key of ['lore','effectText','resolution','fusionRules']) if (typeof card[key] !== 'string' || card[key].length>8000) errors.push(`${label}: invalid ${key}.`);
     if (i===4) {
       if (!['Palm Trick','Concealed Trick'].includes(card.trickType)) errors.push('Choose Palm or Concealed Trick.');
-      if (!/target\s+(?:exactly\s+)?1\s+catalyst/i.test(card.effectText || '')) errors.push('The Trick must target 1 Catalyst.');
-      const boost=String(card.effectText || '').match(/(?:gain|increase)[^0-9]{0,30}(\d{2,4})/i);
-      if (boost && Number(boost[1])>300) errors.push('The Trick boost cannot exceed +300.');
+      errors.push(...validateTrickEffect(String(card.effectText || '')));
       return;
     }
     const ranks = i<2 ? [1,4] : i===2 ? [6,7] : [1,12];
@@ -40,7 +57,7 @@ export function validateDraft(draft, tree) {
     if (card.effectClass==='Normal' ? !String(card.lore || '').trim() : !String(card.effectText || '').trim()) errors.push(`${label}: write its lore/effect text.`);
     if (i===3) {
       const a=Number(card.materialOne),b=Number(card.materialTwo);
-      if (!/great/i.test(name) || !String(card.fusionRules || '').trim()) errors.push('Fusion needs Great in its name and printed material requirements.');
+      if (!hasGreatName(name) || !String(card.fusionRules || '').trim()) errors.push('Fusion needs “Great” as a separate word in its name and printed material requirements.');
       if (![a,b].every(value=>Number.isInteger(value)&&value>=0&&value<3) || a===b) errors.push('Choose two distinct submitted Catalyst materials.');
       else {
         for (const key of ['pressure','counterPressure']) if (Number(card[key])>Number(draft.cards[a]?.[key])+Number(draft.cards[b]?.[key])) errors.push(`Fusion ${key} exceeds its materials.`);

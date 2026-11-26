@@ -1,4 +1,4 @@
-import {validateTriggerTiming} from './forge-submission.mjs';
+import {hasGreatName, validateTrickEffect, validateTriggerTiming} from './forge-submission.mjs';
 const TREE_URL = new URL('../../ALPHA/forge-review-data.json', import.meta.url);
 const STORAGE_KEY = 'ctf:first-five-forge:v1';
 const SLOTS = [
@@ -149,9 +149,7 @@ function validateCard(index){
   if(cards.some((other,i)=>i!==index&&other.name.trim()&&other.name.trim().toLowerCase()===card.name.trim().toLowerCase()))issues.push('Use a distinct name for each card');
   if(slot.kind==='trick'){
     if(!card.effectText.trim())issues.push('Write the Trick effect');
-    if(!/target\s+(?:exactly\s+)?1\s+catalyst/i.test(card.effectText))issues.push('State “Target 1 Catalyst” in the effect');
-    const boost=card.effectText.match(/(?:gain|increase)[^0-9]{0,30}(\d{2,4})/i);
-    if(boost&&Number(boost[1])>300)issues.push('Trick stat boosts cannot exceed +300');
+    issues.push(...validateTrickEffect(card.effectText));
     return issues;
   }
   if(!tree.canonicalAlignments.includes(card.alignment))issues.push('Choose a canonical alignment');
@@ -170,7 +168,7 @@ function validateCard(index){
   if(card.effectClass==='Normal'&&!card.lore.trim())issues.push('Normal cards require lore');
   if(card.effectClass!=='Normal'&&!card.effectText.trim())issues.push('Effect and Fusion cards require effect text');
   if(slot.kind==='fusion'){
-    if(!card.name.toLowerCase().includes('great'))issues.push('Include “Great” in the Fusion name');
+    if(!hasGreatName(card.name))issues.push('Include “Great” as a separate word in the Fusion name');
     if(card.materialOne===card.materialTwo)issues.push('Choose two different materials');
     if(!card.fusionRules.trim())issues.push('Write the Fusion requirements');
     if(Number(card.pressure)+Number(card.counterPressure)>4000)issues.push('Fusion Pressure + Counter Pressure cannot exceed 4,000');
