@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Deliver the hosted Forge's leased submission notifications."""
 
+from __future__ import annotations
+
 import argparse
 import asyncio
 from contextlib import closing
