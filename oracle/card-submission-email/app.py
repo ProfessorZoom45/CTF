@@ -5,8 +5,10 @@ import asyncio
 import base64
 from collections import defaultdict, deque
 from contextlib import closing
+from copy import deepcopy
 from dataclasses import dataclass
 from email.message import EmailMessage
+from email.policy import SMTP
 import json
 import os
 from pathlib import Path
@@ -213,7 +215,18 @@ class OutlookGraphMailer:
         # Graph accepts the complete RFC 822 message as base64 MIME content.
         # This preserves attachments and works when SMTP AUTH is disabled on
         # the dedicated Outlook mailbox.
-        payload = base64.b64encode(message.as_bytes())
+        prepared = deepcopy(message)
+        for part in prepared.walk():
+            if (
+                part.get_content_type() == "text/plain"
+                and part.get_content_disposition() != "attachment"
+                and part.get("Content-Transfer-Encoding", "").strip().lower() == "quoted-printable"
+            ):
+                # Some clients expose the soft line break inside a word.
+                body = part.get_payload(decode=True)
+                part.set_payload(base64.encodebytes(body).decode("ascii"))
+                part.replace_header("Content-Transfer-Encoding", "base64")
+        payload = base64.b64encode(prepared.as_bytes(policy=SMTP))
         request = urllib.request.Request(
             "https://graph.microsoft.com/v1.0/me/sendMail",
             data=payload,

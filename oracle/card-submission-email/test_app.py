@@ -1,4 +1,7 @@
 import base64
+from email.message import EmailMessage
+from email.parser import BytesParser
+from email.policy import default
 import json
 import os
 from pathlib import Path
@@ -37,6 +40,32 @@ class OutlookSenderTests(unittest.TestCase):
         self.assertEqual(mailer._load_token(), "test-token")
         self.msal_app.get_accounts.assert_called_once_with(username=OUTLOOK_SENDER)
         self.msal_app.acquire_token_silent.assert_called_once_with(mailer.scopes, account=self.account)
+
+    def test_graph_mime_keeps_sender_whole_and_preserves_attachments(self):
+        sentence = (
+            "This is the requested test of email delivery from the Carry The Flame Forge sender. "
+            "No action is needed."
+        )
+        message = EmailMessage()
+        message["From"] = OUTLOOK_SENDER
+        message["To"] = "reviewer@example.com"
+        message.set_content(sentence, cte="quoted-printable")
+        self.assertIn(b"Forge s=\nender.", message.as_bytes())
+        message.add_attachment(b"sample\x00attachment", maintype="application", subtype="octet-stream", filename="example.bin")
+
+        self.msal_app.acquire_token_silent.return_value = {"access_token": "test-token"}
+        with patch("app.urllib.request.urlopen") as urlopen:
+            urlopen.return_value.__enter__.return_value.status = 202
+            OutlookGraphMailer(Config.from_env())._send_sync(message)
+
+        wire = base64.b64decode(urlopen.call_args.args[0].data)
+        parsed = BytesParser(policy=default).parsebytes(wire)
+        body = parsed.get_body(preferencelist=("plain",))
+        self.assertNotIn(b"\n", wire.replace(b"\r\n", b""))
+        self.assertEqual(body["Content-Transfer-Encoding"], "base64")
+        self.assertEqual(body.get_content().strip(), sentence)
+        self.assertEqual(next(parsed.iter_attachments()).get_payload(decode=True), b"sample\x00attachment")
+        self.assertEqual(message.get_body()["Content-Transfer-Encoding"], "quoted-printable")
 
     def test_no_token_is_requested_for_a_different_cached_account(self):
         self.msal_app.get_accounts.return_value = [{"username": "other@outlook.com"}]
