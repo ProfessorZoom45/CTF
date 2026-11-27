@@ -32,7 +32,12 @@ Run `node tools/audit-browser.cjs`, `node tools/test-browser-rules.cjs --simulat
 | `glossary.html` | CTF-native terminology reference |
 | `submit.html` | Custom card submission — 5-card sets with stat pool system |
 
-Start with a guided starter duel, then create cards in the Forge. Finishing a draft opens the Deck Workshop or a guided replay with the starter deck. The lessons and provisional teaching deck use the 26 cards in `assets/data/ZF1.ptcg`. Regenerate the data with `node tools/build-zf1-tutorial-data.mjs` and check it with `node tools/test-zf1-tutorial.cjs`.
+Start with a guided starter duel, then create cards in the Forge. Finishing a
+draft opens the Deck Workshop or a private guided duel using the draft cards
+and their supported effect presets. The lessons and teaching deck use the 26
+cards in `assets/data/ZF1.ptcg`. Regenerate the data with
+`node tools/build-zf1-tutorial-data.mjs` and check the two guided modes with
+`node tools/test-zf1-tutorial.cjs` and `node tools/test-forge-practice.cjs`.
 
 ## Friend Rooms
 
@@ -59,14 +64,19 @@ Friend Rooms support single duels and same-room rematches. Best-of-three, the fu
 
 ## Card-submission delivery
 
-`submit.html` writes submission metadata to OperatorStack, downloads and presents
-the full JSON to the creator, then sends that same JSON to the protected Oracle
-service in `oracle/card-submission-email`. The Oracle service sends the owner a
-JSON attachment and sends the submitter a separate thank-you/review message.
-See the service README for the required HTTPS, Outlook OAuth, and Cloudflare
-Turnstile configuration. The public service URL and Turnstile site key belong in
-`assets/js/submission-delivery-config.js`; secret keys never belong in this
-repository.
+`submit.html` opens the Forge submission page. Both public editions send finalized
+five-card packages to the same hosted review inbox. The inbox records the package
+and a confirmation job before returning a receipt. Start local development with
+`node server.mjs` to use a local file-based inbox.
+
+Administrators sign in at [Forge Review](https://carry-the-flame-online.dr-zoom.chatgpt.site/forge-review).
+Approved cards can appear in the Card Gallery immediately or at a scheduled UTC
+time. Review information and creator addresses stay private. Deck eligibility
+requires engine certification.
+
+The [Oracle service setup](oracle/card-submission-email/README.md) covers the
+Outlook authorization and background worker for confirmation and decision
+emails from `CTF.OTCG@outlook.com`.
 
 ## Board Layout
 

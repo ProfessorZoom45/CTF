@@ -92,6 +92,12 @@ function renderForm(){
   if(trick||card.effectClass!=='Normal'){
     html+=area('Trigger timing · required when the effect is triggered','timingWindow',card.timingWindow||'','After [event] resolves, before [next step] begins.');
     html+='<p class="timing-help">Every trigger needs a precise window. Shotgun: <strong>After a qualifying Special Spawn resolves, before any on-Spawn effect or the next player action begins.</strong> Announced, failed or negated Spawns do not trigger the draw. <a href="rules.html#timing-lab" target="_blank" rel="noopener">Practice writing a window →</a></p>';
+    const presets=window.CTF_FORGE_PRACTICE?.presets;
+    if(presets){
+      const keys=trick?['pressure','counterPressure']:slot.kind==='fusion'?['specialDraw']:['normalDraw','specialDraw'];
+      html+=`<div class="form-actions full">${keys.map(key=>`<button type="button" data-effect-preset="${key}">${esc(presets[key].label)}</button>`).join('')}</div>`;
+      html+='<p class="timing-help">These effects run in private practice. You can write other effects for review. Card Text shows their practice status.</p>';
+    }
   }
   $('form-fields').innerHTML=html;
   $('form-error').textContent='';
@@ -194,6 +200,23 @@ function wire(){
   const submitLink=document.createElement('a');submitLink.className='primary link-button';submitLink.href='submit-forge.html';submitLink.textContent='Submit these five cards for review →';$('complete-panel').append(submitLink);
   $('form-fields').addEventListener('input',onField);
   $('form-fields').addEventListener('change',onField);
+  $('form-fields').addEventListener('click',event=>{
+    const button=event.target.closest('[data-effect-preset]');
+    const preset=window.CTF_FORGE_PRACTICE?.presets[button?.dataset.effectPreset];
+    if(!preset)return;
+    const card=cards[step];
+    if((card.effectText.trim()&&card.effectText!==preset.text)||(card.timingWindow?.trim()&&card.timingWindow!==preset.timing)){
+      $('form-error').textContent='Clear the current effect text and timing window before choosing another practice effect.';
+      return;
+    }
+    card.effectText=preset.text;
+    card.timingWindow=preset.timing;
+    complete=false;
+    savedLessons[step]=false;
+    save();
+    renderForm();
+    $('form-fields').querySelector('[data-field="effectText"]')?.focus();
+  });
   $('form-fields').addEventListener('click',event=>{const button=event.target.closest('[data-edit-card]');if(!button)return;step=Number(button.dataset.editCard);renderForm();save();});
   $('step-rail').addEventListener('click',event=>{const button=event.target.closest('[data-step]');if(!button||button.disabled)return;step=Number(button.dataset.step);renderForm();save();});
   $('back-step').addEventListener('click',()=>{if(step>0){step--;renderForm();save();}});

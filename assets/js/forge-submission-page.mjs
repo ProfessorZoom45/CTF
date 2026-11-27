@@ -1,9 +1,7 @@
 import { DRAFT_KEY, validateDraft, buildSubmission } from './forge-submission.mjs';
 const $=id=>document.getElementById(id);
-let local=['127.0.0.1','localhost'].includes(location.hostname),hosted=false;
-const cfg=window.CTF_SUBMISSION_DELIVERY || {};
-let endpoint=local ? '/api/card-submissions' : cfg.endpoint;
-let draft, tree, token='',busy=false,verificationWidgetId;
+let local=false, endpoint=window.CTF_SUBMISSION_DELIVERY?.endpoint;
+let draft, tree, busy=false;
 const submissionIds=new Map();
 const text=(parent,tag,value,cls='')=>{const element=document.createElement(tag);element.textContent=value;if(cls)element.className=cls;parent.append(element);return element;};
 function input(){
@@ -26,14 +24,30 @@ async function assignSubmissionId(values,submission){
   submission.submission_id=id;
   return id;
 }
-function resetVerification(){
-  token='';
-  if(verificationWidgetId!==undefined)window.turnstile.reset(verificationWidgetId);
+async function solveChallenge(submissionId, signal) {
+  const url = new URL(endpoint, location.href);
+  url.searchParams.set('id', submissionId);
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw Error('The review inbox could not start verification.');
+  const { expires, signature } = await response.json();
+  if (!Number.isSafeInteger(expires) || !/^[a-f0-9]{64}$/.test(signature || '')) throw Error('The inbox sent an invalid verification challenge.');
+  const encoder = new TextEncoder();
+  for (let start = 0; start < 262144; start += 64) {
+    if (signal.aborted || expires <= Date.now()) throw Error('Verification expired. Please retry.');
+    const valid = await Promise.all(Array.from({ length: 64 }, async (_, index) => {
+      const nonce = start + index;
+      const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(signature + ':' + nonce)));
+      return hash[0] === 0 && hash[1] < 16 ? nonce : -1;
+    }));
+    const nonce = valid.find(value => value >= 0);
+    if (nonce !== undefined) return { expires, signature, nonce };
+  }
+  throw Error('Verification could not be completed. Please retry.');
 }
 function refresh(){
   const ready=tree && validateDraft(draft,tree).length===0;
   $('download-package').disabled=!ready;
-  $('send-package').disabled=!ready||busy||!$('submit-forge-form').checkValidity()||(!local&&!token);
+  $('send-package').disabled=!ready||!endpoint||busy||!$('submit-forge-form').checkValidity();
 }
 async function download(){
   const values=input(),draftId=crypto.randomUUID();
@@ -63,47 +77,37 @@ async function submit(event){
   const values=input();
   const built=buildSubmission({...values,submission_id:crypto.randomUUID()},tree);
   if(!built.ok){$('submission-status').textContent=built.errors.join(' ');return;}
-  if(!local&&!token){$('submission-status').textContent='Complete the verification before sending.';return;}
-  busy=true;refresh();$('submission-status').textContent=local?'Saving your package to the review inbox…':'Sending your package for review…';
+  if(!endpoint)return;
+  busy=true;refresh();$('submission-status').textContent=local?'Saving your package to the review inbox…':'Verifying your package…';
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),45000);
-  let remoteAttempted=false;
   try{
     const submissionId=await assignSubmissionId(values,built.submission);
-    if(!local&&!token)throw Error('Verification expired. Complete it before retrying.');
-    const body=local?{submission_id:submissionId,...values}:{submission_id:submissionId,file_name:'CTF_Forge_'+submissionId+'.json',turnstile_token:token,json:JSON.stringify(built.submission),images:[]};
-    remoteAttempted=!local;
-    if(remoteAttempted)token='';
+    const body={submission_id:submissionId,...values};
+    if(!local)body.proof=await solveChallenge(submissionId,controller.signal);
+    $('submission-status').textContent='Saving your package to the review inbox…';
     const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:controller.signal});
     let result;try{result=await response.json();}catch{throw Error('The submission service returned an invalid response.');}
     if(!response.ok||!result.ok)throw Error(result.errors?.join(' ')||result.error||'Submission was not accepted.');
-    if(local&&(result.submission_id!==submissionId||result.delivery!==(hosted?'hosted_inbox':'local_inbox')))throw Error('The review inbox did not confirm this package.');
-    if(!local&&(!result.owner_email_sent||!result.submitter_email_sent))throw Error('The mail service did not accept both emails for delivery.');
+    if(result.submission_id!==submissionId||result.delivery!==(local?'local_inbox':'hosted_inbox'))throw Error('The review inbox did not confirm this package.');
     $('submission-receipt').hidden=false;$('receipt-id').textContent=submissionId;
-    $('receipt-copy').textContent=hosted?'Your five cards are queued in the online review inbox. Keep this receipt and download a JSON backup.':local?'Your five cards were saved to this computer’s review inbox. No email was sent.':'The mail service accepted the reviewer and confirmation emails for delivery.';
+    $('receipt-copy').textContent=local?'Your five cards were saved to this computer’s review inbox.':'Your five cards are queued in the review inbox. Keep your reference and download a JSON backup.';
     $('submission-status').textContent='Submitted for manual review.';
-    try{localStorage.setItem('ctf:last-forge-submission',JSON.stringify({submission_id:submissionId,delivery:hosted?'hosted_inbox':local?'local_inbox':'email',receivedAt:result.receivedAt||new Date().toISOString()}));}catch{}
+    try{localStorage.setItem('ctf:last-forge-submission',JSON.stringify({submission_id:submissionId,delivery:result.delivery,receivedAt:result.receivedAt||new Date().toISOString()}));}catch{}
     $('send-package').textContent='Submitted for review';
     $('submission-receipt').scrollIntoView({block:'nearest',behavior:'smooth'});
   }catch(error){
     busy=false;
     $('submission-status').textContent=(error.name==='AbortError'?'The request timed out.':error.message)+' Your draft is still saved. Download the JSON backup or retry.';
-    if(remoteAttempted)resetVerification();
     refresh();
   }
   finally{clearTimeout(timer);}
 }
-$('delivery-mode').textContent=local?'Local browser edition: Submit saves your package to the review inbox on this computer.':'Website edition: Submit sends your package to the configured CTF reviewer email service.';
-$('submit-forge-form').addEventListener('input',()=>{if(!$('submission-receipt').hidden){$('submission-receipt').hidden=true;$('send-package').textContent='Submit five cards for review';busy=false;if(!local)resetVerification();}refresh();});
+$('submit-forge-form').addEventListener('input',()=>{if(!$('submission-receipt').hidden){$('submission-receipt').hidden=true;$('send-package').textContent='Submit five cards for review';busy=false;}refresh();});
 $('submit-forge-form').addEventListener('submit',submit);$('download-package').addEventListener('click',download);
 try{
-  try{const config=await fetch('/api/site-config',{signal:AbortSignal.timeout(5000)});if(config.ok){const delivery=(await config.json()).submissionDelivery;hosted=delivery==='hosted_inbox';local=hosted||delivery==='local_inbox';if(local)endpoint='/api/card-submissions';}}catch{}
-  $('delivery-mode').textContent=hosted?'Online edition: Submit saves all five cards to the online review inbox for manual review.':local?'Local browser edition: Submit saves your package to the review inbox on this computer.':'Website edition: Submit sends your package to the configured CTF reviewer email service.';
+  try{const config=await fetch('/api/site-config',{signal:AbortSignal.timeout(5000)});if(config.ok){const delivery=(await config.json()).submissionDelivery;local=delivery==='local_inbox';if(local||delivery==='hosted_inbox')endpoint='/api/card-submissions';}}catch{}
+  $('delivery-mode').textContent=local?'Submit saves your package to the review inbox on this computer.':'Submit saves all five cards in the private CTF review inbox.';
   draft=JSON.parse(localStorage.getItem(DRAFT_KEY)||'null');
   const response=await fetch('ALPHA/forge-review-data.json');if(!response.ok)throw Error('The Forge rules could not load.');tree=await response.json();render();
-  if(!local){
-    if(!/^https:\/\//.test(endpoint||'')||!cfg.turnstileSiteKey)throw Error('Email submission is not configured for this host. Your package can still be downloaded.');
-    const script=document.createElement('script');script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.async=true;
-    script.onload=()=>{verificationWidgetId=window.turnstile.render($('submission-verification'),{sitekey:cfg.turnstileSiteKey,action:'card_submission',theme:'dark',callback:value=>{token=value;refresh();},'expired-callback':()=>{token='';refresh();},'error-callback':()=>{token='';$('submission-status').textContent='Verification unavailable. Your package can still be downloaded.';refresh();}});};
-    script.onerror=()=>{$('submission-status').textContent='Verification could not load. Download the JSON backup and try again later.';};document.head.append(script);
-  }
+  if(!endpoint)throw Error('Submission is unavailable. Your draft can still be downloaded.');
 }catch(error){$('package-error').hidden=false;$('package-error').textContent=error.message;}

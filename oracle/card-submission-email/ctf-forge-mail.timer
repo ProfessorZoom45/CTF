@@ -1,0 +1,10 @@
+[Unit]
+Description=Check for Carry The Flame Forge review notifications every minute
+
+[Timer]
+OnCalendar=minutely
+AccuracySec=5s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

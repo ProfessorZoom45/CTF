@@ -64,3 +64,53 @@ Run it as the service account so it can read and refresh the token cache. After
 installing an update, restart `ctf-card-email.service`. An authorized test
 submission and confirmation in the receiving inbox are required to verify mail
 delivery.
+
+## Shared Forge review notifications
+
+The companion worker polls the hosted Forge outbox for queue receipts, approvals,
+and rejections. It uses the existing Microsoft Graph mailbox and mails the
+submitter saved in the canonical package. A 202 response means Graph accepted
+the message for delivery. Confirm a live test in the receiving inbox before
+declaring mail verified.
+
+Run local tests with `python -m unittest test_app.py test_forge_mail_outbox.py`.
+To install on the existing VM after the hosted outbox endpoint is deployed:
+
+1. Back up the current app and keep its state and MSAL token cache. Update
+   `app.py` and `bootstrap_outlook.py` from the same commit as
+   `forge_mail_outbox.py`. Its only runtime dependencies are already in
+   `requirements.txt`. Restart the legacy unit if it still serves submissions.
+2. Set `CTF_FORGE_MAIL_BRIDGE_TOKEN` to the same dedicated service token in
+   the hosted backend's secret store and
+   `/opt/ctf-card-email/secrets/ctf-forge-mail.env`. Use 32 or more random
+   bytes encoded as hex. Keep the env file at mode `600`. Use the example
+   outbox URL unless the Site has moved.
+3. Verify authorization in the app virtualenv as `opc` with both service
+   environment files loaded. Run `python forge_mail_outbox.py --check`.
+   This verifies the sender without claiming or sending mail. If authorization
+   needs renewal, run `bootstrap_outlook.py` as `opc` with the relay env
+   loaded and complete Microsoft's device flow as `CTF.OTCG@outlook.com`.
+4. Install `ctf-forge-mail.service` and `ctf-forge-mail.timer` under
+   `/etc/systemd/system`, run `sudo systemctl daemon-reload`, then run
+   `sudo systemctl enable --now ctf-forge-mail.timer`. Check
+   `sudo journalctl -u ctf-forge-mail.service -n 30`.
+5. Use an authorized test recipient to verify all three message templates in
+   the receiving inbox and the statuses recorded in the Forge review screen.
+
+Keep the worker on one VM and preserve `forge-mail.sqlite3` when upgrading.
+The journal records send outcomes without storing recipients or mail content.
+A timeout or interrupted send becomes `uncertain`. Check the dedicated
+mailbox's Sent Items and the recipient's inbox before initiating a new send
+for that job. `failed` indicates rejected or invalid work and `retry`
+indicates Graph or authorization did not accept a message.
+
+To check mailbox authorization using the production environment files without
+printing their contents, run this on the VM before enabling the timer:
+
+```sh
+sudo systemd-run --wait --pipe --collect --uid=opc \
+  -p WorkingDirectory=/opt/ctf-card-email/app \
+  -p EnvironmentFile=/opt/ctf-card-email/secrets/ctf-card-email.env \
+  -p EnvironmentFile=/opt/ctf-card-email/secrets/ctf-forge-mail.env \
+  /opt/ctf-card-email/app/.venv/bin/python /opt/ctf-card-email/app/forge_mail_outbox.py --check
+```

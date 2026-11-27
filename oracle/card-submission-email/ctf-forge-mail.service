@@ -1,0 +1,20 @@
+[Unit]
+Description=Deliver Carry The Flame Forge review notifications
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=opc
+Group=opc
+WorkingDirectory=/opt/ctf-card-email/app
+EnvironmentFile=/opt/ctf-card-email/secrets/ctf-card-email.env
+EnvironmentFile=/opt/ctf-card-email/secrets/ctf-forge-mail.env
+ExecStart=/usr/bin/flock -n /opt/ctf-card-email/state/forge-mail.lock /opt/ctf-card-email/app/.venv/bin/python /opt/ctf-card-email/app/forge_mail_outbox.py
+TimeoutStartSec=9min
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/ctf-card-email/state /opt/ctf-card-email/secrets

@@ -866,6 +866,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="lobby-title">Play Carry The Flame</div>
 <div class="lobby-sub">Learn the rules, build a deck, and play against the CPU or a friend in your browser.</div>
 <div class="lobby-note"><strong>New player?</strong> Play a guided duel with a starter deck, then create your first five cards in the Forge.</div>
+<div class="lobby-note" id="forge-practice-status" hidden><span role="status"></span> <a href="first-five-forge.html">Return to Forge</a></div>
 <p class="duel-rotate-hint">Rotate your device to see the board and controls side by side.</p>
 <section class="ctf-alpha-panel" aria-label="Carry The Flame alpha download information">
   <img class="ctf-alpha-panel__badge" src="assets/img/ctf-torch-badge.png" alt="Carry The Flame torch badge">
@@ -936,6 +937,7 @@ body.ctf-nav-pad { padding-top: 0; }
   </header>
   <p class="duel-rotate-hint">Rotate your device to see the board and controls side by side.</p>
   <p id="friend-duel-status" role="status"></p>
+  <p id="friend-duel-countdown" aria-live="off" hidden></p>
   <ol id="friend-duel-phases" aria-label="Turn phases"></ol>
   <div class="friend-duel-layout">
     <div class="ctf-playmat" role="group" aria-label="Carry The Flame board">
@@ -1332,6 +1334,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <script src="assets/js/ai_opponent.js"></script>
 <script src="assets/js/tutorial_coach.js"></script>
 <script src="assets/js/cpu-browser.js"></script>
+<script src="assets/js/forge-practice.js"></script>
 <script src="play_inline.js?v=zf1-lessons-2026-09-25"></script>
 <script src="assets/js/friend-duel.js"></script>
 

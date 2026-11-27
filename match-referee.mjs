@@ -173,8 +173,15 @@ export class PrivateDuel {
   #rematchDecks = [null, null];
 
   get revision() { return this.#revision; }
+  get running() { return !!this.#state && !this.#state.gameOver; }
 
   registered(seat) { return !!this.#decks[seat]; }
+
+  finishFromPresence({winner, reason}) {
+    if (!this.running) return;
+    this.#rules.finishDuel(this.#state, winner, reason);
+    this.#revision++;
+  }
 
   register(seat, deck) {
     if (this.#state) return { status:409, body:{ error:'This duel already started.' } };

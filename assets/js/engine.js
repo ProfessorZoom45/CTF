@@ -283,7 +283,11 @@ function getCard(id) {
   if (id === '__buck_token_1000__') return { id: '__buck_token_1000__', name: 'BuCk The Great Token', cardType: 'Catalyst', sub: 'Token', level: 3, pr: 1000, cp: 1000, alignment: 'Fire', kinds: ['Gunman'], kindsStr: 'Gunman', desc: 'BuCk The Great Token (1000/1000). Cannot be used as Tribute.', great: false, set: 'token' };
   if (id === '__buck_token_1500__') return { id: '__buck_token_1500__', name: 'BuCk The Great Token', cardType: 'Catalyst', sub: 'Token', level: 3, pr: 1500, cp: 1000, alignment: 'Fire', kinds: ['Gunman'], kindsStr: 'Gunman', desc: 'BuCk The Great Token (1500/1000). Cannot be used as Tribute.', great: false, set: 'token' };
   const normId = LEGACY_CARD_ID_ALIASES[String(id || '').trim()] || id;
-  return CTF_CARDS.find(c => c.id === normId) || null;
+  return forgePracticeRuntime()?.getCard(normId) || CTF_CARDS.find(c => c.id === normId) || null;
+}
+
+function forgePracticeRuntime() {
+  return globalThis.window?.CTF_FORGE_PRACTICE;
 }
 
 function addLog(state, msg) {
@@ -1182,6 +1186,8 @@ regEffect('cc1-065-highwayman', { type:'activated', tag:'highwaymanFlip', action
 regEffect('ggx-019-zappa', { type:'onAttackedInDef', tag:'zappaDelay', action:'custom_zappa' });
 regEffect('s-m-001-agentx', { type:'onFlip', tag:'agentXFlip', action:'destroy1Catalyst' });
 regEffect('dbz-038-yajirobe', { type:'onFlip', tag:'yajirobeFlip', action:'draw1' });
+regEffect('db1-038-fortunetellerbaba', { type:'onFlip', tag:'babaSearch', action:'searchByName', names:["Baba's Fighter"] });
+regEffect('db1-040-babasfighter2invisibleman', { type:'onFlip', tag:'invisibleManCounters', action:'addInvisibleManCounters' });
 regEffect('ff7-012-barretttrance', { type:'continuous', tag:'barrettImmune', action:'palmImmunity' });
 regEffect('ff7-016-tifatrance', { type:'doubleAttack', tag:'tifaDblAtk', cost:1000 });
 regEffect('dbs-010-brolylegendarysupersaiyan', { type:'activated', tag:'brolyNuke', action:'custom_broly', oncePerDuel:true });
@@ -2906,6 +2912,7 @@ function getEffectivePressure(state, playerIdx, zoneIdx) {
   }
   // Registry continuous PR boosts
   total += getRegisteredPRBoost(state, playerIdx, zoneIdx);
+  total += forgePracticeRuntime()?.getBoost(state, slot, 'pr') || 0;
   return Math.max(0, total);
 }
 
@@ -2925,6 +2932,7 @@ function getEffectiveCounterPressure(state, playerIdx, zoneIdx) {
     total = dragonCount * 500 + Number(slot.cpMod || 0);
   }
   total += getRegisteredCPBoost(state, playerIdx, zoneIdx);
+  total += forgePracticeRuntime()?.getBoost(state, slot, 'cp') || 0;
   return Math.max(0, total);
 }
 
@@ -2961,6 +2969,10 @@ function runStarterIgnitionUpkeep(state, playerIdx) {
     const slot = p.catalysts[z];
     const c = slot ? getCard(slot.cardId) : null;
     if (!slot || !c) continue;
+    if (!slot.faceDown && slot._invisibleManCounters > 0) {
+      slot._invisibleManCounters--;
+      addLog(state, `Effect Script: ${c.name} has ${slot._invisibleManCounters} counter(s) left.`);
+    }
     const name = String(c.name || '').toLowerCase();
     if (name === 'viper') {
       if (p.chi >= 200) {
@@ -3194,6 +3206,10 @@ function runOnSummonScripts(state, playerIdx, zoneIdx, summonType) {
   const slot = state.players[playerIdx].catalysts[zoneIdx];
   const card = slot ? getCard(slot.cardId) : null;
   if (!card) return;
+  if (card.practiceNote) {
+    forgePracticeRuntime().onSpawn(state, playerIdx, zoneIdx, summonType);
+    return;
+  }
   const name = canonicalScriptName(card.name || '');
   if (name === 'starky') {
     const searched = addCardToHandFromDeckByNameToken(state, playerIdx, ['starky']);
@@ -3231,26 +3247,8 @@ function runOnSummonScripts(state, playerIdx, zoneIdx, summonType) {
     if (found) addLog(state, `Effect Script: RedXIII - Trance added ${found.name} to hand.`);
   }
   // ─── PATCH 26: ADDITIONAL ON-SPAWN / FLIP / CONTINUOUS HANDLERS ───
-  else if (name === 'agent x') {
-    // FLIP: destroy 1 Catalyst on the field
-    if (summonType === 'flip' || summonType === 'normal') {
-      const opp = state.players[1 - playerIdx];
-      const targetZ = opp.catalysts.findIndex(Boolean);
-      if (targetZ >= 0) {
-        const tc = getCard(opp.catalysts[targetZ].cardId);
-        runOnSelfDestroyed(state, 1 - playerIdx, opp.catalysts[targetZ].cardId, { reason:'Agent X' });
-        opp.void.push(opp.catalysts[targetZ].cardId);
-        opp.catalysts[targetZ] = null;
-        state.players[playerIdx].kills = (state.players[playerIdx].kills || 0) + 1;
-        addLog(state, `Effect Script: Agent X destroyed ${tc?.name || 'a Catalyst'}. +1 Kill.`);
-      } else addLog(state, 'Effect Script: Agent X had no valid target to destroy.');
-    }
-  } else if (name === 'yajirobe') {
-    // FLIP: draw 1 card
-    if (summonType === 'flip') {
-      drawCard(state, playerIdx);
-      addLog(state, 'Effect Script: Yajirobe drew 1 card on flip spawn.');
-    }
+  else if (card.id === 'db1-038-fortunetellerbaba' || card.id === 'db1-040-babasfighter2invisibleman') {
+    runCatalystFlipEffects(state, playerIdx, zoneIdx);
   } else if (name === 'fire dragon2-enraged' || name === 'fire dragon2 - enraged') {
     // On spawn: mark with negate-targeting ability
     slot._fireDragonNegate = true;
@@ -3442,6 +3440,10 @@ function runPalmScript(state, playerIdx, card, manual) {
   const p = state.players[playerIdx];
   const name = canonicalScriptName(card && card.name || '');
   if (!card) return { ok:true };
+  if (card.practiceNote) {
+    forgePracticeRuntime().resolveTrick(state, playerIdx, card, manual);
+    return { ok:true };
+  }
 
   const equipToFirstMatching = (predicate, mods, flags, label) => {
     const zoneIdx = findFirstCatalystZoneByPredicate(state, playerIdx, predicate);
@@ -4618,6 +4620,10 @@ function getActivatableCatalystAbilities(state, playerIdx) {
 function runConcealedResolutionScript(state, link) {
   const card = getCard(link.cardId);
   if (!card) return;
+  if (card.practiceNote) {
+    forgePracticeRuntime().resolveTrick(state, link.player, card, link.manual);
+    return;
+  }
   const name = canonicalScriptName(card.name || '');
   const pending = state.pendingAction;
   const atkPlayer = pending && pending.type === 'attack' ? pending.attackerPlayer : null;
@@ -4907,7 +4913,9 @@ function getLegalAttackTargets(state, attackerPlayer, attackerZone) {
   const defPlayer = 1 - attackerPlayer;
   const def = state.players[defPlayer];
   const targets = [];
-  def.catalysts.forEach((c, idx) => { if (c) targets.push(idx); });
+  def.catalysts.forEach((c, idx) => {
+    if (c && !hasAttackProtection(def, c)) targets.push(idx);
+  });
   const atkSlot = state.players[attackerPlayer].catalysts[attackerZone];
   if ((targets.length === 0 && isFieldClearForDirectAttack(state, defPlayer)) || (atkSlot && atkSlot._canAttackDirectly)) targets.push(-1);
   return targets;
@@ -4976,6 +4984,7 @@ function handleDrawPhaseClick(state) {
 // limit still applies.
 function changeCatalystPositionInResolution(state, playerIdx, zoneIdx) {
   if (!state || !state.players) return { ok: false, msg: 'No game state.' };
+  if (state.gameOver || state.waitingForResponse || state.pendingDiscard) return { ok:false, msg:'Resolve the pending action before changing position.' };
   if (state.phaseName !== 'resolution') return { ok: false, msg: 'Position change is only allowed during your Resolution Phase.' };
   if (state.activePlayer !== playerIdx) return { ok: false, msg: "It is not your turn." };
   const player = state.players[playerIdx];
@@ -4984,11 +4993,16 @@ function changeCatalystPositionInResolution(state, playerIdx, zoneIdx) {
   if (!slot) return { ok: false, msg: 'No Catalyst in that zone.' };
   if (slot.attackedThisTurn) return { ok: false, msg: 'That Catalyst attacked this turn and cannot change position.' };
   if (player.posChanged && player.posChanged.has(zoneIdx)) return { ok: false, msg: 'That Catalyst has already changed position this turn.' };
+  const revealed = slot.faceDown;
   slot.position = (slot.position === 'atk') ? 'def' : 'atk';
   slot.faceDown = false;
   if (player.posChanged) player.posChanged.add(zoneIdx);
   const cardName = getCard(slot.cardId)?.name || 'A Catalyst';
   addLog(state, `P${playerIdx + 1} changed ${cardName} to ${slot.position === 'atk' ? 'Attack' : 'Defense'} position during Resolution.`);
+  if (revealed && getBattleFlipEffects(slot.cardId).length) {
+    return beginResponseWindow(state, { type:'catalystFlip', playerIdx, zoneIdx, cardId:slot.cardId },
+      { player:playerIdx, cardId:slot.cardId, source:'flip', effectType:'flip', isCounter:false });
+  }
   return { ok: true, msg: 'Position changed.' };
 }
 
@@ -5041,6 +5055,7 @@ function executePhaseAuto(state) {
     case 'resolution':
       addLog(state, `Phase 6: Resolution Phase`);
       checkWinConditions(state);
+      checkNoProgressDraw(state);
       // Manual stop phase (Patch v3.2): do not auto-advance. Player may
       // pass, set eligible Tricks, or change 1 Catalyst position (only for
       // Catalysts that did not attack this turn). Then click Continue.
@@ -5107,6 +5122,9 @@ function finalizeTurnSwitch(state) {
   resetEffectsUsed(state);
   // Clean up any effects copied by Ace The Great
   cleanupAceCopiedEffects();
+
+  checkWinConditions(state);
+  if (checkNoProgressDraw(state) || state.gameOver) return;
 
   state.activePlayer = 1 - state.activePlayer;
   state.phase = 0;
@@ -5398,6 +5416,9 @@ function libraSummon(state, playerIdx, handIdxs, zoneIdxs) {
     addLog(state, `Libra Spawn: ${entry.card.name} entered C${entry.z+1}.`);
   }
   registerSpecialSummon(state, playerIdx, 'Libra Spawn');
+  for (const entry of chosen) {
+    if (entry.card.practiceNote) forgePracticeRuntime().onSpawn(state, playerIdx, entry.z, 'special');
+  }
   return { ok: true };
 }
 
@@ -5409,6 +5430,8 @@ function activateSetPalmTrick(state, playerIdx, zoneIdx, manual) {
   if (!slot) return { ok: false, msg: 'No set card in that Trick Zone.' };
   const card = getCard(slot.cardId);
   if (!card || card.cardType !== 'Palm Trick') return { ok: false, msg: 'That set card is not a Palm Trick.' };
+  const practiceError = forgePracticeRuntime()?.validateTrick(state, playerIdx, card, manual);
+  if (practiceError) return { ok:false, msg:practiceError };
   if (isZeroDegreesLockActive(state)) return { ok:false, msg:'Zero Degrees is active — Palm Tricks cannot be played right now.' };
   if (state.players[1 - playerIdx].spellNegator) return { ok:false, msg:'Spell Negator is active — Palm Tricks are negated this turn.' };
   p.tricks[zoneIdx] = null;
@@ -5519,6 +5542,7 @@ const FUSION_SPECS = {
 
 function getFusionSpec(fusionCard) {
   if (!fusionCard) return null;
+  if (fusionCard.practiceFusion) return fusionCard.practiceFusion;
   const explicit = FUSION_SPECS[fusionCard.id];
   if (explicit) return explicit;
   const parsed = parseFusionMaterialsFromText(fusionCard);
@@ -5578,6 +5602,16 @@ function getFusionMaterialCandidates(state, playerIdx, desc, usedFieldIdxs, used
 
 function findFusionAssignment(state, playerIdx, spec, pos, usedFieldIdxs, usedHandIdxs, acc) {
   if (spec?.freeFusion) return { steps: [], fieldIdxs: [], handIdxs: [], materialCardIds: [] };
+  if (spec?.requiresFieldAndHand) {
+    for (const fieldMaterial of [0, 1]) {
+      const materials = spec.materials.map((material, index) => ({
+        ...material, zones:[index === fieldMaterial ? 'field' : 'hand']
+      }));
+      const assignment = findFusionAssignment(state, playerIdx, { materials }, pos, usedFieldIdxs, usedHandIdxs, acc);
+      if (assignment) return assignment;
+    }
+    return null;
+  }
   /* ── pickN / pool: choose any N distinct cards from a pool ── */
   if (spec?.pickN && spec?.pool) {
     return _findPickNAssignment(state, playerIdx, spec.pool, spec.pickN, 0, new Set(), new Set(), []);
@@ -5629,6 +5663,7 @@ function getAvailableFusionSummons(state, playerIdx) {
   p.fusionDeck.forEach((fusionId, fusionDeckIdx) => {
     const fusionCard = getCard(fusionId);
     if (!fusionCard) return;
+    if (fusionCard.practiceFusion && !fieldTrickProvidesFusion(p.fieldTrick)) return;
     const spec = getFusionSpec(fusionCard);
     if (!spec) return;
     const assignment = findFusionAssignment(state, playerIdx, spec, 0, new Set(), new Set(), []);
@@ -5646,6 +5681,14 @@ function fusionSummonDetailed(state, playerIdx, fusionDeckIdx, zoneIdx, fieldIdx
   if (!fusionCard) return { ok:false, msg:'Invalid Fusion card.' };
   const spec = getFusionSpec(fusionCard);
   if (!spec) return { ok:false, msg:'No Fusion spec found for that card.' };
+  if (fusionCard.practiceFusion) {
+    if (!fieldTrickProvidesFusion(p.fieldTrick) || removeMode !== 'rfg') {
+      return { ok:false, msg:'Activate Fusion Zone and remove one assigned field material and one assigned hand material from play.' };
+    }
+    const block = getSummonRestriction(state, playerIdx, fusionCard);
+    if (block) return { ok:false, msg:block };
+    if (p.specialSummonCount >= MAX_SPECIAL_SUMMONS) return { ok:false, msg:'The Special Spawn limit has been reached.' };
+  }
   const assignment = spec.freeFusion ? { fieldIdxs:[], handIdxs:[], materialCardIds:[] } : findFusionAssignment(state, playerIdx, spec, 0, new Set(), new Set(), []);
   if (!assignment) return { ok:false, msg:'No legal Fusion material assignment exists right now.' };
   /* ── pickN validation: any N distinct pool members are legal ── */
@@ -5686,6 +5729,9 @@ function fusionSummon(state, playerIdx, fusionDeckIdx, zoneIdx) {
   const options = getAvailableFusionSummons(state, playerIdx);
   const option = options.find(o => o.fusionDeckIdx === fusionDeckIdx);
   if (!option) return { ok: false, msg: 'No legal Fusion Spawn available for that card.' };
+  if (option.fusionCard.practiceFusion) {
+    return fusionSummonDetailed(state, playerIdx, fusionDeckIdx, zoneIdx, option.fieldIdxs, option.handIdxs, 'rfg');
+  }
   if (p.catalysts[zoneIdx] !== null) return { ok: false, msg: 'Chosen Catalyst Zone is occupied.' };
   if (!option.freeFusion) {
     option.fieldIdxs.slice().sort((a,b)=>b-a).forEach(idx => { const sent = p.catalysts[idx]; p.catalysts[idx] = null; if (sent) p.void.push(sent.cardId); });
@@ -5726,9 +5772,12 @@ function getRespondableTricks(state, playerIdx) {
     const card = getCard(slot.cardId);
     if (!card) return;
     if (!['Concealed Trick','Counter Trick'].includes(card.cardType)) return;
+    if (card.practiceNote && (card.practiceEffect?.type !== 'boost' || !p.catalysts.some(slot => slot && !slot.faceDown))) return;
     const isCounter = card.cardType === 'Counter Trick' || /subtype:\s*counter/i.test(String(card.desc||'')) || /counter/i.test(String(card.cardType||''));
     if (counterOnly && !isCounter) return;
-    out.push({ zone, cardId: slot.cardId, card, isCounter, effectType: classifyChainEffect(card) });
+    const effectType = classifyChainEffect(card);
+    if (effectType === 'negate_attack' && ['catalystFlip','battleFlip'].includes(state.pendingAction?.type)) return;
+    out.push({ zone, cardId: slot.cardId, card, isCounter, effectType });
   });
   return out;
 }
@@ -5751,6 +5800,8 @@ function activatePalmTrick(state, playerIdx, handIdx, manual) {
   const cardId = p.hand[handIdx];
   const card = getCard(cardId);
   if (!card || card.cardType !== 'Palm Trick') return { ok: false, msg: 'Selected card is not a Palm Trick.' };
+  const practiceError = forgePracticeRuntime()?.validateTrick(state, playerIdx, card, manual);
+  if (practiceError) return { ok:false, msg:practiceError };
   if (isZeroDegreesLockActive(state)) return { ok:false, msg:'Zero Degrees is active — Palm Tricks cannot be played right now.' };
   return beginResponseWindow(state, { type: 'palm', playerIdx, handIdx, cardId, manual }, { player: playerIdx, cardId, source: 'palm', effectType: classifyChainEffect(card), isCounter: false });
 }
@@ -5761,13 +5812,16 @@ function declareAttack(state, attackerPlayer, attackerZone, defenderPlayer, defe
   const atk = state.players[attackerPlayer];
   const atkCat = atk.catalysts[attackerZone];
   if (!atkCat) return { ok: false, msg: 'No attacker in this zone.' };
-  if (atkCat.position !== 'atk') return { ok: false, msg: 'Catalyst must be in ATK position to attack.' };
+  if (!canAttackFromPosition(atkCat)) return { ok: false, msg: 'Catalyst must be in ATK position to attack.' };
   if (atkCat.attackedThisTurn) return { ok: false, msg: 'This Catalyst already attacked this turn.' };
   if (state.waitingForResponse) return { ok: false, msg: 'A chain is already open.' };
   if (defenderZone !== -1 && (!Number.isInteger(defenderZone) || !state.players[defenderPlayer].catalysts[defenderZone])) {
     return { ok:false, msg:'Choose an occupied opposing Catalyst Zone.' };
   }
-  return beginResponseWindow(state, { type: 'attack', attackerPlayer, attackerZone, defenderPlayer, defenderZone, cardId: atkCat.cardId }, { player: attackerPlayer, cardId: atkCat.cardId, source: 'attack', effectType: 'attack', isCounter: false });
+  const defender = state.players[defenderPlayer];
+  if (hasAttackProtection(defender, defender.catalysts[defenderZone])) return { ok:false, msg:'That Catalyst is protected from attacks.' };
+  const battle = markBattleParticipants(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone);
+  return beginResponseWindow(state, battle, { player: attackerPlayer, cardId: atkCat.cardId, source: 'attack', effectType: 'attack', isCounter: false });
 }
 
 function queueConcealedResponse(state, playerIdx, zoneIdx, manual) {
@@ -5777,6 +5831,8 @@ function queueConcealedResponse(state, playerIdx, zoneIdx, manual) {
   const opts = getRespondableTricks(state, playerIdx);
   const chosen = opts.find(o => o.zone === zoneIdx);
   if (!chosen) return { ok: false, msg: 'That set card cannot respond right now.' };
+  const practiceError = forgePracticeRuntime()?.validateTrick(state, playerIdx, chosen.card, manual);
+  if (practiceError) return { ok:false, msg:practiceError };
   const p = state.players[playerIdx];
   const opp = state.players[1 - playerIdx];
   const negatorZone = opp.catalysts.findIndex(s => s && s._negateConcealedAvailable);
@@ -5812,6 +5868,7 @@ function passChain(state, playerIdx) {
 }
 
 function resolveChain(state) {
+  const pending = state.pendingAction;
   addLog(state, `Resolving chain with ${state.chain.length} link${state.chain.length === 1 ? '' : 's'} (LIFO).`);
   const negated = new Set();
   for (let i = state.chain.length - 1; i >= 0; i--) {
@@ -5849,9 +5906,24 @@ function resolveChain(state) {
       }
     }
   }
-  const pending = state.pendingAction;
   const openerNegated = negated.has(0) || (pending && pending.negated);
   resetChainState(state);
+  if (pending?.type === 'battleFlip') {
+    if (!openerNegated && !state.gameOver && originalBattleParticipant(state, pending, true)) {
+      runCatalystFlipEffects(state, pending.defenderPlayer, pending.defenderZone, pending);
+      checkWinConditions(state);
+    }
+    return resolveDeclaredBattle(state, pending);
+  }
+  if (pending?.type === 'catalystFlip') {
+    const slot = state.players[pending.playerIdx].catalysts[pending.zoneIdx];
+    if (!openerNegated && !state.gameOver && slot?.cardId === pending.cardId && !slot.faceDown) {
+      runCatalystFlipEffects(state, pending.playerIdx, pending.zoneIdx);
+      checkWinConditions(state);
+    }
+    checkNoProgressDraw(state);
+    return { ok:true, resolved:true };
+  }
   if (!pending || openerNegated) {
     if (pending && pending.type === 'attack') {
       addLog(state, 'Attack resolution was stopped by the chain.');
@@ -5868,15 +5940,155 @@ function resolveChain(state) {
           }
         }
       }
+      clearBattleParticipants(state, pending);
     }
+    checkNoProgressDraw(state);
     return { ok: true, resolved: true, negated: true };
   }
   if (pending.type === 'palm') return executePalmTrickCore(state, pending.playerIdx, pending.handIdx, pending.manual);
-  if (pending.type === 'attack') return executeAttackCore(state, pending.attackerPlayer, pending.attackerZone, pending.defenderPlayer, pending.defenderZone);
+  if (pending.type === 'attack') return resolveDeclaredBattle(state, pending);
   return { ok: true, resolved: true };
 }
 
 // ── COMBAT ──
+function canAttackFromPosition(slot) {
+  return !slot.faceDown && (slot.position === 'atk' || slot._invisibleManCounters > 0);
+}
+
+function hasAttackProtection(player, slot) {
+  if (!slot || slot.faceDown) return false;
+  if (slot._invisibleManCounters > 0) return true;
+  return slot.cardId === 'db1-038-fortunetellerbaba' &&
+    player.catalysts.some(c => c && !c.faceDown && cardHasNameToken(getCard(c.cardId), "Baba's Fighter"));
+}
+
+function markBattleParticipants(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone) {
+  const attacker = state.players[attackerPlayer].catalysts[attackerZone];
+  const defender = state.players[defenderPlayer].catalysts[defenderZone];
+  const marker = (state._battleSequence || 0) + 1;
+  state._battleSequence = marker;
+  attacker._battleMarker = marker;
+  if (defender) defender._battleMarker = marker;
+  return { type:'attack', attackerPlayer, attackerZone, defenderPlayer, defenderZone, cardId:attacker.cardId, marker };
+}
+
+function originalBattleParticipant(state, battle, defending) {
+  const player = defending ? battle.defenderPlayer : battle.attackerPlayer;
+  const zone = defending ? battle.defenderZone : battle.attackerZone;
+  const slot = state.players[player].catalysts[zone];
+  if (!slot) return null;
+  if (battle.marker !== undefined) return slot._battleMarker === battle.marker ? slot : null;
+  // Pending attacks saved before battle markers still identify the attacker.
+  return defending || slot.cardId === battle.cardId ? slot : null;
+}
+
+function clearBattleParticipants(state, battle) {
+  if (battle.marker === undefined) return;
+  for (const player of state.players) {
+    for (const slot of player.catalysts) {
+      if (slot?._battleMarker === battle.marker) delete slot._battleMarker;
+    }
+  }
+}
+
+function resolveDeclaredBattle(state, battle) {
+  const { attackerPlayer, attackerZone, defenderPlayer, defenderZone } = battle;
+  const attacker = originalBattleParticipant(state, battle, false);
+  const defender = originalBattleParticipant(state, battle, true);
+  const canContinue = !state.gameOver && attacker &&
+    (defenderZone === -1 || defender);
+  const result = canContinue ? executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone, battle) : null;
+  if (result?.waiting) return result;
+  clearBattleParticipants(state, battle);
+  checkWinConditions(state);
+  checkNoProgressDraw(state);
+  if (result?.ok) return result;
+  if (!state.gameOver) {
+    if (battle.type === 'battleFlip' && attacker) consumeBattleAttack(attacker, defenderZone);
+    addLog(state, 'Attack stopped before battle values were compared.');
+  }
+  return { ok:true, resolved:true, canceled:true };
+}
+
+function consumeBattleAttack(attacker, defenderZone) {
+  if (hasDoubleAttack(attacker.cardId) && attacker.attackedThisTurn) attacker._doubleAttackUsed = true;
+  else if (attacker.extraAttackThisTurn > 0) attacker.extraAttackThisTurn--;
+  else attacker.attackedThisTurn = true;
+  if (attacker._attackedDefenders) attacker._attackedDefenders[defenderZone === -1 ? 'direct' : defenderZone] = true;
+}
+
+const FLIP_SCRIPTS = {
+  custom_acaciaFlip, custom_halvePressure, custom_kaykoFlip, custom_koenmaFlip,
+  custom_pilafFlip, custom_sasamiFlip, custom_shippoFlip, custom_shuFlip,
+  custom_tenchiFlip, custom_venomFlip, custom_voidToHand, custom_yukinaFlip,
+  custom_fayeFlip: p55_fayeFlip,
+  custom_jamFlip: p55_jamFlip,
+  custom_mayFlip: p55_mayFlip,
+  custom_torchmanFlip: p55_torchmanFlip
+};
+const FLIP_ACTIONS = new Set([
+  'addInvisibleManCounters', 'boostSelfCP', 'boostSelfPR', 'destroy1Catalyst',
+  'destroyFacedownCatalyst', 'draw1', 'returnCatalystToHand', 'searchByName',
+  ...Object.keys(FLIP_SCRIPTS)
+]);
+
+function getBattleFlipEffects(cardId) {
+  const effects = getCardEffects(cardId).filter(effect => effect.type === 'onFlip' && FLIP_ACTIONS.has(effect.action));
+  // Some old registry batches contain duplicate registrations for the same printed ability.
+  return effects.filter((effect, index) => effects.findIndex(other => other.action === effect.action) === index);
+}
+
+function runCatalystFlipEffects(state, playerIdx, zoneIdx, battle) {
+  const player = state.players[playerIdx];
+  const source = player.catalysts[zoneIdx];
+  if (!source) return;
+  for (const effect of getBattleFlipEffects(source.cardId)) {
+    if (state.gameOver || player.catalysts[zoneIdx] !== source) break;
+    const card = getCard(source.cardId);
+    if (effect.action === 'searchByName') {
+      const found = addCardToHandFromDeckByNameToken(state, playerIdx, effect.names);
+      if (found) addLog(state, `Effect Script: ${card.name} added ${found.name} to hand.`);
+    } else if (effect.action === 'addInvisibleManCounters') {
+      source._invisibleManCounters = 3;
+      addLog(state, `Effect Script: ${card.name} gained 3 counters.`);
+    } else if (effect.action === 'draw1') {
+      if (drawCard(state, playerIdx)) addLog(state, `Effect Script: ${card.name} drew 1 card.`);
+    } else if (effect.action === 'boostSelfCP' || effect.action === 'boostSelfPR') {
+      const stat = effect.action === 'boostSelfCP' ? 'cpMod' : 'atkMod';
+      source[stat] = Number(source[stat] || 0) + Number(effect.amount || 0);
+    } else if (FLIP_SCRIPTS[effect.action]) {
+      FLIP_SCRIPTS[effect.action](state, playerIdx, zoneIdx);
+    } else {
+      moveCatalystForFlip(state, playerIdx, effect.action, battle, card.name);
+    }
+  }
+}
+
+function moveCatalystForFlip(state, playerIdx, action, battle, cardName) {
+  const opponent = 1 - playerIdx;
+  const isLegal = slot => slot && (action !== 'destroyFacedownCatalyst' || slot.faceDown);
+  const attackTarget = battle && originalBattleParticipant(state, battle, false);
+  const enemy = state.players[opponent];
+  const enemyZone = isLegal(attackTarget) ? battle.attackerZone : enemy.catalysts.findIndex(isLegal);
+  const targetPlayer = enemyZone >= 0 ? opponent : playerIdx;
+  const target = state.players[targetPlayer];
+  const zone = enemyZone >= 0 ? enemyZone : target.catalysts.findIndex(isLegal);
+  if (zone < 0) return;
+  const slot = target.catalysts[zone];
+  const owner = state.players[getCatalystOwner(slot, targetPlayer)];
+  if (action === 'returnCatalystToHand') {
+    target.catalysts[zone] = null;
+    owner.hand.push(slot.cardId);
+    addLog(state, `Effect Script: ${cardName} returned a Catalyst to hand.`);
+    return;
+  }
+  runOnSelfDestroyed(state, targetPlayer, slot.cardId, { destroyerPlayer:playerIdx, reason:'effect' });
+  if (target.catalysts[zone] === slot) target.catalysts[zone] = null;
+  owner.void.push(slot.cardId);
+  if (targetPlayer !== playerIdx) state.players[playerIdx].kills++;
+  addLog(state, `Effect Script: ${cardName} destroyed a Catalyst.`);
+}
+
 function counterPressureDamage(state, attackerPlayer, pressure, counterPressure) {
   return state.players[attackerPlayer].preventBattleDamage ? 0 : Math.max(0, counterPressure - pressure);
 }
@@ -5890,15 +6102,16 @@ function previewCounterPressureDamage(state, attackerPlayer, attackerZone, defen
     getEffectiveCounterPressure(state, defendingPlayer, defenderZone));
 }
 
-function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone) {
+function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone, battle) {
   const atk = state.players[attackerPlayer];
   const def = state.players[defenderPlayer];
   const atkCat = atk.catalysts[attackerZone];
   if (!atkCat) return { ok: false, msg: 'No attacker in this zone.' };
-  if (atkCat.position !== 'atk') return { ok: false, msg: 'Catalyst must be in ATK position to attack.' };
+  if (!canAttackFromPosition(atkCat)) return { ok: false, msg: 'Catalyst must be in ATK position to attack.' };
   if (atkCat.cannotAttackThisTurn) return { ok: false, msg: 'This Catalyst cannot attack this turn.' };
   if (atkCat._cannotAttackUntilTurn && state.turn <= atkCat._cannotAttackUntilTurn) return { ok:false, msg:'This Catalyst cannot attack yet.' };
   const defSlotCheck = defenderZone >= 0 ? state.players[defenderPlayer].catalysts[defenderZone] : null;
+  if (hasAttackProtection(def, defSlotCheck)) return { ok:false, msg:'That Catalyst is protected from attacks.' };
   if (defSlotCheck && defSlotCheck._cannotBeAttackedFaceUpAtk && defSlotCheck.position === 'atk') return { ok:false, msg:'That Catalyst cannot be attacked while face-up in ATK position.' };
   if (defSlotCheck && defSlotCheck._cannotBeAttackedUntilEndTurn) return { ok:false, msg:'That Catalyst cannot be attacked this turn.' };
   const attackAllMode = !!atkCat._attackAllOnceEach && defenderZone >= 0;
@@ -5912,7 +6125,16 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
   }
 
   const atkCard = getCard(atkCat.cardId);
-  if (defenderZone >= 0 && def.catalysts[defenderZone]) def.catalysts[defenderZone].faceDown = false;
+  if (defSlotCheck?.faceDown) {
+    defSlotCheck.faceDown = false;
+    addLog(state, `P${defenderPlayer+1}'s defending Catalyst was revealed: ${getCard(defSlotCheck.cardId)?.name || 'Catalyst'}.`);
+    if (getBattleFlipEffects(defSlotCheck.cardId).length) {
+      const pending = battle ?? markBattleParticipants(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone);
+      const cardId = defSlotCheck.cardId;
+      return beginResponseWindow(state, {...pending, type:'battleFlip'},
+        { player:defenderPlayer, cardId, source:'flip', effectType:'flip', isCounter:false });
+    }
+  }
   runCombatPreHooks(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone);
   // Apply registered battle calc boosts (once per turn PR boosts during combat)
   const battleBoost = runRegisteredBattleCalcBoost(state, attackerPlayer, attackerZone);
@@ -5969,12 +6191,7 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
       }
     }
 
-    if (atk.catalysts[attackerZone]) {
-      if (hasDoubleAttack(atkCat.cardId) && atkCat.attackedThisTurn) atkCat._doubleAttackUsed = true;
-      else if (atk.catalysts[attackerZone].extraAttackThisTurn > 0) atk.catalysts[attackerZone].extraAttackThisTurn -= 1;
-      else atk.catalysts[attackerZone].attackedThisTurn = true;
-      if (atk.catalysts[attackerZone]._attackedDefenders) atk.catalysts[attackerZone]._attackedDefenders.direct = true;
-    }
+    if (atk.catalysts[attackerZone] === atkCat) consumeBattleAttack(atkCat, -1);
     checkWinConditions(state);
     return { ok: true, result: 'direct', dmg };
   }
@@ -6106,12 +6323,7 @@ function executeAttackCore(state, attackerPlayer, attackerZone, defenderPlayer, 
     }
   }
 
-  if (atk.catalysts[attackerZone]) {
-    if (hasDoubleAttack(atkCat.cardId) && atk.catalysts[attackerZone].attackedThisTurn) atk.catalysts[attackerZone]._doubleAttackUsed = true;
-    else if (atk.catalysts[attackerZone].extraAttackThisTurn > 0) atk.catalysts[attackerZone].extraAttackThisTurn -= 1;
-    else atk.catalysts[attackerZone].attackedThisTurn = true;
-    if (defenderZone >= 0 && atk.catalysts[attackerZone]._attackedDefenders) atk.catalysts[attackerZone]._attackedDefenders[defenderZone] = true;
-  }
+  if (atk.catalysts[attackerZone] === atkCat) consumeBattleAttack(atkCat, defenderZone);
   runCombatPostHooks(state, attackerPlayer, attackerZone, defenderPlayer, defenderZone, result, atkCard, defCard);
 
   // Registry: battle damage triggers (ATK vs ATK where attacker wins)
@@ -6256,6 +6468,19 @@ function endPhaseAction(state, playerIdx, action, sacrificeZone, targetIdx) {
 }
 
 // ── WIN CONDITIONS ──
+function checkNoProgressDraw(state) {
+  if (state.gameOver || state.waitingForResponse || state.pendingDiscard) return false;
+  const couldAdvance = state.players.some((player, index) =>
+    player.hand.length || player.deck.length || player.catalysts.some(Boolean) ||
+    player.greatTalentPrizeActive || player.fieldTrick?.faceDown ||
+    player.tricks.some(slot => slot && !slot.isLibra && slot.faceDown && getCard(slot.cardId)?.cardType === 'Palm Trick') ||
+    getAvailableFusionSummons(state, index).length ||
+    state._delayedRevives?.some(revive => revive.playerIdx === index && player.void.includes(revive.cardId)));
+  if (couldAdvance) return false;
+  finishDuel(state, -1, 'Neither player can advance the duel');
+  return true;
+}
+
 function checkWinConditions(state) {
   if (state.gameOver) return;
   const [first, second] = state.players;

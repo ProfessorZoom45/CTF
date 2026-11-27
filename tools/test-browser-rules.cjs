@@ -16,8 +16,11 @@ globalThis.testCards = [
  {id:'qa-great',name:'QA Great',cardType:'Catalyst',sub:'Normal',level:4,pr:1000,cp:900,desc:'',great:false},
  {id:'qa-greatness',name:'QA Greatness',cardType:'Catalyst',sub:'Normal',level:4,pr:1000,cp:900,desc:'',great:true},
  {id:'qa-recoil',name:'QA Guard',cardType:'Catalyst',sub:'Normal',level:4,pr:1000,cp:1600,desc:''},
+ {id:'qa-flip-guard',name:'QA Flip Guard',cardType:'Catalyst',sub:'Effect',level:4,pr:1000,cp:800,desc:'Flip: gain 800 Counter Pressure.'},
+ {id:'qa-flip-counter',name:'QA Flip Counter',cardType:'Counter Trick',sub:'Counter',desc:'Negate a Catalyst effect.'},
  {id:'qa-trick',name:'QA Trick',cardType:'Palm Trick',sub:'Normal',level:0,pr:0,cp:0,desc:'',great:false}
 ]; CTF_CARDS.push(...testCards);
+regEffect('qa-flip-guard',{type:'onFlip',action:'boostSelfCP',amount:800});
 globalThis.fresh = () => createGameState({main:Array(40).fill('qa-mid'),noShuffle:true},{main:Array(40).fill('qa-mid'),noShuffle:true});
 globalThis.phase = (s,name) => {s.phaseName=name;s.phase=PHASES.indexOf(name);s.turn=2;s.isP1FirstTurn=false;return s;};
 globalThis.slot = (id,position='atk') => ({cardId:id,position,faceDown:false,attackedThisTurn:false});
@@ -106,6 +109,120 @@ test('an empty Catalyst Zone is rejected before opening a Chain',`
 `);
 test('direct attacks require clear opposing Catalyst Zones',`const s=phase(fresh(),'battle');s.players[0].catalysts[0]=slot('qa-mid');s.players[1].catalysts[0]=slot('qa-low');assert.equal(executeAttackCore(s,0,0,1,-1).ok,false);`);
 test('response chain resolves after two passes',`const s=phase(fresh(),'battle');s.players[0].catalysts[0]=slot('qa-mid');assert.equal(declareAttack(s,0,0,1,-1).ok,true);assert.equal(s.waitingForResponse,true);passChain(s,s.currentResponder);passChain(s,s.currentResponder);assert.equal(s.waitingForResponse,false);assert.equal(s.players[1].chi,8400);`);
+test('revealed Flip effect opens its own chain before applying 600 Chi recoil from either seat',`
+ for (const attacker of [0,1]) {
+  let s=phase(fresh(),'battle');
+  const defender=1-attacker;
+  s.activePlayer=attacker;
+  s.players[attacker].catalysts[0]=slot('qa-low');
+  s.players[defender].catalysts[0]={...slot('qa-flip-guard','def'),faceDown:true};
+  assert(declareAttack(s,attacker,0,defender,0).ok);
+  assert(s.players[defender].catalysts[0].faceDown);
+  assert(passChain(s,defender).waiting);
+  assert(passChain(s,attacker).waiting);
+  assert.equal(s.pendingAction.type,'battleFlip');
+  assert.equal(s.currentResponder,attacker);
+  assert.equal(s.chain[0].cardId,'qa-flip-guard');
+  assert.equal(s.players[defender].catalysts[0].faceDown,false);
+  assert.equal(s.players[attacker].chi,10000);
+  assert.equal(getEffectiveCounterPressure(s,defender,0),800);
+  s=deserializeState(serializeState(s));
+  assert(passChain(s,attacker).waiting);
+  assert.equal(passChain(s,defender).dmg,600);
+  assert.equal(s.players[attacker].chi,9400);
+  assert.equal(s.players[attacker].catalysts[0].cardId,'qa-low');
+  assert.equal(s.players[defender].catalysts[0].cardId,'qa-flip-guard');
+  assert(!s.waitingForResponse);
+ }
+`);
+test('a Counter Trick may negate the Flip ability without canceling battle',`
+ const s=phase(fresh(),'battle');
+ s.players[0].catalysts[0]=slot('qa-low');
+ s.players[0].tricks[1]={cardId:'qa-flip-counter',faceDown:true};
+ s.players[1].catalysts[0]={...slot('qa-flip-guard','def'),faceDown:true};
+ assert(declareAttack(s,0,0,1,0).ok);
+ passChain(s,1);
+ passChain(s,0);
+ assert(queueConcealedResponse(s,0,1).ok);
+ passChain(s,1);
+ assert.equal(passChain(s,0).type,'capture');
+ assert.equal(s.players[0].box[0],'qa-flip-guard');
+ assert.equal(s.players[0].chi,10000);
+`);
+test('Flip removal closes the Chain successfully without fighting a replacement',`
+ let s=phase(fresh(),'battle');
+ s.players[0].catalysts[2]=slot('qa-low');
+ s.players[1].catalysts[0]={...slot('s-m-001-agentx','def'),faceDown:true};
+ assert(declareAttack(s,0,2,1,0).ok);
+ passChain(s,1);
+ assert(passChain(s,0).waiting);
+ passChain(s,0);
+ assert(passChain(s,1).canceled);
+ assert(!s.waitingForResponse);
+ assert.equal(s.players[0].catalysts[2],null);
+ assert.equal(s.players[0].void[0],'qa-low');
+ assert.equal(s.players[1].catalysts[0].cardId,'s-m-001-agentx');
+ assert.equal(s.players[0].chi,10000);
+ s=phase(fresh(),'battle');
+ s.players[0].catalysts[0]=slot('qa-low');
+ s.players[1].catalysts[0]={...slot('qa-flip-guard','def'),faceDown:true};
+ assert(declareAttack(s,0,0,1,0).ok);passChain(s,1);passChain(s,0);
+ s.players[1].catalysts[0]=slot('qa-flip-guard','def');
+ passChain(s,0);
+ assert(passChain(s,1).canceled);
+ assert.equal(s.players[1].catalysts[0].cpMod,undefined);
+ assert.equal(s.players[0].chi,10000);
+`);
+test('printed Baba search resolves before Capture and Invisible Man gains protection before battle',`
+ const baba='db1-038-fortunetellerbaba';
+ const invisible='db1-040-babasfighter2invisibleman';
+ for (const defender of [baba,invisible]) {
+  const s=phase(fresh(),'battle');
+  s.players[0].catalysts[0]=slot('qa-high');
+  s.players[1].deck=[invisible];
+  s.players[1].catalysts[0]={...slot(defender,'def'),faceDown:true};
+  assert(declareAttack(s,0,0,1,0).ok);
+  passChain(s,1);
+  assert(passChain(s,0).waiting);
+  passChain(s,0);
+  const outcome=passChain(s,1);
+  if (defender===baba) {
+   assert.equal(outcome.type,'capture');
+   assert(s.players[1].hand.includes(invisible));
+   assert.equal(s.players[1].deck.length,0);
+  } else {
+   assert(outcome.canceled);
+   assert.equal(s.players[1].catalysts[0]._invisibleManCounters,3);
+   assert(s.players[0].catalysts[0].attackedThisTurn);
+   assert.equal(s.players[0].box.length,0);
+  }
+ }
+`);
+test('exhaustion is a draw only when neither player can progress',`
+ for (const active of [0,1]) {
+  const s=phase(fresh(),'end');
+  s.activePlayer=active;
+  for (const player of s.players) { player.hand=[]; player.deck=[]; }
+  s.players[0].tricks[0]={cardId:'qa-low',isLibra:true};
+  s.players[1].tricks[1]={cardId:'qa-flip-counter',faceDown:true};
+  assert(endPhaseAction(s,active,'endTurn').ok);
+  assert(s.gameOver);
+  assert.equal(s.winner,-1);
+  assert.equal(s.winReason,'Neither player can advance the duel');
+ }
+ for (const option of ['hand','deck','field','palm','revive']) {
+  const s=phase(fresh(),'end');
+  for (const player of s.players) { player.hand=[]; player.deck=[]; }
+  const remaining=s.players[1];
+  if(option==='hand') remaining.hand.push('qa-low');
+  if(option==='deck') remaining.deck.push('qa-low');
+  if(option==='field') remaining.catalysts[0]=slot('qa-low');
+  if(option==='palm') remaining.tricks[1]={cardId:'qa-trick',faceDown:true};
+  if(option==='revive') {remaining.void.push('qa-low');queueDelayedRevive(s,1,'qa-low',{});}
+  assert(endPhaseAction(s,0,'endTurn').ok);
+  assert.equal(s.gameOver,false,option+' still provides progress');
+ }
+`);
 test('free End Turn remains legal',`const s=phase(fresh(),'end');s.players[0].catalysts[0]=slot('qa-mid');assert.equal(endPhaseAction(s,0,'endTurn').ok,true);assert.equal(s.activePlayer,1);assert.equal(s.players[0].catalysts[0].cardId,'qa-mid');`);
 test('Capture followed by Extraction places the target in its owner’s RFG',`
  const s=phase(fresh(),'battle');

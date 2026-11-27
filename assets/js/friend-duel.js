@@ -31,6 +31,7 @@
   let room = null;
   let view = null;
   let connected = false;
+  let presence = null;
   let pending = false;
   let pollTimer;
   let choice;
@@ -117,6 +118,7 @@
         await api('rooms/' + seat.code + '/messages', {type:'deckChoice',deck:deck || selectedLegalDeck()}, seat.token);
       }
       room = seat;
+      presence = seat.presence || null;
       byId('cancel-waiting-room').hidden = false;
       lobby.querySelectorAll('[data-local-mode]').forEach(node => { node.disabled = true; });
       status.textContent = 'Waiting for both players and their decks.';
@@ -146,11 +148,14 @@
       if (room !== seat) return;
       const old = connected;
       connected = update.connected;
+      presence = update.presence || null;
       if (update.view) acceptView(update.view);
       else if (view && old !== connected) render();
+      else renderPresence();
     } catch {
       if (room !== seat) return;
       connected = false;
+      presence = null;
       if (view) render();
       else byId('create-status').textContent = 'Trying to reconnect to the referee…';
     }
@@ -165,7 +170,10 @@
     renderControls();
     try {
       const result = await api('rooms/' + seat.code + '/messages', {...body, revision:view.revision}, seat.token);
-      if (room === seat) acceptView(result.view);
+      if (room === seat) {
+        if ('presence' in result) presence = result.presence;
+        acceptView(result.view);
+      }
     } catch (error) {
       if (room === seat) {
         actionError = error.message;
@@ -299,14 +307,27 @@
   const ownRfg = pileTile('rfg', 'You · Removed from Game', 'Your RFG');
   byId('friend-duel-rfg').append(opponentRfg.node, ownRfg.node);
 
+  function renderPresence() {
+    const countdown = byId('friend-duel-countdown');
+    if (!countdown) return;
+    const deadline = presence?.reconnectUntil?.[1-view?.seat];
+    const remaining = deadline === null || deadline === undefined ? 0 : Math.max(0, Math.ceil((deadline-presence.now)/1000));
+    const idle = presence?.idleUntil ? Math.max(0, Math.ceil((presence.idleUntil-presence.now)/1000)) : 0;
+    const label = view?.result ? '' : remaining ? `Opponent reconnect window · ${remaining}s` :
+      connected && idle && idle <= 60 ? `Time until inactivity draw · ${idle}s` : '';
+    countdown.hidden = !label;
+    countdown.textContent = label;
+  }
+
   function render() {
     const {seat, players, activeSeat, prioritySeat, phase, turn, result} = view;
     const me = players[seat], other = players[1-seat];
     byId('friend-duel-room').textContent = 'Room ' + room.code + ' · Player ' + (seat + 1);
     let status = prioritySeat === seat ? 'Your action' : 'Waiting for your opponent';
     if (result) status = result.winner < 0 ? 'Draw' : result.winner === seat ? 'You win' : 'Your opponent wins';
-    if (!connected && !result) status = 'Waiting for your opponent to reconnect';
+    if (!connected && !result) status = presence ? 'Waiting for your opponent to reconnect' : 'Reconnecting to the referee';
     byId('friend-duel-status').textContent = `Turn ${turn} · ${status}${result ? ' · ' + result.reason : ''}`;
+    renderPresence();
     byId('friend-duel-phases').replaceChildren(...phases.map(([key, name]) => {
       const step = element('li', name);
       if (key === phase) step.setAttribute('aria-current','step');
@@ -575,6 +596,7 @@
     room = null;
     view = null;
     connected = false;
+    presence = null;
     actionError = '';
     updateDuelWindows([]);
     clearTimeout(pollTimer);

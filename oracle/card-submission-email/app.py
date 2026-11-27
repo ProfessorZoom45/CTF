@@ -160,6 +160,17 @@ class SubmissionStore:
                 db.commit()
 
 
+class OutlookTokenUnavailable(RuntimeError):
+    pass
+
+
+class GraphSendRejected(RuntimeError):
+    def __init__(self, status: int, retry_after: Optional[int] = None) -> None:
+        super().__init__(f"Microsoft Graph email failed ({status})")
+        self.status = status
+        self.retry_after = retry_after
+
+
 class OutlookGraphMailer:
     scopes = ["https://graph.microsoft.com/Mail.Send"]
 
@@ -195,7 +206,10 @@ class OutlookGraphMailer:
         return result["access_token"]
 
     def _send_sync(self, message: EmailMessage) -> None:
-        token = self._load_token()
+        try:
+            token = self._load_token()
+        except Exception as error:
+            raise OutlookTokenUnavailable("The dedicated Outlook mailbox needs authorization or is unavailable") from error
         # Graph accepts the complete RFC 822 message as base64 MIME content.
         # This preserves attachments and works when SMTP AUTH is disabled on
         # the dedicated Outlook mailbox.
@@ -212,10 +226,12 @@ class OutlookGraphMailer:
         try:
             with urllib.request.urlopen(request, timeout=45) as response:
                 if response.status != 202:
-                    raise RuntimeError(f"Microsoft Graph email failed ({response.status})")
+                    raise GraphSendRejected(response.status)
         except urllib.error.HTTPError as error:
-            detail = error.read().decode("utf-8", "replace")[:500]
-            raise RuntimeError(f"Microsoft Graph email failed ({error.code}): {detail}") from error
+            retry_after = error.headers.get("Retry-After", "") if error.headers else ""
+            delay = int(retry_after) if retry_after.isascii() and retry_after.isdecimal() and len(retry_after) <= 6 else None
+            error.close()
+            raise GraphSendRejected(error.code, delay) from error
 
 
 class TurnstileVerifier:

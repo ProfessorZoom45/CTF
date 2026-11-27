@@ -351,8 +351,26 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <div class="rule-section" id="start-here">
 <h2>Start Here — Learn CTF Fast</h2>
-<p>If you are brand new, do not try to memorize everything at once. Learn the game in this order: <strong>board → spawning → battle → End Phase → win conditions</strong>.</p>
-<div class="callout"><strong>Quick loop:</strong> Draw 1 card, play cards in Action Phase, decide whether to attack in Battle Phase, then choose an End Phase action or END TURN.</div>
+<p><a href="play.html?guided=1">Start a guided duel</a> and use the current browser turn guide below as you play.</p>
+<ol style="margin:0 0 1rem 1.2rem;color:var(--cream)">
+  <li><strong>Turn Start.</strong> Confirm whose turn it is and resolve start-of-turn effects.</li>
+  <li><strong>Draw Phase.</strong> Draw one card. An empty deck skips this draw.</li>
+  <li><strong>Ignition Phase.</strong> Follow the prompt for any eligible Ignition effect or continue.</li>
+  <li><strong>Action Phase.</strong> Spawn or set Catalysts, play legal Tricks, and make other legal plays.</li>
+  <li><strong>Battle Phase.</strong> Attack or continue. The first player skips Battle on their first turn.</li>
+  <li><strong>Resolution Phase.</strong> Finish the turn's actions and resolve any printed effects with this timing.</li>
+  <li><strong>End Phase.</strong> Use an eligible End Phase action or choose End Turn. Discard to the hand limit when prompted.</li>
+</ol>
+<details>
+  <summary>Guide archive</summary>
+  <ul>
+    <li><a href="ALPHA/docs/CTF-Quick-Start-10-Plus-v1.0.pdf">Quick Start 10+ v1.0</a></li>
+    <li><a href="ALPHA/docs/CTF-Player-Manual-13-Plus-v1.0.pdf">Player Manual 13+ v1.0</a></li>
+    <li><a href="ALPHA/pdfs/Carry-The-Flame-First-Turn-Guide-Alpha-2026-09-24.pdf">First Turn Guide, September 2026 Alpha</a></li>
+    <li><a href="ALPHA/pdfs/CTF-Quick-Start-10-Plus-Alpha-2026-09-24.pdf">Quick Start 10+, September 2026 Alpha</a></li>
+    <li><a href="ALPHA/pdfs/CTF-Player-Manual-13-Plus-Alpha-2026-09-24.pdf">Player Manual 13+, September 2026 Alpha</a></li>
+  </ul>
+</details>
 <table class="rule-table">
 <thead><tr><th>Thing to learn first</th><th>What it means in plain language</th></tr></thead>
 <tbody>
@@ -501,7 +519,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <p>Every attack follows the same order:</p>
 <ol style="margin:0 0 1rem 1.2rem;color:var(--cream)">
   <li>Choose your attacking Catalyst. It uses <strong>P</strong>.</li>
-  <li>Check the defender's position.</li>
+  <li>Reveal a face-down defender and resolve its Flip effect and any legal responses. Then check the defender's position and current stats.</li>
   <li>If the defender is in P, compare <strong>P vs P</strong>.</li>
   <li>If the defender is in CP, compare <strong>P vs CP</strong>.</li>
   <li>Apply the correct destination: <strong>Void</strong>, <strong>Box</strong>, or no movement.</li>
@@ -559,7 +577,7 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <div class="rule-section" id="box">
 <h2>The Box & Capture System</h2>
-<p>When your ATK Pressure strictly exceeds an opponent's DEF Counter Pressure, the defender is <strong>Captured</strong> and enters your Box. ATK = DEF = tie (bounce, nothing captured). Only Catalysts can enter the Box.</p>
+<p>When attacking Pressure exceeds the defender's Counter Pressure, a regular Catalyst is <strong>Captured</strong> into your Box. Equal values leave both Catalysts in place. A defeated Great Catalyst goes to its owner's Void.</p>
 <table class="rule-table">
 <thead><tr><th>Situation</th><th>Opponent's Choice</th><th>Result</th></tr></thead>
 <tbody>
@@ -655,7 +673,7 @@ body.ctf-nav-pad { padding-top: 0; }
 <table class="rule-table">
 <thead><tr><th>Mode</th><th>Players</th><th>Chi</th><th>Key Rules</th></tr></thead>
 <tbody>
-<tr><td style="color:var(--flame);font-weight:700">Standard 1v1</td><td>2</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Single duel or best of three. Between duels in a series, adjust your deck using its Substitute Deck.</td></tr>
+<tr><td style="color:var(--flame);font-weight:700">Standard 1v1</td><td>2</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Browser Friend Rooms currently offer single duels and rematches.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Team 2v2</td><td>4 (2 teams)</td><td><span data-ctf="ui.startingChi">10,000</span> shared</td><td>Shared Chi. 1 Normal Spawn/player. Shared Chi to 0 = team loses. <span class="locked">🔒</span></td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Boss Battle 3v1</td><td>4 (3 vs 1)</td><td><span data-ctf="ui.startingChi">10,000</span> each side</td><td>Boss: 2 Normal Spawns/turn, 2 draws/turn, 1 free Fusion Turn 1.</td></tr>
 <tr><td style="color:var(--flame);font-weight:700">Free-for-All</td><td>3 or 4</td><td><span data-ctf="ui.startingChi">10,000</span> each</td><td>Each player has an independent field and can target any opponent. See the board preview for the desktop format notes.</td></tr>
@@ -676,9 +694,9 @@ body.ctf-nav-pad { padding-top: 0; }
 <tr><td>06</td><td>Rescue Dest.</td><td>YOUR Catalyst from opponent's Box → YOUR Deck (shuffled).</td></tr>
 <tr><td>07</td><td>7 Kills</td><td>Battle ONLY. Effects/Destroy Trick = destroyed, not Kills.</td></tr>
 <tr><td>08</td><td>Starting Hand</td><td>5 cards before Turn 1.</td></tr>
-<tr><td>09</td><td>ATK = ATK</td><td>Both destroyed (Mutual Kill). No damage. +1 Kill each.</td></tr>
-<tr><td>10</td><td>ATK = DEF</td><td>Attacker bounces. Defender survives. Nothing captured.</td></tr>
-<tr><td>11</td><td>Great DEF</td><td>→ Void (not Box). +1 Kill. Only DEF battle that = Kill.</td></tr>
+<tr><td>09</td><td>Pressure equals opposing Pressure</td><td>Both Catalysts go to the Void. Each player gains one Kill. Chi stays the same.</td></tr>
+<tr><td>10</td><td>Pressure equals opposing Counter Pressure</td><td>Both Catalysts stay on the field. Chi and scores stay the same.</td></tr>
+<tr><td>11</td><td>Pressure exceeds a Great Catalyst's Counter Pressure</td><td>The Great Catalyst goes to its owner's Void and the attacker gains one Kill.</td></tr>
 <tr><td>12</td><td>Direct Attack</td><td>Catalyst Zones empty. Tricks do NOT block.</td></tr>
 <tr><td>13</td><td>Position Change</td><td>Cannot change same turn spawned.</td></tr>
 <tr><td>14</td><td>Mandatory Atk</td><td>REMOVED. Attacking always optional.</td></tr>

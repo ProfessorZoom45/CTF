@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { PRESENCE_TIMEOUT, presenceView, startPresence, updatePresence } from './duel-presence.mjs';
 
 const CODE_ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const id=()=>crypto.randomBytes(24).toString('base64url');
@@ -13,14 +14,29 @@ export class RoomService {
     this.rooms.set(code,room);return {status:201,body:{code,token,role:'host'}};
   }
   seat(room,token){return token&&room.host.token===token?'host':token&&room.guest?.token===token?'guest':null;}
+  touch(room,role,now){
+    if(room.duel?.running){
+      const seat=role==='host'?0:1;
+      const update=updatePresence(room.presence,now,[room.host.seen,room.guest?.seen??null],seat);
+      room.presence=update.presence;
+      if(update.result){
+        room.duel.finishFromPresence(update.result);
+        room.presence=null;
+        room.seq=room.duel.revision;
+      }
+    }
+    room.updated=now;
+    room[role].seen=now;
+  }
   join(code,token){
     this.sweep();const room=this.rooms.get(code);if(!room)return {status:404,body:{error:'Room not found or expired. Ask the host for a new code.'}};
     const role=this.seat(room,token);
     if(role){
-      room[role].seen=this.now();room.updated=this.now();
+      const now=this.now();
+      this.touch(room,role,now);
       const snapshot=room.duel ? room.duel.view(role==='host'?0:1) : room.snapshot||null;
       const registered=room.duel?.registered(role==='host'?0:1);
-      return {status:200,body:{code,token,role,resumed:true,cursor:room.seq,snapshot,registered}};
+      return {status:200,body:{code,token,role,resumed:true,cursor:room.seq,snapshot,registered,presence:presenceView(room.presence,now)}};
     }
     if(room.guest)return {status:409,body:{error:'This room already has two players.'}};
     const guestToken=id();room.guest={token:guestToken,seen:this.now(),events:[]};room.updated=this.now();
@@ -29,12 +45,14 @@ export class RoomService {
   events(code,token,after=0){
     this.sweep();const room=this.rooms.get(code);if(!room)return {status:404,body:{error:'Room expired. Create a new room.'}};
     const role=this.seat(room,token);if(!role)return {status:403,body:{error:'Invalid room session.'}};
-    room.updated=this.now();room[role].seen=this.now();
+    const now=this.now();
+    this.touch(room,role,now);
     const other=room[role==='host'?'guest':'host'];
-    const connected=!!other&&this.now()-other.seen<25000;
+    const presence=presenceView(room.presence,now);
+    const connected=presence?presence.reconnectUntil[role==='host'?1:0]===null:!!other&&now-other.seen<PRESENCE_TIMEOUT;
     if(room.duel){
       const view=room.duel.revision>after ? room.duel.view(role==='host'?0:1) : null;
-      return {status:200,body:{role,connected,view,cursor:room.duel.revision}};
+      return {status:200,body:{role,connected,view,cursor:room.duel.revision,presence}};
     }
     room[role].events=room[role].events.filter(event=>event.seq>after);
     return {status:200,body:{role,connected,events:room[role].events.filter(event=>event.seq>after),cursor:room.seq}};
@@ -43,15 +61,23 @@ export class RoomService {
     this.sweep();const room=this.rooms.get(code);if(!room)return {status:404,body:{error:'Room expired.'}};
     const role=this.seat(room,token);if(!role)return {status:403,body:{error:'Invalid room session.'}};
     if(room.duel){
+      const now=this.now();
       const seat=role==='host'?0:1;
+      this.touch(room,role,now);
+      if(data?.type==='actionRequest'&&data.action?.type!=='concede'&&room.presence?.disconnectedAt.some(since=>since!==null)){
+        return {status:409,body:{error:'The duel is paused while a player reconnects.'}};
+      }
       let result;
       if(data?.type==='deckChoice')result=room.duel.register(seat,data.deck);
       else if(data?.type==='actionRequest')result=room.duel.act(seat,data.action,data.revision);
       else if(data?.type==='rematchRequest')result=room.duel.rematch(seat,data.deck,data.revision);
       else return {status:400,body:{error:'The referee only accepts deck choices and game commands.'}};
       if(result.status===200){
-        room.updated=this.now();room[role].seen=this.now();
+        if(!room.duel.running)room.presence=null;
+        else if(room.presence)room.presence={...room.presence,lastActionAt:now};
+        else room.presence=startPresence(now);
         room.seq=room.duel.revision;
+        result.body.presence=presenceView(room.presence,now);
       }
       return result;
     }

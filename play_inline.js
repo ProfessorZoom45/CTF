@@ -37,7 +37,12 @@ const TUTORIAL_STEPS = [
 ];
 let tutorialActive = false;
 let tutorialStep = 0;
-let tutorialFromForge = false;
+let forgePractice = null;
+const FORGE_PRACTICE_LESSON = {
+  title: 'Private Forge Practice',
+  copy: 'Play your own Catalysts and use Fusion Zone to try your Great Fusion. The CPU uses the ZF1 starter deck.',
+  points: ['Your four Main Deck drafts and Fusion Zone are in your opening hand.', 'Use the two materials you selected in Forge to Fusion Spawn your draft.', 'Card Text shows which effects can run in this duel. Unsupported custom effects remain visible for review.']
+};
 let isSandboxMode = false;
 let isHotSeatMode = false;
 // Patch v3.2: VS-AI mode flags. Coach drives the first 3 turns of lessons.
@@ -49,6 +54,10 @@ let lastRoomCode = localStorage.getItem('ctf:lastRoomCode') || '';
 if ('serviceWorker' in navigator) { window.addEventListener('load', ()=> navigator.serviceWorker.register('service-worker.js').catch(()=>{})); }
 
 const $ = id => document.getElementById(id);
+const displayCardName = card => card?.displayName || card?.name || 'Unknown';
+const escapePlayHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+  '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+})[char]);
 
 // ═══ POSITION LABEL HELPER ═══
 // Maps internal state values ('atk'/'def') to CTF display terms.
@@ -321,7 +330,40 @@ function getTutorialDeck(){
     tutorial: true
   });
 }
-function getTutorialStepData(){ return TUTORIAL_STEPS[Math.min(Math.max(tutorialStep,0), TUTORIAL_STEPS.length - 1)]; }
+function getTutorialStepData(){ return forgePractice ? FORGE_PRACTICE_LESSON : TUTORIAL_STEPS[Math.min(Math.max(tutorialStep,0), TUTORIAL_STEPS.length - 1)]; }
+
+function initTutorialDuel() {
+  const starter = getTutorialDeck();
+  initGame(forgePractice?.deck || starter, starter);
+}
+
+async function startForgePractice() {
+  const notice = $('forge-practice-status');
+  const status = notice.querySelector('[role="status"]');
+  notice.hidden = false;
+  status.textContent = 'Loading the finalized cards saved in this browser…';
+  try {
+    const { DRAFT_KEY, validateDraft } = await import('./assets/js/forge-submission.mjs');
+    const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+    if (!draft?.complete) {
+      status.textContent = 'Finalize your five cards in Forge on this browser to start private practice.';
+      return;
+    }
+    const response = await fetch('ALPHA/forge-review-data.json');
+    if (!response.ok) throw Error('The Forge rules could not load.');
+    const errors = validateDraft(draft, await response.json());
+    if (errors.length) {
+      status.textContent = errors[0];
+      return;
+    }
+    const practice = window.CTF_FORGE_PRACTICE.create(draft, getTutorialDeck());
+    if (GS || net || $('friend-duel')?.hidden === false) return;
+    startTutorial(false, practice);
+    notice.hidden = true;
+  } catch {
+    status.textContent = 'The private practice duel could not load. Open Forge to check your saved draft.';
+  }
+}
 
 // ─── Per-phase guide ──────────────────────────────────────────────────────
 const WALKTHROUGH_PHASES = ['turnStart','draw','ignition','action','battle','resolution','end'];
@@ -389,7 +431,7 @@ function renderPhaseGuide(){
   const next = guided && !reviewing && isMyTurn && !GS.waitingForResponse && !GS.pendingDiscard && !attackMode
     ? buttons[phaseKey] : null;
   const title = tutorialActive ? getTutorialStepData().title.replace(/^Match \d+ — /, '') : '';
-  const match = title ? `<span class="tpb-lesson">Match ${tutorialStep + 1} of ${TUTORIAL_STEPS.length} · ${title}</span>` : '';
+  const match = title ? `<span class="tpb-lesson">${forgePractice ? title : `Match ${tutorialStep + 1} of ${TUTORIAL_STEPS.length} · ${title}`}</span>` : '';
   banner.style.display = 'block';
   banner.dataset.guided = guided ? 'true' : 'false';
   banner.innerHTML = `${match}<div class="tpb-head"><span class="tpb-step">${reviewing ? 'Review' : 'Phase'} ${displayPhase + 1} / 7</span>
@@ -408,28 +450,29 @@ function renderTutorialPanel(){
   if (!tutorialActive || !GS) { panel.style.display = 'none'; return; }
   const data = getTutorialStepData();
   panel.style.display = 'block';
-  $('tutorial-title').textContent = `${data.title} (${tutorialStep + 1}/${TUTORIAL_STEPS.length})`;
+  $('tutorial-title').textContent = getTutorialLabel();
   $('tutorial-copy').textContent = data.copy;
   const prog = $('tutorial-progress');
-  if (prog) prog.innerHTML = TUTORIAL_STEPS.map((step, idx) => `<button type="button" class="act-btn act-btn-ghost tutorial-lesson-link" ${idx === tutorialStep ? 'aria-current="true" disabled' : ''} onclick="switchWalkthroughMatch(${idx})">${step.title}</button>`).join('');
+  if (prog) prog.innerHTML = forgePractice ? '' : TUTORIAL_STEPS.map((step, idx) => `<button type="button" class="act-btn act-btn-ghost tutorial-lesson-link" ${idx === tutorialStep ? 'aria-current="true" disabled' : ''} onclick="switchWalkthroughMatch(${idx})">${step.title}</button>`).join('');
   $('tutorial-points').innerHTML = data.points.map(point => `<li>${point}</li>`).join('');
   const nextBtn = $('tutorial-next-btn');
   const exitBtn = $('tutorial-exit-btn');
-  if (nextBtn) { nextBtn.style.display = ''; nextBtn.textContent = tutorialStep >= TUTORIAL_STEPS.length - 1 ? 'Finish Tutorial' : 'Next Tutorial Match'; }
+  if (nextBtn) { nextBtn.style.display = ''; nextBtn.textContent = forgePractice ? 'Finish Practice' : tutorialStep >= TUTORIAL_STEPS.length - 1 ? 'Finish Tutorial' : 'Next Tutorial Match'; }
   if (exitBtn) exitBtn.style.display = '';
 }
 async function switchWalkthroughMatch(index) {
-  if (!tutorialActive || index === tutorialStep || !TUTORIAL_STEPS[index]) return;
+  if (!tutorialActive || forgePractice || index === tutorialStep || !TUTORIAL_STEPS[index]) return;
   if (!GS.gameOver && !await ctfConfirm('Start the selected practice match? This will replace the current practice duel.', 'Switch practice match?')) return;
   tutorialStep = index;
   saveTutorialProgress();
   $('tutorial-panel').open = false;
   replayTutorialMatch();
 }
-function startTutorial(reset=false){
+function startTutorial(reset=false, practice=null){
   if (reset) localStorage.setItem(TUTORIAL_KEY, '0');
-  tutorialFromForge = new URLSearchParams(location.search).get('onboarding') === '1';
-  loadTutorialProgress();
+  forgePractice = practice;
+  if (forgePractice) tutorialStep = 0;
+  else loadTutorialProgress();
   tutorialActive = true;
   window.tutorialActive = true;
   isHotSeatMode = false;
@@ -447,12 +490,10 @@ function startTutorial(reset=false){
     document.body.classList.remove('watch-mode');
     if (typeof applySettings === 'function') applySettings();
   } catch (e) { /* non-fatal */ }
-  const deck = getTutorialDeck();
-  initGame(deck, deck);
+  initTutorialDuel();
 }
 function replayTutorialMatch(){
-  const deck = getTutorialDeck();
-  initGame(deck, deck);
+  initTutorialDuel();
   $('game-over')?.classList.remove('show');
   showToast('Replaying this tutorial match.');
 }
@@ -479,19 +520,20 @@ function renderTutorialGameOver(){
   const stepEl = $('go-tutorial-step');
   const lessonEl = $('go-tutorial-lesson');
   const progEl = $('go-tutorial-progress');
-  if (stepEl) stepEl.textContent = `${data.title} — Match ${tutorialStep + 1} of ${TUTORIAL_STEPS.length} complete`;
+  if (stepEl) stepEl.textContent = forgePractice ? 'Private Forge Practice Complete' : `${data.title} — Match ${tutorialStep + 1} of ${TUTORIAL_STEPS.length} complete`;
   if (lessonEl) lessonEl.textContent = data.points.join(' · ');
-  if (progEl) progEl.innerHTML = TUTORIAL_STEPS.map((_, idx) =>
+  if (progEl) progEl.innerHTML = forgePractice ? '' : TUTORIAL_STEPS.map((_, idx) =>
     `<span class="tutorial-step-dot${idx < tutorialStep ? ' done' : ''}${idx === tutorialStep ? ' active' : ''}">${idx + 1}</span>`
   ).join('');
   const isLast = tutorialStep >= TUTORIAL_STEPS.length - 1;
   nextBtn.style.display = '';
-  nextBtn.textContent = isLast ? 'Finish Tutorial' : 'Next Tutorial Match';
+  nextBtn.textContent = forgePractice ? 'Finish Practice' : isLast ? 'Finish Tutorial' : 'Next Tutorial Match';
   replayBtn.style.display = '';
   lobbyBtn.textContent = 'Exit Tutorial & Return to Lobby';
 }
 function advanceTutorialStep(){
   if (!tutorialActive) return;
+  if (forgePractice) return returnToPlayLobby();
   if (tutorialStep >= TUTORIAL_STEPS.length - 1) {
     tutorialActive = false;
     window.tutorialActive = false;
@@ -510,13 +552,13 @@ function advanceTutorialStep(){
   }
   tutorialStep += 1;
   saveTutorialProgress();
-  const deck = getTutorialDeck();
-  initGame(deck, deck);
+  initTutorialDuel();
   $('game-over')?.classList.remove('show');
   const data = getTutorialStepData();
   showToast(`${data.title} — ${data.copy}`);
 }
 function exitTutorial(){
+  if (forgePractice) return returnToPlayLobby();
   tutorialActive = false;
   window.tutorialActive = false;
   try {
@@ -646,6 +688,7 @@ function getDuelWinnerLabel(state){
 }
 function getTutorialLabel(){
   if (!tutorialActive) return isSandboxMode ? 'Solo Sandbox' : (isHotSeatMode ? 'Hot-Seat Local' : 'Free play');
+  if (forgePractice) return FORGE_PRACTICE_LESSON.title;
   const data = getTutorialStepData();
   return `${data.title} (${tutorialStep + 1}/${TUTORIAL_STEPS.length})`;
 }
@@ -1135,6 +1178,9 @@ function initGame(p1Deck, p2Deck) {
     tutorial: deck?.tutorial === true
   });
   const left = prepare(p1Deck), right = prepare(p2Deck);
+  const currentPractice = p1Deck === forgePractice?.deck ? forgePractice : null;
+  forgePractice = currentPractice;
+  window.CTF_FORGE_PRACTICE?.use(currentPractice);
   GS = createGameState(left, right);
   GS.deckMeta = { p1: left, p2: right };
   $('lobby').style.display = 'none';
@@ -1405,9 +1451,9 @@ function openChoiceModal(title, subtitle, items, onChoose) {
   $('choice-sub').textContent = subtitle || '';
   $('choice-list').innerHTML = items.map((rawItem, idx) => { const item = sanitizeChoiceItemForWatchMode(rawItem, idx); return `
     <button class="choice-item" onclick="pickChoiceItem(${idx})">
-      <strong>${item.label}</strong>
-      ${item.meta ? `<small>${item.meta}</small>` : ''}
-      ${item.tag ? `<span class="choice-tag">${item.tag}</span>` : ''}
+      <strong>${escapePlayHtml(item.label)}</strong>
+      ${item.meta ? `<small>${escapePlayHtml(item.meta)}</small>` : ''}
+      ${item.tag ? `<span class="choice-tag">${escapePlayHtml(item.tag)}</span>` : ''}
     </button>`; }).join('');
   $('choice-modal').classList.add('show');
 }
@@ -1464,6 +1510,11 @@ function getCurrentEffectInfoCard() {
 function showCurrentCardEffectInfo() {
   const ctx = getCurrentEffectInfoCard();
   if (!ctx || !ctx.card) return showToast('Select a card first.');
+  if (ctx.card.practiceNote) {
+    const content = [displayCardName(ctx.card), ctx.card.practiceNote, ctx.card.printedText]
+      .map(escapePlayHtml).join('<br><br>');
+    return openInfoModal('Private Forge Card', ctx.card.cardType, content);
+  }
   const info = getCardPlayabilityInfo(ctx.card) || { status:'manual', reason:'Printed effect reference.' };
   const isNormalCatalystSupport = cardHasNormalCatalystRuntimeSupport(ctx.card);
   const heading = info.status === 'manual'
@@ -1493,7 +1544,23 @@ function isPalmNeedingManualChoice(card) {
   ].includes(name);
 }
 
+function chooseForgeTrickTarget(card, onReady) {
+  if (!card.practiceEffect) return showToast(card.practiceNote);
+  const targets = GS.players[myPlayer].catalysts.flatMap((slot, zone) => (
+    slot && !slot.faceDown ? [{ zone, cardId:slot.cardId }] : []
+  ));
+  if (!targets.length) return showToast('Place a face-up Catalyst you control before activating this Trick.');
+  openChoiceModal(displayCardName(card), 'Choose one face-up Catalyst you control.', targets.map(target => ({
+    label: `C${target.zone + 1} — ${displayCardName(getCard(target.cardId))}`
+  })), index => {
+    const target = targets[index];
+    closeChoiceModal();
+    onReady({targetZone:target.zone, targetCardId:target.cardId});
+  });
+}
+
 function preparePalmActivation(card, sourceCtx, onReady) {
+  if (card?.practiceNote) return chooseForgeTrickTarget(card, onReady);
   if (!card || !isPalmNeedingManualChoice(card)) return onReady(null);
   const me = GS.players[myPlayer];
   const opp = GS.players[1 - myPlayer];
@@ -1566,6 +1633,7 @@ function preparePalmActivation(card, sourceCtx, onReady) {
 }
 
 function prepareConcealedResponse(card, zoneIdx, onReady) {
+  if (card?.practiceNote) return chooseForgeTrickTarget(card, onReady);
   const me = GS.players[myPlayer];
   const name = String(card?.name || '').toLowerCase();
   if (name !== 'the chosen one') return onReady(null);
@@ -1910,7 +1978,7 @@ function startFusionSummon() {
   if (!emptyZones.length) return showToast('No empty Catalyst Zones are available.');
   const activeField = me.fieldTrick ? getCard(me.fieldTrick.cardId) : null;
   const detailed = !!(me.fieldTrick && !me.fieldTrick.faceDown && activeField && /fusion zone/i.test(activeField.name || ''));
-  openChoiceModal('Choose Fusion Card', 'Select the Fusion Monster you want to bring out.', options.map(o => ({ label: o.fusionCard.name, meta: `Materials: ${o.materials.join(' + ')}` })), (pickIdx) => {
+  openChoiceModal('Choose Fusion Card', 'Choose a Fusion Catalyst to spawn.', options.map(o => ({ label: displayCardName(o.fusionCard), meta: `Materials: ${o.materials.join(' + ')}` })), (pickIdx) => {
     const picked = options[pickIdx];
     closeChoiceModal();
     openChoiceModal('Choose Fusion Zone', 'Pick an empty Catalyst Zone for the Fusion Spawn.', emptyZones.map(z => ({ label: `Catalyst Zone C${z + 1}` })), (zonePickIdx) => {
@@ -1945,7 +2013,7 @@ function startFusionSummon() {
       function chooseStep(pos) {
         if (picked.freeFusion || pos >= steps.length) return afterMaterials();
         const opt = steps[pos];
-        openChoiceModal('Fusion Material', `Confirm ${opt.label}.`, [{ label: `${opt.card.name} (${opt.src})`, meta: opt.src === 'field' ? `Catalyst Zone C${opt.idx + 1}` : `Hand #${opt.idx + 1}`, sensitive: opt.src === 'hand', hiddenLabel:'Fusion Material (Hand)', hiddenMeta: opt.src === 'field' ? `Catalyst Zone C${opt.idx + 1}` : `Hand #${opt.idx + 1}` }], () => {
+        openChoiceModal('Fusion Material', `Confirm ${opt.label}.`, [{ label: `${displayCardName(opt.card)} (${opt.src})`, meta: opt.src === 'field' ? `Catalyst Zone C${opt.idx + 1}` : `Hand #${opt.idx + 1}`, sensitive: opt.src === 'hand', hiddenLabel:'Fusion Material (Hand)', hiddenMeta: opt.src === 'field' ? `Catalyst Zone C${opt.idx + 1}` : `Hand #${opt.idx + 1}` }], () => {
           closeChoiceModal();
           if (opt.src === 'field') chosenFieldIdxs.push(opt.idx); else chosenHandIdxs.push(opt.idx);
           chooseStep(pos + 1);
@@ -1991,7 +2059,7 @@ function getChainSummaryHtml() {
   };
   const entries = GS.chain.map((link, idx) => {
     const c = getCard(link.cardId);
-    const name = c ? c.name : 'Effect';
+    const name = c ? escapePlayHtml(displayCardName(c)) : 'Effect';
     const type = c ? c.cardType : '';
     const isCounter = !!link.isCounter;
     const resolveOrder = depth - idx;
@@ -2120,9 +2188,9 @@ function getStatusMessage() {
           if (selected.cardType === 'Field Trick') return { main: `${turnLead} Activate your selected hidden card.`, sub: 'Click your Field slot to set it. If one is already active, you will be asked to confirm the overwrite.', mode: '' };
           return { main: `${turnLead} Use your selected hidden card.`, sub: 'Click an open Trick Zone. Palm Tricks may activate from hand or be set face-down first.', mode: '' };
         }
-        if (selected.cardType === 'Catalyst') return { main: `${turnLead} Spawn ${selected.name}.`, sub: 'Click an empty Catalyst Zone. Level 5+ needs manual Tribute selection.', mode: '' };
+        if (selected.cardType === 'Catalyst') return { main: `${turnLead} Spawn ${displayCardName(selected)}.`, sub: 'Click an empty Catalyst Zone. Level 5+ needs manual Tribute selection.', mode: '' };
         if (selected.cardType === 'Field Trick') return { main: `${turnLead} Activate ${selected.name}.`, sub: 'Click your Field slot to set it. If one is already active, you will be asked to confirm the overwrite.', mode: '' };
-        return { main: `${turnLead} Set or activate ${selected.name}.`, sub: 'Click an open Trick Zone. Palm Tricks may activate from hand or be set face-down first.', mode: '' };
+        return { main: `${turnLead} Set or activate ${displayCardName(selected)}.`, sub: selected.practiceNote || 'Click an open Trick Zone. Palm Tricks may activate from hand or be set face-down first.', mode: '' };
       }
       return { main: turnLead, sub: 'Action Phase: spawn, set, activate, or change one Catalyst position. Use Continue when you are done.', mode: isMyTurn ? '' : 'waiting' };
     }
@@ -2268,12 +2336,12 @@ function renderLocalDuelWindows() {
   if (canPlay && chainOpen && GS.currentResponder === myPlayer) {
     const depth = GS.chain.length;
     const latest = GS.chain[depth - 1];
-    const revealedTrick = ['palm','concealed'].includes(latest?.source) ? getCard(latest.cardId)?.name : '';
+    const revealedTrick = ['palm','concealed'].includes(latest?.source) ? displayCardName(getCard(latest.cardId)) : '';
     const source = latest?.source === 'attack' ? 'An attack' : revealedTrick || 'An effect';
     const responses = getLocalChainResponses();
     const useZoneLabels = isWatchModeEnabled() || isHotSeatMode || isSandboxMode;
     const actions = responses.map(response => ({
-      label:useZoneLabels ? `Respond from T${response.zone + 1}` : `Respond with ${response.card.name}`,
+      label:useZoneLabels ? `Respond from T${response.zone + 1}` : `Respond with ${displayCardName(response.card)}`,
       run:() => doRespondFromZone(response.zone)
     }));
     actions.push({label:'Pass Chain', run:doPassChain, primary:!responses.length});
@@ -2455,9 +2523,10 @@ function renderMyHand(me) {
     const art = cardArtUrl(c);
     const artClass = art ? ' has-art' : '';
     const artStyle = art ? ` style="background-image:url('${art.replace(/'/g,"%27")}')"` : '';
-    return `<div class="hand-card${artClass}${i === selectedHandIdx ? ' selected' : ''}"${artStyle} data-inspect-card="${id}" onclick="handClick(${i})" onmouseenter="showTip(event,'${id}')" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="Hand card ${i + 1}: ${String(c.name).replace(/"/g,'&quot;')}">
+    const name = escapePlayHtml(displayCardName(c));
+    return `<div class="hand-card${artClass}${i === selectedHandIdx ? ' selected' : ''}"${artStyle} data-inspect-card="${id}" onclick="handClick(${i})" onmouseenter="showTip(event,'${id}')" onmouseleave="hideTip()" role="button" tabindex="0" aria-label="Hand card ${i + 1}: ${name}">
       <div class="hc-bar" style="background:${color}"></div>
-      <div class="hc-name">${c.name}</div>
+      <div class="hc-name">${name}</div>
       <div class="hc-type">${c.cardType}${c.level ? ' Lv' + c.level : ''}</div>
       ${isCat ? `<div class="hc-stats">${c.pr}/${c.cp}</div>` : ''}
     </div>`;
@@ -2556,9 +2625,9 @@ function renderFieldCard(card, slot, isOpp, mini = false, playerIdx = null, zone
   const shownCp = hidePrivate ? '?' : ((playerIdx !== null && zoneIdx !== null && typeof getEffectiveCounterPressure === 'function' && isCat && !slot.isLibra) ? getEffectiveCounterPressure(GS, playerIdx, zoneIdx) : card.cp);
   const tipHandlers = hidePrivate ? '' : ` data-inspect-card="${card.id}" onmouseenter="showTip(event,'${card.id}')" onmouseleave="hideTip()"`;
   const selectedClass = (!isOpp && selectedFieldZone && ((selectedFieldZone.type === 'cat' && playerIdx === myPlayer && zoneIdx === selectedFieldZone.zone) || (selectedFieldZone.type === 'trick' && playerIdx === myPlayer && zoneIdx === selectedFieldZone.zone))) ? ' selected' : '';
-  const visibleName = hidePrivate ? (isCat ? 'Face-Down Catalyst' : 'Set Trick') : card.name;
+  const visibleName = hidePrivate ? (isCat ? 'Face-Down Catalyst' : 'Set Trick') : escapePlayHtml(displayCardName(card));
   const visibleType = hidePrivate ? (isCat ? 'Hidden Catalyst' : 'Hidden Trick') : card.cardType;
-  const ariaLabel = hidePrivate ? `${visibleName} — hidden in Watch Mode` : String(card.name).replace(/"/g,'&quot;');
+  const ariaLabel = hidePrivate ? `${visibleName} — hidden in Watch Mode` : visibleName;
   const posBadge = isCat ? (() => {
     if (slot.faceDown) return '<div class="fc-pos fc-pos-fd">FACE-DOWN</div>';
     const lbl = posLabel(slot.position);
@@ -2643,7 +2712,7 @@ function renderActions(isMyTurn) {
       if (opts.length) {
         opts.forEach(o => {
           const manualTag = cardNeedsManualEffectAssist(o.card) ? ' · Manual' : '';
-          const responseLabel = isWatchModeEnabled() ? `Chain Hidden ${o.isCounter ? 'Counter' : 'Concealed'} Trick${manualTag}` : `Chain ${o.card.name} ${o.isCounter ? '· Counter' : ''}${manualTag}`; html += `<button class="act-btn ${o.isCounter ? 'act-btn-purple' : 'act-btn-blue'}" onclick="doRespondFromZone(${o.zone})">${responseLabel}</button>`;
+          const responseLabel = isWatchModeEnabled() ? `Chain Hidden ${o.isCounter ? 'Counter' : 'Concealed'} Trick${manualTag}` : `Chain ${displayCardName(o.card)} ${o.isCounter ? '· Counter' : ''}${manualTag}`; html += `<button class="act-btn ${o.isCounter ? 'act-btn-purple' : 'act-btn-blue'}" onclick="doRespondFromZone(${o.zone})">${escapePlayHtml(responseLabel)}</button>`;
         });
       } else {
         html += `<div style="color:var(--ash);font-size:.72rem;margin-bottom:4px">No legal set Concealed/Counter Trick responses.</div>`;
@@ -2778,8 +2847,11 @@ function renderActions(isMyTurn) {
 function sanitizeVisibleLogMessage(msg){
   const draw = String(msg || '').match(/^P([12]) drew /);
   if (draw && Number(draw[1])-1 !== myPlayer) return `P${draw[1]} drew a card.`;
-  if (!isWatchModeEnabled()) return msg;
-  const text = String(msg || '');
+  let text = String(msg || '');
+  for (const card of forgePractice?.cards || []) {
+    text = text.replaceAll(card.name, () => card.displayName);
+  }
+  if (!isWatchModeEnabled()) return text;
   const privatePatterns = [
     /\bfrom hand\b/i,
     /\bto hand\b/i,
@@ -2812,7 +2884,7 @@ function renderLog() {
     const kind = getLogType(safeMsg);
     let cls = 'log-entry ' + kind;
     if (kind === 'phase') cls += ' phase-change';
-    return `<div class="${cls}"><span class="log-meta">T${e.turn} · ${String(e.phase || '').toUpperCase()}</span>${safeMsg}</div>`;
+    return `<div class="${cls}"><span class="log-meta">T${e.turn} · ${String(e.phase || '').toUpperCase()}</span>${escapePlayHtml(safeMsg)}</div>`;
   }).join('');
   log.scrollTop = log.scrollHeight;
 }
@@ -3136,11 +3208,11 @@ function doEndPhase(action) {
 function updateCardText(id) {
   const c = getCard(id);
   if (!c) return false;
-  $('tip-name').textContent = c.name + (CTFDeckUtils.isGreatCard(c) ? ' ★' : '');
+  $('tip-name').textContent = displayCardName(c) + (CTFDeckUtils.isGreatCard(c) ? ' ★' : '');
   $('tip-info').textContent = `${c.cardType}${c.sub && c.sub !== 'Normal' ? ' (' + c.sub + ')' : ''} · ${c.set}${c.alignment ? ' · ' + c.alignment : ''}${c.level ? ' · Lv ' + c.level : ''}${c.kindsStr ? ' · ' + c.kindsStr : ''}`;
   const isCat = c.cardType === 'Catalyst' || c.cardType === 'Fusion';
   $('tip-stats').textContent = isCat ? `Pressure: ${c.pr}  ·  Counter Pressure: ${c.cp}` : '';
-  $('tip-desc').textContent = c.desc || 'No text.';
+  $('tip-desc').textContent = c.practiceNote ? [c.practiceNote, c.printedText].filter(Boolean).join('\n\n') : c.desc || 'No text.';
   return true;
 }
 
@@ -3227,7 +3299,8 @@ for (const deck of lobbyDecks) {
   if (deck.source === 'starter') $('cpu-deck-select').add(new Option(deck.name, deck.id));
 }
 if (lastRoomCode && $('join-input')) $('join-input').value = lastRoomCode;
-if (lobbyParams.get('onboarding') === '1') startTutorial(true);
+if (lobbyParams.get('forgePractice') === '1' && !lobbyParams.has('room')) startForgePractice();
+else if (lobbyParams.get('onboarding') === '1') startTutorial(true);
 else if (lobbyParams.get('guided') === '1') startTutorial();
 if (lobbyParams.get('settings') === '1') toggleSettings(true);
 const invitedRoom=lobbyParams.get('room');

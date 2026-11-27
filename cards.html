@@ -364,6 +364,13 @@ body.ctf-nav-pad { padding-top: 0; }
 <div class="page-header"><h1>Card Gallery</h1><p id="gallery-subtitle">All live cards from the current Patch 42 database. Search, filter, and click any card for full details.</p></div>
 
 <div class="container">
+<details id="forge-releases" class="sbar">
+<summary>Forge releases</summary>
+<p>Approved community cards. Deck eligibility follows play testing and certification.</p>
+<p id="forge-release-status" role="status"></p>
+<div id="forge-release-list"></div>
+<button type="button" id="forge-release-more" hidden>Load more Forge cards</button>
+</details>
 <div class="sbar" id="stats"></div>
 <div class="fb">
 <input type="text" id="q" placeholder="Search by name, kind, or effect text...">
@@ -406,6 +413,8 @@ body.ctf-nav-pad { padding-top: 0; }
 
 <script src="assets/js/data.js"></script>
 <script src="assets/js/card-image-map.js"></script>
+<script src="assets/js/submission-delivery-config.js"></script>
+<script src="assets/js/forge-catalog.js" defer></script>
 <script>
 if(typeof CTF_CARDS==='undefined'){
  document.querySelector('.container').innerHTML='<div style="padding:4rem 2rem;text-align:center"><h2 style="color:#ff6a00;font-family:Bebas Neue,sans-serif;font-size:2rem;margin-bottom:1rem">Card Database Not Loaded</h2><p style="color:#e8e0d0;max-width:560px;margin:0 auto;line-height:1.7">Make sure <code style="color:#ff6a00">assets/js/data.js</code> and <code style="color:#ff6a00">assets/js/card-image-map.js</code> both exist in the repo and that the service worker is not serving an older cached version.</p></div>';

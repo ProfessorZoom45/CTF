@@ -1,6 +1,5 @@
-// Public runtime configuration for the Oracle card-submission email service.
-// Public values only. Keep the Turnstile secret on the Oracle server.
+// Public Forge intake and catalog endpoints shared by both browser sites.
 window.CTF_SUBMISSION_DELIVERY=Object.freeze({
-  endpoint:'https://ctf-cards.193-122-174-254.sslip.io/submit-card',
-  turnstileSiteKey:'0x4AAAAAAEYQdRdtlQ07Yi-j'
+  endpoint:'https://carry-the-flame-online.dr-zoom.chatgpt.site/api/card-submissions',
+  catalog:'https://carry-the-flame-online.dr-zoom.chatgpt.site/api/forge-catalog'
 });
