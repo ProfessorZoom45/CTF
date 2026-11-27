@@ -47,7 +47,10 @@ GitHub Pages publishes the repository root from `main`. The non-GitHub Site host
 
 For local development, run `node server.mjs` and use the local Game Hub in two independent browser sessions. Loopback play uses the local referee. Check its protocol with `node tools/test-private-rooms.mjs http://127.0.0.1:8028`.
 
-Friend Rooms support single duels and same-room rematches. Best-of-three, the full timer and disconnect-forfeit policy, and automated Forge approval emails are separate release work.
+Friend Rooms support single duels and same-room rematches. After detecting a
+disconnect, the referee pauses play for a one-minute reconnect window. A
+third disconnect forfeits that duel, and five minutes of inactivity draws it.
+Best-of-three and the full turn and Chain clocks remain release work.
 
 ## Card Database
 
