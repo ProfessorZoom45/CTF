@@ -60,7 +60,10 @@ class OutboxClient:
             raise OutboxError("CTF_FORGE_MAIL_BRIDGE_TOKEN must be a 32–512 character service token")
         self.session = session
         self.endpoint = endpoint
-        self.headers = {"Authorization": f"Bearer {token}"}
+        self.headers = {
+            "Authorization": f"Bearer {token}",
+            "User-Agent": "Carry-The-Flame-Forge/1.0",
+        }
 
     async def claim(self) -> dict | None:
         async with self.session.post(

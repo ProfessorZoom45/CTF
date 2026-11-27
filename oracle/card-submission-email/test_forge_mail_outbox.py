@@ -75,7 +75,7 @@ class OutboxClientTests(unittest.IsolatedAsyncioTestCase):
         client = OutboxClient(session, DEFAULT_OUTBOX_URL, "a" * 64)
         self.assertEqual(await client.claim(), job())
         self.assertTrue(await client.finish("forge-job-123", "lease-one", Outcome("retry", 123)))
-        headers = {"Authorization": "Bearer " + "a" * 64}
+        headers = {"Authorization": "Bearer " + "a" * 64, "User-Agent": "Carry-The-Flame-Forge/1.0"}
         self.assertEqual(session.post.call_args_list, [
             call(DEFAULT_OUTBOX_URL, json={"action": "claim"}, headers=headers, allow_redirects=False),
             call(DEFAULT_OUTBOX_URL, json={
